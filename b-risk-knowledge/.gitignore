@@ -2,3 +2,9 @@
 .contract-tmp/
 __pycache__/
 *.pyc
+.venv/
+.local/
+node_modules/
+frontend/dist/
+.pytest_cache/
+output/playwright/
