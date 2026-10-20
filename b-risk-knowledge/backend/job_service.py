@@ -14,9 +14,15 @@ def fingerprint(value):
 
 def enqueue(db, run_id):
     from .queue import demo_check
+    run = db.get(ProcessingRun, run_id)
+    task = demo_check
+    lock = f'b01:{run_id}'
+    if run.kind == 'source_import':
+        from .modules.ingestion.tasks import source_import
+        task, lock = source_import, f"source:{run.payload['source_id']}"
     # The library INSERT and the SQLAlchemy ORM flush share one physical transaction.
     connection = db.connection().connection.driver_connection
-    return demo_check.configure(connection=connection, lock=f"b01:{run_id}").defer(run_id=run_id)
+    return task.configure(connection=connection, lock=lock).defer(run_id=run_id)
 
 
 def create_run(actor, data, key, request_id):
@@ -80,6 +86,9 @@ def retry_run(actor, run_id, version, key, request_id):
             raise Problem(409, "QUEUE_NOT_SETTLED", "处理服务正在结束上次运行，请稍后重试。")
         run.queue_job_id = enqueue(db, run.id)
         run.status, run.error, run.progress = "queued", None, 0
+        if run.kind == 'source_import':
+            from .modules.ingestion.service import prepare_retry
+            prepare_retry(db, run)
         run.row_version += 1
         run.updated_at = utcnow()
         db.add(RetryRequest(actor_id=actor.id, idempotency_key=key, run_id=run.id, input_hash=digest))

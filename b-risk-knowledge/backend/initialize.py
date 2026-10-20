@@ -30,7 +30,9 @@ def main():
             db.flush()
             for project in projects:
                 db.add(RoleBinding(user_id=user.id, role=role, scope_type="project", scope_id=project))
-    print("B01 schemas and explicit mock identities ready. Existing roles unchanged.")
+    from .modules.ingestion.fixtures import seed_assets
+    seed_assets()
+    print("B01/B02 schemas and explicit mock identities ready. Existing roles unchanged.")
 
 
 if __name__ == "__main__":

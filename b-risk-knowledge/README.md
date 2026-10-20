@@ -1,6 +1,8 @@
-# 工程风险知识与复盘培训中心｜B01
+# 工程风险知识与复盘培训中心｜B01 / B02
 
-本地基础工程已实现。B00合同保留在 `contracts/`；A身份、项目事实权限及真实任务包尚未联调。本轮没有导入或修改原始报告和旧治理工作台。
+本地基础工程及B02模拟数据接入已实现。B00合同保留在 `contracts/`；A身份、真实数据和任务包尚未联调。原始报告和旧治理工作台没有改动。
+
+B02入口：<http://127.0.0.1:5181/sources>，支持模拟CSV、Excel和治理导出接入、增量版本、证据与候选关联。已准备4个来源、10条模拟记录供试用。[操作步骤与架构](reports/B02-design-and-use.md)、[12项测试及浏览器验收](reports/B02-validation.md)。
 
 ## 本机使用
 
@@ -38,6 +40,8 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/start.ps1
 | `backend/job_service.py` | 提交幂等、重试版本校验、业务对象与队列同事务 |
 | `backend/queue.py` | Procrastinate注册任务与恢复；新增加工任务复用队列，不能另造调度器 |
 | `backend/storage.py` | 受控路径与原子写入；B02通过文件ID接入证据，不向调用方暴露路径 |
+| `backend/modules/ingestion` | B02三类文件接入、字段校验、增量版本、逐行恢复、证据与跨来源候选 |
+| `fixtures/b02` | 明确标注的模拟CSV、XLSX、治理导出和证据示意图 |
 | `backend/models.py` / `migrations` | SQLAlchemy业务表、Alembic迁移；队列表由Procrastinate管理 |
 | `tests/test_foundation.py` | 真实数据库、worker、文件与权限集成测试 |
 | `contracts` | B00对A合同；当前proposed，不等于已实现A接口 |
@@ -46,7 +50,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/start.ps1
 
 提交的幂等键按操作者唯一，同键不同内容返回409；重试还要求当前 `row_version`。队列插入使用SQLAlchemy同一条psycopg物理连接，因此两者共同提交或回滚。worker心跳每2秒更新，10秒失联视为停滞；重启立即尝试恢复，常驻恢复任务每分钟检查。结果文件按任务固定路径原子写入，结果对象按任务唯一，重复执行不会多产出结果对象。队列采用至少一次执行语义，未来涉及外部副作用的任务仍须各自实现幂等。
 
-新增任务须注册明确的任务类型、输入Schema、权限动作和结果适配，不接受任意函数名/文件路径。当前唯一业务类型为 `demo_check`，不宣称已经实现文档解析或风险判断。
+新增任务须注册明确的任务类型、输入Schema、权限动作和结果适配，不接受任意函数名/文件路径。当前类型为 `demo_check` 和 `source_import`；不包含OCR、知识生成或风险判断。
 
 ## API（前缀 `/api/v1`）
 
@@ -72,6 +76,6 @@ npm run build
 
 `check.py` 只重建保留给测试的 `risk_b_test` 数据库，不清空开发库 `risk_b`。不要把其他数据存入测试库。测试文件落在 `.local/test-storage`。
 
-本轮实际证据见 [B01验证报告](reports/B01-validation.md)。锁定后端依赖在 `requirements.txt`，前端在 `package-lock.json`。测试工具有一项 Starlette/httpx 弃用提醒，当前测试通过；不为消除提醒额外升级未验证的测试依赖。
+实际证据见 [B01验证报告](reports/B01-validation.md)和[B02验证报告](reports/B02-validation.md)。锁定后端依赖在 `requirements.txt`，前端在 `package-lock.json`。测试工具有一项 Starlette/httpx 弃用提醒，当前测试通过；不为消除提醒额外升级未验证的测试依赖。
 
-下一步执行B02，先接入少量代表样本验证来源定位、重复接入和证据权限，再扩展到全量数据。
+下一步可执行B03，基于固定来源版本和证据加工知识候选。真实数据接入仍需先核对表头、身份和图片锚点，不能将本轮模拟验证当作真实数据验收。

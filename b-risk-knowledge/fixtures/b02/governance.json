@@ -1,0 +1,61 @@
+{
+  "format": "governance-export-v1",
+  "records": [
+    {
+      "source_id": "MOCK-OLD-SOURCE",
+      "raw_fields": {
+        "record_id": "MOCK-001",
+        "report_id": "MOCK-REPORT-01",
+        "project_id": "demo-airport",
+        "project_name": "模拟机场项目",
+        "record_kind": "detail",
+        "inspection_date": "2026-10-01",
+        "description": "模拟：疏散通道堆放物品",
+        "images": "[{\"ref\": \"photo-airport\", \"type\": \"site_photo\", \"relation_confidence\": \"anchored\"}, {\"ref\": \"missing-file\", \"type\": \"text_screenshot\", \"relation_confidence\": \"candidate\"}]",
+        "original_index": "1",
+        "report_title": "模拟巡查报告",
+        "location": "模拟区域1",
+        "category": "",
+        "severity": "",
+        "standard_reference": "",
+        "rectification": "",
+        "review_result": "",
+        "responsible_party": "",
+        "deadline": "",
+        "inspector": "",
+        "page_no": "",
+        "table_no": "",
+        "cell_range": "",
+        "image_type": "",
+        "source_filename": "",
+        "source_sheet": "",
+        "source_row": "",
+        "original_description": "",
+        "effective_description": "",
+        "governance_revision": "",
+        "modified_by": "",
+        "modified_at": "",
+        "basis_status": "",
+        "confidence": "",
+        "task_id": "",
+        "parent_record_id": "",
+        "specialty": "",
+        "scene_code": "",
+        "remarks": "",
+        "custom_unmapped": "扩展字段也应完整保留"
+      },
+      "effective_fields": {
+        "description": "模拟：疏散通道堆放物品（人工确认区域为A区）"
+      },
+      "revision": 7,
+      "modified_by": "模拟审核员",
+      "field_provenance": {
+        "description": {
+          "method": "manual",
+          "revision": 7,
+          "source_field": "description"
+        }
+      }
+    }
+  ]
+}

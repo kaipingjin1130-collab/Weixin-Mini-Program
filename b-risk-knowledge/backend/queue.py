@@ -81,7 +81,7 @@ async def recover_stalled():
     jobs = await queue_app.job_manager.get_stalled_jobs(queue="b01", seconds_since_heartbeat=10)
     for job in jobs:
         # Only this registered queue/task is recovered; no other application's jobs.
-        if job.task_name == "b01.demo_check":
+        if job.task_name in {"b01.demo_check", "b02.source_import"}:
             await queue_app.job_manager.retry_job(job)
 
 
@@ -89,3 +89,7 @@ async def recover_stalled():
 @queue_app.task(name="b01.recover_stalled", queue="b01-maintenance", queueing_lock="b01-recovery")
 async def periodic_recovery(timestamp):
     await recover_stalled()
+
+
+# Register extension tasks in both API and worker processes.
+from .modules.ingestion import tasks as ingestion_tasks  # noqa: E402,F401

@@ -23,6 +23,9 @@ from .job_service import create_run, retry_run
 from .storage import asset_path
 from .audit import record
 
+from .pagination import paginate
+from .api_common import key_header
+
 PROJECTS = {"demo-airport": "机场检查 · 演示项目", "demo-metro": "地铁监护 · 演示项目"}
 
 
@@ -79,35 +82,14 @@ async def unexpected_error(request, exc):
     return problem_response(request, 503, "SERVICE_UNAVAILABLE", "处理服务暂不可用，请稍后重试。")
 
 
-def key_header(idempotency_key: str = Header(alias="Idempotency-Key")):
-    if not re.fullmatch(r"[A-Za-z0-9_.:-]{1,128}", idempotency_key):
-        raise Problem(422, "INVALID_IDEMPOTENCY_KEY", "提交标识格式不正确。")
-    return idempotency_key
 
 
 def job_dto(run):
     fields = ["id", "kind", "title", "project_id", "status", "attempts", "progress",
               "result_ref", "error", "row_version", "created_at", "updated_at"]
-    return {**{k: getattr(run, k) for k in fields}, "is_demo": True}
+    return {**{k: getattr(run, k) for k in fields}, "is_demo": run.kind == "demo_check"}
 
 
-def paginate(db, statement, model, limit, cursor):
-    if cursor:
-        try:
-            stamp, ident = json.loads(base64.urlsafe_b64decode(cursor + "=" * (-len(cursor) % 4)))
-            when = datetime.fromisoformat(stamp)
-        except (ValueError, TypeError, KeyError):
-            raise Problem(422, "INVALID_CURSOR", "分页标识无效，请重新加载列表。")
-        statement = statement.where(or_(model.created_at < when,
-                                        and_(model.created_at == when, model.id < ident)))
-    rows = db.scalars(statement.order_by(model.created_at.desc(), model.id.desc()).limit(limit + 1)).all()
-    more = len(rows) > limit
-    rows = rows[:limit]
-    next_cursor = None
-    if more:
-        next_cursor = base64.urlsafe_b64encode(json.dumps(
-            [rows[-1].created_at.isoformat(), rows[-1].id]).encode()).decode().rstrip("=")
-    return rows, next_cursor
 
 
 @app.get("/api/v1/health")
@@ -184,6 +166,8 @@ def asset_content(asset_id: str, actor: Actor = Depends(current_actor)):
         if not asset:
             raise Problem(404, "NOT_FOUND", "文件不存在。")
         authorize(actor, "read", asset.project_id)
+        if asset.mime_type in {'text/csv', 'application/json', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}:
+            authorize(actor, 'run', asset.project_id)
         if asset.availability != "available":
             raise Problem(410, "ASSET_UNAVAILABLE", "文件已撤回或暂不可用。")
         path = asset_path(asset.storage_key)
@@ -191,7 +175,7 @@ def asset_content(asset_id: str, actor: Actor = Depends(current_actor)):
             raise Problem(404, "ASSET_MISSING", "文件缺失，请联系管理员。")
         if path.stat().st_size != asset.size or hashlib.sha256(path.read_bytes()).hexdigest() != asset.sha256:
             raise Problem(409, "ASSET_INTEGRITY_ERROR", "文件内容校验失败。")
-        return FileResponse(path, media_type=asset.mime_type, filename=f"演示检查结果-{asset.id[:8]}.txt")
+        return FileResponse(path, media_type=asset.mime_type, filename=path.name)
 
 
 @app.get("/api/v1/access")
@@ -257,3 +241,7 @@ def audit_events(actor: Actor = Depends(current_actor), limit: int = Query(20, g
         return {"items": [{"id": r.id, "action": r.action, "object_id": r.object_id,
                            "project_id": r.project_id, "created_at": r.created_at} for r in rows],
                 "next_cursor": next_cursor}
+
+
+from .modules.ingestion.api import router as ingestion_router
+app.include_router(ingestion_router)
