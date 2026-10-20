@@ -1,0 +1,4 @@
+.venv-contracts/
+.contract-tmp/
+__pycache__/
+*.pyc

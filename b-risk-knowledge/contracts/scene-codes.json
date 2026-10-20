@@ -1,0 +1,27 @@
+{
+  "version": "1.0",
+  "status": "proposed",
+  "unknown_policy": "reject_unregistered",
+  "items": [
+    {
+      "code": "lifting_supervision",
+      "label": "吊装旁站"
+    },
+    {
+      "code": "fire_inspection",
+      "label": "消防检查"
+    },
+    {
+      "code": "structural_inspection",
+      "label": "结构检查"
+    },
+    {
+      "code": "mep_inspection",
+      "label": "机电检查"
+    },
+    {
+      "code": "general_inspection",
+      "label": "一般巡查"
+    }
+  ]
+}

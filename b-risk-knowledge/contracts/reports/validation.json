@@ -1,0 +1,350 @@
+{
+  "generated_at": "2026-10-20T08:10:52.434124+00:00",
+  "scope": "offline contract validation only; no HTTP, JWT, DB, worker, attachment download or A integration",
+  "contract_status": "proposed",
+  "python": "3.12.10",
+  "dependencies": {
+    "jsonschema": "4.26.0",
+    "PyYAML": "6.0.3",
+    "referencing": "0.37.0"
+  },
+  "vendored": [
+    "rfc8785.py upstream implementation snapshot",
+    "OpenAPI 3.1 official 2022-10-07 meta-schema"
+  ],
+  "passed": 70,
+  "failed": 0,
+  "results": [
+    {
+      "name": "schema:error.schema.json",
+      "passed": true
+    },
+    {
+      "name": "schema:knowledge-query.schema.json",
+      "passed": true
+    },
+    {
+      "name": "schema:knowledge-response.schema.json",
+      "passed": true
+    },
+    {
+      "name": "schema:task-package.schema.json",
+      "passed": true
+    },
+    {
+      "name": "schema:task-receipt.schema.json",
+      "passed": true
+    },
+    {
+      "name": "schema:task-status.schema.json",
+      "passed": true
+    },
+    {
+      "name": "schema:withdraw-request.schema.json",
+      "passed": true
+    },
+    {
+      "name": "schema:withdraw-response.schema.json",
+      "passed": true
+    },
+    {
+      "name": "openapi:official-meta-schema",
+      "passed": true
+    },
+    {
+      "name": "openapi:all-references-resolve",
+      "passed": true
+    },
+    {
+      "name": "openapi:standalone-schema-parity",
+      "passed": true
+    },
+    {
+      "name": "openapi:all-inline-examples",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-valid.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-no-time.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-missing-attachments.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-unknown-event.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-repeat.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-same-version-conflict.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-v2.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-old-arrival.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-invalid-missing-project.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-invalid-reference.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:package-invalid-timezone.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:query-valid.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:query-invalid-limit.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:response-answered.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:response-no-evidence.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:response-degraded.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:response-invalid-citation.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:receipt-accepted.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:status-ready.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:status-partial-evidence.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:withdraw-request.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:withdraw-response.json",
+      "passed": true
+    },
+    {
+      "name": "fixture:error-conflict.json",
+      "passed": true
+    },
+    {
+      "name": "state:same-key-same-body",
+      "passed": true
+    },
+    {
+      "name": "state:same-version-new-key",
+      "passed": true
+    },
+    {
+      "name": "state:same-key-different-content",
+      "passed": true
+    },
+    {
+      "name": "state:same-version-different-content",
+      "passed": true
+    },
+    {
+      "name": "state:new-version",
+      "passed": true
+    },
+    {
+      "name": "state:old-arrives-late",
+      "passed": true
+    },
+    {
+      "name": "hash:fixed-vector",
+      "passed": true
+    },
+    {
+      "name": "hash:sha256-library-known-vector",
+      "passed": true
+    },
+    {
+      "name": "hash:invariants-and-jcs-bytes",
+      "passed": true
+    },
+    {
+      "name": "negative:duplicate-event-id",
+      "passed": true
+    },
+    {
+      "name": "negative:dangling-actor",
+      "passed": true
+    },
+    {
+      "name": "negative:dangling-object",
+      "passed": true
+    },
+    {
+      "name": "negative:unknown-top-level-field",
+      "passed": true
+    },
+    {
+      "name": "negative:unsupported-schema-version",
+      "passed": true
+    },
+    {
+      "name": "negative:unregistered-scene",
+      "passed": true
+    },
+    {
+      "name": "negative:contradictory-completeness",
+      "passed": true
+    },
+    {
+      "name": "negative:timezone-with-impossible-date",
+      "passed": true
+    },
+    {
+      "name": "negative:inverted-task-time",
+      "passed": true
+    },
+    {
+      "name": "negative:unsafe-file-path",
+      "passed": true
+    },
+    {
+      "name": "negative:unsafe-url",
+      "passed": true
+    },
+    {
+      "name": "negative:attachment-over-limit",
+      "passed": true
+    },
+    {
+      "name": "negative:oversized-nested-text",
+      "passed": true
+    },
+    {
+      "name": "negative:unsafe-jcs-integer",
+      "passed": true
+    },
+    {
+      "name": "negative:non-finite",
+      "passed": true
+    },
+    {
+      "name": "negative:invalid-extension-namespace",
+      "passed": true
+    },
+    {
+      "name": "negative:query-duplicate-output",
+      "passed": true
+    },
+    {
+      "name": "negative:answered-without-content",
+      "passed": true
+    },
+    {
+      "name": "negative:unsupported-claim-in-insufficient",
+      "passed": true
+    },
+    {
+      "name": "negative:citation-without-release",
+      "passed": true
+    },
+    {
+      "name": "state:package-id-conflict",
+      "passed": true
+    },
+    {
+      "name": "state:ready-order-and-withdrawal",
+      "passed": true
+    },
+    {
+      "name": "reference-only:trusted-scope-denial",
+      "passed": true
+    },
+    {
+      "name": "parser:duplicate-keys-and-nonfinite",
+      "passed": true
+    },
+    {
+      "name": "negative:nested-depth-limit",
+      "passed": true
+    },
+    {
+      "name": "contract:assets-security-and-idempotency-headers",
+      "passed": true
+    }
+  ],
+  "input_sha256": {
+    "decisions.md": "ff819dd3918c908f426102525a301448a9922181a86bd266db3fe97ec74e5a45",
+    "domain-model.md": "0bac64dbf62845c075c6e25c5b8eaaab0bb36a2c64772209ce08aa5f25b89f36",
+    "error.schema.json": "1cf6db245100d4b37e69b2412b2e9d4a3803647acc6594ea55ca446bb17c451b",
+    "event-types.json": "c7ae0b7d634826e61807121447dc4ca9f3bed53e2f5b8b6f014cc9c219e5a660",
+    "examples/error-conflict.json": "70e38557190d7618310cd0575f2453e877daf6c838ff2bfca64c69a96d2bbbb7",
+    "examples/hash-vectors.json": "76f15ed16d2d60d3555205596b8f08ee044d836d5be1b794844cd8c49c8c2422",
+    "examples/manifest.json": "bd305bc9bd525dcdcede0d885ba7c222c387570b277f30f6bf94beb2b219217c",
+    "examples/package-invalid-missing-project.json": "94237fd035c71f9b2974f9acf1f0e9d74adf521508348c6c08d73eab70357dfb",
+    "examples/package-invalid-reference.json": "ee94d43c3785509813341c02b1b4262df79953d518cceb5964cbb06d43533c1e",
+    "examples/package-invalid-timezone.json": "777796b7d8c7eb3f36f30c5a1db3e5f708ba5af49938e35e3edd6f539432698b",
+    "examples/package-missing-attachments.json": "d3fb7d22ff56a8c24369263d77344371cc7f7fc7271164419a12e98c5f5013a0",
+    "examples/package-no-time.json": "0a344b0f31859b540a062605f9c5f020b48faec86db78ebfb9cec69811507b16",
+    "examples/package-old-arrival.json": "84907f8bc3b9dd83ed42504f56f9d9e1bd59fd3394ded52b1a4df3558e1d9f65",
+    "examples/package-repeat.json": "84907f8bc3b9dd83ed42504f56f9d9e1bd59fd3394ded52b1a4df3558e1d9f65",
+    "examples/package-same-version-conflict.json": "cb29be2026b8f1c61c325b50c12ed021b02317e9b386e991059483459f3b552b",
+    "examples/package-unknown-event.json": "b923523ec57091dd43602431853af4989d92c0e2d8665b9888ebe779d304a168",
+    "examples/package-v2.json": "b68ebb1aa80c93755eeb6f4db2885ca381d3e8b2fd88b87ce79458ecca49672f",
+    "examples/package-valid.json": "84907f8bc3b9dd83ed42504f56f9d9e1bd59fd3394ded52b1a4df3558e1d9f65",
+    "examples/query-invalid-limit.json": "f2a11d5420a1e45a00f7abe5b7aa7d0064abfb750bab8928f4d0da6bafece3df",
+    "examples/query-valid.json": "2f7c4bd37b9d9cf44ae03aa6243f18e59f772c95ed8b474ff91e1de122e46f3c",
+    "examples/receipt-accepted.json": "12275fe6c5999285e900fdc4a8657f30c611f9cd722d9e11bb1e37d0cf536985",
+    "examples/response-answered.json": "cb0230e7c64e938b15515c755833944140dd6f7d12391459c44b5e12b7e8b887",
+    "examples/response-degraded.json": "af96c366159c254622415d03028b32495bde7f7b6b9d9ac376aeadbe6c08ab1f",
+    "examples/response-invalid-citation.json": "64848182602a05f14fed724308fdde36f31eb8b8886672504962ce33345c2b78",
+    "examples/response-no-evidence.json": "6964312c48004b34abf52c8090434fb7812d5b5c53b5daf18dfa4a51cbf45673",
+    "examples/state-scenarios.json": "63fba1341b54ea984d89544ae3d93b396dc99ddb6d93a9912af40b011943e33c",
+    "examples/status-partial-evidence.json": "e1a931b3df6815d70c8b9ab81c14bce81424fad18a30f611f3289027b1a63b9a",
+    "examples/status-ready.json": "be46d4f999a33fe248bccaa91a2ca465b5bcfe6dc7a68121451c1411f8035a60",
+    "examples/withdraw-request.json": "fbd12dd616d929ce6bdbe667bcbb5f53d133f8e149d67c3559b439475978139f",
+    "examples/withdraw-response.json": "07b29860adeac9d3a538c9cca3b6af70fc872117918ed6cb76bdb629a1326261",
+    "knowledge-query.schema.json": "1b18dcad3488487f1aed337e18370f15db7c1101dac6ca16cc5938616f2ea792",
+    "knowledge-response.schema.json": "17980d015daf4d0b0f383ecf2778f8b87279d8d17245c2a6eaf6014a391de129",
+    "limits.json": "70b21ee9d96c7f8a1959f232da0a8225a2dbc8f57ac0e7b1552f3b67f67a878e",
+    "openapi-integration.yaml": "5d7085021c2379f28cfe084691bd8fec5096c88fba28f5fd8a5ce9c1fd69a3d5",
+    "README.md": "fc0d5aeb6a713691434f698db4d8c14c49941d0549d265dfc788a70f7fe5ef96",
+    "requirements-contracts.txt": "9f1f8929ec98b0454ef3d94953ae5c1595abac27976da22549b270b72837366e",
+    "scene-codes.json": "c4fb7367a1844424cc2ad2262429683dbeb1cba888f2fd0dee6c8917599a5f21",
+    "semantics.md": "f184d635ce7a03a31e26984ece1ebdf512851b6ad2413987e3ccd26ac5fb8ae6",
+    "task-package.schema.json": "20b0406ce1a5d47ec3235504356ad1fa80cd571b143ee8b5a5116a3c481fb734",
+    "task-receipt.schema.json": "0b91b73dcc51e5909c8a89cd6f4658e07c88a9c8f63c6a4bcfada1dd23282771",
+    "task-status.schema.json": "25c112c8b0074b4296f060f1141d4f569857a0ade11aee2dc1080ccd67f7c1fa",
+    "tools/build_contracts.py": "64fffe1fdf30864cb401f1535256590a18cfe6f574f1c5138682a1fe82fe7844",
+    "tools/contract_rules.py": "0ba376d639719906601eb54671311b9c1b40c3de65c438027cc14c242982beae",
+    "tools/validate_contracts.py": "1094996306498418a9a9b9c1af798f4f3cd61da913c4627395309ac62c2423f9",
+    "tools/vendor/openapi-3.1-schema.json": "e7cb616a2a10849a166c4e4a93c62c56cfea02cc00eadf287e2fb875e7124098",
+    "tools/vendor/README.md": "c97742237495f8ad36aff2336f68295b44b6f6c8f1618cda55807308dbfa43d2",
+    "tools/vendor/rfc8785.py": "05f5e92d41688bcb9d6f228566035e84480bf11e4cd86d4b812bbb5acefad86d",
+    "withdraw-request.schema.json": "9ed109394411bca7da0d5df664366d222eee824a319317203cf037ed89860604",
+    "withdraw-response.schema.json": "1a8ead9e5c37c221485ec18316aeb61d2ddc5f3c331d955308e51bb323a4b48b"
+  }
+}

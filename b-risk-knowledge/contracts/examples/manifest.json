@@ -1,0 +1,146 @@
+[
+  {
+    "file": "package-valid.json",
+    "schema": "task-package.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "package-no-time.json",
+    "schema": "task-package.schema.json",
+    "valid": true,
+    "expected_warnings": [
+      "missing_event_time"
+    ]
+  },
+  {
+    "file": "package-missing-attachments.json",
+    "schema": "task-package.schema.json",
+    "valid": true,
+    "expected_warnings": [
+      "missing_attachments"
+    ]
+  },
+  {
+    "file": "package-unknown-event.json",
+    "schema": "task-package.schema.json",
+    "valid": true,
+    "expected_warnings": [
+      "unknown_event_type"
+    ]
+  },
+  {
+    "file": "package-repeat.json",
+    "schema": "task-package.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "package-same-version-conflict.json",
+    "schema": "task-package.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "package-v2.json",
+    "schema": "task-package.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "package-old-arrival.json",
+    "schema": "task-package.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "package-invalid-missing-project.json",
+    "schema": "task-package.schema.json",
+    "valid": false,
+    "expected_warnings": []
+  },
+  {
+    "file": "package-invalid-reference.json",
+    "schema": "task-package.schema.json",
+    "valid": false,
+    "expected_warnings": []
+  },
+  {
+    "file": "package-invalid-timezone.json",
+    "schema": "task-package.schema.json",
+    "valid": false,
+    "expected_warnings": []
+  },
+  {
+    "file": "query-valid.json",
+    "schema": "knowledge-query.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "query-invalid-limit.json",
+    "schema": "knowledge-query.schema.json",
+    "valid": false,
+    "expected_warnings": []
+  },
+  {
+    "file": "response-answered.json",
+    "schema": "knowledge-response.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "response-no-evidence.json",
+    "schema": "knowledge-response.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "response-degraded.json",
+    "schema": "knowledge-response.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "response-invalid-citation.json",
+    "schema": "knowledge-response.schema.json",
+    "valid": false,
+    "expected_warnings": []
+  },
+  {
+    "file": "receipt-accepted.json",
+    "schema": "task-receipt.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "status-ready.json",
+    "schema": "task-status.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "status-partial-evidence.json",
+    "schema": "task-status.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "withdraw-request.json",
+    "schema": "withdraw-request.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "withdraw-response.json",
+    "schema": "withdraw-response.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  },
+  {
+    "file": "error-conflict.json",
+    "schema": "error.schema.json",
+    "valid": true,
+    "expected_warnings": []
+  }
+]

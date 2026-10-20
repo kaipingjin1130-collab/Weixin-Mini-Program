@@ -1,0 +1,6 @@
+{
+  "code": "PACKAGE_VERSION_CONFLICT",
+  "message": "同版本内容不同，请提交更高版本",
+  "details": [],
+  "request_id": "req-demo-001"
+}

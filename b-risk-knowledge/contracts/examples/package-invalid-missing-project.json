@@ -1,0 +1,70 @@
+{
+  "schema_version": "1.0",
+  "producer": "a-demo",
+  "package_id": "pkg-demo-1",
+  "task_id": "task-demo",
+  "package_version": 1,
+  "exported_at": "2026-10-20T10:00:00+08:00",
+  "org_id": "org-demo",
+  "scene_code": "lifting_supervision",
+  "task": {
+    "name": "演示吊装旁站任务（模拟）",
+    "status": "completed",
+    "started_at": "2026-10-19T08:00:00+08:00",
+    "completed_at": "2026-10-19T10:00:00+08:00"
+  },
+  "participants": [
+    {
+      "actor_id": "user-demo",
+      "role": "supervisor"
+    }
+  ],
+  "events": [
+    {
+      "event_id": "event-start",
+      "event_type": "task_started",
+      "occurred_at": "2026-10-19T08:00:00+08:00",
+      "actor_id": "user-demo",
+      "actor_role": "supervisor",
+      "related_object_id": "task-demo",
+      "payload": {},
+      "evidence_refs": []
+    },
+    {
+      "event_id": "event-end",
+      "event_type": "task_completed",
+      "occurred_at": "2026-10-19T10:00:00+08:00",
+      "actor_id": "user-demo",
+      "actor_role": "supervisor",
+      "related_object_id": "task-demo",
+      "payload": {
+        "note": "仅供合同测试，无实际工程结论"
+      },
+      "evidence_refs": [
+        "attachment-demo"
+      ]
+    }
+  ],
+  "issues": [],
+  "attachments": [
+    {
+      "attachment_id": "attachment-demo",
+      "sha256": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+      "mime_type": "image/jpeg",
+      "size": 1024,
+      "evidence_type": "site_photo",
+      "access_ref": {
+        "connector_id": "demo-store",
+        "object_id": "demo-object"
+      }
+    }
+  ],
+  "data_completeness": {
+    "participants": "complete",
+    "events": "complete",
+    "issues": "not_applicable",
+    "attachments": "complete",
+    "event_times": "complete"
+  },
+  "is_demo": true
+}

@@ -1,0 +1,48 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "task-receipt",
+  "x-contract-status": "proposed",
+  "type": "object",
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 36,
+      "format": "uuid"
+    },
+    "job_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 36,
+      "format": "uuid"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "received",
+        "validating",
+        "processing",
+        "ready",
+        "failed",
+        "withdrawn"
+      ]
+    },
+    "status_url": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 200,
+      "pattern": "^/integration/v1/task-packages/[0-9a-f-]{36}$"
+    },
+    "replayed": {
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "receipt_id",
+    "job_id",
+    "status",
+    "status_url",
+    "replayed"
+  ],
+  "additionalProperties": false
+}

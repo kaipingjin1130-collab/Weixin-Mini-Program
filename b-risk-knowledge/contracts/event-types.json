@@ -1,0 +1,35 @@
+{
+  "version": "1.0",
+  "status": "proposed",
+  "unknown_policy": "retain_and_warn",
+  "items": [
+    {
+      "code": "task_started",
+      "label": "任务开始"
+    },
+    {
+      "code": "inspection_recorded",
+      "label": "检查记录"
+    },
+    {
+      "code": "issue_created",
+      "label": "发现问题"
+    },
+    {
+      "code": "rectification_submitted",
+      "label": "提交整改"
+    },
+    {
+      "code": "review_rejected",
+      "label": "复核退回"
+    },
+    {
+      "code": "review_accepted",
+      "label": "复核通过"
+    },
+    {
+      "code": "task_completed",
+      "label": "任务完成"
+    }
+  ]
+}

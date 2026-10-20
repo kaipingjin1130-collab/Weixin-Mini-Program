@@ -1,0 +1,16 @@
+{
+  "status": "proposed",
+  "profile": "1.0-default",
+  "request_bytes": 5242880,
+  "attachment_bytes": 104857600,
+  "attachments_per_package": 200,
+  "total_attachment_bytes": 1073741824,
+  "events_per_package": 10000,
+  "issues_per_package": 2000,
+  "query_characters": 4000,
+  "query_limit": 20,
+  "text_characters": 20000,
+  "json_depth": 20,
+  "json_nodes": 300000,
+  "idempotency_key_characters": 128
+}

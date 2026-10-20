@@ -1,0 +1,148 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "task-status",
+  "x-contract-status": "proposed",
+  "type": "object",
+  "properties": {
+    "receipt_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 36,
+      "format": "uuid"
+    },
+    "job_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 36,
+      "format": "uuid"
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "received",
+        "validating",
+        "processing",
+        "ready",
+        "failed",
+        "withdrawn"
+      ]
+    },
+    "is_current": {
+      "type": "boolean"
+    },
+    "validation_errors": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z][a-z0-9_]{0,63}$"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 512
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "code",
+          "path",
+          "message"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 100
+    },
+    "missing_fields": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1,
+        "maxLength": 512
+      },
+      "minItems": 0,
+      "maxItems": 100,
+      "uniqueItems": true
+    },
+    "warnings": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 64,
+            "pattern": "^[a-z][a-z0-9_]{0,63}$"
+          },
+          "path": {
+            "type": "string",
+            "minLength": 0,
+            "maxLength": 512
+          },
+          "message": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 2000
+          }
+        },
+        "required": [
+          "code",
+          "path",
+          "message"
+        ],
+        "additionalProperties": false
+      },
+      "minItems": 0,
+      "maxItems": 100
+    },
+    "retrospective_id": {
+      "anyOf": [
+        {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 36,
+          "format": "uuid"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "capabilities": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "enum": [
+          "historical_summary",
+          "partial_timeline",
+          "complete_timeline"
+        ]
+      },
+      "minItems": 0,
+      "maxItems": 3,
+      "uniqueItems": true
+    }
+  },
+  "required": [
+    "receipt_id",
+    "job_id",
+    "status",
+    "is_current",
+    "validation_errors",
+    "missing_fields",
+    "warnings",
+    "retrospective_id",
+    "capabilities"
+  ],
+  "additionalProperties": false
+}

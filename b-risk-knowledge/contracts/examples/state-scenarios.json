@@ -1,0 +1,106 @@
+[
+  {
+    "name": "same-key-same-body",
+    "steps": [
+      {
+        "file": "package-valid.json",
+        "key": "k1",
+        "expected_status": 202,
+        "current": 1
+      },
+      {
+        "file": "package-repeat.json",
+        "key": "k1",
+        "expected_status": 200,
+        "current": 1
+      }
+    ]
+  },
+  {
+    "name": "same-version-new-key",
+    "steps": [
+      {
+        "file": "package-valid.json",
+        "key": "k1",
+        "expected_status": 202,
+        "current": 1
+      },
+      {
+        "file": "package-repeat.json",
+        "key": "k2",
+        "expected_status": 200,
+        "current": 1
+      }
+    ]
+  },
+  {
+    "name": "same-key-different-content",
+    "steps": [
+      {
+        "file": "package-valid.json",
+        "key": "k1",
+        "expected_status": 202,
+        "current": 1
+      },
+      {
+        "file": "package-same-version-conflict.json",
+        "key": "k1",
+        "expected_status": 409,
+        "expected_code": "IDEMPOTENCY_CONFLICT",
+        "current": 1
+      }
+    ]
+  },
+  {
+    "name": "same-version-different-content",
+    "steps": [
+      {
+        "file": "package-valid.json",
+        "key": "k1",
+        "expected_status": 202,
+        "current": 1
+      },
+      {
+        "file": "package-same-version-conflict.json",
+        "key": "k2",
+        "expected_status": 409,
+        "expected_code": "PACKAGE_VERSION_CONFLICT",
+        "current": 1
+      }
+    ]
+  },
+  {
+    "name": "new-version",
+    "steps": [
+      {
+        "file": "package-valid.json",
+        "key": "k1",
+        "expected_status": 202,
+        "current": 1
+      },
+      {
+        "file": "package-v2.json",
+        "key": "k2",
+        "expected_status": 202,
+        "current": 2
+      }
+    ]
+  },
+  {
+    "name": "old-arrives-late",
+    "steps": [
+      {
+        "file": "package-v2.json",
+        "key": "k2",
+        "expected_status": 202,
+        "current": 2
+      },
+      {
+        "file": "package-old-arrival.json",
+        "key": "k1",
+        "expected_status": 202,
+        "current": 2
+      }
+    ]
+  }
+]

@@ -1,0 +1,9 @@
+{
+  "algorithm": "sha256-jcs-task-package-v1",
+  "vectors": [
+    {
+      "file": "package-valid.json",
+      "sha256": "fda2e8177f638b61bc5612fe253656474be0d130137e60a46e932f93197102cc"
+    }
+  ]
+}
