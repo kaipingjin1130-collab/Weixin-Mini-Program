@@ -32,6 +32,8 @@ def main():
                 db.add(RoleBinding(user_id=user.id, role=role, scope_type="project", scope_id=project))
     from .modules.ingestion.fixtures import seed_assets
     seed_assets()
+    from .modules.knowledge.quality import backfill
+    backfill()
     print("B01/B02 schemas and explicit mock identities ready. Existing roles unchanged.")
 
 

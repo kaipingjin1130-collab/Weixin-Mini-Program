@@ -245,3 +245,5 @@ def audit_events(actor: Actor = Depends(current_actor), limit: int = Query(20, g
 
 from .modules.ingestion.api import router as ingestion_router
 app.include_router(ingestion_router)
+from .modules.knowledge.api import router as knowledge_router
+app.include_router(knowledge_router)

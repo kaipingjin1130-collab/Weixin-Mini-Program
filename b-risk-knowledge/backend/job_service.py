@@ -20,6 +20,9 @@ def enqueue(db, run_id):
     if run.kind == 'source_import':
         from .modules.ingestion.tasks import source_import
         task, lock = source_import, f"source:{run.payload['source_id']}"
+    elif run.kind == 'knowledge_generation':
+        from .modules.knowledge.tasks import generate
+        task = generate
     # The library INSERT and the SQLAlchemy ORM flush share one physical transaction.
     connection = db.connection().connection.driver_connection
     return task.configure(connection=connection, lock=lock).defer(run_id=run_id)

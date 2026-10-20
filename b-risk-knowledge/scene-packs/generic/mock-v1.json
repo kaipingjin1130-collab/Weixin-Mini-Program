@@ -1,0 +1,11 @@
+{
+  "template_version": "mock-v1",
+  "schema_version": "knowledge-card-v1",
+  "model_ref": "local-structured-mock-v1",
+  "is_mock": true,
+  "allowed_types": [
+    "case_card",
+    "checkpoint_card"
+  ],
+  "policy": "Source facts and suggestions are distinct. Standards are pending verification or not used."
+}

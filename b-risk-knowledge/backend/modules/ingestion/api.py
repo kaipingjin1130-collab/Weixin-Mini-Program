@@ -4,7 +4,7 @@ from fastapi import APIRouter, Depends, Request, Query
 from fastapi.responses import JSONResponse
 from fastapi.encoders import jsonable_encoder
 from pydantic import BaseModel, ConfigDict, Field
-from sqlalchemy import select, func
+from sqlalchemy import select, func, case
 from sqlalchemy.exc import IntegrityError
 from ...auth import Actor, current_actor, authorize, Problem
 from ...db import Session
@@ -146,6 +146,7 @@ def import_detail(ident: str, actor: Actor = Depends(current_actor), limit: int 
 
 @router.get('/records')
 def records(actor: Actor = Depends(current_actor), project_id: str | None = None, source_id: str | None = None,
+            document_id: str | None = None,
             record_kind: Literal['detail', 'review', 'summary'] | None = None,
             quality_status: Literal['valid', 'needs_review'] | None = None, from_date: date | None = None,
             to_date: date | None = None, limit: int = Query(20, ge=1, le=100), cursor: str | None = None):
@@ -157,6 +158,12 @@ def records(actor: Actor = Depends(current_actor), project_id: str | None = None
         if source_id:
             source_in(db, source_id, actor)
             query = query.where(SourceRecord.source_id == source_id)
+        if document_id:
+            doc = db.get(SourceDocument, document_id)
+            if not doc:
+                raise Problem(404, 'NOT_FOUND', '报告不存在。')
+            source_in(db, doc.source_id, actor)
+            query = query.where(SourceRecord.document_id == document_id)
         for column, value in [(SourceRecord.record_kind, record_kind), (SourceRecord.quality_status, quality_status)]:
             if value:
                 query = query.where(column == value)
@@ -188,6 +195,44 @@ def records(actor: Actor = Depends(current_actor), project_id: str | None = None
         return {'items': output, 'next_cursor': next_cursor, 'totals_by_kind': totals,
                 'detail_groups_after_confirmed_links': totals.get('detail', 0) - merges,
                 'counting_note': '原始记录按明细/复查/汇总分别统计，不能相加当独立隐患数。'}
+
+
+@router.get('/reports')
+def reports(actor: Actor = Depends(current_actor), project_id: str | None = None, source_id: str | None = None,
+            record_kind: Literal['detail', 'review', 'summary'] | None = None,
+            quality_status: Literal['valid', 'needs_review'] | None = None, from_date: date | None = None,
+            to_date: date | None = None, limit: int = Query(20, ge=1, le=100), after_id: str = ''):
+    with Session() as db:
+        filters = [SourceRecord.project_id.in_(actor.projects())]
+        if project_id:
+            authorize(actor, 'read', project_id)
+            filters.append(SourceRecord.project_id == project_id)
+        if source_id:
+            source_in(db, source_id, actor)
+            filters.append(SourceRecord.source_id == source_id)
+        if record_kind:
+            filters.append(SourceRecord.record_kind == record_kind)
+        if quality_status:
+            filters.append(SourceRecord.quality_status == quality_status)
+        if from_date:
+            filters.append(SourceRecord.occurred_on >= from_date.isoformat())
+        if to_date:
+            filters.append(SourceRecord.occurred_on <= to_date.isoformat())
+        counts = select(SourceRecord.document_id.label('document_id'), func.count().label('count'),
+                        func.sum(case((SourceRecord.record_kind == 'detail', 1), else_=0)).label('details'),
+                        func.sum(case((SourceRecord.record_kind == 'review', 1), else_=0)).label('reviews'),
+                        func.sum(case((SourceRecord.record_kind == 'summary', 1), else_=0)).label('summaries')).where(*filters).group_by(SourceRecord.document_id).subquery()
+        rows = db.execute(select(SourceDocument, counts.c.count, counts.c.details, counts.c.reviews, counts.c.summaries)
+                          .join(counts, counts.c.document_id == SourceDocument.id).where(SourceDocument.id > after_id)
+                          .order_by(SourceDocument.id).limit(limit + 1)).all()
+        more = len(rows) > limit
+        rows = rows[:limit]
+        return {'items': [{'id': doc.id, 'report_id': doc.external_report_id, 'title': doc.title,
+                           'source_id': doc.source_id, 'source_name': db.get(DataSource, doc.source_id).name,
+                           'project_id': db.get(DataSource, doc.source_id).project_id, 'count': count,
+                           'counts': {'detail': details, 'review': reviews, 'summary': summaries}, 'is_mock': True}
+                          for doc, count, details, reviews, summaries in rows],
+                'next_cursor': rows[-1][0].id if more else None}
 
 
 def evidence_dto(db, evidence, actor):

@@ -130,6 +130,8 @@ def apply_row(db, source, batch, n, raw, governed, locator):
                                                   'governance': governed, 'is_mock': True}, batch_id=batch.id)
         db.add(version)
         db.flush()
+        from ..knowledge.quality import ensure_issues
+        ensure_issues(db, version)
         db.add(EvidenceItem(document_id=doc.id, record_version_id=version.id, locator=locator,
                             evidence_type='source_row', asset_id=batch.input_asset_id, relation_confidence='anchored'))
         for image in effective['images']:

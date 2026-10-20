@@ -1,0 +1,173 @@
+{
+  "$defs": {
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 10,
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "source_kind": {
+          "default": "source_effective",
+          "enum": [
+            "source_effective",
+            "human_annotation"
+          ],
+          "title": "Source Kind",
+          "type": "string"
+        }
+      },
+      "required": [
+        "text",
+        "evidence_ids"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "Standard": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "clause": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Clause"
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Edition"
+        },
+        "origin": {
+          "enum": [
+            "source_unverified",
+            "system_supplement"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "verification_status": {
+          "default": "pending_verification",
+          "enum": [
+            "pending_verification",
+            "not_used"
+          ],
+          "title": "Verification Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "origin"
+      ],
+      "title": "Standard",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "title": {
+      "maxLength": 200,
+      "minLength": 1,
+      "title": "Title",
+      "type": "string"
+    },
+    "type": {
+      "enum": [
+        "case_card",
+        "checkpoint_card"
+      ],
+      "title": "Type",
+      "type": "string"
+    },
+    "facts": {
+      "items": {
+        "$ref": "#/$defs/Claim"
+      },
+      "maxItems": 30,
+      "minItems": 1,
+      "title": "Facts",
+      "type": "array"
+    },
+    "suggestions": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 30,
+      "title": "Suggestions",
+      "type": "array"
+    },
+    "standards": {
+      "items": {
+        "$ref": "#/$defs/Standard"
+      },
+      "maxItems": 20,
+      "title": "Standards",
+      "type": "array"
+    },
+    "project_name": {
+      "maxLength": 200,
+      "title": "Project Name",
+      "type": "string"
+    },
+    "occurred_on": {
+      "anyOf": [
+        {
+          "maxLength": 10,
+          "type": "string"
+        },
+        {
+          "type": "null"
+        }
+      ],
+      "default": null,
+      "title": "Occurred On"
+    },
+    "is_mock": {
+      "const": true,
+      "default": true,
+      "title": "Is Mock",
+      "type": "boolean"
+    }
+  },
+  "required": [
+    "title",
+    "type",
+    "facts",
+    "project_name"
+  ],
+  "title": "Card",
+  "type": "object"
+}
