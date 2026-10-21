@@ -88,6 +88,8 @@ def current_item(db, item_id, actor, action='read', lock=False):
     if not item:
         raise Problem(404, 'NOT_FOUND', '知识卡不存在。')
     authorize(actor, action, item.project_id)
+    if item.withdrawn_at:
+        raise Problem(410, 'KNOWLEDGE_WITHDRAWN', '此知识已撤回。')
     revision = db.scalar(select(KnowledgeRevision).where(KnowledgeRevision.item_id == item.id,
                                                         KnowledgeRevision.version == item.current_revision))
     source_context(db, item.record_version_id, actor)

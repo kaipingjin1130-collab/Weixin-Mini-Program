@@ -1,6 +1,6 @@
-# 工程风险知识与复盘培训中心｜B01—B03
+# 工程风险知识与复盘培训中心｜B01—B04
 
-本地基础工程、B02模拟数据接入及B03模拟知识加工/审核已实现。B00合同保留在 `contracts/`；A身份、真实数据、模型和任务包尚未联调。原始报告和旧治理工作台没有改动。
+本地基础工程、B02模拟数据接入及B03模拟知识加工/审核及B04发布检索已实现。B00合同保留在 `contracts/`；A身份、真实数据、模型和任务包尚未联调。原始报告和旧治理工作台没有改动。
 
 B02入口：<http://127.0.0.1:5181/sources>，支持模拟CSV、Excel和治理导出接入、增量版本、证据与候选关联。已准备4个来源、10条模拟记录供试用。[操作步骤与架构](reports/B02-design-and-use.md)、[12项测试及浏览器验收](reports/B02-validation.md)。
 
@@ -29,7 +29,7 @@ cd ..
 powershell -NoProfile -ExecutionPolicy Bypass -File tools/start.ps1
 ```
 
-启动脚本负责生成本地配置、创建带 B01 所有权标签的数据库容器、等待就绪、迁移和初始化。只管理 `risk-b01-postgres` / `risk-b01-pgdata`；数据库仅绑定 `127.0.0.1:55439`，不连接旧系统数据库。首次无镜像需下载 `postgres:15`。
+启动脚本负责生成本地配置、创建带 B01 所有权标签的数据库容器、等待就绪、迁移和初始化。只管理 `risk-b01-postgres` / `risk-b01-pgdata`；数据库仅绑定 `127.0.0.1:55439`，不连接旧系统数据库。首次无镜像需下载 `pgvector/pgvector:0.8.7-pg15-trixie`，沿用原PostgreSQL 15数据卷；启动器仅升级本项目标签与卷均匹配的专用容器。
 
 开发模式仅绑定本机，模拟身份没有密码。`B_ENV=production` 或非 mock 模式会拒绝启动；接入真实身份前不能把它部署为多人在线正式系统。
 
@@ -54,7 +54,7 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/start.ps1
 
 提交的幂等键按操作者唯一，同键不同内容返回409；重试还要求当前 `row_version`。队列插入使用SQLAlchemy同一条psycopg物理连接，因此两者共同提交或回滚。worker心跳每2秒更新，10秒失联视为停滞；重启立即尝试恢复，常驻恢复任务每分钟检查。结果文件按任务固定路径原子写入，结果对象按任务唯一，重复执行不会多产出结果对象。队列采用至少一次执行语义，未来涉及外部副作用的任务仍须各自实现幂等。
 
-新增任务须注册明确的任务类型、输入Schema、权限动作和结果适配，不接受任意函数名/文件路径。当前类型为 `demo_check`、`source_import`、`knowledge_generation`；生成当前为显式模拟，不包含OCR或真实模型风险判断。
+新增任务须注册明确的任务类型、输入Schema、权限动作和结果适配，不接受任意函数名/文件路径。当前类型为 `demo_check`、`source_import`、`knowledge_generation`、`release_build`；生成当前为显式模拟，不包含OCR或真实模型风险判断。
 
 ## API（前缀 `/api/v1`）
 
@@ -83,3 +83,7 @@ npm run build
 实际证据见 [B01验证报告](reports/B01-validation.md)、[B02验证报告](reports/B02-validation.md)和[B03验证报告](reports/B03-validation.md)。锁定后端依赖在 `requirements.txt`，前端在 `package-lock.json`。测试工具有一项 Starlette/httpx 弃用提醒，当前测试通过；不为消除提醒额外升级未验证的测试依赖。
 
 下一步可执行B04，基于已审核修订和固定证据实现发布与检索。真实数据接入仍需先核对表头、身份和图片锚点，不能将本轮模拟验证当作真实数据验收。
+
+## B04发布检索
+
+入口：[已发布知识](http://127.0.0.1:5181/knowledge/library)、[发布管理](http://127.0.0.1:5181/releases)、[检索](http://127.0.0.1:5181/search)。已有一张通过原审核流程的模拟卡片已启用供试用。详见[设计、接口与AI交接](reports/B04-design-and-use.md)、[本地验证](reports/B04-validation.md)。当前使用真实pgvector存储和索引、模拟特征向量及事实摘录；没有接入真实LLM或训练语义模型。

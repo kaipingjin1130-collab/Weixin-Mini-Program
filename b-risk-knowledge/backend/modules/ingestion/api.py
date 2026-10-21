@@ -239,6 +239,9 @@ def evidence_dto(db, evidence, actor):
     version = db.get(SourceRecordVersion, evidence.record_version_id)
     row = db.get(SourceRecord, version.record_id)
     authorize(actor, 'read', row.project_id)
+    origin = db.get(FileAsset, version.provenance.get('input_asset_id'))
+    if not origin or origin.availability != 'available' or origin.project_id != row.project_id:
+        raise Problem(410, 'SOURCE_WITHDRAWN', '来源已撤回或不可用。')
     asset = db.get(FileAsset, evidence.asset_id) if evidence.asset_id else None
     allowed = asset and asset.project_id == row.project_id and asset.availability == 'available'
     return {'id': evidence.id, 'record_version_id': version.id, 'type': evidence.evidence_type,

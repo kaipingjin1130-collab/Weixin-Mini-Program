@@ -23,6 +23,9 @@ def enqueue(db, run_id):
     elif run.kind == 'knowledge_generation':
         from .modules.knowledge.tasks import generate
         task = generate
+    elif run.kind == 'release_build':
+        from .modules.retrieval.tasks import build_release
+        task = build_release
     # The library INSERT and the SQLAlchemy ORM flush share one physical transaction.
     connection = db.connection().connection.driver_connection
     return task.configure(connection=connection, lock=lock).defer(run_id=run_id)
@@ -71,7 +74,7 @@ def retry_run(actor, run_id, version, key, request_id):
         run = db.scalar(select(ProcessingRun).where(ProcessingRun.id == run_id).with_for_update())
         if not run:
             raise Problem(404, "NOT_FOUND", "任务不存在。")
-        authorize(actor, "run", run.project_id)
+        authorize(actor, 'audit' if run.kind == 'release_build' else 'run', run.project_id)
         prior = db.scalar(select(RetryRequest).where(RetryRequest.actor_id == actor.id,
                                                      RetryRequest.idempotency_key == key))
         if prior:

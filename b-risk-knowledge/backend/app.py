@@ -37,7 +37,7 @@ async def lifespan(app):
     queue_app.close()
 
 
-app = FastAPI(title="工程风险知识中心 B01", version="0.1.0", lifespan=lifespan)
+app = FastAPI(title="工程风险知识中心 B04", version="0.4.0", lifespan=lifespan)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "testserver"])
 
 
@@ -245,5 +245,8 @@ def audit_events(actor: Actor = Depends(current_actor), limit: int = Query(20, g
 
 from .modules.ingestion.api import router as ingestion_router
 app.include_router(ingestion_router)
+from .modules.retrieval.api import router as retrieval_router, integration_router
+app.include_router(retrieval_router)
+app.include_router(integration_router)
 from .modules.knowledge.api import router as knowledge_router
 app.include_router(knowledge_router)

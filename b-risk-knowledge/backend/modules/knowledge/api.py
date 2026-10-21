@@ -26,12 +26,18 @@ def curate_projects(actor):
     return projects
 
 
-def item_dto(item, revision):
+def item_dto(item, revision, db=None):
+    published = False
+    if db is not None:
+        from ..retrieval.models import KnowledgeRelease, ReleaseEntry
+        published = bool(db.scalar(select(ReleaseEntry.id).join(KnowledgeRelease).where(
+            ReleaseEntry.knowledge_revision_id == revision.id, ReleaseEntry.state == 'ready',
+            KnowledgeRelease.state == 'active', KnowledgeRelease.active_scope == item.project_id).limit(1)))
     return {'id': item.id, 'title': item.title, 'type': item.type, 'project_id': item.project_id,
             'record_version_id': item.record_version_id, 'revision_id': revision.id, 'version': revision.version,
             'state': revision.state, 'row_version': item.row_version, 'model_ref': revision.model_ref,
             'schema_version': revision.schema_version, 'template_version': revision.template_version,
-            'created_at': item.created_at, 'is_mock': True, 'published': False}
+            'created_at': item.created_at, 'is_mock': True, 'published': published}
 
 
 @router.get('/quality/issues')
@@ -161,7 +167,7 @@ def knowledge(actor: Actor = Depends(current_actor), state: str | None = None, p
         for item in rows:
             try:
                 item, revision = current_item(db, item.id, actor)
-                output.append(item_dto(item, revision))
+                output.append(item_dto(item, revision, db))
             except Problem as exc:
                 if exc.status not in {403, 410}:
                     raise
@@ -176,7 +182,7 @@ def knowledge_detail(ident: str, actor: Actor = Depends(current_actor)):
         revisions = db.scalars(select(KnowledgeRevision).where(KnowledgeRevision.item_id == item.id).order_by(KnowledgeRevision.version.desc())).all()
         actions = db.scalars(select(ReviewAction).where(ReviewAction.object_id == item.id).order_by(ReviewAction.created_at)).all()
         annotations = db.scalars(select(RecordAnnotation).where(RecordAnnotation.record_version_id == source.id)).all()
-        return {**item_dto(item, revision), 'content': revision.content,
+        return {**item_dto(item, revision, db), 'content': revision.content,
                 'source': {'record_id': row.id, 'version': source.version, 'current_version': row.current_version,
                            'effective_fields': source.effective_fields, 'raw_fields': source.raw_fields, 'provenance': source.provenance,
                            'evidence': [{'id': e.id, 'type': e.evidence_type, 'locator': e.locator, 'relation_confidence': e.relation_confidence} for e in evidence],
@@ -210,7 +216,7 @@ def reviews(actor: Actor = Depends(current_actor), state: str = 'pending_review'
         for item in rows:
             try:
                 current, revision = current_item(db, item.id, actor)
-                output.append({**item_dto(current, revision), 'review_id': revision.id})
+                output.append({**item_dto(current, revision, db), 'review_id': revision.id})
             except Problem as exc:
                 if exc.status not in {403, 410}:
                     raise

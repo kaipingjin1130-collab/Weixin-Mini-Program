@@ -11,7 +11,7 @@ type Issue = {id:string;description:string;project_id:string;record_id:string;fi
 type Option = {id:string;record_version_id:string;description:string;project_id:string;current_version:number;record_kind:string};
 type Job = {job_id:string;status:string;progress:number;row_version:number;counts:Record<string,number>;total:number;error:string|null;items:{record_version_id:string;outcome:string;item_id:string|null;error:string|null}[]};
 type Page<T> = {items:T[];next_cursor:string|null};
-const stateLabel:Record<string,string>={draft:'草稿',pending_review:'待审核',changes_requested:'已退回',approved:'已审核 · 未发布',open:'待核查',resolved:'已处理',ignored:'暂不处理',submitted:'提交审核',edited:'人工修订',created:'新增',skipped:'复用已有',failed:'失败'};
+const stateLabel:Record<string,string>={draft:'草稿',pending_review:'待审核',changes_requested:'已退回',approved:'已审核',open:'待核查',resolved:'已处理',ignored:'暂不处理',submitted:'提交审核',edited:'人工修订',created:'新增',skipped:'复用已有',failed:'失败'};
 const ruleLabel:Record<string,string>={INVALID_DATE:'日期异常',INVALID_IMAGES:'图片字段异常',FALLBACK_ID:'来源身份待核查',MISSING_DESCRIPTION:'缺少描述',UNVERIFIED_STANDARD:'依据待核验'};
 const typeLabel:Record<string,string>={case_card:'案例卡',checkpoint_card:'检查要点卡'};
 function differences(before:Card,after:Card){
@@ -54,10 +54,10 @@ export function Knowledge({api,path,navigate,projects,identity}:{api:Api;path:st
   const pages=<div className="panel-footer"><span>仅显示当前身份可访问范围</span><div className="pagination"><button disabled={!history.length} onClick={()=>{setCursor(history.at(-1)||'');setHistory(history.slice(0,-1));}}>上一页</button><button disabled={!next} onClick={()=>{setHistory([...history,cursor]);setCursor(next||'');}}>下一页</button></div></div>;
   const canEditDetail=detail&&projects.find(p=>p.id===detail.project_id)?.can_run;
   const canReviewDetail=detail&&projects.find(p=>p.id===detail.project_id)?.roles.some(r=>['admin','reviewer'].includes(r));
-  const transition=(actionName:string)=>action(async()=>{if(!detail)return;const url=actionName==='submit'?`/knowledge/${detail.id}/submit-review`:`/reviews/${detail.revision_id}/${actionName}`;await api(url,{method:'POST',body:JSON.stringify({row_version:detail.row_version,revision_id:detail.revision_id,reason,evidence_checked:checked})});setNotice(actionName==='approve'?'此版本已审核，尚未发布。':'状态已更新，审核意见已保留。');setRefresh(v=>v+1);setChecked(false);});
+  const transition=(actionName:string)=>action(async()=>{if(!detail)return;const url=actionName==='submit'?`/knowledge/${detail.id}/submit-review`:`/reviews/${detail.revision_id}/${actionName}`;await api(url,{method:'POST',body:JSON.stringify({row_version:detail.row_version,revision_id:detail.revision_id,reason,evidence_checked:checked})});setNotice(actionName==='approve'?'此版本已审核，请到发布管理构建并启用。':'状态已更新，审核意见已保留。');setRefresh(v=>v+1);setChecked(false);});
 
   return <div className="knowledge-module">
-    <div className="ingest-banner"><FileCheck2 size={19}/><div><strong>质量核查与知识加工 · 模拟模式</strong><span>已有字段自动带入。来源事实、人工补充、模拟建议和待核验依据分别标记；审核通过后仍未发布。</span></div></div>
+    <div className="ingest-banner"><FileCheck2 size={19}/><div><strong>质量核查与知识加工 · 模拟模式</strong><span>已有字段自动带入。来源事实、人工补充、模拟建议和待核验依据分别标记；审核通过后可到发布管理构建并启用。</span></div></div>
     {error&&<div className="feedback error" role="alert"><AlertCircle size={18}/>{error}<button onClick={()=>setRefresh(v=>v+1)}>重新加载</button></div>}{notice&&<div className="feedback success" role="status"><CheckCircle2 size={18}/>{notice}</div>}
     <div className="ingest-toolbar"><div className="ingest-tabs"><button className={quality?'selected':''} onClick={()=>navigate('/quality')}>质量核查</button><button className={!quality&&!reviews?'selected':''} onClick={()=>navigate('/knowledge/drafts')}>知识候选</button><button className={reviews?'selected':''} onClick={()=>navigate('/reviews')}>审核待办</button></div><button className="button ghost" disabled={loading} onClick={()=>setRefresh(v=>v+1)}><RefreshCw size={15}/>刷新</button></div>
     {loading?<div className="loading">正在读取工作区…</div>:quality?<>

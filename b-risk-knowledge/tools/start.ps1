@@ -13,8 +13,9 @@ try {
     docker info --format '{{.ServerVersion}}' 2>$null | Out-Null
     if ($LASTEXITCODE -ne 0) { throw 'Start Docker Desktop, then retry.' }
     $containerNames = @(docker ps -a --format '{{.Names}}')
+    & (Join-Path $PSScriptRoot 'ensure-vector.ps1')
     if ($containerNames -notcontains 'risk-b01-postgres') {
-        docker run -d --name risk-b01-postgres --label com.riskb.project=B01 --env-file (Join-Path $local 'postgres.env') -p 127.0.0.1:55439:5432 -v risk-b01-pgdata:/var/lib/postgresql/data postgres:15 | Out-Null
+        # ensure-vector.ps1 already created the dedicated container.
         if ($LASTEXITCODE -ne 0) { throw 'Could not create the dedicated database container.' }
     }
     $container = docker inspect risk-b01-postgres | ConvertFrom-Json
@@ -65,7 +66,7 @@ try {
         Start-Sleep -Seconds 1
     }
     if (!$ready) { throw "Services did not become ready. Check .local/logs." }
-    Write-Host 'B01 ready: http://127.0.0.1:5181/workbench'
+    Write-Host 'B04 ready: http://127.0.0.1:5181/knowledge/library'
     if (!$NoBrowser) { Start-Process 'http://127.0.0.1:5181/workbench' }
 } catch {
     Write-Host $_.Exception.Message -ForegroundColor Red

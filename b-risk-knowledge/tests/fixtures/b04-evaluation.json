@@ -1,0 +1,8 @@
+[
+  {"id":"E01","kind":"exact_standard","question":"GB 55037-2022","expected":"evacuation"},
+  {"id":"E02","kind":"wording_variant","question":"材料堆积在疏散出口，人员不能通过","expected":"evacuation"},
+  {"id":"E03","kind":"wording_variant","question":"配电柜接地缺失会产生什么风险","expected":"electrical"},
+  {"id":"E04","kind":"exact_term","question":"电气绝缘","expected":"electrical"},
+  {"id":"E05","kind":"no_evidence","question":"GB 999999-2099","expected":null},
+  {"id":"E06","kind":"scene_filter","question":"疏散通道","scene":"lifting_supervision","expected":null}
+]

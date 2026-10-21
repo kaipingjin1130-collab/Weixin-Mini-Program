@@ -41,7 +41,7 @@ def main():
         docker("run", "-d", "--name", CONTAINER, "--label", "com.riskb.project=B01",
                "--env-file", str(LOCAL / "postgres.env"),
                "-p", "127.0.0.1:55439:5432",
-               "-v", "risk-b01-pgdata:/var/lib/postgresql/data", "postgres:15")
+               "-v", "risk-b01-pgdata:/var/lib/postgresql/data", "pgvector/pgvector:0.8.7-pg15-trixie")
     else:
         data = json.loads(inspect.stdout)[0]
         if data["Config"].get("Labels", {}).get("com.riskb.project") != "B01":

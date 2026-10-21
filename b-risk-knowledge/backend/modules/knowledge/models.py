@@ -47,6 +47,8 @@ class KnowledgeItem(Base):
     template_version: Mapped[str] = mapped_column(String(64))
     current_revision: Mapped[int] = mapped_column(Integer, default=1)
     row_version: Mapped[int] = mapped_column(Integer, default=1)
+    withdrawn_at: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
+    withdrawal_reason: Mapped[str | None] = mapped_column(String(2000), nullable=True)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)
 
 

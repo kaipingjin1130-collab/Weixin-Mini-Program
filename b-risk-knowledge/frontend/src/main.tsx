@@ -5,6 +5,7 @@ import { Activity, ArrowRight, CheckCircle2, ChevronRight, ClipboardList, Downlo
 import './style.css';
 import { Ingestion } from './Ingestion';
 import { Knowledge } from './Knowledge';
+import { Retrieval } from './Retrieval';
 
 type Project = { id: string; name: string; roles: string[]; can_run: boolean; can_manage: boolean };
 type Me = { id: string; name: string; subject: string; mode: string; projects: Project[] };
@@ -24,7 +25,8 @@ function App() {
   const [identity, setIdentity] = useState(localStorage.getItem('b01-identity') || 'admin');
   const [path, setPath] = useState(location.pathname);
   const [governanceOpen, setGovernanceOpen] = useState(['/sources','/imports','/records'].some(p => location.pathname.startsWith(p)));
-  const isKnowledge = ['/quality','/knowledge','/reviews'].some(p => path.startsWith(p));
+  const isRetrieval = ['/search','/releases','/knowledge/library'].includes(path) || /^\/knowledge\/[^/]+$/.test(path) && path !== '/knowledge/drafts';
+  const isKnowledge = !isRetrieval && ['/quality','/knowledge','/reviews'].some(p => path.startsWith(p));
   const isIngestion = ['/sources', '/imports', '/records'].some(p => path.startsWith(p));
   const [me, setMe] = useState<Me | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -78,7 +80,7 @@ function App() {
         const health = await api<{ worker_online: boolean }>('/health');
         if (stale) return;
         setOnline(health.worker_online);
-        if (isIngestion || isKnowledge) return;
+        if (isIngestion || isKnowledge || isRetrieval) return;
         if (path === '/settings/access') {
           if (!current.projects.some(p => p.can_manage)) return;
           const [a, logs] = await Promise.all([api<Access>('/access'), api<{ items: typeof audit }>('/audit-events?limit=10')]);
@@ -101,7 +103,7 @@ function App() {
   }, [identity, path, status, kind, cursor, refresh]);
 
   useEffect(() => {
-    if (!me || path === '/settings/access' || isIngestion || isKnowledge) return;
+    if (!me || path === '/settings/access' || isIngestion || isKnowledge || isRetrieval) return;
     let stale = false;
     const timer = window.setInterval(async () => {
       try {
@@ -143,7 +145,7 @@ function App() {
   });
   const canRun = me?.projects.some(p => p.can_run);
   const canManage = me?.projects.some(p => p.can_manage);
-  const title = isKnowledge ? '知识加工与审核' : isIngestion ? (path.startsWith('/sources') ? '历史数据来源' : path.startsWith('/imports') ? '历史项目' : '风险数据') : path === '/settings/access' ? '成员与权限' : path === '/jobs' ? '处理任务' : '我的工作台';
+  const title = isRetrieval ? (path === '/releases' ? '知识发布管理' : path === '/search' ? '知识检索' : '已发布知识库') : isKnowledge ? '知识加工与审核' : isIngestion ? (path.startsWith('/sources') ? '历史数据来源' : path.startsWith('/imports') ? '历史项目' : '风险数据') : path === '/settings/access' ? '成员与权限' : path === '/jobs' ? '处理任务' : '我的工作台';
   const activeCount = (counts.queued || 0) + (counts.running || 0) + (counts.retrying || 0);
 
   return <div className="app-shell">
@@ -158,10 +160,11 @@ function App() {
         <button className={`nav-item governance-toggle ${isIngestion ? 'active-group' : ''}`} aria-label="历史数据治理" aria-expanded={governanceOpen} aria-controls="governance-menu" onClick={() => setGovernanceOpen(v => !v)}><FolderLock size={19}/><span>历史数据治理</span><ChevronRight className={governanceOpen ? 'expanded' : ''} size={15}/></button>
         {governanceOpen && <div id="governance-menu" className="subnav">{[['/sources','数据来源'],['/imports','历史项目'],['/records','风险数据']].map(([url,label]) => <button key={url} aria-label={label} className={path.startsWith(url) ? 'active' : ''} onClick={() => navigate(url)}>{label}</button>)}</div>}
         <button className={isKnowledge ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/quality')} aria-label="知识加工与审核"><FileCheck2 size={19}/><span>知识加工与审核</span><ChevronRight size={15}/></button>
+        <button className={isRetrieval ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/knowledge/library')} aria-label="知识库与检索"><FileCheck2 size={19}/><span>知识库与检索</span><ChevronRight size={15}/></button>
         <button className={path === '/settings/access' ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/settings/access')} aria-label="成员与权限"><Users size={19}/><span>成员与权限</span><ChevronRight size={15}/></button>
       </nav>
       <div className="scope-card"><FolderLock size={19} /><strong>项目范围隔离</strong><p>记录、文件和操作权限<br />随当前身份实时检查。</p></div>
-      <div className="sidebar-bottom"><span className="dot" />本地开发 · B03<span className="version">v0.3</span></div>
+      <div className="sidebar-bottom"><span className="dot" />本地开发 · B04<span className="version">v0.4</span></div>
     </aside>
     <div className="main-shell">
       <header className="topbar"><div className="breadcrumb">工程风险知识中心 <ChevronRight size={14} /><strong>{title}</strong></div>
@@ -171,16 +174,17 @@ function App() {
       </header>
       <main>
         <div className="page-heading"><div><div className="eyebrow">工作空间</div><h1>{title}</h1>
-          <p>{isKnowledge ? '复用来源证据生成候选，核查质量问题后逐版本审核。' : isIngestion ? '一次接入模拟资料，保留原文、治理生效值与来源证据。' : path === '/settings/access' ? '按项目分配角色，保留每次授权与撤销的记录。' : '查看处理进度、定位失败任务，保留每一次执行结果。'}</p></div>
+          <p>{isRetrieval ? '固定审核版本发布，以项目权限检索知识并打开来源。' : isKnowledge ? '复用来源证据生成候选，核查质量问题后逐版本审核。' : isIngestion ? '一次接入模拟资料，保留原文、治理生效值与来源证据。' : path === '/settings/access' ? '按项目分配角色，保留每次授权与撤销的记录。' : '查看处理进度、定位失败任务，保留每一次执行结果。'}</p></div>
           <div className="heading-actions"><button className="button ghost" onClick={() => setRefresh(v => v + 1)} disabled={loading}><RefreshCw size={16} />刷新</button>
-            {!isIngestion && !isKnowledge && path !== '/settings/access' && <button className="button primary" disabled={!canRun || busy} onClick={() => {
+            {!isIngestion && !isKnowledge && !isRetrieval && path !== '/settings/access' && <button className="button primary" disabled={!canRun || busy} onClick={() => {
               setProject(me?.projects.find(p => p.can_run)?.id || 'demo-airport'); setShowCreate(true);
             }}><Play size={16} />运行演示检查</button>}</div>
         </div>
-        {!isIngestion && !isKnowledge && <div className="mode-banner"><ShieldCheck size={18} /><div><strong>本地演示模式</strong><span>尚未接入A的真实身份或历史资料。所有输入均为明确标注的模拟数据，尚未接入真实工程资料。</span></div></div>}
+        {!isIngestion && !isKnowledge && !isRetrieval && <div className="mode-banner"><ShieldCheck size={18} /><div><strong>本地演示模式</strong><span>尚未接入A的真实身份或历史资料。所有输入均为明确标注的模拟数据，尚未接入真实工程资料。</span></div></div>}
         {error && <div className="feedback error" role="alert"><AlertCircle size={18} />{error}<button onClick={() => setRefresh(v => v + 1)}>重新加载</button></div>}
         {notice && <div className="feedback success" role="status"><CheckCircle2 size={18} />{notice}<button aria-label="关闭提示" onClick={() => setNotice('')}><X size={16} /></button></div>}
         {loading ? <div className="loading"><LoaderCircle className="spin" size={24} /><span>正在读取工作区…</span></div> :
+          isRetrieval ? <Retrieval key={identity} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isKnowledge ? <Knowledge key={identity} api={api} path={path} navigate={navigate} projects={me?.projects || []} identity={identity} /> :
           isIngestion ? <Ingestion key={identity} api={api} path={path} navigate={navigate} projects={me?.projects || []} identity={identity} /> :
           path === '/settings/access' ? !canManage ? <section className="panel empty"><FolderLock size={38} /><h2>当前身份没有管理权限</h2><p>可以切换到本地管理员验证授权流程。后端同样会拒绝越权请求。</p></section> :
@@ -221,14 +225,14 @@ function App() {
               <section className="panel jobs-panel">
                 <div className="panel-heading"><div><h2>{path === '/jobs' ? '任务列表' : '最近处理任务'}</h2><span>仅展示当前身份可访问的项目</span></div>
                   <select aria-label="任务类型筛选" value={kind} onChange={e => { setKind(e.target.value); setCursor(''); setHistory([]); }}>
-                    <option value="">全部类型</option><option value="demo_check">演示检查</option><option value="source_import">历史数据接入</option><option value="knowledge_generation">知识候选生成</option></select>
+                    <option value="">全部类型</option><option value="demo_check">演示检查</option><option value="source_import">历史数据接入</option><option value="knowledge_generation">知识候选生成</option><option value="release_build">发布索引构建</option></select>
                   <select aria-label="任务状态筛选" value={status} onChange={e => { setStatus(e.target.value); setCursor(''); setHistory([]); }}>
                     <option value="">全部状态</option>{Object.entries(statuses).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></div>
                 {!jobs.length ? <div className="empty"><FileCheck2 size={42} /><h2>{status ? '没有符合条件的任务' : '还没有处理任务'}</h2>
                   <p>{status ? '切换筛选条件查看其他任务。' : canRun ? '运行一次演示检查，验证提交、执行和结果保存的完整过程。' : '当前身份可查看项目任务，请等待加工人员提交。'}</p>
                   {canRun && !status && <button className="button secondary" onClick={() => setShowCreate(true)}>开始一次演示<ArrowRight size={16} /></button>}</div> :
                   <div className="table-wrap"><table><thead><tr><th>任务 / 项目</th><th>状态</th><th>进度</th><th>提交时间</th><th>操作</th></tr></thead><tbody>
-                    {jobs.map(job => <tr key={job.id}><td><button className="job-title" onClick={() => setSelected(job)}>{job.title}</button><small>{projectNames[job.project_id]}<span className="subtle-separator">·</span>{job.kind === 'source_import' ? '历史项目接入' : job.kind === 'knowledge_generation' ? '知识候选生成' : '演示任务'}</small></td>
+                    {jobs.map(job => <tr key={job.id}><td><button className="job-title" onClick={() => setSelected(job)}>{job.title}</button><small>{projectNames[job.project_id]}<span className="subtle-separator">·</span>{job.kind === 'source_import' ? '历史项目接入' : job.kind === 'knowledge_generation' ? '知识候选生成' : job.kind === 'release_build' ? '发布索引构建' : '演示任务'}</small></td>
                       <td><span className={`status ${job.status}`}><i />{statuses[job.status]}</span></td>
                       <td><div className="progress-cell"><div className="progress-track"><span style={{ width: `${job.progress}%` }} /></div><span>{job.progress}%</span></div></td>
                       <td className="muted nowrap">{fmt(job.created_at)}</td><td><div className="row-actions">{job.kind === 'source_import' && <button className="text-button" onClick={() => navigate('/imports')}>历史项目</button>}<button className="text-button" onClick={() => setSelected(job)}>详情</button>

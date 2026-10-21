@@ -1,0 +1,50 @@
+{
+  "scope": "synthetic fixtures; hash vectors only; no real semantic/LLM accuracy claim",
+  "release_id": "f909f7b5-134c-47a2-bd66-eee1a21e6f68",
+  "samples": [
+    {
+      "id": "E01",
+      "kind": "exact_standard",
+      "hit_at_3": true,
+      "latency_ms": 20.5,
+      "status": "answered"
+    },
+    {
+      "id": "E02",
+      "kind": "wording_variant",
+      "hit_at_3": true,
+      "latency_ms": 20.9,
+      "status": "answered"
+    },
+    {
+      "id": "E03",
+      "kind": "wording_variant",
+      "hit_at_3": true,
+      "latency_ms": 21.1,
+      "status": "answered"
+    },
+    {
+      "id": "E04",
+      "kind": "exact_term",
+      "hit_at_3": true,
+      "latency_ms": 22.85,
+      "status": "answered"
+    },
+    {
+      "id": "E05",
+      "kind": "no_evidence",
+      "hit_at_3": true,
+      "latency_ms": 10.49,
+      "status": "insufficient_evidence"
+    },
+    {
+      "id": "E06",
+      "kind": "scene_filter",
+      "hit_at_3": true,
+      "latency_ms": 12.37,
+      "status": "insufficient_evidence"
+    }
+  ],
+  "hits": 6,
+  "total": 6
+}
