@@ -19,6 +19,7 @@ def main():
         ("processor", "资料加工员", ["demo-airport"], "processor"),
         ("learner", "新成员", ["demo-airport"], "learner"),
         ("outsider", "其他项目成员", ["demo-metro"], "learner"),
+        ("a-service", "模拟A服务（非真实联调）", ["demo-airport", "demo-metro"], "a_service"),
     ]
     with Session.begin() as db:
         for subject, name, projects, role in profiles:

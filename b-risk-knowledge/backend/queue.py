@@ -81,7 +81,7 @@ async def recover_stalled():
     jobs = await queue_app.job_manager.get_stalled_jobs(queue="b01", seconds_since_heartbeat=10)
     for job in jobs:
         # Only this registered queue/task is recovered; no other application's jobs.
-        if job.task_name in {"b01.demo_check", "b02.source_import", "b03.knowledge_generation", "b04.release_build"}:
+        if job.task_name in {"b01.demo_check", "b02.source_import", "b03.knowledge_generation", "b04.release_build", "b05.task_package_import"}:
             await queue_app.job_manager.retry_job(job)
 
 
@@ -95,3 +95,4 @@ async def periodic_recovery(timestamp):
 from .modules.ingestion import tasks as ingestion_tasks  # noqa: E402,F401
 from .modules.knowledge import tasks as knowledge_tasks  # noqa: E402,F401
 from .modules.retrieval import tasks as retrieval_tasks  # noqa: E402,F401
+from .modules.task_packages import tasks as package_tasks  # noqa: E402,F401

@@ -1,6 +1,6 @@
-# 工程风险知识与复盘培训中心｜B01—B04
+# 工程风险知识与复盘培训中心｜B01—B05
 
-本地基础工程、B02模拟数据接入及B03模拟知识加工/审核及B04发布检索已实现。B00合同保留在 `contracts/`；A身份、真实数据、模型和任务包尚未联调。原始报告和旧治理工作台没有改动。
+本地基础工程、B02模拟数据接入、B03模拟知识加工/审核、B04发布检索及B05模拟A任务包接入已实现。B00合同保留在 `contracts/`；A身份、真实数据、模型和任务包尚未联调。原始报告和旧治理工作台没有改动。
 
 B02入口：<http://127.0.0.1:5181/sources>，支持模拟CSV、Excel和治理导出接入、增量版本、证据与候选关联。已准备4个来源、10条模拟记录供试用。[操作步骤与架构](reports/B02-design-and-use.md)、[12项测试及浏览器验收](reports/B02-validation.md)。
 
@@ -48,13 +48,13 @@ powershell -NoProfile -ExecutionPolicy Bypass -File tools/start.ps1
 | `fixtures/b02` | 明确标注的模拟CSV、XLSX、治理导出和证据示意图 |
 | `backend/models.py` / `migrations` | SQLAlchemy业务表、Alembic迁移；队列表由Procrastinate管理 |
 | `tests/test_foundation.py` | 真实数据库、worker、文件与权限集成测试 |
-| `contracts` | B00对A合同；当前proposed，不等于已实现A接口 |
+| `contracts` | B00对A合同；当前proposed，B04/B05接口已本地实现，真实A未联调 |
 
 授权取“来源项目范围 ∩ B内角色”，撤权下一次请求立即生效。演示仅有固定 `demo-org`，多租户组织隔离不在本轮实现；接真实身份需补齐组织映射。权限不会因重新启动被还原。
 
 提交的幂等键按操作者唯一，同键不同内容返回409；重试还要求当前 `row_version`。队列插入使用SQLAlchemy同一条psycopg物理连接，因此两者共同提交或回滚。worker心跳每2秒更新，10秒失联视为停滞；重启立即尝试恢复，常驻恢复任务每分钟检查。结果文件按任务固定路径原子写入，结果对象按任务唯一，重复执行不会多产出结果对象。队列采用至少一次执行语义，未来涉及外部副作用的任务仍须各自实现幂等。
 
-新增任务须注册明确的任务类型、输入Schema、权限动作和结果适配，不接受任意函数名/文件路径。当前类型为 `demo_check`、`source_import`、`knowledge_generation`、`release_build`；生成当前为显式模拟，不包含OCR或真实模型风险判断。
+新增任务须注册明确的任务类型、输入Schema、权限动作和结果适配，不接受任意函数名/文件路径。当前类型为 `demo_check`、`source_import`、`knowledge_generation`、`release_build`、`task_package_import`；生成当前为显式模拟，不包含OCR或真实模型风险判断。
 
 ## API（前缀 `/api/v1`）
 
@@ -87,3 +87,7 @@ npm run build
 ## B04发布检索
 
 入口：[已发布知识](http://127.0.0.1:5181/knowledge/library)、[发布管理](http://127.0.0.1:5181/releases)、[检索](http://127.0.0.1:5181/search)。已有一张通过原审核流程的模拟卡片已启用供试用。详见[设计、接口与AI交接](reports/B04-design-and-use.md)、[本地验证](reports/B04-validation.md)。当前使用真实pgvector存储和索引、模拟特征向量及事实摘录；没有接入真实LLM或训练语义模型。
+
+## B05任务包接入
+
+入口：[任务包清单](http://127.0.0.1:5181/task-packages)、[导入模拟包](http://127.0.0.1:5181/task-packages/import)。接入后自动校验附件、保存事件和版本；本机已保留v1/v2演示。见[使用与AI交接](reports/B05-design-and-use.md)、[A接口说明](reports/B05-A-integration.md)、[验证记录](reports/B05-validation.md)。当前只有模拟资料与身份，尚未连接真实A，未生成复盘或培训。

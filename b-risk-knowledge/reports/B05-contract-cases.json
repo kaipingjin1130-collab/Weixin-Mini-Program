@@ -1,0 +1,57 @@
+[
+  {
+    "file": "package-valid.json",
+    "expected_valid": true,
+    "http_status": 202
+  },
+  {
+    "file": "package-no-time.json",
+    "expected_valid": true,
+    "http_status": 202
+  },
+  {
+    "file": "package-missing-attachments.json",
+    "expected_valid": true,
+    "http_status": 202
+  },
+  {
+    "file": "package-unknown-event.json",
+    "expected_valid": true,
+    "http_status": 202
+  },
+  {
+    "file": "package-repeat.json",
+    "expected_valid": true,
+    "http_status": 202
+  },
+  {
+    "file": "package-same-version-conflict.json",
+    "expected_valid": true,
+    "http_status": 202
+  },
+  {
+    "file": "package-v2.json",
+    "expected_valid": true,
+    "http_status": 202
+  },
+  {
+    "file": "package-old-arrival.json",
+    "expected_valid": true,
+    "http_status": 202
+  },
+  {
+    "file": "package-invalid-missing-project.json",
+    "expected_valid": false,
+    "http_status": 422
+  },
+  {
+    "file": "package-invalid-reference.json",
+    "expected_valid": false,
+    "http_status": 422
+  },
+  {
+    "file": "package-invalid-timezone.json",
+    "expected_valid": false,
+    "http_status": 422
+  }
+]

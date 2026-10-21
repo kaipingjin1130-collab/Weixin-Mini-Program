@@ -37,7 +37,7 @@ async def lifespan(app):
     queue_app.close()
 
 
-app = FastAPI(title="工程风险知识中心 B04", version="0.4.0", lifespan=lifespan)
+app = FastAPI(title="工程风险知识中心 B05", version="0.5.0", lifespan=lifespan)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "testserver"])
 
 
@@ -166,6 +166,8 @@ def asset_content(asset_id: str, actor: Actor = Depends(current_actor)):
         if not asset:
             raise Problem(404, "NOT_FOUND", "文件不存在。")
         authorize(actor, "read", asset.project_id)
+        from .modules.task_packages.service import guard_asset
+        guard_asset(db, asset_id, actor)
         if asset.mime_type in {'text/csv', 'application/json', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}:
             authorize(actor, 'run', asset.project_id)
         if asset.availability != "available":
@@ -250,3 +252,6 @@ app.include_router(retrieval_router)
 app.include_router(integration_router)
 from .modules.knowledge.api import router as knowledge_router
 app.include_router(knowledge_router)
+from .modules.task_packages.api import router as package_router, integration_router as package_integration_router
+app.include_router(package_router)
+app.include_router(package_integration_router)
