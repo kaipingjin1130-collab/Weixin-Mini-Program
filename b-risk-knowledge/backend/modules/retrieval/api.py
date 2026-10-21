@@ -15,7 +15,7 @@ from ...models import FileAsset
 from ...storage import asset_path
 from ..ingestion.models import EvidenceItem
 from ..knowledge.models import KnowledgeItem, KnowledgeRevision, KnowledgeEvidenceLink
-from ..knowledge.service import source_context
+from ..knowledge.service import source_context, item_source
 from .models import KnowledgeRelease, SearchRun
 from .schemas import CreateRelease, Activation, Withdrawal, SearchInput, Feedback
 from .publication import create_release, activate, release_dto, active_release, withdraw, public_query, public_revision, card_dto
@@ -57,7 +57,7 @@ def options(actor: Actor = Depends(current_actor), project_id: str = Query(...))
         items = []
         for item, revision in rows[:100]:
             try:
-                source_context(db, item.record_version_id, actor)
+                item_source(db, item, actor)
                 items.append({'id': item.id, 'revision_id': revision.id, 'title': revision.content['title'], 'version': revision.version, 'type': item.type})
             except Problem as exc:
                 if exc.status not in {403, 410}:
@@ -123,16 +123,18 @@ def public_detail(ident: str, revision_id: str | None = None, actor: Actor = Dep
 @router.get('/published/evidence/{ident}')
 def public_evidence(ident: str, revision_id: str, historical: bool = False, actor: Actor = Depends(current_actor)):
     with Session() as db:
-        _, revision, source, _, _ = public_revision(db, revision_id, actor, allow_history=historical)
+        item, revision, source, evidence_rows, _ = public_revision(db, revision_id, actor, allow_history=historical)
         link = db.scalar(select(KnowledgeEvidenceLink).where(KnowledgeEvidenceLink.revision_id == revision.id,
-                         KnowledgeEvidenceLink.evidence_id == ident).order_by(KnowledgeEvidenceLink.claim_path))
+                         or_(KnowledgeEvidenceLink.evidence_id == ident, KnowledgeEvidenceLink.retrospective_evidence_id == ident)).order_by(KnowledgeEvidenceLink.claim_path))
         if not link:
             raise Problem(404, 'NOT_FOUND', '此版本没有该证据引用。')
         citation = citation_for(db, ident, revision, actor, link.claim_path, allow_history=historical)
-        evidence = db.get(EvidenceItem, ident)
+        evidence = next((e for e in evidence_rows if e.id == ident), None)
+        if not evidence:
+            raise Problem(410, 'EVIDENCE_UNAVAILABLE', '证据不可用。')
         asset = db.get(FileAsset, evidence.asset_id) if evidence.asset_id else None
         # Minimal anchored row content; never expose the whole import file or other rows.
-        return {**citation, 'description': source.effective_fields.get('description'), 'source_version': source.version,
+        return {**citation, 'description': evidence.text if item.retrospective_revision_id else source.effective_fields.get('description'), 'source_version': source.version,
                 'type': evidence.evidence_type, 'has_image': bool(asset and asset.mime_type.startswith('image/')),
                 'is_mock': True, 'note': '模拟证据示意图，非真实现场照片。' if asset and asset.mime_type.startswith('image/') else '结构化来源行；当前未提供原报告附件。'}
 
@@ -143,8 +145,9 @@ def public_evidence_content(ident: str, revision_id: str, historical: bool = Fal
     # assets endpoint is never used to bypass this citation-specific permission.
     public_evidence(ident, revision_id, historical, actor)
     with Session() as db:
-        evidence = db.get(EvidenceItem, ident)
-        asset = db.get(FileAsset, evidence.asset_id)
+        from ..retrospectives.models import RetrospectiveEvidence
+        evidence = db.get(EvidenceItem, ident) or db.get(RetrospectiveEvidence, ident)
+        asset = db.get(FileAsset, evidence.asset_id) if evidence and evidence.asset_id else None
         if not asset or not asset.mime_type.startswith('image/'):
             raise Problem(422, 'NO_PREVIEW', '此证据只提供结构化来源行，没有可预览图片。')
         authorize(actor, 'read', asset.project_id)

@@ -5,6 +5,7 @@ from backend.modules.ingestion import models as ingestion_models
 from backend.modules.knowledge import models as knowledge_models
 from backend.modules.retrieval import models as retrieval_models
 from backend.modules.task_packages import models as package_models
+from backend.modules.retrospectives import models as retrospective_models
 
 with engine.connect() as connection:
     context.configure(connection=connection, target_metadata=Base.metadata, compare_type=True)

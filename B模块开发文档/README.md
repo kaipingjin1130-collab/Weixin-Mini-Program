@@ -2,7 +2,7 @@
 
 更新日期：2026-10-21。文档版本：0.1。
 
-本目录是“工程风险知识与复盘培训中心”的开发工作包。B00合同和B01基础平台已完成本地验证；B02模拟数据接入、B03模拟知识加工/审核、B04发布检索及B05任务包接入流程已本地验收。B04使用模拟向量和摘录式回答，未接真实模型。真实数据、模型效果及A/B联调尚未验收。勾选框未勾选即未验收，不能把文档存在当作功能完成。
+本目录是“工程风险知识与复盘培训中心”的开发工作包。B00合同和B01基础平台已完成本地验证；B02模拟数据接入、B03模拟知识加工/审核、B04发布检索、B05任务包接入及B06两种复盘/经验候选流程已本地验收。B04使用模拟向量和摘录式回答，未接真实模型。真实数据、模型效果及A/B联调尚未验收。勾选框未勾选即未验收，不能把文档存在当作功能完成。
 
 B00成果：[合同交付入口](../b-risk-knowledge/contracts/README.md)、[本地验证报告](../b-risk-knowledge/contracts/reports/validation.md)、[待A确认清单](../b-risk-knowledge/contracts/decisions.md)。当前70项本地检查通过，合同仍为proposed。
 
@@ -48,7 +48,7 @@ B00成果：[合同交付入口](../b-risk-knowledge/contracts/README.md)、[本
 | B03 | [质量核查与知识加工](任务包/B03-质量核查与知识加工.md) | B02 | 候选生成、审核、并发冲突、证据关联闭环 | 模拟生成和审核本地验收通过，发布衔接B04 |
 | B04 | [发布索引与知识检索](任务包/B04-发布索引与知识检索.md) | B03 | 授权检索、有据回答、索引原子切换 | 本地流程验收通过（模拟向量/摘录），真实效果待验 |
 | B05 | [A任务包接入](任务包/B05-A任务包接入.md) | B00、B01、B02证据接口 | 包版本、幂等、附件校验、撤回可验证 | 模拟任务包本地验收通过，待真实A联调 |
-| B06 | [过程复盘与经验](任务包/B06-过程复盘与经验.md) | B03、B05；B04用于检索辅助 | 时间线来自事实，结论可定位，经验重新审核 | 待开发 |
+| B06 | [过程复盘与经验](任务包/B06-过程复盘与经验.md) | B03、B05；B04用于检索辅助 | 时间线来自事实，结论可定位，经验重新审核 | 本地模拟验收通过；规则与真实模型待验 |
 | B07 | [培训与学习记录](任务包/B07-培训与学习记录.md) | B03、B04；B06只影响复盘出题 | 题目审核、版本固定、作答评分和撤回处理 | 待开发 |
 | B08 | [场景配置与扩展](任务包/B08-场景配置与扩展.md) | B03及至少一个B04/B06/B07消费者 | 新场景复用主流程，旧版本保持可解释 | 待开发 |
 | B09 | [数据集评测与演示](任务包/B09-数据集评测与演示.md) | 被评测模块可运行 | 数据集冻结、无泄漏划分、效果证据和演示 | 待开发 |
@@ -78,9 +78,9 @@ B00成果：[合同交付入口](../b-risk-knowledge/contracts/README.md)、[本
 ## 5. 下一步实际行动
 
 1. 先将[A/B接口约定](02-A-B接口约定.md)发给A，优先确认项目/用户ID、身份方式、场景码、事件类型、附件传递和任务包版本。
-2. B00至B05已完成对应本地验证；B02/B03/B04/B05使用明确模拟数据、生成、向量和任务包，不等同真实效果验收。
+2. B00至B06已完成对应本地验证；B02/B03/B04/B05/B06使用明确模拟数据、生成、向量和任务包，不等同真实效果验收。
 3. 阅读上述验证报告及待确认清单；不要把本地参考模型通过当成A联调通过。
-4. 双击根目录“启动B模块.cmd”试用；“历史数据治理”包含数据来源、历史项目、风险数据；另有知识加工与审核。[B03设计与使用](../b-risk-knowledge/reports/B03-design-and-use.md)、[验证记录](../b-risk-knowledge/reports/B03-validation.md)。B04已实现发布与检索：[使用与AI交接](../b-risk-knowledge/reports/B04-design-and-use.md)、[验收记录](../b-risk-knowledge/reports/B04-validation.md)。B05已实现任务包接入：[使用与AI交接](../b-risk-knowledge/reports/B05-design-and-use.md)、[给A接口说明](../b-risk-knowledge/reports/B05-A-integration.md)、[验收记录](../b-risk-knowledge/reports/B05-validation.md)。下一任务B06，需用户发起后再执行。
+4. 双击根目录“启动B模块.cmd”试用；“历史数据治理”包含数据来源、历史项目、风险数据；另有知识加工与审核。[B03设计与使用](../b-risk-knowledge/reports/B03-design-and-use.md)、[验证记录](../b-risk-knowledge/reports/B03-validation.md)。B04已实现发布与检索：[使用与AI交接](../b-risk-knowledge/reports/B04-design-and-use.md)、[验收记录](../b-risk-knowledge/reports/B04-validation.md)。B05已实现任务包接入：[使用与AI交接](../b-risk-knowledge/reports/B05-design-and-use.md)、[给A接口说明](../b-risk-knowledge/reports/B05-A-integration.md)、[验收记录](../b-risk-knowledge/reports/B05-validation.md)。B06已实现任务/历史两种复盘、统一审核及转经验草稿：[使用与AI交接](../b-risk-knowledge/reports/B06-design-and-use.md)、[44项完整检查与B06专项验证](../b-risk-knowledge/reports/B06-validation.md)。下一任务B07，需用户发起后再执行。
 5. 本轮没有导入真实资料。切换真实数据时，先核对映射、稳定ID和图片锚点，再做小样本及全量验证。
 
 ## 6. 每次任务完成如何交接

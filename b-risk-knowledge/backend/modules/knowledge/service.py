@@ -23,14 +23,26 @@ def source_context(db, version_id, actor, action='read', current=False):
     return version, row, evidence
 
 
+def item_source(db, item, actor, action='read', current=False):
+    if item.retrospective_revision_id:
+        authorize(actor, action, item.project_id)
+        from ..retrospectives.sources import context
+        return context(db, item.retrospective_revision_id, actor, current=current)
+    return source_context(db, item.record_version_id, actor, action, current)
+
+
 def validate_card(db, card, version, actor, approving=False):
-    _, row, evidence = source_context(db, version.id, actor, current=approving)
+    if hasattr(version, 'retrospective_revision_id'):
+        from ..retrospectives.sources import context
+        _, row, evidence = context(db, version.retrospective_revision_id, actor, current=approving)
+    else:
+        _, row, evidence = source_context(db, version.id, actor, current=approving)
     allowed = {e.id: e for e in evidence}
     for fact in card.facts:
         for ident in fact.evidence_ids:
             if ident not in allowed:
                 raise Problem(422, 'INVALID_EVIDENCE_REFERENCE', '候选引用了不存在或不属于当前来源版本的证据，已拒绝保存。')
-        if approving and not any(allowed[e].relation_confidence == 'anchored' and allowed[e].evidence_type == 'source_row' for e in fact.evidence_ids):
+        if approving and not any(allowed[e].relation_confidence == 'anchored' and allowed[e].evidence_type in {'source_row', 'process_event', 'historical_row', 'task_snapshot'} for e in fact.evidence_ids):
             raise Problem(422, 'UNVERIFIED_FACT', '事实性内容须引用本版本明确锚定的来源行，候选图片不能单独证明事实。')
     if approving and any(s.verification_status == 'pending_verification' for s in card.standards):
         raise Problem(422, 'STANDARD_UNVERIFIED', '存在待核验依据，请核查或明确标为不采用，不能自动批准为有效标准。')
@@ -40,10 +52,11 @@ def validate_card(db, card, version, actor, approving=False):
 
 
 def link_claims(db, revision, card):
+    item = db.get(KnowledgeItem, revision.item_id)
     for n, fact in enumerate(card.facts):
         for evidence_id in set(fact.evidence_ids):
-            db.add(KnowledgeEvidenceLink(revision_id=revision.id, claim_path=f'/facts/{n}/text',
-                                         evidence_id=evidence_id, relation_type=fact.source_kind))
+            target = {'retrospective_evidence_id': evidence_id} if item.retrospective_revision_id else {'evidence_id': evidence_id}
+            db.add(KnowledgeEvidenceLink(revision_id=revision.id, claim_path=f'/facts/{n}/text', **target, relation_type=fact.source_kind))
 
 
 def generation_preview(db, data, actor):
@@ -92,7 +105,7 @@ def current_item(db, item_id, actor, action='read', lock=False):
         raise Problem(410, 'KNOWLEDGE_WITHDRAWN', '此知识已撤回。')
     revision = db.scalar(select(KnowledgeRevision).where(KnowledgeRevision.item_id == item.id,
                                                         KnowledgeRevision.version == item.current_revision))
-    source_context(db, item.record_version_id, actor)
+    item_source(db, item, actor)
     if action == 'read' and not (actor.can('run', item.project_id) or actor.can('audit', item.project_id)):
         raise Problem(403, 'FORBIDDEN', '此为尚未发布的知识加工区，需要加工或审核权限。')
     return item, revision
@@ -107,7 +120,7 @@ def save_draft(item_id, data, actor, request_id):
     with Session.begin() as db:
         item, prior = current_item(db, item_id, actor, 'run', lock=True)
         check_revision(item, prior, data)
-        source, _, _ = source_context(db, item.record_version_id, actor, 'run', current=True)
+        source, _, _ = item_source(db, item, actor, 'run', current=True)
         if data.content.type != item.type:
             raise Problem(422, 'CARD_TYPE_MISMATCH', '知识类型不能在编辑时变更。')
         old_facts = {(f['text'], tuple(f['evidence_ids'])) for f in prior.content['facts']}
@@ -136,7 +149,7 @@ def transition(item_id, data, actor, action, request_id, review_id=None):
         check_revision(item, revision, data)
         if review_id and review_id != revision.id:
             raise Problem(409, 'REVIEW_VERSION_CHANGED', '审核对象已不是当前版本。')
-        source, _, _ = source_context(db, item.record_version_id, actor, current=True)
+        source, _, _ = item_source(db, item, actor, current=True)
         allowed = {'submitted': {'draft', 'changes_requested'}, 'approved': {'pending_review'}, 'changes_requested': {'pending_review'}}
         if revision.state not in allowed[action]:
             raise Problem(409, 'INVALID_STATE', '当前状态不允许此操作。')

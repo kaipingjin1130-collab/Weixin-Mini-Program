@@ -102,10 +102,15 @@ def status_dto(db, package):
     if package.state == 'ready':
         from .assessment import assess
         warnings, missing, caps = assess(db, package)
+    from ..retrospectives.models import Retrospective, RetrospectiveRevision, RetrospectiveSource
+    retrospective_id = db.scalar(select(Retrospective.id).join(RetrospectiveRevision,
+        (RetrospectiveRevision.parent_id == Retrospective.id) & (RetrospectiveRevision.version == Retrospective.current_revision))
+        .join(RetrospectiveSource, RetrospectiveSource.revision_id == RetrospectiveRevision.id)
+        .where(RetrospectiveSource.task_package_id == package.id).limit(1)) if package.state == 'ready' else None
     return contract_response('task-status.schema.json', {'receipt_id': package.id, 'job_id': package.run_id,
         'status': package.state, 'is_current': package.state == 'ready' and stream.current_package_id == package.id,
         'validation_errors': package.validation_errors, 'missing_fields': missing,
-        'warnings': warnings, 'retrospective_id': None, 'capabilities': caps})
+        'warnings': warnings, 'retrospective_id': retrospective_id, 'capabilities': caps})
 
 
 def withdraw(ident, reason, actor, key, request_id):
@@ -136,7 +141,8 @@ def withdraw(ident, reason, actor, key, request_id):
                 run.status, run.error = 'failed', '任务包已撤回，不再继续处理或重试。'
                 run.row_version += 1
             db.add(PackageInvalidation(package_id=ident, payload={'source_type': 'task_package', 'receipt_id': ident,
-                'package_version': package.package_version, 'pending_consumers': ['B06', 'B07']}))
+                'package_version': package.package_version, 'pending_consumers': ['B07'],
+                'consumed_by': ['B06'], 'B06_policy': 'live-source-guard'}))
             audit(db, actor, 'task_package_withdrawn', 'task_package', ident, package.project_id, request_id)
         if not prior:
             db.add(PackageRequest(actor_id=actor.id, producer=package.producer, operation='withdraw', idempotency_key=key,

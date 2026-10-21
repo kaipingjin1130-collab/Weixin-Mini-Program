@@ -16,8 +16,14 @@ from .adapters import get_embedding, terms, standards, normalize, extract_answer
 def citation_for(db, evidence_id, revision, actor, claim_path, allow_history=False):
     item, _, source, evidence, release = public_revision(db, revision.id, actor, allow_history=allow_history)
     linked = db.scalar(select(KnowledgeEvidenceLink.id).where(KnowledgeEvidenceLink.revision_id == revision.id,
-        KnowledgeEvidenceLink.evidence_id == evidence_id, KnowledgeEvidenceLink.claim_path == claim_path))
+        or_(KnowledgeEvidenceLink.evidence_id == evidence_id, KnowledgeEvidenceLink.retrospective_evidence_id == evidence_id), KnowledgeEvidenceLink.claim_path == claim_path))
     row = next((e for e in evidence if e.id == evidence_id), None)
+    if item.retrospective_revision_id:
+        if not linked or not row:
+            raise Problem(410, 'EVIDENCE_UNAVAILABLE', '复盘证据不可用。')
+        locator = {k: v for k, v in row.locator.items() if k in {'page', 'table', 'row', 'cell', 'event_id', 'source_record_id', 'section'} and v is not None}
+        return {'citation_id': 'cite-'+revision.id+'-'+evidence_id, 'knowledge_revision_id': revision.id,
+            'evidence_id': evidence_id, 'source_title': '已审核复盘 · '+item.title[:480], 'locator': locator, 'review_status': 'published'}
     if not linked or not row or row.relation_confidence != 'anchored' or row.evidence_type not in {'source_row', 'site_photo', 'text_screenshot'}:
         raise Problem(410, 'EVIDENCE_UNAVAILABLE', '此事实缺少可打开的已审核行证据。')
     asset = db.get(FileAsset, row.asset_id) if row.asset_id else None

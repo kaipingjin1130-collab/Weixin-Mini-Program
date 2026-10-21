@@ -1,5 +1,5 @@
 from datetime import datetime
-from sqlalchemy import String, Integer, DateTime, UniqueConstraint, ForeignKey
+from sqlalchemy import String, Integer, DateTime, UniqueConstraint, ForeignKey, CheckConstraint
 from sqlalchemy.dialects.postgresql import JSONB
 from sqlalchemy.orm import Mapped, mapped_column
 from ...db import Base
@@ -35,9 +35,12 @@ class RecordAnnotation(Base):
 
 class KnowledgeItem(Base):
     __tablename__ = 'knowledge_items'
-    __table_args__ = (UniqueConstraint('record_version_id', 'type', 'template_version'),)
+    __table_args__ = (UniqueConstraint('record_version_id', 'type', 'template_version'),
+        UniqueConstraint('retrospective_revision_id', 'type', 'template_version', name='knowledge_retro_unique'),
+        CheckConstraint('(record_version_id IS NULL) <> (retrospective_revision_id IS NULL)', name='knowledge_source_xor'))
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
-    record_version_id: Mapped[str] = mapped_column(ForeignKey('source_record_versions.id'), index=True)
+    record_version_id: Mapped[str | None] = mapped_column(ForeignKey('source_record_versions.id'), index=True, nullable=True)
+    retrospective_revision_id: Mapped[str | None] = mapped_column(ForeignKey('retrospective_revisions.id'), nullable=True, index=True)
     project_id: Mapped[str] = mapped_column(String(128), index=True)
     type: Mapped[str] = mapped_column(String(32))
     title: Mapped[str] = mapped_column(String(200))
@@ -69,20 +72,26 @@ class KnowledgeRevision(Base):
 
 class KnowledgeEvidenceLink(Base):
     __tablename__ = 'knowledge_evidence_links'
-    __table_args__ = (UniqueConstraint('revision_id', 'claim_path', 'evidence_id'),)
+    __table_args__ = (UniqueConstraint('revision_id', 'claim_path', 'evidence_id'),
+        UniqueConstraint('revision_id', 'claim_path', 'retrospective_evidence_id', name='knowledge_retro_evidence_unique'),
+        CheckConstraint('(evidence_id IS NULL) <> (retrospective_evidence_id IS NULL)', name='knowledge_evidence_xor'))
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
     revision_id: Mapped[str] = mapped_column(ForeignKey('knowledge_revisions.id'), index=True)
     claim_path: Mapped[str] = mapped_column(String(128))
-    evidence_id: Mapped[str] = mapped_column(ForeignKey('evidence_items.id'))
+    evidence_id: Mapped[str | None] = mapped_column(ForeignKey('evidence_items.id'), nullable=True)
+    retrospective_evidence_id: Mapped[str | None] = mapped_column(ForeignKey('retrospective_evidence.id'), nullable=True)
     relation_type: Mapped[str] = mapped_column(String(32), default='source_fact')
 
 
 class ReviewAction(Base):
     __tablename__ = 'review_actions'
+    __table_args__ = (CheckConstraint("object_type IN ('knowledge_revision','retrospective_revision')", name='review_object_type'),)
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
     object_type: Mapped[str] = mapped_column(String(64), default='knowledge_revision')
-    object_id: Mapped[str] = mapped_column(ForeignKey('knowledge_items.id'))
-    revision_id: Mapped[str] = mapped_column(ForeignKey('knowledge_revisions.id'), index=True)
+    # Shared polymorphic review ledger. Dispatch validates target type, exact revision
+    # and authorization in its owning domain service; IDs are immutable UUIDs.
+    object_id: Mapped[str] = mapped_column(String(36))
+    revision_id: Mapped[str] = mapped_column(String(36), index=True)
     object_version: Mapped[int] = mapped_column(Integer)
     action: Mapped[str] = mapped_column(String(32))
     reviewer: Mapped[str] = mapped_column(String(36))

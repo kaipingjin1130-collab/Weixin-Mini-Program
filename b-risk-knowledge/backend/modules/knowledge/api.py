@@ -14,7 +14,7 @@ from ..ingestion.models import SourceRecord, SourceRecordVersion
 from ..ingestion.api import record_dto
 from .models import QualityIssue, RecordAnnotation, KnowledgeItem, KnowledgeRevision, ReviewAction, GenerationEntry
 from .schemas import GenerateInput, PatchIssue, PatchDraft, VersionAction
-from .service import source_context, generation_preview, submit_generation, current_item, save_draft, transition
+from .service import source_context, item_source, generation_preview, submit_generation, current_item, save_draft, transition
 
 router = APIRouter(prefix='/api/v1', tags=['质量核查与知识加工'])
 
@@ -34,7 +34,8 @@ def item_dto(item, revision, db=None):
             ReleaseEntry.knowledge_revision_id == revision.id, ReleaseEntry.state == 'ready',
             KnowledgeRelease.state == 'active', KnowledgeRelease.active_scope == item.project_id).limit(1)))
     return {'id': item.id, 'title': item.title, 'type': item.type, 'project_id': item.project_id,
-            'record_version_id': item.record_version_id, 'revision_id': revision.id, 'version': revision.version,
+            'record_version_id': item.record_version_id, 'retrospective_revision_id': item.retrospective_revision_id,
+            'revision_id': revision.id, 'version': revision.version, 'object_type': 'knowledge_revision',
             'state': revision.state, 'row_version': item.row_version, 'model_ref': revision.model_ref,
             'schema_version': revision.schema_version, 'template_version': revision.template_version,
             'created_at': item.created_at, 'is_mock': True, 'published': published}
@@ -178,12 +179,13 @@ def knowledge(actor: Actor = Depends(current_actor), state: str | None = None, p
 def knowledge_detail(ident: str, actor: Actor = Depends(current_actor)):
     with Session() as db:
         item, revision = current_item(db, ident, actor)
-        source, row, evidence = source_context(db, item.record_version_id, actor)
+        source, row, evidence = item_source(db, item, actor)
         revisions = db.scalars(select(KnowledgeRevision).where(KnowledgeRevision.item_id == item.id).order_by(KnowledgeRevision.version.desc())).all()
         actions = db.scalars(select(ReviewAction).where(ReviewAction.object_id == item.id).order_by(ReviewAction.created_at)).all()
         annotations = db.scalars(select(RecordAnnotation).where(RecordAnnotation.record_version_id == source.id)).all()
         return {**item_dto(item, revision, db), 'content': revision.content,
-                'source': {'record_id': row.id, 'version': source.version, 'current_version': row.current_version,
+                'source': {'record_id': row.id, 'kind': 'retrospective' if item.retrospective_revision_id else 'historical',
+                           'version': source.version, 'current_version': source.version if item.retrospective_revision_id else row.current_version,
                            'effective_fields': source.effective_fields, 'raw_fields': source.raw_fields, 'provenance': source.provenance,
                            'evidence': [{'id': e.id, 'type': e.evidence_type, 'locator': e.locator, 'relation_confidence': e.relation_confidence} for e in evidence],
                            'annotations': [{'field': n.field, 'value': n.value, 'reason': n.reason, 'source_kind': n.source_kind} for n in annotations]},
@@ -204,10 +206,17 @@ def submit_review(ident: str, data: VersionAction, request: Request, actor: Acto
 
 @router.get('/reviews')
 def reviews(actor: Actor = Depends(current_actor), state: str = 'pending_review',
-            limit: int = Query(20, ge=1, le=100), cursor: str | None = None):
+            limit: int = Query(20, ge=1, le=100), cursor: str | None = None, object_type: str = 'knowledge_revision'):
     projects = actor.projects('audit')
     if not projects:
         raise Problem(403, 'FORBIDDEN', '当前身份没有审核权限。')
+    if object_type == 'retrospective_revision':
+        from ..retrospectives.api import listing
+        result = listing(actor=actor, mode=None, state=state, limit=limit, cursor=cursor, review_only=True)
+        result['items'] = [{**i, 'review_id': i['revision_id'], 'type': 'retrospective_revision'} for i in result['items'] if i['project_id'] in projects]
+        return result
+    if object_type != 'knowledge_revision':
+        raise Problem(422, 'UNKNOWN_REVIEW_TYPE', '未知审核对象类型。')
     with Session() as db:
         query = select(KnowledgeItem).join(KnowledgeRevision, (KnowledgeRevision.item_id == KnowledgeItem.id) &
                 (KnowledgeRevision.version == KnowledgeItem.current_revision)).where(KnowledgeItem.project_id.in_(projects), KnowledgeRevision.state == state)
@@ -223,6 +232,17 @@ def reviews(actor: Actor = Depends(current_actor), state: str = 'pending_review'
         return {'items': output, 'next_cursor': next_cursor}
 
 
+def retrospective_review(ident, data, actor, action, request_id):
+    from ..retrospectives.models import RetrospectiveRevision
+    from ..retrospectives.service import transition as retro_transition
+    with Session() as db:
+        revision = db.get(RetrospectiveRevision, ident)
+        parent_id = revision.parent_id if revision else None
+    if parent_id:
+        return retro_transition(parent_id, data, actor, action, request_id, review_id=ident)
+    return None
+
+
 def review_object(ident, actor):
     with Session() as db:
         revision = db.get(KnowledgeRevision, ident)
@@ -234,9 +254,15 @@ def review_object(ident, actor):
 
 @router.post('/reviews/{ident}/approve')
 def approve(ident: str, data: VersionAction, request: Request, actor: Actor = Depends(current_actor)):
+    result = retrospective_review(ident, data, actor, 'approved', request.state.request_id)
+    if result is not None:
+        return result
     return item_dto(*transition(review_object(ident, actor), data, actor, 'approved', request.state.request_id, review_id=ident))
 
 
 @router.post('/reviews/{ident}/request-changes')
 def request_changes(ident: str, data: VersionAction, request: Request, actor: Actor = Depends(current_actor)):
+    result = retrospective_review(ident, data, actor, 'changes_requested', request.state.request_id)
+    if result is not None:
+        return result
     return item_dto(*transition(review_object(ident, actor), data, actor, 'changes_requested', request.state.request_id, review_id=ident))

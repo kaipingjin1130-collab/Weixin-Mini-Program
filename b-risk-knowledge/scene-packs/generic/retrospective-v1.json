@@ -1,0 +1,14 @@
+{
+  "version": "process-review-v1",
+  "name": "通用检查整改记录对照模板（演示，非强制规范）",
+  "summary_policy": "保留事件原文摘录、复核退回记录和证据，严格分离模板建议",
+  "steps": [
+    {"event_type": "task_started", "name": "任务开始", "scope": "task"},
+    {"event_type": "inspection_recorded", "name": "检查记录", "scope": "task"},
+    {"event_type": "issue_created", "name": "问题记录", "scope": "issue"},
+    {"event_type": "rectification_submitted", "name": "整改提交", "scope": "issue"},
+    {"event_type": "review_accepted", "name": "复核通过", "scope": "issue"},
+    {"event_type": "task_completed", "name": "任务结束", "scope": "task"}
+  ],
+  "deadline_rule": {"id": "accepted-by-due-v1", "applicable_scenes": ["lifting_supervision", "general_inspection"], "completion_event": "review_accepted", "description": "仅比较同一问题明确整改期限与有实际时间的复核通过记录；只表示记录中的时间比较。"}
+}

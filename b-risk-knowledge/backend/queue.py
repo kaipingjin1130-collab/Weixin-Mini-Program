@@ -96,3 +96,6 @@ from .modules.ingestion import tasks as ingestion_tasks  # noqa: E402,F401
 from .modules.knowledge import tasks as knowledge_tasks  # noqa: E402,F401
 from .modules.retrieval import tasks as retrieval_tasks  # noqa: E402,F401
 from .modules.task_packages import tasks as package_tasks  # noqa: E402,F401
+# B06 extends knowledge provenance with foreign keys even though its bounded,
+# deterministic generation is synchronous. Workers must load that metadata too.
+from .modules.retrospectives import models as retrospective_models  # noqa: E402,F401

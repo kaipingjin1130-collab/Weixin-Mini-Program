@@ -1,11 +1,11 @@
-from sqlalchemy import select, text, func
+from sqlalchemy import select, text, func, or_, and_
 from ...db import Session
 from ...auth import authorize, Problem
 from ...models import ProcessingRun, FileAsset, utcnow, new_id
 from ...job_service import fingerprint, enqueue
 from ...audit import record as audit
 from ..knowledge.models import KnowledgeItem, KnowledgeRevision, KnowledgeEvidenceLink
-from ..knowledge.service import source_context, validate_card
+from ..knowledge.service import source_context, item_source, validate_card
 from ..knowledge.schemas import Card
 from ..ingestion.models import SourceRecordVersion, SourceRecord, EvidenceItem
 from .models import KnowledgeRelease, ReleaseEntry, EmbeddingSet, SearchChunk, ChunkEmbedding
@@ -23,7 +23,7 @@ def publication_source(db, revision, actor):
         raise Problem(410, 'KNOWLEDGE_WITHDRAWN', '此知识已撤回，不能继续查看或引用。')
     if revision.state != 'approved':
         raise Problem(409, 'REVISION_NOT_APPROVED', '只能发布已审核通过的固定版本。')
-    source, row, evidence = source_context(db, item.record_version_id, actor)
+    source, row, evidence = item_source(db, item, actor)
     return item, source, evidence
 
 
@@ -158,13 +158,15 @@ def public_query(actor, project=None, scene=None, card_type=None, include_histor
     query = select(KnowledgeItem, KnowledgeRevision, KnowledgeRelease).select_from(KnowledgeItem).join(KnowledgeRevision,
         KnowledgeRevision.item_id == KnowledgeItem.id).join(ReleaseEntry,
         ReleaseEntry.knowledge_revision_id == KnowledgeRevision.id).join(KnowledgeRelease,
-        KnowledgeRelease.id == ReleaseEntry.release_id).join(SourceRecordVersion,
-        SourceRecordVersion.id == KnowledgeItem.record_version_id).join(FileAsset,
+        KnowledgeRelease.id == ReleaseEntry.release_id).outerjoin(SourceRecordVersion,
+        SourceRecordVersion.id == KnowledgeItem.record_version_id).outerjoin(FileAsset,
         FileAsset.id == SourceRecordVersion.provenance['input_asset_id'].astext).where(
         KnowledgeRelease.state.in_(['active', 'inactive'] if include_history else ['active']),
         KnowledgeRelease.published_at.is_not(None), ReleaseEntry.state == 'ready', KnowledgeItem.withdrawn_at.is_(None),
-        KnowledgeItem.project_id.in_(projects), KnowledgeRevision.state == 'approved', FileAsset.availability == 'available',
-        FileAsset.project_id == KnowledgeItem.project_id)
+        KnowledgeItem.project_id.in_(projects), KnowledgeRevision.state == 'approved')
+    from ..retrospectives.sources import availability_sql
+    query = query.where(or_(and_(KnowledgeItem.record_version_id.is_not(None), FileAsset.availability == 'available',
+        FileAsset.project_id == KnowledgeItem.project_id), availability_sql(KnowledgeItem)))
     if scene:
         query = query.where(KnowledgeItem.scene_code == scene)
     if card_type:
