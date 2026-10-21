@@ -1,0 +1,37 @@
+{
+  "description": "质量安全小察本地试用版",
+  "miniprogramRoot": "./",
+  "compileType": "miniprogram",
+  "appid": "wxe8537346a8de6c0b",
+  "projectname": "quality-safety-local",
+  "setting": {
+    "urlCheck": false,
+    "es6": true,
+    "enhance": true,
+    "minified": true,
+    "postcss": false,
+    "compileWorklet": false,
+    "uglifyFileName": false,
+    "uploadWithSourceMap": true,
+    "packNpmManually": false,
+    "packNpmRelationList": [],
+    "minifyWXSS": true,
+    "minifyWXML": true,
+    "localPlugins": false,
+    "disableUseStrict": false,
+    "useCompilerPlugins": false,
+    "condition": false,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
+    }
+  },
+  "libVersion": "latest",
+  "simulatorPluginLibVersion": {},
+  "packOptions": {
+    "ignore": [],
+    "include": []
+  },
+  "editorSetting": {}
+}

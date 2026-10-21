@@ -1,0 +1,6 @@
+{
+  "pages": ["pages/index/index","pages/work/work"],
+  "window": {"navigationBarTitleText":"质量安全小察","navigationBarBackgroundColor":"#164b3b","navigationBarTextStyle":"white","backgroundColor":"#f4f7f2"},
+  "style":"v2",
+  "sitemapLocation":"sitemap.json"
+}
