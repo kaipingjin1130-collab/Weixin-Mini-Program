@@ -203,7 +203,7 @@ def snapshot_docx(snap,brief=False):
    inspector=t.get('inspectors') or '、'.join(dict.fromkeys(r['authorName'] for r in t['records'])),
    scope=(t.get('fieldSummary','') if brief else t.get('handoverSummary',''))+'\n'+'\n'.join(k+'：'+v for k,v in t['fields'].items())+
          (('\n接收意见：'+t['receipt']['text']) if t.get('receipt') else ''),
-   noHazard=False,issues=[dict(category='现场确认记录与证据',risk='人工核对',description='\n'.join(r['type']+' / '+r['authorName']+' / '+r['occurredAt']+'：'+r['text'] for r in t['records']),photos=[eid for eid in photos if any(eid in r['evidence'] for r in t['records']) and not any(eid in i['evidence'] for i in t['issues'])]),*issue_rows],signatures=[dict(name=t['fieldSignature']['name'],signature=t['fieldSignature']['evidenceId'])] if t.get('fieldSignature') else [])
+   noHazard=t.get('noHazard',False),issues=([dict(category='现场确认记录与证据',risk='人工核对',description='\n'.join(r['type']+' / '+r['authorName']+' / '+r['occurredAt']+'：'+r['text'] for r in t['records']),photos=[eid for eid in photos if any(eid in r['evidence'] for r in t['records']) and not any(eid in i['evidence'] for i in t['issues'])])] if t['records'] else [])+issue_rows,signatures=[dict(name=t['fieldSignature']['name'],signature=t['fieldSignature']['evidenceId'])] if t.get('fieldSignature') else [])
   return make_docx(mc,report)
 
 class Handler(BaseHTTPRequestHandler):
@@ -220,7 +220,7 @@ class Handler(BaseHTTPRequestHandler):
   token=self.headers.get('Authorization','').removeprefix('Bearer ')
   if not token:
    from http.cookies import SimpleCookie
-   cookie=SimpleCookie(self.headers.get('Cookie','')); token=cookie['session'].value if 'session' in cookie else ''
+   cookie=SimpleCookie(self.headers.get('Cookie','')); token=cookie['qaxc_session'].value if 'qaxc_session' in cookie else ''
   with SESSION_LOCK: valid=SESSIONS.get(token,0)>time.time()
   if not valid: raise Problem('请登录本地工作台',401)
   return token
@@ -230,9 +230,9 @@ class Handler(BaseHTTPRequestHandler):
   self.db_connection=None
   try:
    path=urlsplit(self.path).path
-   if method=='GET' and path in ['/','/app.js','/style.css','/work','/work.js']:
+   if method=='GET' and path in ['/','/app.js','/followup.js','/style.css','/work','/work.js']:
     f=ROOT/'web'/({'/':'index.html','/work':'work.html'}.get(path,path.lstrip('/')))
-    self.send(f.read_bytes(),mime={'/':'text/html; charset=utf-8','/work':'text/html; charset=utf-8','/work.js':'text/javascript; charset=utf-8','/app.js':'text/javascript; charset=utf-8','/style.css':'text/css; charset=utf-8'}[path]); return
+    self.send(f.read_bytes(),mime={'/':'text/html; charset=utf-8','/work':'text/html; charset=utf-8','/work.js':'text/javascript; charset=utf-8','/app.js':'text/javascript; charset=utf-8','/followup.js':'text/javascript; charset=utf-8','/style.css':'text/css; charset=utf-8'}[path]); return
    d={}
    if method=='POST':
     origin=self.headers.get('Origin')
@@ -257,11 +257,11 @@ class Handler(BaseHTTPRequestHandler):
      LOGIN_ATTEMPTS.pop(ip,None)
      token=secrets.token_urlsafe(32); SESSIONS[token]=time.time()+86400
      SESSION_USERS[token]=user
-    self.send({'token':token,'user':user},headers={'Set-Cookie':f'session={token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=86400'}); return
+    self.send({'token':token,'user':user},headers={'Set-Cookie':f'qaxc_session={token}; HttpOnly; SameSite=Strict; Path=/; Max-Age=86400'}); return
    token=self.auth()
    if path=='/api/logout':
     with SESSION_LOCK: SESSIONS.pop(token,None); SESSION_USERS.pop(token,None)
-    self.send({'ok':True},headers={'Set-Cookie':'session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'}); return
+    self.send({'ok':True},headers={'Set-Cookie':'qaxc_session=; HttpOnly; SameSite=Strict; Path=/; Max-Age=0'}); return
    with db() as c:
     self.db_connection=c
     if method=='POST': c.execute('BEGIN IMMEDIATE')
@@ -310,6 +310,7 @@ class Handler(BaseHTTPRequestHandler):
       # Recheck authorization after role changes before returning cached task data.
       if d.get('taskId'): w.task(d['taskId'])
       if d.get('projectId'): w.role(d['projectId'])
+      if d.get('reportId'): w.role(get_report(c,d['reportId'])['projectId'])
       self.send(json.loads(previous['result']));return
      result=w.upload(d) if action=='upload' else w.dispatch(action,d)
      c.execute('INSERT INTO operations VALUES(?,?,?,?)',(user['id'],request_id,fingerprint,workflow.dump(result)))

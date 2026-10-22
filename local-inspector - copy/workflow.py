@@ -133,6 +133,32 @@ class Workflow:
   self.task(r['task_id'])
   return json.loads(r['payload'])
  def dispatch(self,path,d):
+  if path=='report-followup':
+   report=self.s.get_report(self.c,self.text(d,'reportId',100))
+   pid=report['projectId'];self.allow(pid,['manager'])
+   if report['status']!='submitted': self.fail('请先提交巡查报告，再办理整改与归档',409)
+   # POST requests run in BEGIN IMMEDIATE: different clicks cannot create duplicates.
+   for row in self.c.execute('SELECT payload FROM tasks WHERE project_id=?',(pid,)):
+    existing=json.loads(row[0])
+    if existing.get('sourceReportId')==report['id'] or any(r.get('sourceReportId')==report['id'] for r in existing['records']):
+     return existing
+   receiver=self.text(d,'receiverName',100)
+   due=self.checkdate(d.get('dueDate'))
+   scenario=json.loads(self.c.execute("SELECT payload FROM scenarios WHERE id='inspection'").fetchone()[0])
+   t=dict(id=self.s.uid(),number='FOLLOW-'+report['number'],projectId=pid,inspectors=report['inspector'],
+          title='巡查报告后续办理 · '+report['number'],objectId=self.s.uid(),object=report['scope'][:200],
+          dueDate=due,scenario=scenario,fields={k:report['scope'][:1000] for k in scenario['fields']},
+          materials=[],checklist=[],assignee=self.user['id'],receiver='',receiverName=receiver,
+          source='report',sourceReportId=report['id'],createdBy=self.user['id'],createdByName=self.user['name'],
+          status='active',fieldStatus='collecting',fieldBriefs=[],revision=1,records=[],issues=[],events=[],deliveries=[],
+          createdAt=self.s.now(),updatedAt=self.s.now())
+   self.stamp(t,'report-followup','从已签署巡查报告发起后续办理，保留原报告')
+   self.c.execute('INSERT INTO tasks VALUES(?,?,?,?)',(t['id'],pid,dump(t),1))
+   t=self.dispatch('import-report',dict(taskId=t['id'],revision=t['revision'],reportId=report['id']))
+   t['fieldStatus']='accepted';t['noHazard']=report.get('noHazard',False);t['fieldSummary']=report['scope']
+   t['fieldFeedback']=dict(text='负责人从报告中心确认接收已提交报告并发起后续办理',decision='accept',actor=self.user['id'],uploadedAt=self.s.now())
+   self.stamp(t,'receive-field',t['fieldFeedback']['text'])
+   return self.persist(t)
   if path=='users':
    if self.user['id']!='admin': self.fail('只有管理员可以创建账号',403)
    username=self.text(d,'username',60)
@@ -228,7 +254,11 @@ class Workflow:
    if self.role(pid)=='inspector' and self.user['id']!=t['assignee']: self.fail('由任务执行人汇总上报',403)
    if t['status']!='active' or t.get('fieldStatus','collecting')!='collecting': self.fail('当前不能重复上报现场记录',409)
    if any(r['status']!='confirmed' for r in t['records']): self.fail('请先在网页平台确认历史现场记录草稿')
-   if not t['issues']: self.fail('请至少保存一条隐患记录后再生成简报')
+   no_hazard=d.get('noHazard') is True
+   if no_hazard and t['issues']: self.fail('已有隐患记录，不能选择未发现隐患')
+   if not no_hazard and not t['issues']: self.fail('请至少保存一条隐患记录，或明确选择未发现隐患并填写检查结论')
+   self.text(d,'text')
+   t['noHazard']=no_hazard
    inspectors=self.text(d,'inspectors',1000)
    signer=self.text(d,'signer',100)
    names=[n.strip() for n in re.split(r'[,，、;；\n]+',inspectors) if n.strip()]
@@ -281,10 +311,24 @@ class Workflow:
    if record['status']=='confirmed': record['confirmedAt']=self.s.now()
    if old: t['records'][t['records'].index(old)]=record
    else: t['records'].append(record)
-  elif path=='issue':
+  elif path=='delete-issue':
+   self.allow(pid,['manager','inspector'])
+   if t['status']!='active' or t.get('fieldStatus','collecting')!='collecting': self.fail('上报后隐患已锁定，请平台退回后操作',409)
+   old=next((i for i in t['issues'] if i['id']==d.get('issueId')),None)
+   if not old: self.fail('隐患不存在',404)
+   if old['status']!='unassigned' or old['history']: self.fail('已进入整改办理的隐患不能删除',409)
+   t['issues'].remove(old)
+   self.stamp(t,'delete-issue',dump(old))
+   return self.persist(t)
+  elif path in ['issue','edit-issue']:
    self.allow(pid,['manager','inspector'])
    if t['status']!='active': self.fail('仅执行中任务可登记问题',409)
    if t.get('fieldStatus','collecting')!='collecting': self.fail('现场材料已上报，请平台退回后补充问题',409)
+   old=None
+   if path=='edit-issue':
+    old=next((i for i in t['issues'] if i['id']==d.get('issueId')),None)
+    if not old: self.fail('隐患不存在',404)
+    if old['status']!='unassigned' or old['history']: self.fail('已进入整改办理的隐患不能修改',409)
    evidence=self.evidence(pid,d.get('evidence',[]))
    if t['scenario']['workflow']['requireEvidence'] and not evidence: self.fail('此场景的问题必须关联证据')
    risk=d.get('risk','中')
@@ -295,6 +339,11 @@ class Workflow:
     if not isinstance(value,str) or len(value)>4000: self.fail('隐患字段格式不正确')
     details[key]=value.strip()
    if details['category'] and details['category'] not in ['工程质量','施工安全','消防安全','文明施工','其他']: self.fail('隐患类别不支持')
+   if old:
+    self.stamp(t,'edit-issue',dump(old))
+    old.update(description=self.text(d,'description'),risk=risk,evidence=evidence,updatedAt=self.s.now(),**details)
+    return self.persist(t)
+   t['noHazard']=False
    assigned=bool(d.get('assignee') or d.get('reviewer'))
    if assigned: self.allow(pid,['manager'])
    t['issues'].append(dict(id=self.s.uid(),description=self.text(d,'description'),risk=risk,**details,
@@ -346,15 +395,17 @@ class Workflow:
    mids={report.get('signature','')}
    mids.update(x['signature'] for x in report.get('signatures',[]))
    for issue in report['issues']: mids.update(issue['photos'])
-   evidence=[]
+   evidence=[];media_map={}
    for mid in mids-{''}:
     m=self.c.execute('SELECT * FROM media WHERE id=?',(mid,)).fetchone()
     raw=(self.s.DATA/'uploads'/m['name']).read_bytes()
     eid=self.s.uid();meta=dict(id=eid,projectId=pid,name=m['name'],mime=m['mime'],filename=m['name'],sha256=hashlib.sha256(raw).hexdigest(),size=len(raw),version=1,reviewStatus='source-confirmed',source='legacy-report:'+report['id'],uploadedAt=self.s.now(),occurredAt=report['date']+'T00:00:00+08:00',access='/api/work/evidence/'+eid)
-    self.c.execute('INSERT INTO evidence VALUES(?,?,?)',(eid,pid,dump(meta)));evidence.append(eid)
+    self.c.execute('INSERT INTO evidence VALUES(?,?,?)',(eid,pid,dump(meta)));evidence.append(eid);media_map[mid]=eid
    t['records'].append(dict(id=self.s.uid(),sourceReportId=report['id'],type=t['scenario']['recordTypes'][0],text=report['scope']+'\n'+ '\n'.join(x['description'] for x in report['issues']),sourceReport=report,occurredAt=report['date']+'T00:00:00+08:00',uploadedAt=self.s.now(),confirmedAt=self.s.now(),author=self.user['id'],authorName=self.user['name'],status='confirmed',evidence=evidence))
    for item in report['issues']:
-    t['issues'].append(dict(id=self.s.uid(),description=item['description'],risk=item['risk'],assignee='',reviewer='',dueDate=t['dueDate'],status='unassigned',evidence=evidence,history=[],createdAt=self.s.now()))
+    t['issues'].append(dict(id=self.s.uid(),description=item['description'],risk=item['risk'],
+      **{k:item.get(k,'') for k in ['category','subcategory','location','reference','suggestion']},
+      assignee='',reviewer='',dueDate=t['dueDate'],status='unassigned',evidence=[media_map[mid] for mid in item['photos']],history=[],createdAt=self.s.now()))
   elif path=='deliver':
    self.allow(pid,['manager'])
    if t['status']!='active': self.fail('仅执行中任务可生成交接成果',409)
@@ -441,7 +492,7 @@ def report_html(s):
  blocks['任务信息']='<p>检查人员：'+esc(t.get('inspectors',''))+'</p><p>'+esc(t['number']+' / '+t['title']+' / '+s['project']['name'])+'</p><p>对象：'+esc(t['object'])+'　状态：'+esc(STATUS[t['status']])+'</p>'+''.join('<p>'+esc(k)+'：'+esc(v)+'</p>' for k,v in t['fields'].items())
  if t.get('receiverName'): blocks['任务信息']+='<p>最终成果接收人：'+esc(t['receiverName'])+'</p>'
  blocks['确认记录']=''.join('<article><h3>'+esc(r['type'])+' · '+esc(r['authorName'])+'</h3><p>'+esc(r['text'])+'</p><small>'+esc(r['occurredAt'])+' / '+esc(r['status'])+'</small></article>' for r in t['records'])
- blocks['问题清单']=''.join('<article><p>'+esc(i['description'])+' / '+esc(i['risk'])+' / '+esc(i['status'])+'</p>'+''.join('<p>'+esc(label+'：'+i.get(key,''))+'</p>' for key,label in [('category','类别'),('subcategory','子分类'),('location','部位'),('reference','规范依据'),('suggestion','处理建议')])+'<p>整改人：'+esc(i.get('assigneeName') or i['assignee'])+' / 复核人：'+esc(i.get('reviewerName') or i['reviewer'])+'</p>'+'<p>关联证据：'+esc('、'.join(i['evidence']))+'</p>'+''.join('<p>'+esc(h['action']+'：'+h['text'])+'</p>' for h in i['history'])+'</article>' for i in t['issues']) or '<p>未登记问题。</p>'
+ blocks['问题清单']=''.join('<article><p>'+esc(i['description'])+' / '+esc(i['risk'])+' / '+esc(i['status'])+'</p>'+''.join('<p>'+esc(label+'：'+i.get(key,''))+'</p>' for key,label in [('category','类别'),('subcategory','子分类'),('location','部位'),('reference','规范依据'),('suggestion','处理建议')])+'<p>整改人：'+esc(i.get('assigneeName') or i['assignee'])+' / 复核人：'+esc(i.get('reviewerName') or i['reviewer'])+'</p>'+'<p>关联证据：'+esc('、'.join(i['evidence']))+'</p>'+''.join('<p>'+esc(h['action']+'：'+h['text'])+'</p>' for h in i['history'])+'</article>' for i in t['issues']) or ('<p>本次在上述检查范围内未发现隐患。</p><p>'+esc(t.get('fieldSummary',''))+'</p>' if t.get('noHazard') else '<p>未登记问题。</p>')
  blocks['操作日志']=''.join('<p>'+esc(x['uploadedAt']+' '+x['actorName']+' '+x['action']+' '+x['detail'])+'</p>' for x in t['events'])
  blocks['交接摘要']='<p>'+esc(t.get('handoverSummary',''))+'</p><p>'+esc(t.get('receipt',{}).get('text','尚未接收'))+'</p>'
  evidence='<h2>证据与附件</h2>'
