@@ -134,6 +134,9 @@ def public_evidence(ident: str, revision_id: str, historical: bool = False, acto
             raise Problem(410, 'EVIDENCE_UNAVAILABLE', '证据不可用。')
         asset = db.get(FileAsset, evidence.asset_id) if evidence.asset_id else None
         # Minimal anchored row content; never expose the whole import file or other rows.
+        if not item.retrospective_revision_id:
+            from ..ingestion.models import SourceRecordVersion
+            source = db.get(SourceRecordVersion, evidence.record_version_id)
         return {**citation, 'description': evidence.text if item.retrospective_revision_id else source.effective_fields.get('description'), 'source_version': source.version,
                 'type': evidence.evidence_type, 'has_image': bool(asset and asset.mime_type.startswith('image/')),
                 'is_mock': True, 'note': '模拟证据示意图，非真实现场照片。' if asset and asset.mime_type.startswith('image/') else '结构化来源行；当前未提供原报告附件。'}

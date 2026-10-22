@@ -1,0 +1,73 @@
+{
+  "$defs": {
+    "Option": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z]$",
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "title": "Option",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "description": "This schema deliberately has no answer/rubric/source knowledge body fields.",
+  "properties": {
+    "question_id": {
+      "title": "Question Id",
+      "type": "string"
+    },
+    "revision_id": {
+      "title": "Revision Id",
+      "type": "string"
+    },
+    "type": {
+      "title": "Type",
+      "type": "string"
+    },
+    "stem": {
+      "title": "Stem",
+      "type": "string"
+    },
+    "options": {
+      "items": {
+        "$ref": "#/$defs/Option"
+      },
+      "title": "Options",
+      "type": "array"
+    },
+    "max_score": {
+      "title": "Max Score",
+      "type": "number"
+    },
+    "position": {
+      "title": "Position",
+      "type": "integer"
+    }
+  },
+  "required": [
+    "question_id",
+    "revision_id",
+    "type",
+    "stem",
+    "options",
+    "max_score",
+    "position"
+  ],
+  "title": "LearnerQuestion",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

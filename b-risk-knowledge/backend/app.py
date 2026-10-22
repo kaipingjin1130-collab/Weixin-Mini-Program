@@ -37,7 +37,7 @@ async def lifespan(app):
     queue_app.close()
 
 
-app = FastAPI(title="工程风险知识中心 B06", version="0.6.0", lifespan=lifespan)
+app = FastAPI(title="工程风险知识中心 B07", version="0.7.0", lifespan=lifespan)
 app.add_middleware(TrustedHostMiddleware, allowed_hosts=["127.0.0.1", "localhost", "testserver"])
 
 
@@ -250,6 +250,8 @@ app.include_router(ingestion_router)
 from .modules.retrieval.api import router as retrieval_router, integration_router
 app.include_router(retrieval_router)
 app.include_router(integration_router)
+from .modules.extraction.api import router as extraction_router
+app.include_router(extraction_router)
 from .modules.knowledge.api import router as knowledge_router
 app.include_router(knowledge_router)
 from .modules.task_packages.api import router as package_router, integration_router as package_integration_router
@@ -257,3 +259,5 @@ app.include_router(package_router)
 app.include_router(package_integration_router)
 from .modules.retrospectives.api import router as retrospective_router
 app.include_router(retrospective_router)
+from .modules.training.api import router as training_router
+app.include_router(training_router)

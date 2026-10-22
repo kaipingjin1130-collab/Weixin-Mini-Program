@@ -167,6 +167,8 @@ def public_query(actor, project=None, scene=None, card_type=None, include_histor
     from ..retrospectives.sources import availability_sql
     query = query.where(or_(and_(KnowledgeItem.record_version_id.is_not(None), FileAsset.availability == 'available',
         FileAsset.project_id == KnowledgeItem.project_id), availability_sql(KnowledgeItem)))
+    from ..extraction.grounding import extra_available_sql
+    query = query.where(extra_available_sql(KnowledgeItem))
     if scene:
         query = query.where(KnowledgeItem.scene_code == scene)
     if card_type:
@@ -177,4 +179,4 @@ def public_query(actor, project=None, scene=None, card_type=None, include_histor
 def card_dto(item, revision, release):
     return {'id': item.id, 'revision_id': revision.id, 'version': revision.version, 'title': revision.content['title'],
             'type': item.type, 'project_id': item.project_id, 'scene_code': item.scene_code, 'object_type': item.object_type,
-            'scope': item.scope, 'release_id': release.id, 'state': 'published', 'is_mock': True}
+            'scope': item.scope, 'release_id': release.id, 'state': 'published', 'is_mock': True, 'origin_type': 'retrospective' if item.retrospective_revision_id else 'historical'}

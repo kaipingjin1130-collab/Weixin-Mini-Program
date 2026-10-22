@@ -18,6 +18,7 @@ def main():
         ("admin", "本地管理员", ["demo-airport", "demo-metro"], "admin"),
         ("processor", "资料加工员", ["demo-airport"], "processor"),
         ("learner", "新成员", ["demo-airport"], "learner"),
+        ("teacher", "培训教员", ["demo-airport"], "teacher"),
         ("outsider", "其他项目成员", ["demo-metro"], "learner"),
         ("a-service", "模拟A服务（非真实联调）", ["demo-airport", "demo-metro"], "a_service"),
     ]

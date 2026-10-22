@@ -81,7 +81,7 @@ async def recover_stalled():
     jobs = await queue_app.job_manager.get_stalled_jobs(queue="b01", seconds_since_heartbeat=10)
     for job in jobs:
         # Only this registered queue/task is recovered; no other application's jobs.
-        if job.task_name in {"b01.demo_check", "b02.source_import", "b03.knowledge_generation", "b04.release_build", "b05.task_package_import"}:
+        if job.task_name in {"b01.demo_check", "b02.source_import", "b03.knowledge_generation", "b04.release_build", "b05.task_package_import", "b07.knowledge_extraction", "b07.training_grading"}:
             await queue_app.job_manager.retry_job(job)
 
 
@@ -99,3 +99,6 @@ from .modules.task_packages import tasks as package_tasks  # noqa: E402,F401
 # B06 extends knowledge provenance with foreign keys even though its bounded,
 # deterministic generation is synchronous. Workers must load that metadata too.
 from .modules.retrospectives import models as retrospective_models  # noqa: E402,F401
+from .modules.training import models as training_models  # noqa: E402,F401
+from .modules.extraction import tasks as extraction_tasks  # noqa: E402,F401
+from .modules.training import tasks as training_tasks  # noqa: E402,F401

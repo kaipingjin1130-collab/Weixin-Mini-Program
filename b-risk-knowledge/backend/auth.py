@@ -29,6 +29,8 @@ class Actor:
             "run": {"admin", "processor"},
             "manage": {"admin"},
             "audit": {"admin", "reviewer"},
+            "training_manage": {"admin", "teacher"},
+            "training_review": {"admin", "reviewer", "teacher"},
             "package_read": {"admin", "processor", "reviewer", "teacher", "learner", "a_service"},
             "package_receive": {"admin", "processor", "a_service"},
             "package_withdraw": {"admin", "reviewer", "a_service"},
@@ -43,7 +45,7 @@ def current_actor(request: Request) -> Actor:
     token = request.headers.get("authorization", "")
     identities = {"Bearer dev-admin": "admin", "Bearer dev-processor": "processor",
                   "Bearer dev-learner": "learner", "Bearer dev-outsider": "outsider",
-                  "Bearer dev-a-service": "a-service"}
+                  "Bearer dev-a-service": "a-service", "Bearer dev-teacher": "teacher"}
     subject = identities.get(token)
     if subject is None:
         raise Problem(401, "UNAUTHENTICATED", "请选择本地演示身份；真实身份接入尚未配置。")

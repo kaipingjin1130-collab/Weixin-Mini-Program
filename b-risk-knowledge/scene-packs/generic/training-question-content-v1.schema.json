@@ -1,0 +1,95 @@
+{
+  "$defs": {
+    "Option": {
+      "additionalProperties": false,
+      "properties": {
+        "id": {
+          "pattern": "^[a-z]$",
+          "title": "Id",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "id",
+        "text"
+      ],
+      "title": "Option",
+      "type": "object"
+    },
+    "Rubric": {
+      "additionalProperties": false,
+      "properties": {
+        "point": {
+          "maxLength": 2000,
+          "minLength": 1,
+          "title": "Point",
+          "type": "string"
+        },
+        "keywords": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 10,
+          "minItems": 1,
+          "title": "Keywords",
+          "type": "array"
+        },
+        "points": {
+          "exclusiveMinimum": 0,
+          "maximum": 100,
+          "title": "Points",
+          "type": "number"
+        }
+      },
+      "required": [
+        "point",
+        "keywords",
+        "points"
+      ],
+      "title": "Rubric",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "stem": {
+      "maxLength": 4000,
+      "minLength": 1,
+      "title": "Stem",
+      "type": "string"
+    },
+    "options": {
+      "items": {
+        "$ref": "#/$defs/Option"
+      },
+      "maxItems": 8,
+      "title": "Options",
+      "type": "array"
+    },
+    "answer": {
+      "additionalProperties": true,
+      "title": "Answer",
+      "type": "object"
+    },
+    "rubric": {
+      "items": {
+        "$ref": "#/$defs/Rubric"
+      },
+      "maxItems": 10,
+      "title": "Rubric",
+      "type": "array"
+    }
+  },
+  "required": [
+    "stem"
+  ],
+  "title": "Content",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

@@ -32,7 +32,8 @@ def citation_for(db, evidence_id, revision, actor, claim_path, allow_history=Fal
     document = db.get(SourceDocument, row.document_id)
     # Adapter locators may have ingestion-only fields. Contract locator is a safe subset.
     locator = {k: v for k, v in row.locator.items() if k in {'page', 'table', 'row', 'cell', 'event_id', 'source_record_id', 'section'} and v is not None}
-    source_record = db.get(SourceRecord, source.record_id)
+    actual_source = db.get(SourceRecordVersion, row.record_version_id)
+    source_record = db.get(SourceRecord, actual_source.record_id)
     locator['source_record_id'] = source_record.id
     if 'line' in row.locator:
         locator['row'] = row.locator['line']

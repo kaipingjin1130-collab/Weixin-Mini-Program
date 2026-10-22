@@ -1,0 +1,346 @@
+{
+  "$defs": {
+    "Claim": {
+      "additionalProperties": false,
+      "properties": {
+        "text": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 10,
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "source_kind": {
+          "default": "source_effective",
+          "enum": [
+            "source_effective",
+            "human_annotation"
+          ],
+          "title": "Source Kind",
+          "type": "string"
+        },
+        "source_quotes": {
+          "items": {
+            "$ref": "#/$defs/SourceQuote"
+          },
+          "maxItems": 10,
+          "title": "Source Quotes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "text",
+        "evidence_ids"
+      ],
+      "title": "Claim",
+      "type": "object"
+    },
+    "ConstructionPoint": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "stage": {
+          "enum": [
+            "preparation",
+            "execution",
+            "review"
+          ],
+          "title": "Stage",
+          "type": "string"
+        },
+        "content": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Content",
+          "type": "string"
+        },
+        "inspection_method": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Inspection Method",
+          "type": "string"
+        },
+        "common_mistakes": {
+          "default": "",
+          "maxLength": 2000,
+          "title": "Common Mistakes",
+          "type": "string"
+        },
+        "claim_kind": {
+          "enum": [
+            "source_summary",
+            "suggestion"
+          ],
+          "title": "Claim Kind",
+          "type": "string"
+        },
+        "evidence_ids": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 10,
+          "minItems": 1,
+          "title": "Evidence Ids",
+          "type": "array"
+        },
+        "source_quotes": {
+          "items": {
+            "$ref": "#/$defs/SourceQuote"
+          },
+          "maxItems": 10,
+          "title": "Source Quotes",
+          "type": "array"
+        }
+      },
+      "required": [
+        "title",
+        "stage",
+        "content",
+        "claim_kind",
+        "evidence_ids"
+      ],
+      "title": "ConstructionPoint",
+      "type": "object"
+    },
+    "ExtractedCard": {
+      "additionalProperties": false,
+      "properties": {
+        "title": {
+          "maxLength": 200,
+          "minLength": 1,
+          "title": "Title",
+          "type": "string"
+        },
+        "type": {
+          "enum": [
+            "case_card",
+            "checkpoint_card"
+          ],
+          "title": "Type",
+          "type": "string"
+        },
+        "facts": {
+          "items": {
+            "$ref": "#/$defs/Claim"
+          },
+          "maxItems": 30,
+          "minItems": 1,
+          "title": "Facts",
+          "type": "array"
+        },
+        "suggestions": {
+          "items": {
+            "type": "string"
+          },
+          "maxItems": 30,
+          "title": "Suggestions",
+          "type": "array"
+        },
+        "standards": {
+          "items": {
+            "$ref": "#/$defs/Standard"
+          },
+          "maxItems": 20,
+          "title": "Standards",
+          "type": "array"
+        },
+        "project_name": {
+          "maxLength": 200,
+          "title": "Project Name",
+          "type": "string"
+        },
+        "occurred_on": {
+          "anyOf": [
+            {
+              "maxLength": 10,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Occurred On"
+        },
+        "is_mock": {
+          "default": true,
+          "title": "Is Mock",
+          "type": "boolean"
+        },
+        "generation_mode": {
+          "default": "mock",
+          "enum": [
+            "mock",
+            "llm",
+            "human"
+          ],
+          "title": "Generation Mode",
+          "type": "string"
+        },
+        "category_code": {
+          "anyOf": [
+            {
+              "maxLength": 64,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Category Code"
+        },
+        "category_name": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Category Name"
+        },
+        "construction_points": {
+          "items": {
+            "$ref": "#/$defs/ConstructionPoint"
+          },
+          "maxItems": 30,
+          "title": "Construction Points",
+          "type": "array"
+        }
+      },
+      "required": [
+        "title",
+        "type",
+        "facts",
+        "project_name"
+      ],
+      "title": "ExtractedCard",
+      "type": "object"
+    },
+    "SourceQuote": {
+      "additionalProperties": false,
+      "properties": {
+        "evidence_id": {
+          "maxLength": 36,
+          "title": "Evidence Id",
+          "type": "string"
+        },
+        "text": {
+          "maxLength": 4000,
+          "minLength": 1,
+          "title": "Text",
+          "type": "string"
+        }
+      },
+      "required": [
+        "evidence_id",
+        "text"
+      ],
+      "title": "SourceQuote",
+      "type": "object"
+    },
+    "Standard": {
+      "additionalProperties": false,
+      "properties": {
+        "name": {
+          "maxLength": 500,
+          "minLength": 1,
+          "title": "Name",
+          "type": "string"
+        },
+        "clause": {
+          "anyOf": [
+            {
+              "maxLength": 500,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Clause"
+        },
+        "edition": {
+          "anyOf": [
+            {
+              "maxLength": 100,
+              "type": "string"
+            },
+            {
+              "type": "null"
+            }
+          ],
+          "default": null,
+          "title": "Edition"
+        },
+        "origin": {
+          "enum": [
+            "source_unverified",
+            "system_supplement"
+          ],
+          "title": "Origin",
+          "type": "string"
+        },
+        "verification_status": {
+          "default": "pending_verification",
+          "enum": [
+            "pending_verification",
+            "not_used"
+          ],
+          "title": "Verification Status",
+          "type": "string"
+        }
+      },
+      "required": [
+        "name",
+        "origin"
+      ],
+      "title": "Standard",
+      "type": "object"
+    }
+  },
+  "additionalProperties": false,
+  "properties": {
+    "cards": {
+      "items": {
+        "$ref": "#/$defs/ExtractedCard"
+      },
+      "maxItems": 10,
+      "minItems": 1,
+      "title": "Cards",
+      "type": "array"
+    },
+    "missing_information": {
+      "items": {
+        "type": "string"
+      },
+      "maxItems": 30,
+      "title": "Missing Information",
+      "type": "array"
+    }
+  },
+  "required": [
+    "cards"
+  ],
+  "title": "Output",
+  "type": "object",
+  "$schema": "https://json-schema.org/draft/2020-12/schema"
+}

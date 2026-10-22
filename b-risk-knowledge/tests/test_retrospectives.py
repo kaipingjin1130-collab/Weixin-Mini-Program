@@ -227,7 +227,7 @@ def test_experience_draft_reuses_knowledge_review_publication_and_live_withdrawa
     with Session() as db:
         assert db.scalar(select(func.count()).select_from(ExperienceConversion).where(ExperienceConversion.revision_id==d['revision_id']))==1
         event=db.scalar(select(PackageInvalidation).where(PackageInvalidation.package_id==ident))
-        assert 'B06' in event.payload['consumed_by'] and event.payload['pending_consumers']==['B07']
+        assert {'B06','B07'}<=set(event.payload['consumed_by']) and event.payload['pending_consumers']==[]
 
 
 def test_partial_and_summary_packages_degrade_without_fake_process(client):

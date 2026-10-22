@@ -62,7 +62,7 @@ class KnowledgeRevision(Base):
     item_id: Mapped[str] = mapped_column(ForeignKey('knowledge_items.id'), index=True)
     version: Mapped[int] = mapped_column(Integer)
     content: Mapped[dict] = mapped_column(JSONB)
-    schema_version: Mapped[str] = mapped_column(String(64), default='knowledge-card-v1')
+    schema_version: Mapped[str] = mapped_column(String(64), default='knowledge-card-v2')
     template_version: Mapped[str] = mapped_column(String(64))
     model_ref: Mapped[str] = mapped_column(String(128))
     state: Mapped[str] = mapped_column(String(32), default='draft', index=True)
@@ -85,7 +85,7 @@ class KnowledgeEvidenceLink(Base):
 
 class ReviewAction(Base):
     __tablename__ = 'review_actions'
-    __table_args__ = (CheckConstraint("object_type IN ('knowledge_revision','retrospective_revision')", name='review_object_type'),)
+    __table_args__ = (CheckConstraint("object_type IN ('knowledge_revision','retrospective_revision','question_revision')", name='review_object_type'),)
     id: Mapped[str] = mapped_column(String(36), primary_key=True, default=new_id)
     object_type: Mapped[str] = mapped_column(String(64), default='knowledge_revision')
     # Shared polymorphic review ledger. Dispatch validates target type, exact revision

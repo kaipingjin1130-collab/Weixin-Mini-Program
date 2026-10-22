@@ -1,13 +1,15 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Activity, ArrowRight, CheckCircle2, ChevronRight, ClipboardList, Download, FileCheck2,
-  FolderLock, LayoutDashboard, LoaderCircle, Play, RefreshCw, ShieldCheck, Users, X, AlertCircle } from 'lucide-react';
+  FolderLock, LayoutDashboard, LoaderCircle, Play, RefreshCw, ShieldCheck, Users, X, AlertCircle, BookOpen } from 'lucide-react';
 import './style.css';
 import { Ingestion } from './Ingestion';
 import { Knowledge } from './Knowledge';
 import { Retrieval } from './Retrieval';
 import { TaskPackages } from './TaskPackages';
 import { Retrospectives } from './Retrospectives';
+import { Training } from './Training';
+import { Extraction } from './Extraction';
 
 type Project = { id: string; name: string; roles: string[]; can_run: boolean; can_manage: boolean };
 type Me = { id: string; name: string; subject: string; mode: string; projects: Project[] };
@@ -21,7 +23,7 @@ const statuses: Record<string, string> = { queued: '等待处理', running: '正
 const roles: Record<string, string> = { admin: '管理员', processor: '资料加工', reviewer: '内容审核', teacher: '培训教员', learner: '学习成员', a_service: '模拟A服务' };
 const projectNames: Record<string, string> = { 'demo-airport': '机场检查 · 演示', 'demo-metro': '地铁监护 · 演示' };
 const fmt = (date: string) => new Date(date).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
-const profiles = [['admin', '本地管理员'], ['processor', '资料加工员'], ['learner', '新成员'], ['outsider', '其他项目成员']];
+const profiles = [['admin', '本地管理员'], ['processor', '资料加工员'], ['learner', '新成员'], ['teacher', '培训教员'], ['outsider', '其他项目成员']];
 
 function App() {
   const [identity, setIdentity] = useState(localStorage.getItem('b01-identity') || 'admin');
@@ -29,6 +31,8 @@ function App() {
   const [governanceOpen, setGovernanceOpen] = useState(['/sources','/imports','/records'].some(p => location.pathname.startsWith(p)));
   const isRetrieval = ['/search','/releases','/knowledge/library'].includes(path) || /^\/knowledge\/[^/]+$/.test(path) && path !== '/knowledge/drafts';
   const isKnowledge = !isRetrieval && ['/quality','/knowledge','/reviews'].some(p => path.startsWith(p));
+  const isTraining = path.startsWith('/training') || path.startsWith('/learn');
+  const isExtraction = path.startsWith('/extraction') || path === '/settings/models';
   const isRetrospectives = path.startsWith('/retrospectives');
   const isPackages = path.startsWith('/task-packages');
   const isIngestion = ['/sources', '/imports', '/records'].some(p => path.startsWith(p));
@@ -84,7 +88,7 @@ function App() {
         const health = await api<{ worker_online: boolean }>('/health');
         if (stale) return;
         setOnline(health.worker_online);
-        if (isIngestion || isKnowledge || isRetrieval || isPackages || isRetrospectives) return;
+        if (isIngestion || isKnowledge || isRetrieval || isPackages || isRetrospectives || isTraining || isExtraction) return;
         if (path === '/settings/access') {
           if (!current.projects.some(p => p.can_manage)) return;
           const [a, logs] = await Promise.all([api<Access>('/access'), api<{ items: typeof audit }>('/audit-events?limit=10')]);
@@ -107,7 +111,7 @@ function App() {
   }, [identity, path, status, kind, cursor, refresh]);
 
   useEffect(() => {
-    if (!me || path === '/settings/access' || isIngestion || isKnowledge || isRetrieval || isPackages || isRetrospectives) return;
+    if (!me || path === '/settings/access' || isIngestion || isKnowledge || isRetrieval || isPackages || isRetrospectives || isTraining || isExtraction) return;
     let stale = false;
     const timer = window.setInterval(async () => {
       try {
@@ -149,7 +153,7 @@ function App() {
   });
   const canRun = me?.projects.some(p => p.can_run);
   const canManage = me?.projects.some(p => p.can_manage);
-  const title = isRetrospectives ? '过程复盘与经验' : isPackages ? 'A任务包接入' : isRetrieval ? (path === '/releases' ? '知识发布管理' : path === '/search' ? '知识检索' : '已发布知识库') : isKnowledge ? '知识加工与审核' : isIngestion ? (path.startsWith('/sources') ? '历史数据来源' : path.startsWith('/imports') ? '历史项目' : '风险数据') : path === '/settings/access' ? '成员与权限' : path === '/jobs' ? '处理任务' : '我的工作台';
+  const title = isTraining ? (path.startsWith('/learn')?'我的学习':'培训与学习记录') : isExtraction ? (path==='/settings/models'?'云端模型配置':'施工要点知识萃取') : isRetrospectives ? '过程复盘与经验' : isPackages ? 'A任务包接入' : isRetrieval ? (path === '/releases' ? '知识发布管理' : path === '/search' ? '知识检索' : '已发布知识库') : isKnowledge ? '知识加工与审核' : isIngestion ? (path.startsWith('/sources') ? '历史数据来源' : path.startsWith('/imports') ? '历史项目' : '风险数据') : path === '/settings/access' ? '成员与权限' : path === '/jobs' ? '处理任务' : '我的工作台';
   const activeCount = (counts.queued || 0) + (counts.running || 0) + (counts.retrying || 0);
 
   return <div className="app-shell">
@@ -163,14 +167,15 @@ function App() {
         })}
         <button className={`nav-item governance-toggle ${isIngestion ? 'active-group' : ''}`} aria-label="历史数据治理" aria-expanded={governanceOpen} aria-controls="governance-menu" onClick={() => setGovernanceOpen(v => !v)}><FolderLock size={19}/><span>历史数据治理</span><ChevronRight className={governanceOpen ? 'expanded' : ''} size={15}/></button>
         {governanceOpen && <div id="governance-menu" className="subnav">{[['/sources','数据来源'],['/imports','历史项目'],['/records','风险数据']].map(([url,label]) => <button key={url} aria-label={label} className={path.startsWith(url) ? 'active' : ''} onClick={() => navigate(url)}>{label}</button>)}</div>}
-        <button className={isKnowledge ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/quality')} aria-label="知识加工与审核"><FileCheck2 size={19}/><span>知识加工与审核</span><ChevronRight size={15}/></button>
+        <button className={isKnowledge || isExtraction ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/extraction')} aria-label="知识加工与审核"><FileCheck2 size={19}/><span>知识加工与审核</span><ChevronRight size={15}/></button>
         <button className={isRetrieval ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/knowledge/library')} aria-label="知识库与检索"><FileCheck2 size={19}/><span>知识库与检索</span><ChevronRight size={15}/></button>
         <button className={isPackages ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/task-packages')} aria-label="A任务包接入"><FileCheck2 size={19}/><span>A任务包接入</span><ChevronRight size={15}/></button>
         <button className={isRetrospectives ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/retrospectives')} aria-label="过程复盘与经验"><Activity size={19}/><span>过程复盘与经验</span><ChevronRight size={15}/></button>
+        <button className={isTraining ? 'nav-item active' : 'nav-item'} onClick={() => navigate(me?.projects.some(p=>p.roles.some(r=>['admin','teacher','reviewer'].includes(r)))?'/training/questions':'/learn')} aria-label="培训与学习"><BookOpen size={19}/><span>培训与学习</span><ChevronRight size={15}/></button>
         <button className={path === '/settings/access' ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/settings/access')} aria-label="成员与权限"><Users size={19}/><span>成员与权限</span><ChevronRight size={15}/></button>
       </nav>
       <div className="scope-card"><FolderLock size={19} /><strong>项目范围隔离</strong><p>记录、文件和操作权限<br />随当前身份实时检查。</p></div>
-      <div className="sidebar-bottom"><span className="dot" />本地开发 · B06<span className="version">v0.6</span></div>
+      <div className="sidebar-bottom"><span className="dot" />本地开发 · B07<span className="version">v0.7</span></div>
     </aside>
     <div className="main-shell">
       <header className="topbar"><div className="breadcrumb">工程风险知识中心 <ChevronRight size={14} /><strong>{title}</strong></div>
@@ -180,16 +185,18 @@ function App() {
       </header>
       <main>
         <div className="page-heading"><div><div className="eyebrow">工作空间</div><h1>{title}</h1>
-          <p>{isRetrospectives ? '复用已有过程记录与证据，核查实际流程，形成可审核的经验草稿。' : isPackages ? '接收作业快照，核对事件、证据和版本，减少重复准备资料。' : isRetrieval ? '固定审核版本发布，以项目权限检索知识并打开来源。' : isKnowledge ? '复用来源证据生成候选，核查质量问题后逐版本审核。' : isIngestion ? '一次接入模拟资料，保留原文、治理生效值与来源证据。' : path === '/settings/access' ? '按项目分配角色，保留每次授权与撤销的记录。' : '查看处理进度、定位失败任务，保留每一次执行结果。'}</p></div>
+          <p>{isTraining ? '固定审核来源、题目与学习包版本，保留作答、建议评分和教员复核。' : isExtraction ? '按类别合并历史记录，调用云端模型提炼可追溯的施工要点。' : isRetrospectives ? '复用已有过程记录与证据，核查实际流程，形成可审核的经验草稿。' : isPackages ? '接收作业快照，核对事件、证据和版本，减少重复准备资料。' : isRetrieval ? '固定审核版本发布，以项目权限检索知识并打开来源。' : isKnowledge ? '复用来源证据生成候选，核查质量问题后逐版本审核。' : isIngestion ? '一次接入模拟资料，保留原文、治理生效值与来源证据。' : path === '/settings/access' ? '按项目分配角色，保留每次授权与撤销的记录。' : '查看处理进度、定位失败任务，保留每一次执行结果。'}</p></div>
           <div className="heading-actions"><button className="button ghost" onClick={() => setRefresh(v => v + 1)} disabled={loading}><RefreshCw size={16} />刷新</button>
-            {!isIngestion && !isKnowledge && !isRetrieval && !isPackages && !isRetrospectives && path !== '/settings/access' && <button className="button primary" disabled={!canRun || busy} onClick={() => {
+            {!isIngestion && !isKnowledge && !isRetrieval && !isPackages && !isRetrospectives && !isTraining && !isExtraction && path !== '/settings/access' && <button className="button primary" disabled={!canRun || busy} onClick={() => {
               setProject(me?.projects.find(p => p.can_run)?.id || 'demo-airport'); setShowCreate(true);
             }}><Play size={16} />运行演示检查</button>}</div>
         </div>
-        {!isIngestion && !isKnowledge && !isRetrieval && !isPackages && !isRetrospectives && <div className="mode-banner"><ShieldCheck size={18} /><div><strong>本地演示模式</strong><span>尚未接入A的真实身份或历史资料。所有输入均为明确标注的模拟数据，尚未接入真实工程资料。</span></div></div>}
+        {!isIngestion && !isKnowledge && !isRetrieval && !isPackages && !isRetrospectives && !isTraining && !isExtraction && <div className="mode-banner"><ShieldCheck size={18} /><div><strong>本地演示模式</strong><span>尚未接入A的真实身份或历史资料。所有输入均为明确标注的模拟数据，尚未接入真实工程资料。</span></div></div>}
         {error && <div className="feedback error" role="alert"><AlertCircle size={18} />{error}<button onClick={() => setRefresh(v => v + 1)}>重新加载</button></div>}
         {notice && <div className="feedback success" role="status"><CheckCircle2 size={18} />{notice}<button aria-label="关闭提示" onClick={() => setNotice('')}><X size={16} /></button></div>}
         {loading ? <div className="loading"><LoaderCircle className="spin" size={24} /><span>正在读取工作区…</span></div> :
+          isTraining ? <Training key={identity} api={api} path={path} navigate={navigate} projects={me?.projects || []} /> :
+          isExtraction ? <Extraction key={identity} api={api} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isRetrospectives ? <Retrospectives key={identity} api={api} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isPackages ? <TaskPackages key={identity} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isRetrieval ? <Retrieval key={identity} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :

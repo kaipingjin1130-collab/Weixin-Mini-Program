@@ -38,7 +38,7 @@ def item_dto(item, revision, db=None):
             'revision_id': revision.id, 'version': revision.version, 'object_type': 'knowledge_revision',
             'state': revision.state, 'row_version': item.row_version, 'model_ref': revision.model_ref,
             'schema_version': revision.schema_version, 'template_version': revision.template_version,
-            'created_at': item.created_at, 'is_mock': True, 'published': published}
+            'created_at': item.created_at, 'is_mock': revision.content.get('is_mock',True), 'generation_mode':revision.content.get('generation_mode','mock'), 'published': published}
 
 
 @router.get('/quality/issues')
@@ -91,8 +91,10 @@ def update_issue(ident: str, data: PatchIssue, request: Request, actor: Actor = 
 
 
 @router.get('/knowledge/schema')
-def schema(actor: Actor = Depends(current_actor)):
-    return json.loads((ROOT/'scene-packs/generic/knowledge-card-v1.schema.json').read_text(encoding='utf-8'))
+def schema(actor: Actor = Depends(current_actor), version: str = 'knowledge-card-v2'):
+    if version not in {'knowledge-card-v1','knowledge-card-v2'}:
+        raise Problem(422,'UNKNOWN_SCHEMA','未知知识结构版本。')
+    return json.loads((ROOT/f'scene-packs/generic/{version}.schema.json').read_text(encoding='utf-8'))
 
 
 @router.get('/knowledge/source-options')
@@ -183,9 +185,15 @@ def knowledge_detail(ident: str, actor: Actor = Depends(current_actor)):
         revisions = db.scalars(select(KnowledgeRevision).where(KnowledgeRevision.item_id == item.id).order_by(KnowledgeRevision.version.desc())).all()
         actions = db.scalars(select(ReviewAction).where(ReviewAction.object_id == item.id).order_by(ReviewAction.created_at)).all()
         annotations = db.scalars(select(RecordAnnotation).where(RecordAnnotation.record_version_id == source.id)).all()
+        source_versions = []
+        if hasattr(source, 'source_version_ids'):
+            for version_id in source.source_version_ids:
+                v, record, _ = source_context(db,version_id,actor)
+                source_versions.append({'record_version_id':v.id,'record_id':record.id,'version':v.version,'effective_fields':v.effective_fields})
         return {**item_dto(item, revision, db), 'content': revision.content,
                 'source': {'record_id': row.id, 'kind': 'retrospective' if item.retrospective_revision_id else 'historical',
                            'version': source.version, 'current_version': source.version if item.retrospective_revision_id else row.current_version,
+                           'versions': source_versions,
                            'effective_fields': source.effective_fields, 'raw_fields': source.raw_fields, 'provenance': source.provenance,
                            'evidence': [{'id': e.id, 'type': e.evidence_type, 'locator': e.locator, 'relation_confidence': e.relation_confidence} for e in evidence],
                            'annotations': [{'field': n.field, 'value': n.value, 'reason': n.reason, 'source_kind': n.source_kind} for n in annotations]},
@@ -207,6 +215,11 @@ def submit_review(ident: str, data: VersionAction, request: Request, actor: Acto
 @router.get('/reviews')
 def reviews(actor: Actor = Depends(current_actor), state: str = 'pending_review',
             limit: int = Query(20, ge=1, le=100), cursor: str | None = None, object_type: str = 'knowledge_revision'):
+    if object_type == 'question_revision':
+        from ..training.api import questions
+        result = questions(actor=actor,state=state,type=None,scene_code=None,source_version=None,limit=limit,cursor=cursor,review_only=True)
+        result['items'] = [{**i,'review_id':i['revision_id']} for i in result['items']]
+        return result
     projects = actor.projects('audit')
     if not projects:
         raise Problem(403, 'FORBIDDEN', '当前身份没有审核权限。')
@@ -243,6 +256,15 @@ def retrospective_review(ident, data, actor, action, request_id):
     return None
 
 
+def training_review(ident, data, actor, action, request_id):
+    from ..training.models import QuestionRevision
+    from ..training.service import transition as question_transition
+    with Session() as db:
+        revision = db.get(QuestionRevision,ident)
+        parent_id = revision.question_id if revision else None
+    return question_transition(parent_id,data,actor,action,request_id,review_id=ident) if parent_id else None
+
+
 def review_object(ident, actor):
     with Session() as db:
         revision = db.get(KnowledgeRevision, ident)
@@ -254,6 +276,8 @@ def review_object(ident, actor):
 
 @router.post('/reviews/{ident}/approve')
 def approve(ident: str, data: VersionAction, request: Request, actor: Actor = Depends(current_actor)):
+    result = training_review(ident,data,actor,'approved',request.state.request_id)
+    if result is not None:return result
     result = retrospective_review(ident, data, actor, 'approved', request.state.request_id)
     if result is not None:
         return result
@@ -262,6 +286,8 @@ def approve(ident: str, data: VersionAction, request: Request, actor: Actor = De
 
 @router.post('/reviews/{ident}/request-changes')
 def request_changes(ident: str, data: VersionAction, request: Request, actor: Actor = Depends(current_actor)):
+    result = training_review(ident,data,actor,'changes_requested',request.state.request_id)
+    if result is not None:return result
     result = retrospective_review(ident, data, actor, 'changes_requested', request.state.request_id)
     if result is not None:
         return result

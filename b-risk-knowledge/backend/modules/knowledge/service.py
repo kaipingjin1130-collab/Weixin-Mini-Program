@@ -28,11 +28,30 @@ def item_source(db, item, actor, action='read', current=False):
         authorize(actor, action, item.project_id)
         from ..retrospectives.sources import context
         return context(db, item.retrospective_revision_id, actor, current=current)
-    return source_context(db, item.record_version_id, actor, action, current)
+    source, row, evidence = source_context(db, item.record_version_id, actor, action, current)
+    from ..extraction.models import KnowledgeSource
+    extra = db.scalars(select(KnowledgeSource).where(KnowledgeSource.item_id == item.id)).all()
+    if extra:
+        from types import SimpleNamespace
+        merged = {e.id: e for e in evidence}
+        version_ids = {source.id}
+        for link in extra:
+            v, r, ev = source_context(db, link.record_version_id, actor, action, current)
+            if r.project_id != item.project_id:
+                raise Problem(403, 'SOURCE_SCOPE_MISMATCH', '知识来源不属于此项目。')
+            version_ids.add(v.id)
+            merged.update({e.id:e for e in ev})
+        source = SimpleNamespace(id=source.id, record_id=source.record_id, version=source.version,
+            effective_fields=source.effective_fields, raw_fields=source.raw_fields, provenance=source.provenance,
+            knowledge_item_id=item.id, source_version_ids=sorted(version_ids))
+        evidence = list(merged.values())
+    return source, row, evidence
 
 
 def validate_card(db, card, version, actor, approving=False):
-    if hasattr(version, 'retrospective_revision_id'):
+    if hasattr(version, 'knowledge_item_id'):
+        _, row, evidence = item_source(db, db.get(KnowledgeItem, version.knowledge_item_id), actor, current=approving)
+    elif hasattr(version, 'retrospective_revision_id'):
         from ..retrospectives.sources import context
         _, row, evidence = context(db, version.retrospective_revision_id, actor, current=approving)
     else:
@@ -44,9 +63,16 @@ def validate_card(db, card, version, actor, approving=False):
                 raise Problem(422, 'INVALID_EVIDENCE_REFERENCE', '候选引用了不存在或不属于当前来源版本的证据，已拒绝保存。')
         if approving and not any(allowed[e].relation_confidence == 'anchored' and allowed[e].evidence_type in {'source_row', 'process_event', 'historical_row', 'task_snapshot'} for e in fact.evidence_ids):
             raise Problem(422, 'UNVERIFIED_FACT', '事实性内容须引用本版本明确锚定的来源行，候选图片不能单独证明事实。')
+    if card.construction_points or any(f.source_quotes for f in card.facts):
+        from ..extraction.grounding import check_quotes, evidence_map
+        pool = evidence_map(db, evidence)
+        for fact in card.facts:
+            check_quotes(fact, pool, required=card.generation_mode == 'llm')
+        for point in card.construction_points:
+            check_quotes(point, pool, required=point.claim_kind == 'source_summary')
     if approving and any(s.verification_status == 'pending_verification' for s in card.standards):
         raise Problem(422, 'STANDARD_UNVERIFIED', '存在待核验依据，请核查或明确标为不采用，不能自动批准为有效标准。')
-    if approving and db.scalar(select(QualityIssue.id).where(QualityIssue.record_version_id == version.id,
+    if approving and db.scalar(select(QualityIssue.id).where(QualityIssue.record_version_id.in_(getattr(version, 'source_version_ids', [version.id])),
                      QualityIssue.severity == 'error', QualityIssue.status == 'open').limit(1)):
         raise Problem(422, 'BLOCKING_QUALITY_ISSUE', '来源仍存在未处理的阻断问题。')
 
@@ -57,6 +83,10 @@ def link_claims(db, revision, card):
         for evidence_id in set(fact.evidence_ids):
             target = {'retrospective_evidence_id': evidence_id} if item.retrospective_revision_id else {'evidence_id': evidence_id}
             db.add(KnowledgeEvidenceLink(revision_id=revision.id, claim_path=f'/facts/{n}/text', **target, relation_type=fact.source_kind))
+    for n, point in enumerate(card.construction_points):
+        for evidence_id in set(point.evidence_ids):
+            target = {'retrospective_evidence_id': evidence_id} if item.retrospective_revision_id else {'evidence_id': evidence_id}
+            db.add(KnowledgeEvidenceLink(revision_id=revision.id, claim_path=f'/construction_points/{n}/content', **target, relation_type=point.claim_kind))
 
 
 def generation_preview(db, data, actor):

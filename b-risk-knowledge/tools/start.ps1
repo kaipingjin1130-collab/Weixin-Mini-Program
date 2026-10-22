@@ -66,7 +66,7 @@ try {
         Start-Sleep -Seconds 1
     }
     if (!$ready) { throw "Services did not become ready. Check .local/logs." }
-    Write-Host 'B06 ready: http://127.0.0.1:5181/retrospectives'
+    Write-Host 'B07 ready: http://127.0.0.1:5181/learn'
     if (!$NoBrowser) { Start-Process 'http://127.0.0.1:5181/workbench' }
 } catch {
     Write-Host $_.Exception.Message -ForegroundColor Red

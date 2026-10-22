@@ -2,7 +2,7 @@
 
 ## B模块：工程风险知识与复盘培训中心
 
-本分支保存B模块源码、开发任务和B00接口合同。B01—B06已完成对应本地验证，支持历史数据治理、知识加工审核、发布检索、模拟A任务包接入及过程复盘/经验候选；A/B合同仍为 `proposed`。当前使用模拟资料、身份和模型，尚未完成真实A联调。
+本分支保存B模块源码、开发任务和B00接口合同。B01—B07已完成对应本地验证，支持历史数据治理、知识加工审核、发布检索、模拟A任务包接入、过程复盘/经验候选及培训学习记录；A/B合同仍为 `proposed`。当前使用模拟资料与身份；已支持配置云端兼容模型，真实服务和模型效果未验收，真实A尚未联调。
 
 - [开发总索引与AI启动指令](B模块开发文档/README.md)
 - [A/B接口约定](B模块开发文档/02-A-B接口约定.md)
@@ -14,7 +14,9 @@
 - [B05给A的接口说明](b-risk-knowledge/reports/B05-A-integration.md)
 - [B06过程复盘、经验草稿与AI交接](b-risk-knowledge/reports/B06-design-and-use.md)
 - [B06验证记录（44项完整检查）](b-risk-knowledge/reports/B06-validation.md)
-- [下一任务：B07培训与学习记录](B模块开发文档/任务包/B07-培训与学习记录.md)
+- [B07培训、云端知识加工与AI交接](b-risk-knowledge/reports/B07-design-and-use.md)
+- [知识萃取开源评估](b-risk-knowledge/reports/B07-open-source-and-extraction.md)
+- [B07验证记录](b-risk-knowledge/reports/B07-validation.md)
 
 合同样例为模拟数据。仓库不包含原始报告、业务数据集、Python环境或临时下载文件。文档中的本机资料路径是来源参考，其他机器须配置自己的路径。
 

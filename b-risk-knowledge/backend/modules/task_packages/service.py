@@ -140,9 +140,9 @@ def withdraw(ident, reason, actor, key, request_id):
             if run.status != 'succeeded':
                 run.status, run.error = 'failed', '任务包已撤回，不再继续处理或重试。'
                 run.row_version += 1
-            db.add(PackageInvalidation(package_id=ident, payload={'source_type': 'task_package', 'receipt_id': ident,
-                'package_version': package.package_version, 'pending_consumers': ['B07'],
-                'consumed_by': ['B06'], 'B06_policy': 'live-source-guard'}))
+            db.add(PackageInvalidation(package_id=ident, state='handled', payload={'source_type': 'task_package', 'receipt_id': ident,
+                'package_version': package.package_version, 'pending_consumers': [],
+                'consumed_by': ['B06','B07'], 'B06_policy': 'live-source-guard', 'B07_policy': 'live-publication-source-guard'}))
             audit(db, actor, 'task_package_withdrawn', 'task_package', ident, package.project_id, request_id)
         if not prior:
             db.add(PackageRequest(actor_id=actor.id, producer=package.producer, operation='withdraw', idempotency_key=key,

@@ -58,8 +58,10 @@ def build_release(run_id: str):
                         item, revision = approved_for_release(db, entry.knowledge_revision_id, actor, run.project_id, current=False)
                         embedding = db.scalar(select(EmbeddingSet).where(EmbeddingSet.release_id == release_id))
                         adapter = get_embedding(embedding.model)
-                        for i, fact in enumerate(revision.content['facts']):
-                            path = f'/facts/{i}/text'
+                        claims = [(f'/facts/{i}/text',f) for i,f in enumerate(revision.content['facts'])]
+                        claims += [(f'/construction_points/{i}/content',{'text':p['content'],'evidence_ids':p['evidence_ids']})
+                                   for i,p in enumerate(revision.content.get('construction_points',[])) if p['claim_kind']=='source_summary']
+                        for path, fact in claims:
                             db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:key,0))'), {'key': f'chunk:{revision.id}:{STRATEGY}:{path}'})
                             chunk = db.scalar(select(SearchChunk).where(SearchChunk.revision_id == revision.id,
                                 SearchChunk.chunk_version == STRATEGY, SearchChunk.claim_path == path))

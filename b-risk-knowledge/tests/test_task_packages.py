@@ -203,7 +203,7 @@ def test_withdrawal_idempotency_attachments_and_pending_downstream(client):
     assert client.get('/api/v1/assets/'+asset['asset_id']+'/content',headers=h('learner')).status_code==410
     assert client.get(INTERNAL+'/'+ident+'/snapshot',headers=h('learner')).status_code==410
     info=detail(client,ident);assert not info['snapshot_available'] and 'task' not in info and 'events' not in info and 'issues' not in info
-    assert info['invalidations'][0]['state']=='pending' and not info['capabilities']
+    assert info['invalidations'][0]['state']=='handled' and info['invalidations'][0]['pending_consumers']==[] and not info['capabilities']
     # Late completion of an older package cannot resurrect a withdrawn current pointer.
     old=accepted(client,data('complete',task));wait(client,old['receipt_id'])
     assert detail(client,old['receipt_id'])['current_package_id'] is None

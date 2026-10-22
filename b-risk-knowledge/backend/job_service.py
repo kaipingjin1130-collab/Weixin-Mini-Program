@@ -29,6 +29,12 @@ def enqueue(db, run_id):
     elif run.kind == 'task_package_import':
         from .modules.task_packages.tasks import process_package
         task = process_package
+    elif run.kind == 'knowledge_extraction':
+        from .modules.extraction.tasks import extract
+        task = extract
+    elif run.kind == 'training_grading':
+        from .modules.training.tasks import grade_attempt
+        task = grade_attempt
     # The library INSERT and the SQLAlchemy ORM flush share one physical transaction.
     connection = db.connection().connection.driver_connection
     return task.configure(connection=connection, lock=lock).defer(run_id=run_id)
@@ -77,7 +83,7 @@ def retry_run(actor, run_id, version, key, request_id):
         run = db.scalar(select(ProcessingRun).where(ProcessingRun.id == run_id).with_for_update())
         if not run:
             raise Problem(404, "NOT_FOUND", "任务不存在。")
-        authorize(actor, 'audit' if run.kind == 'release_build' else 'package_receive' if run.kind == 'task_package_import' else 'run', run.project_id)
+        authorize(actor, 'training_manage' if run.kind == 'training_grading' else 'audit' if run.kind == 'release_build' else 'package_receive' if run.kind == 'task_package_import' else 'run', run.project_id)
         prior = db.scalar(select(RetryRequest).where(RetryRequest.actor_id == actor.id,
                                                      RetryRequest.idempotency_key == key))
         if prior:
@@ -96,6 +102,9 @@ def retry_run(actor, run_id, version, key, request_id):
         if run.kind == 'task_package_import':
             from .modules.task_packages.service import prepare_retry as prepare_package_retry
             prepare_package_retry(db, run, actor)
+        if run.kind == 'training_grading':
+            from .modules.training.service import prepare_grading_retry
+            prepare_grading_retry(db,run,actor)
         run.queue_job_id = enqueue(db, run.id)
         run.status, run.error, run.progress = "queued", None, 0
         if run.kind == 'source_import':
