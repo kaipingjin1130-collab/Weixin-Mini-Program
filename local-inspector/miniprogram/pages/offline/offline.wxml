@@ -1,0 +1,30 @@
+<view class="page"><view class="title">离线采集</view>
+ <view class="note">文字和照片保存在本手机。请勿删除小程序或清理微信数据。回办公室连同一 Wi-Fi，登录原账号后手动同步。</view>
+ <view class="saved">{{message}}</view><view wx:if="{{busy}}" class="note">正在处理，请保持页面打开…</view>
+ <block wx:if="{{!draft}}">
+  <view class="card"><view class="h2">出发前准备</view><button bindtap="prepare" disabled="{{busy}}">下载／更新项目资料（需连接后台）</button>
+  <view wx:if="{{context}}"><view class="muted">{{context.user.name}} · {{context.server}}</view><view class="muted">资料下载时间：{{context.downloadedAt}}</view><picker range="{{context.projects}}" range-key="name" value="{{projectIndex}}" bindchange="pick"><view class="picker">{{context.projects[projectIndex].name || '暂无检查权限项目'}} ▾</view></picker><button bindtap="create" disabled="{{busy||!context.projects.length}}">＋ 新建离线巡查</button></view></view>
+  <view class="card" wx:for="{{drafts}}" wx:key="id" data-id="{{item.id}}" bindtap="open"><view class="tag">{{item.statusText}}</view><view class="h2">{{item.title}}</view><view>{{item.project.name}} · {{item.user.name}}</view><view>{{item.issues.length}} 条隐患{{item.editor?' · 有正在填写的草稿':''}}</view><view>{{item.error}}</view></view>
+ </block>
+ <block wx:else><button bindtap="back" disabled="{{busy}}" class="secondary">保存并返回列表</button>
+  <view class="card"><view class="h2">{{draft.project.name}}</view><view>{{draft.user.name}} · {{draft.server}}</view>
+   <block wx:if="{{draft.status==='draft'}}"><view class="label">巡查名称</view><input value="{{draft.title}}" data-key="draft.title" bindinput="input" maxlength="200"/><view class="label">检查人员</view><input value="{{draft.inspectors}}" data-key="draft.inspectors" bindinput="input" maxlength="1000"/><view class="label">检查对象</view><input value="{{draft.object}}" data-key="draft.object" bindinput="input" maxlength="200"/><view class="label">巡查日期</view><picker mode="date" value="{{draft.date}}" data-key="draft.date" bindchange="input"><view>{{draft.date}} ▾</view></picker><view class="label">现场准备（请按实际情况确认）</view><checkbox-group bindchange="checks"><label wx:for="{{checkOptions}}" wx:key="text"><checkbox value="{{item.text}}" checked="{{item.checked}}" disabled="{{busy}}"/>{{item.text}}</label></checkbox-group></block>
+   <view wx:else>{{draft.title}} · {{draft.date}}<view>已开始同步，内容锁定；本地记录保留。</view></view>
+  </view>
+  <view class="card" wx:for="{{draft.issues}}" wx:key="id"><view class="h2">隐患 {{index+1}} · {{item.risk}}</view><view>{{item.location}}</view><view class="text">{{item.description}}</view><view class="photos"><image wx:for="{{item.photos}}" wx:for-item="photo" wx:key="id" src="{{photo.path}}" data-path="{{photo.path}}" bindtap="preview" mode="aspectFill" style="width:180rpx;height:160rpx"/></view><button wx:if="{{draft.status==='draft'&&!editor}}" data-id="{{item.id}}" bindtap="edit" class="secondary">编辑本条</button></view>
+  <view wx:if="{{draft.status==='draft'&&editor}}" class="card"><view class="h2">隐患草稿（填写自动保存）</view><picker range="{{categories}}" bindchange="category"><view>{{editor.category}} ▾</view></picker>
+   <view class="label">子分类</view><input value="{{editor.subcategory}}" data-key="editor.subcategory" bindinput="input" maxlength="200"/>
+   <view class="label">具体部位</view><input value="{{editor.location}}" data-key="editor.location" bindinput="input" maxlength="500"/>
+   <view class="label">隐患描述 *</view><textarea value="{{editor.description}}" data-key="editor.description" bindinput="input" maxlength="4000"/>
+   <view class="label">风险等级 *</view><input value="{{editor.risk}}" data-key="editor.risk" bindinput="input" maxlength="100"/>
+   <view class="label">规范依据</view><textarea value="{{editor.reference}}" data-key="editor.reference" bindinput="input" maxlength="4000"/>
+   <view class="label">处理建议</view><textarea value="{{editor.suggestion}}" data-key="editor.suggestion" bindinput="input" maxlength="4000"/>
+   <view class="photos"><view class="photo" wx:for="{{editor.photos}}" wx:key="id"><image src="{{item.path}}" data-path="{{item.path}}" bindtap="preview" mode="aspectFill"/><button class="small secondary" data-id="{{item.id}}" bindtap="removePhoto" disabled="{{busy}}">移除</button></view></view><view class="row"><button bindtap="photo" data-source="camera" disabled="{{busy}}">拍照</button><button bindtap="photo" data-source="album" disabled="{{busy}}" class="secondary">选照片</button></view><button class="actions" bindtap="saveIssue" disabled="{{busy}}">保存本条隐患</button>
+  </view>
+  <button wx:if="{{draft.status==='draft'&&!editor}}" class="actions" bindtap="add" disabled="{{busy}}">＋ 继续登记隐患</button>
+  <button wx:if="{{draft.status==='draft'}}" class="secondary actions" bindtap="save" disabled="{{busy}}">保存手机草稿</button>
+  <button wx:if="{{draft.status!=='synced'}}" class="secondary actions" bindtap="rebind" disabled="{{busy}}">电脑 IP 变化：核对并更新连接地址</button>
+  <button wx:if="{{draft.status!=='synced'}}" class="actions" bindtap="sync" disabled="{{busy||editor}}">回办公室后同步到平台</button>
+  <view wx:else class="note">已同步：{{draft.taskNumber}}。网页平台刷新任务列表即可查看；请在现场作业中继续签名上报。本地照片和记录已保留。</view>
+ </block>
+</view>

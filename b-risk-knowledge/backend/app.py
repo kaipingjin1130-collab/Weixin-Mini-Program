@@ -105,7 +105,7 @@ def health():
 def me(actor: Actor = Depends(current_actor)):
     projects = sorted(actor.grants) if actor.permissions is not None else actor.projects()
     return {"id": actor.id, "name": actor.name, "subject": actor.subject, "mode": settings.auth_mode,
-            "projects": [{"id": p, "name": PROJECTS.get(p, p), "roles": sorted(actor.roles.get(p, [])),
+            "projects": [{"id": p, "name": getattr(actor, 'project_names', {}).get(p, PROJECTS.get(p, p)), "roles": sorted(actor.roles.get(p, [])),
                           "can_run": actor.can("run", p), "can_manage": actor.can("manage", p)}
                          for p in projects]}
 
@@ -189,7 +189,7 @@ def access(actor: Actor = Depends(current_actor)):
     with Session() as db:
         users = db.scalars(select(UserLink)).all()
         bindings = db.scalars(select(RoleBinding).where(RoleBinding.scope_id.in_(projects))).all()
-        return {"projects": [{"id": p, "name": PROJECTS[p]} for p in projects],
+        return {"projects": [{"id": p, "name": PROJECTS.get(p, p)} for p in projects],
                 "users": [{"id": u.id, "name": u.display_name,
                            "authorized_projects": sorted(set(u.authorized_projects) & set(projects))}
                           for u in users if set(u.authorized_projects) & set(projects)],
@@ -199,6 +199,8 @@ def access(actor: Actor = Depends(current_actor)):
 
 @app.post("/api/v1/role-bindings", status_code=201)
 def add_binding(data: CreateBinding, request: Request, actor: Actor = Depends(current_actor)):
+    if settings.auth_mode == 'a':
+        raise Problem(403, 'PLATFORM_MANAGED', '请在小察平台管理项目成员权限。')
     authorize(actor, "manage", data.project_id)
     try:
         with Session.begin() as db:
@@ -217,6 +219,8 @@ def add_binding(data: CreateBinding, request: Request, actor: Actor = Depends(cu
 @app.delete("/api/v1/role-bindings/{binding_id}")
 def delete_binding(binding_id: str, data: DeleteBinding, request: Request,
                    actor: Actor = Depends(current_actor)):
+    if settings.auth_mode == 'a':
+        raise Problem(403, 'PLATFORM_MANAGED', '请在小察平台管理项目成员权限。')
     with Session.begin() as db:
         binding = db.scalar(select(RoleBinding).where(RoleBinding.id == binding_id).with_for_update())
         if not binding:
@@ -247,6 +251,10 @@ def audit_events(actor: Actor = Depends(current_actor), limit: int = Query(20, g
 
 
 from .modules.ingestion.api import router as ingestion_router
+from .platform_upload import router as platform_upload_router
+app.include_router(platform_upload_router)
+from .platform_archives import router as platform_archives_router
+app.include_router(platform_archives_router)
 app.include_router(ingestion_router)
 from .modules.retrieval.api import router as retrieval_router, integration_router
 app.include_router(retrieval_router)

@@ -13,6 +13,10 @@ def main():
             queue_app.schema_manager.apply_schema()
         finally:
             queue_app.close()
+    from .config import settings
+    if settings.auth_mode == 'a':
+        print('Platform database and queue ready; no demo data seeded.')
+        return
     # Seed only missing identities. Repeated startup must NOT restore revoked roles.
     profiles = [
         ("admin", "本地管理员", ["demo-airport", "demo-metro"], "admin"),

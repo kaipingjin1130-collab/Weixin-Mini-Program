@@ -1,0 +1,30 @@
+const store=require('../../utils/offline');
+const api=require('../../utils/api');
+const blank=()=>({id:store.uid(),category:'施工安全',subcategory:'',location:'',description:'',reference:'',suggestion:'',risk:'中',photos:[]});
+Page({
+ data:{busy:false,drafts:[],context:null,draft:null,editor:null,projectIndex:0,checkOptions:[],message:'',categories:['工程质量','施工安全','消防安全','文明施工','其他']},
+ onLoad(){this.reload()},
+ onHide(){this.persist()},
+ onUnload(){this.persist()},
+ reload(){try{const s=store.read();this.setData({context:s.context,drafts:s.drafts.map(d=>({...d,statusText:({draft:'仅保存在手机',pending:'待继续同步',syncing:'待继续同步',synced:'已同步，保留本地副本'})[d.status]}))})}catch(e){this.error(e)}},
+ error(e){this.setData({message:e.message});wx.showModal({title:'离线保存提示',content:e.message,showCancel:false})},
+ async run(fn){if(this.data.busy)return;this.setData({busy:true});try{await fn()}catch(e){this.error(e)}finally{this.setData({busy:false})}},
+ persist(){if(this._syncing||!this.data.draft||this.data.draft.status!=='draft')return true;try{const d={...this.data.draft,editor:this.data.editor};store.update(d);this.setData({message:'已保存在手机 '+new Date().toLocaleTimeString()});return true}catch(e){this.error(e);return false}},
+ async prepare(){await this.run(async()=>{await store.prepare(api);this.reload();this.setData({message:'项目资料已下载，断网后可从此入口采集'})})},
+ pick(e){this.setData({projectIndex:Number(e.detail.value)})},
+ create(){try{const p=this.data.context?.projects[this.data.projectIndex];const d=store.create(p?.id);this.setData({draft:d,editor:null,checkOptions:d.scenario.checklist.map(x=>({text:x,checked:false})),message:'已建立手机草稿'})}catch(e){this.error(e)}},
+ open(e){if(this.data.busy)return;try{const d=store.get(e.currentTarget.dataset.id);this.setData({draft:d,editor:d.editor||null,checkOptions:d.scenario.checklist.map(x=>({text:x,checked:d.checklist.includes(x)})),message:d.error||''})}catch(e){this.error(e)}},
+ input(e){if(this.data.busy||this.data.draft.status!=='draft')return;const key=e.currentTarget.dataset.key;this.setData({[key]:e.detail.value});this.persist()},
+ category(e){this.setData({'editor.category':this.data.categories[Number(e.detail.value)]});this.persist()},
+ checks(e){if(this.data.busy)return;this.setData({'draft.checklist':e.detail.value,checkOptions:this.data.checkOptions.map(x=>({...x,checked:e.detail.value.includes(x.text)}))});this.persist()},
+ add(){this.setData({editor:blank()});this.persist()},
+ edit(e){const i=this.data.draft.issues.find(x=>x.id===e.currentTarget.dataset.id);this.setData({editor:JSON.parse(JSON.stringify(i))});this.persist()},
+ saveIssue(){const i=this.data.editor;if(!i.description.trim()){this.error(Error('请填写隐患描述'));return}if(!i.risk.trim()){this.error(Error('请填写风险等级'));return}const issues=this.data.draft.issues.slice();const pos=issues.findIndex(x=>x.id===i.id);if(pos<0)issues.push(i);else issues[pos]=i;const d={...this.data.draft,issues,editor:null};try{store.update(d);this.setData({draft:d,editor:null,message:'本条隐患已保存在手机'});}catch(e){this.error(e)}},
+ async photo(e){await this.run(async()=>{const count=9-this.data.editor.photos.length;if(count<=0)throw Error('每条隐患最多9张照片');const r=await new Promise((resolve,reject)=>wx.chooseMedia({count:e.currentTarget.dataset.source==='camera'?1:count,mediaType:['image'],sourceType:[e.currentTarget.dataset.source],sizeType:['compressed'],success:resolve,fail:e=>e.errMsg.includes('cancel')?resolve(null):reject(Error('无法拍照或选图，请检查授权'))}));if(!r)return;for(const f of r.tempFiles){if(f.size>10*1024*1024)throw Error('单张照片不能超过10MB');const p=await store.savePhoto(f.tempFilePath);this.setData({'editor.photos':[...this.data.editor.photos,p]});if(!this.persist())return}})},
+ preview(e){wx.previewImage({current:e.currentTarget.dataset.path,urls:[e.currentTarget.dataset.path]})},
+ removePhoto(e){this.setData({'editor.photos':this.data.editor.photos.filter(p=>p.id!==e.currentTarget.dataset.id)});this.persist()},
+ back(){if(!this.persist())return;this.setData({draft:null,editor:null});this.reload()},
+ save(){this.persist()},
+ async rebind(){if(!this.persist())return;const ok=await new Promise(resolve=>wx.showModal({title:'办公室电脑 IP 已变化',content:'请先在首页用新地址登录。仅当确认仍是原来的办公室后台时继续；将核对账号、项目及已同步任务。',success:r=>resolve(r.confirm),fail:()=>resolve(false)}));if(!ok)return;await this.run(async()=>{const d=await store.rebind(this.data.draft.id,api);this.setData({draft:d,message:'已更新为当前登录的办公室地址'});this.reload()})},
+ async sync(){if(!this.persist())return;const ok=await new Promise(resolve=>wx.showModal({title:'同步到办公室平台',content:'将保存为平台临时巡查及隐患草稿。开始同步后本地内容锁定，失败可继续同步。是否继续？',success:r=>resolve(r.confirm),fail:()=>resolve(false)}));if(!ok)return;await this.run(async()=>{this._syncing=true;try{const d=await store.sync(this.data.draft.id,api);this.setData({draft:d,message:'已同步到平台。可在现场作业中继续签名上报。'});}finally{this._syncing=false;this.setData({draft:store.get(this.data.draft.id)});this.reload()}})},
+});

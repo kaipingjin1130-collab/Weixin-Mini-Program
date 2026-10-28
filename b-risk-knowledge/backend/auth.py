@@ -47,7 +47,8 @@ class Actor:
 def current_actor(request: Request) -> Actor:
     from .config import settings
     if settings.auth_mode == 'a':
-        return resolve_a_actor(request, settings)
+        from .platform_identity import persist_actor
+        return persist_actor(resolve_a_actor(request, settings))
     token = request.headers.get("authorization", "")
     identities = {"Bearer dev-admin": "admin", "Bearer dev-processor": "processor",
                   "Bearer dev-learner": "learner", "Bearer dev-outsider": "outsider",
@@ -100,13 +101,21 @@ def resolve_a_actor(request: Request, settings) -> Actor:
                 or any(not isinstance(p, str) for p in project['permissions'])):
                 raise ValueError('invalid project permissions')
             permissions[project['project_id']] = set(project['permissions'])
-        return Actor(value['subject_id'], value['subject_id'], value['display_name'], set(permissions), {},
-                     org_id=value['org_id'], permissions=permissions)
+        actor = Actor(value['subject_id'], value['subject_id'], value['display_name'], set(permissions),
+                      {p['project_id']: set(p.get('roles', [])) for p in value['projects']},
+                      org_id=value['org_id'], permissions=permissions)
+        actor.project_names = {p['project_id']: p.get('name', p['project_id']) for p in value['projects']}
+        return actor
     except (httpx.HTTPError, ValueError, TypeError):
         raise Problem(503, 'IDENTITY_UNAVAILABLE', '身份服务暂不可用或返回无效数据。')
 
 
 def actor_for_user(db, user):
+    if user is None:
+        raise Problem(403, 'IDENTITY_REVOKED', '任务身份已不可用。')
+    if user.issuer.startswith('qaxc:'):
+        from .platform_identity import worker_actor
+        return worker_actor(user)
     from sqlalchemy import select
     from .models import RoleBinding
     roles = {}

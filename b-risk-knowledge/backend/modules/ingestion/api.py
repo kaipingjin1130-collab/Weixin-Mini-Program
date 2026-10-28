@@ -15,6 +15,7 @@ from ...api_common import key_header
 from .models import DataSource, ImportBatch, SourceDocument, SourceRecord, SourceRecordVersion, EvidenceItem, RecordLink, ImportRow
 from .adapters import TEMPLATES, DEFAULT_TEMPLATE
 from .fixtures import catalog
+from ...config import settings
 from .service import preview, submit_import
 
 router = APIRouter(prefix='/api/v1', tags=['历史接入与证据'])
@@ -25,7 +26,7 @@ class SourceInput(BaseModel):
     name: str = Field(min_length=1, max_length=200)
     namespace: str = Field(min_length=1, max_length=128, pattern=r'^[A-Za-z0-9_.:-]+$')
     kind: Literal['csv', 'excel', 'governance_export']
-    project_id: Literal['demo-airport', 'demo-metro']
+    project_id: str = Field(min_length=1, max_length=128)
     mapping_template: str = Field(max_length=64)
 
 
@@ -57,7 +58,7 @@ def source_in(db, ident, actor, action='read'):
 def source_dto(s):
     return {'id': s.id, 'name': s.name, 'kind': s.kind, 'project_id': s.project_id,
             'namespace': s.namespace, 'mapping_version': s.mapping_version, 'mapping': s.config['mapping'],
-            'cursor': s.cursor, 'created_at': s.created_at, 'is_mock': True}
+            'cursor': s.cursor, 'created_at': s.created_at, 'is_mock': s.config.get('is_mock', True)}
 
 
 def record_dto(row, version):
@@ -65,11 +66,14 @@ def record_dto(row, version):
             'external_record_id': row.external_record_id, 'record_kind': version.effective_fields['record_kind'],
             'current_version': row.current_version, 'quality_status': 'needs_review' if version.issues else 'valid',
             'occurred_on': version.effective_fields.get('occurred_on'), 'description': version.effective_fields.get('description'),
-            'created_at': row.created_at, 'is_mock': True}
+            'created_at': row.created_at, 'is_mock': settings.auth_mode != 'a'}
 
 
 @router.get('/input-files')
 def inputs(actor: Actor = Depends(current_actor)):
+    if settings.auth_mode == 'a':
+        from ...platform_upload import catalog as platform_catalog
+        return {'items': platform_catalog(actor), 'templates': TEMPLATES}
     return {'items': catalog(actor), 'templates': TEMPLATES}
 
 
@@ -82,7 +86,7 @@ def add_source(data: SourceInput, request: Request, actor: Actor = Depends(curre
         with Session.begin() as db:
             source = DataSource(name=data.name, namespace=data.namespace, project_id=data.project_id,
                                 kind=data.kind, mapping_version=data.mapping_template,
-                                config={'mapping': TEMPLATES[data.mapping_template], 'is_mock': True})
+                                config={'mapping': TEMPLATES[data.mapping_template], 'is_mock': settings.auth_mode != 'a'})
             db.add(source)
             db.flush()
             audit(db, actor, 'source_created', 'source', source.id, source.project_id, request.state.request_id)
@@ -107,6 +111,8 @@ def import_preview(data: PreviewInput, actor: Actor = Depends(current_actor)):
 
 @router.post('/imports')
 def import_submit(data: ImportInput, request: Request, actor: Actor = Depends(current_actor), key=Depends(key_header)):
+    if settings.auth_mode == 'a' and data.fail_after is not None:
+        raise Problem(422, 'DEMO_DISABLED', '正式平台不支持模拟中断。')
     with Session() as db:
         source = source_in(db, data.source_id, actor, 'run')
         batch, run, replayed = submit_import(source, data, actor, key, request.state.request_id)
@@ -230,7 +236,7 @@ def reports(actor: Actor = Depends(current_actor), project_id: str | None = None
         return {'items': [{'id': doc.id, 'report_id': doc.external_report_id, 'title': doc.title,
                            'source_id': doc.source_id, 'source_name': db.get(DataSource, doc.source_id).name,
                            'project_id': db.get(DataSource, doc.source_id).project_id, 'count': count,
-                           'counts': {'detail': details, 'review': reviews, 'summary': summaries}, 'is_mock': True}
+                           'counts': {'detail': details, 'review': reviews, 'summary': summaries}, 'is_mock': settings.auth_mode != 'a'}
                           for doc, count, details, reviews, summaries in rows],
                 'next_cursor': rows[-1][0].id if more else None}
 
@@ -247,7 +253,7 @@ def evidence_dto(db, evidence, actor):
     return {'id': evidence.id, 'record_version_id': version.id, 'type': evidence.evidence_type,
             'locator': evidence.locator, 'relation_confidence': evidence.relation_confidence,
             'availability': 'available' if allowed else 'unavailable', 'asset_id': asset.id if allowed else None,
-            'is_mock': True, 'note': '模拟资料，图片为标注示意图；缺失附件不生成伪预览。'}
+            'is_mock': settings.auth_mode != 'a', 'note': '模拟资料，图片为标注示意图；缺失附件不生成伪预览。'}
 
 
 @router.get('/records/{ident}')

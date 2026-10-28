@@ -1,6 +1,7 @@
 import json
 from contracts.tools.contract_rules import validate, content_hash, load_json, ROOT as CONTRACT_ROOT
 from ...auth import authorize, Problem
+from ...config import settings
 
 LIMITS = load_json(CONTRACT_ROOT / 'limits.json')
 KNOWN_EVENTS = {e['code'] for e in load_json(CONTRACT_ROOT / 'event-types.json')['items']}
@@ -35,7 +36,7 @@ def scope(actor, data, action='package_receive'):
         raise Problem(422, 'INVALID_PACKAGE_ENVELOPE', '缺少有效的项目、组织或来源标识。')
     authorize(actor, action, data['project_id'])
     # Explicit local mock source registry. No grants are derived from request data.
-    if data['org_id'] != actor.org_id or data['producer'] != 'a-demo':
+    if data['org_id'] != actor.org_id or data['producer'] != ('a' if settings.auth_mode == 'a' else 'a-demo'):
         raise Problem(403, 'SOURCE_SCOPE_DENIED', '来源或组织不属于当前可信身份范围。')
     if actor.is_service and data['producer'] not in actor.producers:
         raise Problem(403, 'PRODUCER_DENIED', '服务身份不能代表此来源系统。')
@@ -49,7 +50,10 @@ def validate_package(data, actor):
         raise Problem(422, 'VALIDATION_ERROR', '任务包不符合B00结构、数值或引用约束。')
     if errors:
         raise Problem(422, 'VALIDATION_ERROR', '任务包不符合B00结构、时间、引用或完整性约束。')
-    if data['is_demo'] is not True:
+    if settings.auth_mode == 'a':
+        from ...platform_archives import verify
+        verify(data, actor)
+    elif data['is_demo'] is not True:
         raise Problem(422, 'DEMO_ONLY', '当前仅接收明确标注is_demo=true的模拟任务包。')
     return content_hash(data), warnings
 

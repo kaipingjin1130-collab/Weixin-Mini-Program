@@ -30,10 +30,8 @@ def source_import(run_id: str):
                 batch, run = db.get(ImportBatch, batch_id), db.get(ProcessingRun, run_id)
                 # Revocation also stops new background consumption, not just API access.
                 user = db.get(UserLink, run.actor_id)
-                roles = {}
-                for binding in db.scalars(select(RoleBinding).where(RoleBinding.user_id == user.id)):
-                    roles.setdefault(binding.scope_id, set()).add(binding.role)
-                authorize(Actor(user.id, user.subject_id, user.display_name, set(user.authorized_projects), roles), 'run', source.project_id)
+                from ...auth import actor_for_user
+                authorize(actor_for_user(db, user), 'run', source.project_id)
                 if db.scalar(select(ImportRow.id).where(ImportRow.batch_id == batch_id, ImportRow.row_number == number)):
                     continue
                 apply_row(db, source, batch, number, raw, governed, locator)

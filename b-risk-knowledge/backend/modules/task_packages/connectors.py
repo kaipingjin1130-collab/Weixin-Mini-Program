@@ -46,6 +46,9 @@ def identity_matches(access_ref, declared, project_id, org_id):
 
 
 def retrieve(package, relation, declared):
+    if package.producer == 'a':
+        from ...platform_archives import retrieve as retrieve_platform
+        return retrieve_platform(package, relation, declared)
     obj, path = resolve(relation.access_ref, package.project_id, package.org_id)
     if declared['mime_type'] not in ALLOWED_MIME or obj.mime_type != declared['mime_type']:
         raise Problem(422, 'ATTACHMENT_TYPE_MISMATCH', '附件类型不符合受控连接器登记信息。')

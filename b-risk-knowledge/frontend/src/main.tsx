@@ -164,8 +164,9 @@ function App() {
   return <div className="app-shell">
     <aside className="sidebar">
       <div className="brand"><span className="brand-mark"><ShieldCheck size={26} /></span><div>工程风险<span>知识与复盘培训中心</span></div></div>
-      <div className="workspace-label">B模块 / 开发工作区</div>
+      <div className="workspace-label">{inPlatform ? "质量安全小察 / 知识与学习" : "B模块 / 开发工作区"}</div>
       <nav aria-label="主导航">
+        {inPlatform && <button className="nav-item" onClick={() => { window.location.href='/quality/'; }}><LayoutDashboard size={19}/><span>返回小察工作台</span></button>}
         {[['/workbench', LayoutDashboard, '我的工作台'], ['/jobs', ClipboardList, '处理任务']].map(([url, Icon, label]) => {
           const I = Icon as typeof LayoutDashboard;
           return <button key={String(url)} aria-label={String(label)} className={path === url || (url === '/workbench' && path === '/') ? 'nav-item active' : 'nav-item'} onClick={() => navigate(String(url))}><I size={19}/><span>{String(label)}</span><ChevronRight size={15}/></button>;
@@ -177,10 +178,10 @@ function App() {
         <button className={isPackages ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/task-packages')} aria-label="A任务包接入"><FileCheck2 size={19}/><span>A任务包接入</span><ChevronRight size={15}/></button>
         <button className={isRetrospectives ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/retrospectives')} aria-label="过程复盘与经验"><Activity size={19}/><span>过程复盘与经验</span><ChevronRight size={15}/></button>
         <button className={isTraining ? 'nav-item active' : 'nav-item'} onClick={() => navigate(me?.projects.some(p=>p.roles.some(r=>['admin','teacher','reviewer'].includes(r)))?'/training/questions':'/learn')} aria-label="培训与学习"><BookOpen size={19}/><span>培训与学习</span><ChevronRight size={15}/></button>
-        <button className={path === '/settings/access' ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/settings/access')} aria-label="成员与权限"><Users size={19}/><span>成员与权限</span><ChevronRight size={15}/></button>
+        {!inPlatform && <button className={path === '/settings/access' ? 'nav-item active' : 'nav-item'} onClick={() => navigate('/settings/access')} aria-label="成员与权限"><Users size={19}/><span>成员与权限</span><ChevronRight size={15}/></button>}
       </nav>
       <div className="scope-card"><FolderLock size={19} /><strong>项目范围隔离</strong><p>记录、文件和操作权限<br />随当前身份实时检查。</p></div>
-      <div className="sidebar-bottom"><span className="dot" />本地开发 · B07<span className="version">v0.7</span></div>
+      <div className="sidebar-bottom"><span className="dot" />{inPlatform ? "平台账号 · 项目授权" : "本地开发 · B07"}<span className="version">v0.7</span></div>
     </aside>
     <div className="main-shell">
       <header className="topbar"><div className="breadcrumb">工程风险知识中心 <ChevronRight size={14} /><strong>{title}</strong></div>
@@ -192,7 +193,7 @@ function App() {
         <div className="page-heading"><div><div className="eyebrow">工作空间</div><h1>{title}</h1>
           <p>{isTraining ? '固定审核来源、题目与学习包版本，保留作答、建议评分和教员复核。' : isExtraction ? '按类别合并历史记录，调用云端模型提炼可追溯的施工要点。' : isRetrospectives ? '复用已有过程记录与证据，核查实际流程，形成可审核的经验草稿。' : isPackages ? '接收作业快照，核对事件、证据和版本，减少重复准备资料。' : isRetrieval ? '固定审核版本发布，以项目权限检索知识并打开来源。' : isKnowledge ? '复用来源证据生成候选，核查质量问题后逐版本审核。' : isIngestion ? '一次接入模拟资料，保留原文、治理生效值与来源证据。' : path === '/settings/access' ? '按项目分配角色，保留每次授权与撤销的记录。' : '查看处理进度、定位失败任务，保留每一次执行结果。'}</p></div>
           <div className="heading-actions"><button className="button ghost" onClick={() => setRefresh(v => v + 1)} disabled={loading}><RefreshCw size={16} />刷新</button>
-            {!isIngestion && !isKnowledge && !isRetrieval && !isPackages && !isRetrospectives && !isTraining && !isExtraction && path !== '/settings/access' && <button className="button primary" disabled={!canRun || busy} onClick={() => {
+            {!inPlatform && !isIngestion && !isKnowledge && !isRetrieval && !isPackages && !isRetrospectives && !isTraining && !isExtraction && path !== '/settings/access' && <button className="button primary" disabled={!canRun || busy} onClick={() => {
               setProject(me?.projects.find(p => p.can_run)?.id || 'demo-airport'); setShowCreate(true);
             }}><Play size={16} />运行演示检查</button>}</div>
         </div>
@@ -265,7 +266,7 @@ function App() {
               </section>
               {path !== '/jobs' && <section className="next-step"><div className="next-icon"><Activity size={22} /></div><div><h3>从真实记录开始，逐步形成可用知识</h3><p>现在可以配置模拟来源、预览字段和异常，再增量接入并核查证据。</p></div><button className="button secondary" onClick={() => navigate('/sources')}>打开数据接入<ArrowRight size={16} /></button></section>}
             </>}
-        <footer className="footer">工程风险知识与复盘培训中心<span>仅限本机开发验证 · 真实身份接入待A确认</span></footer>
+        <footer className="footer">工程风险知识与复盘培训中心<span>{inPlatform ? "小察统一账号 · 按项目授权访问" : "仅限本机开发验证 · 模拟身份"}</span></footer>
       </main>
     </div>
     {showCreate && <div className="modal-backdrop" role="presentation"><section className="modal" role="dialog" aria-modal="true" aria-labelledby="create-title">

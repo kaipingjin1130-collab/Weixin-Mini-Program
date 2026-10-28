@@ -12,10 +12,8 @@ from .service import source_context, validate_card, link_claims
 
 def actor_for(db, ident):
     user = db.get(UserLink, ident)
-    roles = {}
-    for binding in db.scalars(select(RoleBinding).where(RoleBinding.user_id == user.id)):
-        roles.setdefault(binding.scope_id, set()).add(binding.role)
-    return Actor(user.id, user.subject_id, user.display_name, set(user.authorized_projects), roles)
+    from ...auth import actor_for_user
+    return actor_for_user(db, user)
 
 
 @queue_app.task(name='b03.knowledge_generation', queue='b01')

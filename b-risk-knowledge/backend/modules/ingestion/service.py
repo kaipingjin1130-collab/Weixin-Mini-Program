@@ -9,6 +9,7 @@ from ...job_service import fingerprint
 from .models import DataSource, ImportBatch, SourceDocument, SourceRecord, SourceRecordVersion, EvidenceItem, RecordLink, ImportRow
 from .adapters import read_rows, normalize, MIME
 from .fixtures import fixture_id
+from ...config import settings
 
 
 def get_input(db, source, asset_id):
@@ -51,7 +52,7 @@ def preview(source, asset_id, actor):
                                'issues': norm['issues'], 'errors': norm['errors'], 'locator': locator})
         return {'input_hash': asset.sha256, 'total': len(rows), 'warning_rows': warnings,
                 'failed_rows': failures, 'mapping_version': source.mapping_version,
-                'mapping': source.config['mapping'], 'preview': output, 'is_mock': True,
+                'mapping': source.config['mapping'], 'preview': output, 'is_mock': source.config.get('is_mock', True),
                 'raw_columns': list(rows[0][1]) if rows else []}
 
 
@@ -127,7 +128,7 @@ def apply_row(db, source, batch, n, raw, governed, locator):
                                       provenance={'kind': source.kind, 'namespace': source.namespace, 'external_record_id': norm['external_id'],
                                                   'locator': locator, 'input_asset_id': batch.input_asset_id, 'input_hash': batch.input_hash,
                                                   'mapping_version': source.mapping_version, 'rule_version': batch.rule_version,
-                                                  'governance': governed, 'is_mock': True}, batch_id=batch.id)
+                                                  'governance': governed, 'is_mock': source.config.get('is_mock', True)}, batch_id=batch.id)
         db.add(version)
         db.flush()
         from ..knowledge.quality import ensure_issues

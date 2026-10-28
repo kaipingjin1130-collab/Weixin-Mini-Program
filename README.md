@@ -1,4 +1,16 @@
-# Weixin-Mini-Program
+# 质量安全小察 · ABversion
+
+本分支整合小察平台 A 与 `new-agent` 的 B 模块（基线 `397c58ad0259d428a10965096f07444aa01a79cf`）。
+
+- `platform-module/candidate/`：线上小察服务源码、现有账号适配、B 同源代理和六个左侧菜单入口。
+- `platform-module/miniprogram/`：平台小程序源码；`local-inspector/` 保留独立版 A 源码与测试。
+- `b-risk-knowledge/`：历史资料治理、知识加工与检索、归档成果接入、复盘和培训学习。
+- `platform-module/deploy_ab.py`：服务器安装、隔离测试、备份切换与回退脚本。
+- [整合说明与部署记录](AB-INTEGRATION.md)。
+
+正式模式继续使用小察现有登录和项目权限；不初始化演示账号或演示数据。数据库、上传资料、服务密钥、模型密钥和虚拟环境不进入 Git。
+
+以下为上游 B 模块的开发说明，演示身份和启动脚本仅适用于本地开发环境。
 
 ## B模块：工程风险知识与复盘培训中心
 

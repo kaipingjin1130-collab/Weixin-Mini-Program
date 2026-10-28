@@ -18,6 +18,8 @@ TRANSPORT=None  # Test-only injectable transport; never exposed by an API.
 
 
 def config_path():
+    if settings.auth_mode == 'a':
+        return settings.storage.parent / 'model.json'
     return ROOT/'.local'/('test-model.json' if settings.database_url.endswith('/risk_b_test') else 'model.json')
 
 

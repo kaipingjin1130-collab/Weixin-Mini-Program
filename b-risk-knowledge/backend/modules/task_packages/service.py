@@ -22,6 +22,9 @@ def package_in(db, ident, actor, action='package_read', available=False, lock_ro
     scope(actor, {'project_id': package.project_id, 'org_id': package.org_id, 'producer': package.producer}, action)
     if available and package.state == 'withdrawn':
         raise Problem(410, 'PACKAGE_WITHDRAWN', '此任务包已撤回，正文和附件不能继续使用。')
+    if package.producer == 'a' and (available or action == 'package_read') and package.state != 'withdrawn':
+        from ...platform_archives import guard
+        guard(package, actor)
     return package
 
 
@@ -77,7 +80,7 @@ def receive(data, actor, key, request_id):
             package = TaskPackage(id=ident, stream_id=stream.id, producer=data['producer'], package_id=data['package_id'],
                 task_id=data['task_id'], package_version=data['package_version'], content_hash=digest, schema_version=data['schema_version'],
                 org_id=data['org_id'], project_id=data['project_id'], scene_code=data['scene_code'], snapshot=deepcopy(data),
-                is_demo=True, run_id=run.id, actor_id=actor.id)
+                is_demo=data['is_demo'], run_id=run.id, actor_id=actor.id)
             db.add(package)
             db.flush()
             for declared in data['attachments']:
