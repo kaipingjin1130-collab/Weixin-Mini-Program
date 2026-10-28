@@ -1,3 +1,4 @@
+import { apiFetch } from './platform';
 import React, { useEffect, useState, useRef } from 'react';
 import { AlertCircle, BookOpen, CheckCircle2, ExternalLink, RefreshCw, Search } from 'lucide-react';
 import './retrieval.css';
@@ -42,7 +43,7 @@ export function Retrieval({identity,path,projects,navigate}:{identity:string;pat
   const canPublish=projects.find(p=>p.id===project)?.roles.some(r=>['admin','reviewer'].includes(r));
   const detailId=!releasePage&&!searchPage&&!libraryPage?path.split('/')[2]:null;
   async function api<T>(url:string,init:RequestInit={}):Promise<T>{
-    const response=await fetch('/api/v1'+url,{...init,headers:{'Content-Type':'application/json',Authorization:`Bearer dev-${identity}`,...init.headers}});
+    const response=await apiFetch('/api/v1'+url,{...init,headers:{'Content-Type':'application/json',Authorization:`Bearer dev-${identity}`,...init.headers}});
     const body=await response.json();if(!response.ok)throw new Error(body.message||'请求失败，请重试。');return body;
   }
   useEffect(()=>{setSelected([]);setResult(null);setEvidence(null);setError('');setNotice('');setCursor('');setHistory([]);},[project,path,scene,cardType]);
@@ -65,7 +66,7 @@ export function Retrieval({identity,path,projects,navigate}:{identity:string;pat
     const timer=setInterval(()=>setRefresh(v=>v+1),1800);return()=>clearInterval(timer);
   },[releasePage,releases]);
   const action=async(fn:()=>Promise<void>)=>{setBusy(true);setError('');setNotice('');try{await fn();}catch(e){setError((e as Error).message);}finally{setBusy(false);}};
-  const openEvidence=(id:string,revision:string,historical=false)=>action(async()=>{const scope=scopeRef.current;setImageUrl(null);setEvidence(null);const data=await api<Evidence>('/published/evidence/'+id+'?revision_id='+revision+(historical?'&historical=true':''));if(scope===scopeRef.current){setEvidence(data);if(data.has_image){const response=await fetch('/api/v1/published/evidence/'+id+'/content?revision_id='+revision+(historical?'&historical=true':''),{headers:{Authorization:`Bearer dev-${identity}`}});if(!response.ok)throw new Error('证据图片已不可用，请刷新后重试。');const blob=await response.blob();if(scope===scopeRef.current)setImageUrl(URL.createObjectURL(blob));}}});
+  const openEvidence=(id:string,revision:string,historical=false)=>action(async()=>{const scope=scopeRef.current;setImageUrl(null);setEvidence(null);const data=await api<Evidence>('/published/evidence/'+id+'?revision_id='+revision+(historical?'&historical=true':''));if(scope===scopeRef.current){setEvidence(data);if(data.has_image){const response=await apiFetch('/api/v1/published/evidence/'+id+'/content?revision_id='+revision+(historical?'&historical=true':''),{headers:{Authorization:`Bearer dev-${identity}`}});if(!response.ok)throw new Error('证据图片已不可用，请刷新后重试。');const blob=await response.blob();if(scope===scopeRef.current)setImageUrl(URL.createObjectURL(blob));}}});
   const pages=<div className="panel-footer"><span>按当前授权范围展示</span><div className="pagination"><button disabled={!history.length||loading} onClick={()=>{setCursor(history.at(-1)||'');setHistory(history.slice(0,-1));}}>上一页</button><button disabled={!next||loading} onClick={()=>{setHistory([...history,cursor]);setCursor(next||'');}}>下一页</button></div></div>;
   return <div className="retrieval-module">
     <div className="ingest-banner"><BookOpen size={20}/><div><strong>审核成果发布与证据检索</strong><span>当前使用模拟资料与本地特征哈希向量。回答直接摘录已审核事实；未接入真实大模型或训练语义模型。</span></div></div>

@@ -4,6 +4,7 @@ from pathlib import Path
 import httpx
 import pytest
 from backend.integrations.a.client import AClient, AClientError
+from backend.integrations.a.registry import SourceRegistration
 
 DATA = b'test photo'
 EVIDENCE = {'id': 'photo-1', 'name': 'photo.png', 'mime': 'image/png', 'size': len(DATA),
@@ -14,7 +15,10 @@ META = {'source_system': 'a', 'org_id': 'demo-org', 'project_id': 'demo-project-
 
 
 def client(handler):
-    return AClient('http://127.0.0.1:8765/quality', 'service-test', transport=httpx.MockTransport(handler))
+    registration = SourceRegistration.from_config({'source_system': 'a', 'org_id': 'demo-org',
+        'project_ids': ['demo-project-001', '085ecd33912a440fb092c2ed59ee07ed'],
+        'allowed_actions': ['delivery.meta', 'delivery.snapshot', 'delivery.attachment'], 'enabled': True})
+    return AClient('http://127.0.0.1:8765/quality', 'service-test', registration=registration, transport=httpx.MockTransport(handler))
 
 
 def metadata(c):
@@ -33,7 +37,7 @@ def test_meta_and_attachment_with_service_only():
     c = client(handle)
     try:
         assert metadata(c)['eligible']
-        assert c.attachment('delivery-1', EVIDENCE) == DATA
+        assert c.attachment('delivery-1', EVIDENCE, org_id='demo-org', project_id='demo-project-001') == DATA
         assert all(r.headers['authorization'] == 'Bearer service-test' for r in requests)
         assert all('x-ab-session' not in r.headers for r in requests)
         assert requests[1].url.params['deliveryId'] == 'delivery-1'
@@ -53,13 +57,25 @@ def test_meta_rejects_invalid_or_ineligible(change, status):
         c.close()
 
 
+def test_unregistered_scope_is_denied_before_network():
+    def fail(_):
+        raise AssertionError('network must not be called')
+    c = client(fail)
+    try:
+        with pytest.raises(AClientError) as error:
+            c.metadata('delivery-1', org_id='demo-org', project_id='not-registered', task_id='task-1', version=1)
+        assert error.value.status == 403
+    finally:
+        c.close()
+
+
 def test_attachment_rejects_bad_hash_and_redirect():
     def handle(req):
         return httpx.Response(200, json=EVIDENCE) if '/evidence-meta/' in req.url.path else httpx.Response(200, content=b'wrong')
     c = client(handle)
     try:
         with pytest.raises(AClientError, match='A_ATTACHMENT_HASH_MISMATCH'):
-            c.attachment('delivery-1', EVIDENCE)
+            c.attachment('delivery-1', EVIDENCE, org_id='demo-org', project_id='demo-project-001')
     finally:
         c.close()
 

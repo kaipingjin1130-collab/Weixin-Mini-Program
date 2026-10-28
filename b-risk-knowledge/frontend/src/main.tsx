@@ -10,6 +10,7 @@ import { TaskPackages } from './TaskPackages';
 import { Retrospectives } from './Retrospectives';
 import { Training } from './Training';
 import { Extraction } from './Extraction';
+import { apiFetch, currentPath, inPlatform, navigatePath } from './platform';
 
 type Project = { id: string; name: string; roles: string[]; can_run: boolean; can_manage: boolean };
 type Me = { id: string; name: string; subject: string; mode: string; projects: Project[] };
@@ -27,15 +28,17 @@ const profiles = [['admin', '本地管理员'], ['processor', '资料加工员']
 
 function App() {
   const [identity, setIdentity] = useState(localStorage.getItem('b01-identity') || 'admin');
-  const [path, setPath] = useState(location.pathname);
-  const [governanceOpen, setGovernanceOpen] = useState(['/sources','/imports','/records'].some(p => location.pathname.startsWith(p)));
+  const [path, setPath] = useState(currentPath());
+  const [sessionExpired, setSessionExpired] = useState(false);
+  const isAImport = inPlatform && /^\/imports\/[^/]+$/.test(path);
+  const [governanceOpen, setGovernanceOpen] = useState(['/sources','/imports','/records'].some(p => currentPath().startsWith(p)));
   const isRetrieval = ['/search','/releases','/knowledge/library'].includes(path) || /^\/knowledge\/[^/]+$/.test(path) && path !== '/knowledge/drafts';
   const isKnowledge = !isRetrieval && ['/quality','/knowledge','/reviews'].some(p => path.startsWith(p));
   const isTraining = path.startsWith('/training') || path.startsWith('/learn');
   const isExtraction = path.startsWith('/extraction') || path === '/settings/models';
   const isRetrospectives = path.startsWith('/retrospectives');
   const isPackages = path.startsWith('/task-packages');
-  const isIngestion = ['/sources', '/imports', '/records'].some(p => path.startsWith(p));
+  const isIngestion = !isAImport && ['/sources', '/imports', '/records'].some(p => path.startsWith(p));
   const [me, setMe] = useState<Me | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
   const [counts, setCounts] = useState<Record<string, number>>({});
@@ -61,7 +64,7 @@ function App() {
   const [audit, setAudit] = useState<{ id: string; action: string; project_id: string; created_at: string }[]>([]);
 
   async function api<T>(url: string, options: RequestInit = {}): Promise<T> {
-    const response = await fetch('/api/v1' + url, {
+    const response = await apiFetch('/api/v1' + url, {
       ...options, headers: { 'Content-Type': 'application/json', Authorization: `Bearer dev-${identity}`, ...options.headers }
     });
     if (!response.ok) {
@@ -72,11 +75,13 @@ function App() {
   }
 
   const navigate = (url: string) => {
-    window.history.pushState({}, '', url); setPath(url.split('?')[0]); setError(''); setSelected(null);
+    navigatePath(url); setPath(currentPath()); setError(''); setSelected(null);
     setCursor(''); setHistory([]);
   };
-  useEffect(() => { const fn = () => setPath(location.pathname); window.addEventListener('popstate', fn);
-    return () => window.removeEventListener('popstate', fn); }, []);
+  useEffect(() => { const fn = () => setPath(currentPath()); window.addEventListener('popstate', fn); window.addEventListener('hashchange', fn);
+    return () => { window.removeEventListener('popstate', fn); window.removeEventListener('hashchange', fn); }; }, []);
+  useEffect(() => { const fn = () => setSessionExpired(true); window.addEventListener('b-session-expired', fn);
+    return () => window.removeEventListener('b-session-expired', fn); }, []);
   useEffect(() => {
     let stale = false;
     setLoading(true); setError(''); setMe(null); setAccess(null); setJobs([]); setAudit([]);
@@ -145,7 +150,7 @@ function App() {
     setNotice('已提交重试，原任务和来源保持不变。');
   });
   const download = (job: Job) => runAction(async () => {
-    const response = await fetch(`/api/v1/assets/${job.result_ref}/content`, { headers: { Authorization: `Bearer dev-${identity}` } });
+    const response = await apiFetch(`/api/v1/assets/${job.result_ref}/content`, { headers: { Authorization: `Bearer dev-${identity}` } });
     if (!response.ok) { const value = await response.json(); throw new Error(value.message); }
     const link = document.createElement('a'); const url = URL.createObjectURL(await response.blob());
     link.href = url; link.download = `演示检查结果-${job.id.slice(0, 8)}.txt`; link.click(); URL.revokeObjectURL(url);
@@ -179,9 +184,9 @@ function App() {
     </aside>
     <div className="main-shell">
       <header className="topbar"><div className="breadcrumb">工程风险知识中心 <ChevronRight size={14} /><strong>{title}</strong></div>
-        <div className="identity"><span className="demo-tag">模拟身份</span><select aria-label="切换模拟身份" value={identity} onChange={e => {
+        {inPlatform ? <a href="/quality/">返回平台</a> : <div className="identity"><span className="demo-tag">模拟身份</span><select aria-label="切换模拟身份" value={identity} onChange={e => {
           localStorage.setItem('b01-identity', e.target.value); setIdentity(e.target.value); setSelected(null); setCursor(''); setHistory([]); setNotice('');
-        }}>{profiles.map(([id, label]) => <option value={id} key={id}>{label}</option>)}</select></div>
+        }}>{profiles.map(([id, label]) => <option value={id} key={id}>{label}</option>)}</select></div>}
       </header>
       <main>
         <div className="page-heading"><div><div className="eyebrow">工作空间</div><h1>{title}</h1>
@@ -191,10 +196,11 @@ function App() {
               setProject(me?.projects.find(p => p.can_run)?.id || 'demo-airport'); setShowCreate(true);
             }}><Play size={16} />运行演示检查</button>}</div>
         </div>
-        {!isIngestion && !isKnowledge && !isRetrieval && !isPackages && !isRetrospectives && !isTraining && !isExtraction && <div className="mode-banner"><ShieldCheck size={18} /><div><strong>本地演示模式</strong><span>尚未接入A的真实身份或历史资料。所有输入均为明确标注的模拟数据，尚未接入真实工程资料。</span></div></div>}
+        {!inPlatform && !isIngestion && !isKnowledge && !isRetrieval && !isPackages && !isRetrospectives && !isTraining && !isExtraction && <div className="mode-banner"><ShieldCheck size={18} /><div><strong>本地演示模式</strong><span>尚未接入A的真实身份或历史资料。所有输入均为明确标注的模拟数据，尚未接入真实工程资料。</span></div></div>}
+        {sessionExpired && <div className="feedback error" role="alert">登录已失效，请返回平台重新登录。<a href="/quality/">返回平台</a></div>}
         {error && <div className="feedback error" role="alert"><AlertCircle size={18} />{error}<button onClick={() => setRefresh(v => v + 1)}>重新加载</button></div>}
         {notice && <div className="feedback success" role="status"><CheckCircle2 size={18} />{notice}<button aria-label="关闭提示" onClick={() => setNotice('')}><X size={16} /></button></div>}
-        {loading ? <div className="loading"><LoaderCircle className="spin" size={24} /><span>正在读取工作区…</span></div> :
+        {sessionExpired ? null : isAImport ? <section className="panel empty"><h2>成果接入</h2><p>此成果的接入页面尚未开放，请返回平台查看。</p><a href="/quality/">返回平台</a></section> : loading ? <div className="loading"><LoaderCircle className="spin" size={24} /><span>正在读取工作区…</span></div> :
           isTraining ? <Training key={identity} api={api} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isExtraction ? <Extraction key={identity} api={api} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isRetrospectives ? <Retrospectives key={identity} api={api} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :

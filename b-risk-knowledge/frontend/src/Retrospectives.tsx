@@ -1,3 +1,4 @@
+import { apiFetch } from './platform';
 import { useEffect, useState } from 'react';
 import { AlertCircle, CheckCircle2, RefreshCw, History, X } from 'lucide-react';
 import './knowledge.css';
@@ -38,7 +39,7 @@ export function Retrospectives({api,path,navigate,projects,identity}:{api:Api;pa
     const load=async()=>{try{const [p,s]=await Promise.all([api<Page<Package>>(`/task-packages?project_id=${project}&state=ready&limit=100`),api<Page<Source>>(`/knowledge/source-options?project_id=${project}&limit=100`)]);if(stale)return;const ready=p.items.filter(x=>x.is_current);setPackages(ready);setPackageId(ready[0]?.id||'');setSources(s.items);}catch(e){if(!stale)setError((e as Error).message);}};void load();return()=>{stale=true;};
   },[ident,project,refresh]);
   useEffect(()=>{if(!evidence?.asset_id||evidence.type!=='task_attachment'){setPreview('');setPreviewType('');return;}let stale=false,objectUrl='';
-    void fetch('/api/v1/assets/'+evidence.asset_id+'/content',{headers:{Authorization:'Bearer dev-'+identity}}).then(async r=>{if(!r.ok){const body=await r.json();throw new Error(body.message);}const blob=await r.blob();if(!stale&&(/^(image\/|text\/plain)/.test(blob.type))){objectUrl=URL.createObjectURL(blob);setPreview(objectUrl);setPreviewType(blob.type);}}).catch(e=>{if(!stale)setError(e.message);});return()=>{stale=true;if(objectUrl)URL.revokeObjectURL(objectUrl);setPreview('');};
+    void apiFetch('/api/v1/assets/'+evidence.asset_id+'/content',{headers:{Authorization:'Bearer dev-'+identity}}).then(async r=>{if(!r.ok){const body=await r.json();throw new Error(body.message);}const blob=await r.blob();if(!stale&&(/^(image\/|text\/plain)/.test(blob.type))){objectUrl=URL.createObjectURL(blob);setPreview(objectUrl);setPreviewType(blob.type);}}).catch(e=>{if(!stale)setError(e.message);});return()=>{stale=true;if(objectUrl)URL.revokeObjectURL(objectUrl);setPreview('');};
   },[evidence,identity]);
   const action=async(fn:()=>Promise<void>)=>{setBusy(true);setError('');setNotice('');try{await fn();}catch(e){setError((e as Error).message);}finally{setBusy(false);}};
   const payload=()=>({revision_id:detail!.revision_id,row_version:detail!.row_version,reason,evidence_checked:checked});

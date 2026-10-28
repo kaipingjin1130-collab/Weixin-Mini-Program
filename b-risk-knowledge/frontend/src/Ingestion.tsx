@@ -1,3 +1,4 @@
+import { apiFetch } from './platform';
 import { useEffect, useState, useRef } from 'react';
 import { ArrowLeft, ArrowRight, CheckCircle2, Database, FileSearch, RefreshCw, Upload, AlertCircle } from 'lucide-react';
 import './ingestion.css';
@@ -26,7 +27,7 @@ function AuthImage({ asset, identity }: { asset: string; identity: string }) {
   const [error, setError] = useState('');
   useEffect(() => {
     let stale = false; let objectUrl = '';
-    fetch(`/api/v1/assets/${asset}/content`, { headers: { Authorization: `Bearer dev-${identity}` } })
+    apiFetch(`/api/v1/assets/${asset}/content`, { headers: { Authorization: `Bearer dev-${identity}` } })
       .then(async r => { if (!r.ok) throw new Error('图片不可访问或已撤回'); return r.blob(); })
       .then(blob => { objectUrl = URL.createObjectURL(blob); if (!stale) setUrl(objectUrl); else URL.revokeObjectURL(objectUrl); })
       .catch(e => { if (!stale) setError(e.message); });
@@ -145,7 +146,7 @@ export function Ingestion({ api, path, navigate, projects, identity }: { api: Ap
   const pagination = <div className="panel-footer"><span>按权限范围显示 · 使用稳定游标分页</span><div className="pagination"><button disabled={!history.length} onClick={() => { setCursor(history.at(-1) || ''); setHistory(history.slice(0,-1)); }}>上一页</button><button disabled={!next} onClick={() => { setHistory([...history, cursor]); setCursor(next || ''); }}>下一页</button></div></div>;
   const changeFilter = (key: string, value: string) => { setFilters({ ...filters, [key]: value }); setCursor(''); setHistory([]); };
   const download = (asset: string) => action(async () => {
-    const r = await fetch(`/api/v1/assets/${asset}/content`, { headers: { Authorization: `Bearer dev-${identity}` } });
+    const r = await apiFetch(`/api/v1/assets/${asset}/content`, { headers: { Authorization: `Bearer dev-${identity}` } });
     if (!r.ok) { const body = await r.json(); throw new Error(body.message); }
     const url = URL.createObjectURL(await r.blob()); const a = document.createElement('a'); a.href = url; a.download = '模拟来源文件'; a.click(); URL.revokeObjectURL(url);
   });

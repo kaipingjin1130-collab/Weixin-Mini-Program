@@ -16,8 +16,9 @@ class AClientError(Exception):
 
 
 class AClient:
-    def __init__(self, base, key, *, transport=None):
+    def __init__(self, base, key, *, registration, transport=None):
         self.base = base.rstrip('/')
+        self.registration = registration
         self.client = httpx.Client(headers={'Authorization': 'Bearer ' + key}, transport=transport,
                                    timeout=httpx.Timeout(60.0), follow_redirects=False, trust_env=False)
 
@@ -48,6 +49,7 @@ class AClient:
             raise AClientError(503, 'A_UNAVAILABLE') from exc
 
     def metadata(self, delivery_id, *, org_id, project_id, task_id, version):
+        self._scope(org_id, project_id, 'delivery.meta')
         raw = self._get('/api/work/delivery-meta/' + self._id(delivery_id), MAX_JSON)
         try:
             value = json.loads(raw.decode('utf-8'))
@@ -71,7 +73,12 @@ class AClient:
             raise AClientError(422, 'A_NOT_ELIGIBLE')
         return value
 
-    def snapshot(self, delivery_id):
+    def _scope(self, org_id, project_id, action):
+        if not self.registration.permits(org_id, project_id, action):
+            raise AClientError(403, 'A_SERVICE_SCOPE_DENIED')
+
+    def snapshot(self, delivery_id, *, org_id, project_id):
+        self._scope(org_id, project_id, 'delivery.snapshot')
         return self._get('/api/work/snapshot/' + self._id(delivery_id), MAX_JSON)
 
     def prepare(self, delivery_id, *, org_id, project_id, task_id, version):
@@ -80,7 +87,7 @@ class AClient:
         from .mapping import convert
         scope = dict(org_id=org_id, project_id=project_id, task_id=task_id, version=version)
         first = self.metadata(delivery_id, **scope)
-        raw = self.snapshot(delivery_id)
+        raw = self.snapshot(delivery_id, org_id=org_id, project_id=project_id)
         try:
             source = _json(raw)
             task = source['task']
@@ -96,7 +103,8 @@ class AClient:
             raise AClientError(409, 'A_METADATA_CHANGED')
         return raw, result, second
 
-    def attachment(self, delivery_id, evidence):
+    def attachment(self, delivery_id, evidence, *, org_id, project_id):
+        self._scope(org_id, project_id, 'delivery.attachment')
         self._id(delivery_id)
         evidence_id = self._id(evidence['id'])
         if type(evidence.get('size')) is not int or not 0 <= evidence['size'] <= MAX_ATTACHMENT:
