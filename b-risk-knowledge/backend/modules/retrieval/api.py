@@ -20,9 +20,33 @@ from .models import KnowledgeRelease, SearchRun
 from .schemas import CreateRelease, Activation, Withdrawal, SearchInput, Feedback
 from .publication import create_release, activate, release_dto, active_release, withdraw, public_query, public_revision, card_dto
 from .search import search, citation_for
+from ...integrations.a.knowledge import query as a_knowledge_query
 
 router = APIRouter(prefix='/api/v1', tags=['B04 发布检索'])
 integration_router = APIRouter(prefix='/integration/v1', tags=['B04 A集成（proposed / mock身份）'])
+
+
+@integration_router.post('/a-knowledge/query')
+async def a_knowledge(request: Request, actor: Actor = Depends(current_actor)):
+    import asyncio
+    from starlette.concurrency import run_in_threadpool
+    from pydantic import ValidationError
+    try:
+        data = await request.json()
+    except ValueError:
+        raise Problem(422, 'VALIDATION_ERROR', '请求须为合法JSON。')
+
+    def run(project, payload, reader):
+        try:
+            request_data = SearchInput(project_id=project, question=payload['question'], scene_code='generic',
+                object_type='unknown', stage=payload['stage'], conditions=payload['conditions'], limit=5)
+        except ValidationError:
+            raise Problem(422, 'VALIDATION_ERROR', '查询条件不符合检索范围。')
+        return search(request_data, reader, raw_object=payload['object'], exclude_retrospectives=True)
+    try:
+        return await asyncio.wait_for(run_in_threadpool(a_knowledge_query, data, actor, run), timeout=10)
+    except TimeoutError:
+        raise Problem(503, 'KNOWLEDGE_TIMEOUT', '知识查询暂不可用，请稍后重试。')
 
 
 @router.post('/releases')

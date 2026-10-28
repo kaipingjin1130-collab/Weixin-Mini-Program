@@ -47,7 +47,7 @@ def citation_for(db, evidence_id, revision, actor, claim_path, allow_history=Fal
             'evidence_id': evidence_id, 'source_title': document.title[:500], 'locator': locator, 'review_status': 'published'}
 
 
-def search(data, actor, output_types=None):
+def search(data, actor, output_types=None, *, raw_object=None, exclude_retrospectives=False):
     authorize(actor, 'read', data.project_id)
     started = time.perf_counter()
     output_types = output_types or ['answer', 'checkpoints', 'cases']
@@ -62,6 +62,9 @@ def search(data, actor, output_types=None):
             adapter = get_embedding(embedding.model)
             query_vector = adapter.embed(data.question)
             allowed = public_query(actor, data.project_id, data.scene_code, data.card_type)
+            if exclude_retrospectives:
+                # A-derived sources require live withdrawal checks before they can be exposed.
+                allowed = allowed.where(KnowledgeItem.retrospective_revision_id.is_(None))
             if data.object_type:
                 allowed = allowed.where(KnowledgeItem.object_type == data.object_type)
             if data.stage:
@@ -135,7 +138,8 @@ def search(data, actor, output_types=None):
         run = SearchRun(actor_id=actor.id, project_id=data.project_id,
             query=hashlib.sha256(data.question.encode('utf-8')).hexdigest(),
             parameters={'scene_code': data.scene_code, 'object_type': data.object_type, 'stage': data.stage, 'limit': data.limit,
-                        'card_type': data.card_type, 'output_types': output_types, 'answer_mode': data.answer_mode},
+                        'card_type': data.card_type, 'output_types': output_types, 'answer_mode': data.answer_mode,
+                        'raw_object': raw_object},
             release_id=release.id if release else None, result_refs=[r['revision_id'] for r in found],
             latency=elapsed, model_ref=release.index_config['model'] if release else 'none')
         db.add(run)
