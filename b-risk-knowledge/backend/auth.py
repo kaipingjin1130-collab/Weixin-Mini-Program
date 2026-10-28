@@ -1,8 +1,7 @@
 from dataclasses import dataclass
+import hmac
+import httpx
 from fastapi import Request
-from sqlalchemy import select
-from .db import Session
-from .models import UserLink, RoleBinding
 
 
 class Problem(Exception):
@@ -20,10 +19,14 @@ class Actor:
     org_id: str = 'demo-org'
     is_service: bool = False
     producers: frozenset[str] = frozenset()
+    permissions: dict[str, set[str]] | None = None
 
     def can(self, action: str, project: str) -> bool:
         if project not in self.grants:
             return False
+        if self.permissions is not None:
+            # Coarse legacy actions remain closed until each route is mapped individually.
+            return action in self.permissions.get(project, set())
         allowed = {
             "read": {"admin", "processor", "reviewer", "teacher", "learner"},
             "run": {"admin", "processor"},
@@ -42,6 +45,9 @@ class Actor:
 
 
 def current_actor(request: Request) -> Actor:
+    from .config import settings
+    if settings.auth_mode == 'a':
+        return resolve_a_actor(request, settings)
     token = request.headers.get("authorization", "")
     identities = {"Bearer dev-admin": "admin", "Bearer dev-processor": "processor",
                   "Bearer dev-learner": "learner", "Bearer dev-outsider": "outsider",
@@ -49,6 +55,9 @@ def current_actor(request: Request) -> Actor:
     subject = identities.get(token)
     if subject is None:
         raise Problem(401, "UNAUTHENTICATED", "请选择本地演示身份；真实身份接入尚未配置。")
+    from sqlalchemy import select
+    from .db import Session
+    from .models import UserLink
     with Session() as db:
         user = db.scalar(select(UserLink).where(UserLink.issuer == "local-demo", UserLink.subject_id == subject))
         if not user:
@@ -56,7 +65,50 @@ def current_actor(request: Request) -> Actor:
         return actor_for_user(db, user)
 
 
+def resolve_a_actor(request: Request, settings) -> Actor:
+    authorization = request.headers.get('authorization', '')
+    expected = 'Bearer ' + settings.a_to_b_key
+    if not hmac.compare_digest(authorization.encode('utf-8'), expected.encode('utf-8')):
+        raise Problem(401, 'UNAUTHENTICATED', '代理认证失败。')
+    session = request.headers.get('x-ab-session', '')
+    if not session or len(session) > 4096 or '\r' in session or '\n' in session:
+        raise Problem(401, 'UNAUTHENTICATED', '会话引用无效。')
+    try:
+        response = httpx.post(settings.a_base + '/integration/v1/identity/resolve',
+            headers={'Authorization': 'Bearer ' + settings.b_to_a_key, 'X-AB-Session': session,
+                     'X-Request-ID': getattr(request.state, 'request_id', '')},
+            json={'project_id': None}, timeout=3.0, follow_redirects=False, trust_env=False)
+        if response.status_code == 401:
+            raise Problem(401, 'UNAUTHENTICATED', '会话已失效，请返回平台重新登录。')
+        if response.status_code == 403:
+            raise Problem(403, 'FORBIDDEN', '当前身份没有访问权限。')
+        if response.status_code != 200 or len(response.content) > 1024 * 1024:
+            raise Problem(503, 'IDENTITY_UNAVAILABLE', '身份服务暂不可用。')
+        value = response.json()
+        if not isinstance(value, dict) or type(value.get('active')) is not bool:
+            raise ValueError('invalid identity')
+        if not value['active']:
+            raise Problem(401, 'UNAUTHENTICATED', '会话已停用。')
+        if any(not isinstance(value.get(k), str) or not value[k] for k in ('subject_id', 'org_id', 'display_name')):
+            raise ValueError('invalid identity fields')
+        if value['org_id'] != settings.a_org_id or not isinstance(value.get('projects'), list):
+            raise ValueError('invalid organization or projects')
+        permissions = {}
+        for project in value['projects']:
+            if (not isinstance(project, dict) or not isinstance(project.get('project_id'), str) or not project['project_id']
+                or project['project_id'] in permissions or not isinstance(project.get('permissions'), list)
+                or any(not isinstance(p, str) for p in project['permissions'])):
+                raise ValueError('invalid project permissions')
+            permissions[project['project_id']] = set(project['permissions'])
+        return Actor(value['subject_id'], value['subject_id'], value['display_name'], set(permissions), {},
+                     org_id=value['org_id'], permissions=permissions)
+    except (httpx.HTTPError, ValueError, TypeError):
+        raise Problem(503, 'IDENTITY_UNAVAILABLE', '身份服务暂不可用或返回无效数据。')
+
+
 def actor_for_user(db, user):
+    from sqlalchemy import select
+    from .models import RoleBinding
     roles = {}
     for binding in db.scalars(select(RoleBinding).where(RoleBinding.user_id == user.id)):
         roles.setdefault(binding.scope_id, set()).add(binding.role)

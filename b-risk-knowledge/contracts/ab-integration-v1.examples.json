@@ -1,0 +1,277 @@
+{
+  "contract_version": "ab-integration/1.0",
+  "note": "人工构造的合同测试数据，不是真实API响应或业务验收结果",
+  "cases": [
+    {
+      "name": "import-create",
+      "schema": "import_request",
+      "valid": true,
+      "data": {
+        "source_system": "a",
+        "project_id": "demo-project-001",
+        "task_id": "demo-task-001",
+        "delivery_id": "demo-delivery-003",
+        "delivery_version": 3
+      }
+    },
+    {
+      "name": "import-missing-version",
+      "schema": "import_request",
+      "valid": false,
+      "data": {
+        "source_system": "a",
+        "project_id": "demo-project-001",
+        "task_id": "demo-task-001",
+        "delivery_id": "demo-delivery-003"
+      }
+    },
+    {
+      "name": "import-queued",
+      "schema": "import_response",
+      "valid": true,
+      "data": {
+        "import_id": "demo-import-001",
+        "version": 1,
+        "project_id": "demo-project-001",
+        "task_id": "demo-task-001",
+        "delivery_id": "demo-delivery-003",
+        "delivery_version": 3,
+        "status": "queued",
+        "receipt_id": null,
+        "warnings": [],
+        "missing_fields": [],
+        "capabilities": {
+          "can_view_materials": false,
+          "can_generate_retrospective": false,
+          "evidence_complete": false
+        },
+        "retrospective_id": null,
+        "retrospective_status": "not_created",
+        "updated_at": "2026-10-28T17:00:00+08:00",
+        "replayed": false,
+        "error": null
+      }
+    },
+    {
+      "name": "import-replay",
+      "schema": "import_response",
+      "valid": true,
+      "data": {
+        "import_id": "demo-import-001",
+        "version": 1,
+        "project_id": "demo-project-001",
+        "task_id": "demo-task-001",
+        "delivery_id": "demo-delivery-003",
+        "delivery_version": 3,
+        "status": "queued",
+        "receipt_id": null,
+        "warnings": [],
+        "missing_fields": [],
+        "capabilities": {
+          "can_view_materials": false,
+          "can_generate_retrospective": false,
+          "evidence_complete": false
+        },
+        "retrospective_id": null,
+        "retrospective_status": "not_created",
+        "updated_at": "2026-10-28T17:00:00+08:00",
+        "replayed": true,
+        "error": null
+      }
+    },
+    {
+      "name": "import-bad-status",
+      "schema": "import_response",
+      "valid": false,
+      "data": {
+        "import_id": "demo-import-001",
+        "version": 1,
+        "project_id": "demo-project-001",
+        "task_id": "demo-task-001",
+        "delivery_id": "demo-delivery-003",
+        "delivery_version": 3,
+        "status": "success",
+        "receipt_id": null,
+        "warnings": [],
+        "missing_fields": [],
+        "capabilities": {
+          "can_view_materials": false,
+          "can_generate_retrospective": false,
+          "evidence_complete": false
+        },
+        "retrospective_id": null,
+        "retrospective_status": "not_created",
+        "updated_at": "2026-10-28T17:00:00+08:00",
+        "replayed": false,
+        "error": null
+      }
+    },
+    {
+      "name": "retry",
+      "schema": "version_request",
+      "valid": true,
+      "data": {
+        "expected_version": 1
+      }
+    },
+    {
+      "name": "withdraw",
+      "schema": "withdraw_request",
+      "valid": true,
+      "data": {
+        "expected_version": 1,
+        "reason": "测试撤回"
+      }
+    },
+    {
+      "name": "withdraw-empty-reason",
+      "schema": "withdraw_request",
+      "valid": false,
+      "data": {
+        "expected_version": 1,
+        "reason": ""
+      }
+    },
+    {
+      "name": "import-list",
+      "schema": "import_list",
+      "valid": true,
+      "data": {
+        "items": [
+          {
+            "import_id": "demo-import-001",
+            "version": 1,
+            "project_id": "demo-project-001",
+            "task_id": "demo-task-001",
+            "delivery_id": "demo-delivery-003",
+            "delivery_version": 3,
+            "status": "queued",
+            "receipt_id": null,
+            "warnings": [],
+            "missing_fields": [],
+            "capabilities": {
+              "can_view_materials": false,
+              "can_generate_retrospective": false,
+              "evidence_complete": false
+            },
+            "retrospective_id": null,
+            "retrospective_status": "not_created",
+            "updated_at": "2026-10-28T17:00:00+08:00",
+            "replayed": false,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "name": "knowledge-query",
+      "schema": "knowledge_request",
+      "valid": true,
+      "data": {
+        "request_id": "demo-query-001",
+        "project_id": "demo-project-001",
+        "task_id": "demo-task-001",
+        "question": "本次检查需关注什么？",
+        "scenario_id": "inspection",
+        "scenario_version": 1,
+        "object": "测试区域",
+        "stage": "execution",
+        "conditions": {}
+      }
+    },
+    {
+      "name": "knowledge-unsupported-scene",
+      "schema": "knowledge_response",
+      "valid": true,
+      "data": {
+        "query_id": "demo-query-001",
+        "status": "insufficient_evidence",
+        "knowledge_release_id": null,
+        "items": [],
+        "citations": [],
+        "missing_conditions": [
+          "场景暂未接入"
+        ],
+        "warnings": [
+          {
+            "code": "SCENE_UNSUPPORTED",
+            "path": "scenario_id",
+            "message": "该场景暂无匹配知识"
+          }
+        ],
+        "requiresConfirmation": true
+      }
+    },
+    {
+      "name": "retrospective-not-created",
+      "schema": "retrospective_response",
+      "valid": true,
+      "data": {
+        "import_id": "demo-import-001",
+        "receipt_id": null,
+        "delivery_version": 3,
+        "retrospective_id": null,
+        "retrospective_version": null,
+        "status": "not_created",
+        "warnings": [],
+        "missing_fields": [],
+        "result_path": null
+      }
+    },
+    {
+      "name": "error-401",
+      "schema": "error",
+      "valid": true,
+      "data": {
+        "code": "UNAUTHENTICATED",
+        "message": "明确的测试错误",
+        "details": [],
+        "request_id": "demo-request-001"
+      }
+    },
+    {
+      "name": "error-403",
+      "schema": "error",
+      "valid": true,
+      "data": {
+        "code": "FORBIDDEN",
+        "message": "明确的测试错误",
+        "details": [],
+        "request_id": "demo-request-001"
+      }
+    },
+    {
+      "name": "error-409",
+      "schema": "error",
+      "valid": true,
+      "data": {
+        "code": "VERSION_CONFLICT",
+        "message": "明确的测试错误",
+        "details": [],
+        "request_id": "demo-request-001"
+      }
+    },
+    {
+      "name": "error-410",
+      "schema": "error",
+      "valid": true,
+      "data": {
+        "code": "SOURCE_WITHDRAWN",
+        "message": "明确的测试错误",
+        "details": [],
+        "request_id": "demo-request-001"
+      }
+    },
+    {
+      "name": "error-503",
+      "schema": "error",
+      "valid": true,
+      "data": {
+        "code": "DEPENDENCY_UNAVAILABLE",
+        "message": "明确的测试错误",
+        "details": [],
+        "request_id": "demo-request-001"
+      }
+    }
+  ]
+}

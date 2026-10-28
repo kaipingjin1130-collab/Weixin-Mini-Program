@@ -103,7 +103,7 @@ def health():
 
 @app.get("/api/v1/me")
 def me(actor: Actor = Depends(current_actor)):
-    return {"id": actor.id, "name": actor.name, "subject": actor.subject, "mode": "mock",
+    return {"id": actor.id, "name": actor.name, "subject": actor.subject, "mode": settings.auth_mode,
             "projects": [{"id": p, "name": PROJECTS.get(p, p), "roles": sorted(actor.roles.get(p, [])),
                           "can_run": actor.can("run", p), "can_manage": actor.can("manage", p)}
                          for p in actor.projects()]}

@@ -1,0 +1,568 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "B integration v1 boundary shapes - contract only",
+  "$defs": {
+    "import_request": {
+      "type": "object",
+      "properties": {
+        "source_system": {
+          "const": "a"
+        },
+        "project_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "delivery_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "delivery_version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "source_system",
+        "project_id",
+        "task_id",
+        "delivery_id",
+        "delivery_version"
+      ],
+      "additionalProperties": false
+    },
+    "version_request": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "expected_version"
+      ],
+      "additionalProperties": false
+    },
+    "withdraw_request": {
+      "type": "object",
+      "properties": {
+        "expected_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 2000
+        }
+      },
+      "required": [
+        "expected_version",
+        "reason"
+      ],
+      "additionalProperties": false
+    },
+    "error": {
+      "type": "object",
+      "properties": {
+        "code": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "message": {
+          "type": "string"
+        },
+        "details": {
+          "type": "array",
+          "items": {
+            "type": "object"
+          }
+        },
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        }
+      },
+      "required": [
+        "code",
+        "message",
+        "details",
+        "request_id"
+      ],
+      "additionalProperties": false
+    },
+    "import_response": {
+      "type": "object",
+      "properties": {
+        "import_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "project_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "delivery_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "delivery_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "queued",
+            "fetching",
+            "validating",
+            "processing",
+            "ready",
+            "failed",
+            "withdrawn"
+          ]
+        },
+        "receipt_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "path": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "path",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "capabilities": {
+          "type": "object",
+          "properties": {
+            "can_view_materials": {
+              "type": "boolean"
+            },
+            "can_generate_retrospective": {
+              "type": "boolean"
+            },
+            "evidence_complete": {
+              "type": "boolean"
+            }
+          },
+          "required": [
+            "can_view_materials",
+            "can_generate_retrospective",
+            "evidence_complete"
+          ],
+          "additionalProperties": false
+        },
+        "retrospective_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "retrospective_status": {
+          "enum": [
+            "not_created",
+            "queued",
+            "processing",
+            "ready",
+            "failed",
+            "withdrawn"
+          ]
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "replayed": {
+          "type": "boolean"
+        },
+        "error": {
+          "anyOf": [
+            {
+              "$ref": "#/$defs/error"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        }
+      },
+      "required": [
+        "import_id",
+        "version",
+        "project_id",
+        "task_id",
+        "delivery_id",
+        "delivery_version",
+        "status",
+        "receipt_id",
+        "warnings",
+        "missing_fields",
+        "capabilities",
+        "retrospective_id",
+        "retrospective_status",
+        "updated_at",
+        "replayed",
+        "error"
+      ],
+      "additionalProperties": false
+    },
+    "import_list": {
+      "type": "object",
+      "properties": {
+        "items": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/import_response"
+          }
+        }
+      },
+      "required": [
+        "items"
+      ],
+      "additionalProperties": false
+    },
+    "knowledge_request": {
+      "type": "object",
+      "properties": {
+        "request_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "project_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "task_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "question": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 4000
+        },
+        "scenario_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "scenario_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "object": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "stage": {
+          "enum": [
+            "preparation",
+            "execution",
+            "review",
+            "training"
+          ]
+        },
+        "conditions": {
+          "type": "object",
+          "maxProperties": 32
+        }
+      },
+      "required": [
+        "request_id",
+        "project_id",
+        "task_id",
+        "question",
+        "scenario_id",
+        "scenario_version",
+        "object",
+        "stage",
+        "conditions"
+      ],
+      "additionalProperties": false
+    },
+    "knowledge_response": {
+      "type": "object",
+      "properties": {
+        "query_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "status": {
+          "enum": [
+            "answered",
+            "insufficient_evidence",
+            "degraded"
+          ]
+        },
+        "knowledge_release_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "items": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "title": {
+                "type": "string"
+              },
+              "text": {
+                "type": "string"
+              },
+              "reference": {
+                "type": "string"
+              },
+              "citation_ids": {
+                "type": "array",
+                "minItems": 1,
+                "items": {
+                  "type": "string",
+                  "minLength": 1,
+                  "maxLength": 128
+                }
+              }
+            },
+            "required": [
+              "title",
+              "text",
+              "reference",
+              "citation_ids"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "citations": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "citation_id": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "source_title": {
+                "type": "string"
+              },
+              "locator": {
+                "type": "string"
+              },
+              "knowledge_revision_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              },
+              "evidence_id": {
+                "type": [
+                  "string",
+                  "null"
+                ]
+              }
+            },
+            "required": [
+              "citation_id",
+              "source_title",
+              "locator",
+              "knowledge_revision_id",
+              "evidence_id"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "missing_conditions": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "path": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "path",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "requiresConfirmation": {
+          "const": true
+        }
+      },
+      "required": [
+        "query_id",
+        "status",
+        "knowledge_release_id",
+        "items",
+        "citations",
+        "missing_conditions",
+        "warnings",
+        "requiresConfirmation"
+      ],
+      "additionalProperties": false
+    },
+    "retrospective_response": {
+      "type": "object",
+      "properties": {
+        "import_id": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "receipt_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "delivery_version": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "retrospective_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "retrospective_version": {
+          "type": [
+            "integer",
+            "null"
+          ],
+          "minimum": 1
+        },
+        "status": {
+          "enum": [
+            "not_created",
+            "queued",
+            "processing",
+            "ready",
+            "failed",
+            "withdrawn"
+          ]
+        },
+        "warnings": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "code": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 128
+              },
+              "path": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            },
+            "required": [
+              "code",
+              "path",
+              "message"
+            ],
+            "additionalProperties": false
+          }
+        },
+        "missing_fields": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "result_path": {
+          "type": [
+            "string",
+            "null"
+          ]
+        }
+      },
+      "required": [
+        "import_id",
+        "receipt_id",
+        "delivery_version",
+        "retrospective_id",
+        "retrospective_version",
+        "status",
+        "warnings",
+        "missing_fields",
+        "result_path"
+      ],
+      "additionalProperties": false
+    }
+  }
+}
