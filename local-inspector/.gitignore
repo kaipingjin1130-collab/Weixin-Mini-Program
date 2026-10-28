@@ -1,0 +1,5 @@
+data/
+.test-temp/
+__pycache__/
+*.log
+project.private.config.json

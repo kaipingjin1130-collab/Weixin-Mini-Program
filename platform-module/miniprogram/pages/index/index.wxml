@@ -1,0 +1,14 @@
+<view class="page">
+ <button class="secondary actions" bindtap="openOffline">离线采集／手机草稿／回办公室同步</button>
+ <view wx:if="{{mode==='login'}}" class="login">
+  <view class="brand">察</view><view class="title">质量安全小察</view><view class="muted">云端协同 · 巡查工作台</view>
+  <view class="card"><view class="label">服务地址</view><input value="{{server}}" data-key="server" bindinput="input" placeholder="https://qaxc.sribs-risk.com"/><view class="label">登录账号</view><input value="{{username}}" data-key="username" bindinput="input" placeholder="管理员填 admin；成员填分配的账号"/><view class="label">访问密码</view><input password value="{{password}}" data-key="password" bindinput="input" placeholder="请输入与网页平台相同的密码"/><button loading="{{busy}}" disabled="{{busy}}" bindtap="login">连接工作台</button></view>
+  <view class="note">使用与网页平台相同的账号和密码登录，两端数据实时同步。成员账号和项目权限由管理员在网页平台分配。</view>
+ </view>
+ <block wx:else>
+  <view class="title">质量安全小察 · 现场端</view>
+  <view class="card"><view class="h2">现场任务与记录</view><view class="muted">执行派发任务或自主发起临时巡查、拍照录音、确认记录、登记问题、生成现场简报并上报。</view><button class="actions" bindtap="openWork">进入现场作业 →</button></view>
+  <view class="note">项目与人员分工、整改回复和复核、正式报告、成果交接及归档，请在网页平台办理。两端共用同一后台，记录无需重复录入。</view>
+  <button class="secondary actions" bindtap="logout" disabled="{{busy}}">退出登录／切换账号</button>
+ </block>
+</view>

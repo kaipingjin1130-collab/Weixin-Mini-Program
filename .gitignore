@@ -1,0 +1,10 @@
+**/data/
+**/.test-temp/
+**/__pycache__/
+*.pyc
+*.log
+**/project.private.config.json
+.env
+.env.*
+node_modules/
+**/offline-http-*/
