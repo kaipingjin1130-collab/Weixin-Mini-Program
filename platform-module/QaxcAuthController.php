@@ -29,6 +29,8 @@ class QaxcAuthController
                 if ($account === '' || strlen($account)>200 || $password === '' || strlen($password)>1000) {
                     return json(['active'=>false],401);
                 }
+                // The host login resolves its logical account to username/mobile.
+                // Do not query a physical "account" column: the host schema has none.
                 // Match the existing web login's md5(config.key + password).
                 // This is a public frontend value, not the server encryption key.
                 $frontend = file_get_contents(root_path().'public/static/utils/js/config.js');
@@ -61,8 +63,10 @@ class QaxcAuthController
                     $name = (string)$linked[0]->username;
                 }
             }
+            $adminIds = array_map('strval', (array)($config['adminIds'] ?? []));
+            $adminIds[] = (string)($config['adminId'] ?? '');
             return json(['active'=>true,'aud'=>'qaxc','id'=>'host:admin:'.(string)$user->id,
-                'name'=>$name,'isAdmin'=>(string)$user->id===(string)($config['adminId'] ?? '')]);
+                'name'=>$name,'isAdmin'=>in_array((string)$user->id, $adminIds, true)]);
         } catch (\Rain\TryResult\Exceptions\BusinessException $e) {
             return json(['active'=>false],401);
         } catch (\Rain\Auth\Exception\AuthException $e) {

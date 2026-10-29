@@ -46,13 +46,13 @@ async function api(path,data){
  for(let attempt=0;attempt<attempts;attempt++){
   try{
    const r=await fetch(path,{method:data?'POST':'GET',credentials:'same-origin',cache:'no-store',headers:data?{'Content-Type':'application/json'}:{},body:data?JSON.stringify(data):undefined,signal:AbortSignal.timeout(15000)});
-   if(r.status===401){if(path!=='/api/login')login();throw Object.assign(Error('登录已过期，请重新登录'),{status:401})}
+   if(r.status===401){if(path==='/api/login'){const detail=await r.json().catch(()=>({}));throw Object.assign(Error(detail.error||'账号或密码不正确，请使用原平台登录账号'),{status:401})}login();throw Object.assign(Error('登录已过期，请重新登录'),{status:401})}
    const result=await r.json();
    if(!r.ok)throw Object.assign(Error(result.error||'请求失败'),{status:r.status});
    return result;
   }catch(err){
-   if(err.status&&err.status<500)throw err;
-   if(attempt+1===attempts)throw Error(data?'请求未完成，请刷新确认是否已保存后再操作':'连接暂时中断，请重试；登录状态未清除');
+   if(err.status&&(err.status<500||path==='/api/login'))throw err;
+   if(attempt+1===attempts)throw Error(path==='/api/login'?'登录服务暂时不可用，请稍后重试':data?'请求未完成，请刷新确认是否已保存后再操作':'连接暂时中断，请重试；登录状态未清除');
    await new Promise(resolve=>setTimeout(resolve,400*(attempt+1)));
   }
  }
