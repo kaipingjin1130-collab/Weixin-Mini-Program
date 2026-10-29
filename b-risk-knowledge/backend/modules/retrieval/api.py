@@ -39,10 +39,15 @@ async def a_knowledge(request: Request, actor: Actor = Depends(current_actor)):
     def run(project, payload, reader):
         try:
             request_data = SearchInput(project_id=project, question=payload['question'], scene_code='generic',
-                object_type='unknown', stage=payload['stage'], conditions=payload['conditions'], limit=5)
+                object_type=None, stage=payload['stage'], conditions=payload['conditions'], limit=5)
         except ValidationError:
             raise Problem(422, 'VALIDATION_ERROR', '查询条件不符合检索范围。')
-        return search(request_data, reader, raw_object=payload['object'], exclude_retrospectives=True)
+        # Published retrospective evidence now passes the same live archive
+        # guard as the library. An unclassified object is not a literal category.
+        response, found, elapsed = search(request_data, reader, raw_object=payload['object'])
+        response['warnings'].append({'code': 'OBJECT_UNCLASSIFIED', 'path': '/object',
+            'message': '未推断检查对象类别；结果限定当前项目及巡查场景，请人工确认适用条件。'})
+        return response, found, elapsed
     try:
         return await asyncio.wait_for(run_in_threadpool(a_knowledge_query, data, actor, run), timeout=10)
     except TimeoutError:

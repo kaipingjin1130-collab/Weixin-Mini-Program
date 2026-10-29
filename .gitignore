@@ -9,6 +9,8 @@ __pycache__/
 .local/
 node_modules/
 **/frontend/dist/
+**/frontend/dist-embed/
+**/frontend/.build-temp/
 live-app-prefixed.js
 tools_integrate.py
 tools_finish_ingestion.py

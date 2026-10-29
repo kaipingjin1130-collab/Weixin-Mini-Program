@@ -170,7 +170,10 @@ def public_query(actor, project=None, scene=None, card_type=None, include_histor
     from ..extraction.grounding import extra_available_sql
     query = query.where(extra_available_sql(KnowledgeItem))
     if scene:
-        query = query.where(KnowledgeItem.scene_code == scene)
+        # B03's generic pack and the platform's general_inspection denote the
+        # same registered scene. Other scenes must never be inferred or merged.
+        query = query.where(KnowledgeItem.scene_code.in_(['generic', 'general_inspection'])
+                            if scene in {'generic', 'general_inspection'} else KnowledgeItem.scene_code == scene)
     if card_type:
         query = query.where(KnowledgeItem.type == card_type)
     return query

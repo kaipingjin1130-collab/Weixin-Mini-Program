@@ -1,4 +1,11 @@
 'use strict';
+window.QaxcWork={mount(host,options={}){
+const nativeDocument=window.document;
+const document=options.embedded?{querySelector:s=>s==='#work'?host:host.querySelector(s),querySelectorAll:s=>host.querySelectorAll(s),getElementById:id=>host.querySelector('[id="'+id+'"]'),createElement:tag=>nativeDocument.createElement(tag)}:nativeDocument;
+const location=options.embedded?new URL('/quality/work'+(options.query||''),window.location.origin):window.location;
+const history=options.embedded?{replaceState(_a,_b,url){options.onRoute?.(url.search)}}:window.history;
+let disposed=false;
+
 const root=document.querySelector('#work');
 const esc=v=>String(v??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const actionNames={create:'建立任务',start:'确认准备并开始',materials:'关联任务资料',record:'保存现场记录',issue:'登记问题','edit-issue':'修改隐患','delete-issue':'删除隐患','submit-field':'现场上报','receive-field':'平台接收／退回',reassign:'分派问题',reply:'整改回复',review:'复核处理',deliver:'生成正式成果',accept:'成果接收／退回',archive:'归档',reopen:'发起补正','import-report':'导入历史报告'};
@@ -7,7 +14,7 @@ const fieldNames={collecting:'待现场上报',submitted:'待平台接收',accep
 const labels={ready:'待执行',active:'执行中',handover:'待接收',accepted:'已接收',archived:'已归档',unassigned:'待分派',assigned:'待整改',returned:'已退回',review:'待复核',closed:'已销项',manager:'项目负责人',inspector:'检查人',rectifier:'整改人',reviewer:'复核人',receiver:'接收人',draft:'草稿',confirmed:'已确认'};
 const replyDrafts={};
 let state,taskId=new URLSearchParams(location.search).get('task')||'',busy=false,evidence=[],draft=null,pid='',sid='inspection',timer;
-function toast(text){const el=document.querySelector('#toast');el.textContent=text;el.style.display='block';clearTimeout(timer);timer=setTimeout(()=>el.style.display='none',6000)}
+function toast(text){if(disposed)return;const el=document.querySelector('#toast');if(!el)return;el.textContent=text;el.style.display='block';clearTimeout(timer);timer=setTimeout(()=>el.style.display='none',6000)}
 async function api(path,data){
  const attempts=data?1:3;
  for(let attempt=0;attempt<attempts;attempt++){
@@ -15,7 +22,7 @@ async function api(path,data){
    const r=await fetch(path,{method:data?'POST':'GET',credentials:'same-origin',cache:'no-store',headers:data?{'Content-Type':'application/json'}:{},body:data?JSON.stringify(data):undefined,signal:AbortSignal.timeout(15000)});
    if(r.status===401){if(path!=='/api/login')login();throw Object.assign(Error('登录已过期，请重新登录'),{status:401})}
    const result=await r.json();
-   if(!r.ok)throw Object.assign(Error(result.error||'请求失败'),{status:r.status});
+   if(!r.ok)throw Object.assign(Error(result.error||result.message||'请求失败'),{status:r.status});
    return result;
   }catch(err){
    if(err.status&&err.status<500)throw err;
@@ -31,10 +38,11 @@ const select=(name,label,items,selected='')=>`<label>${esc(label)}<select name="
 const members=(p,roles)=>p.members.filter(x=>!roles||roles.includes(x.role)).map(x=>({id:x.id,name:x.name+'（'+(labels[x.role]||x.role)+'）'}));
 const form=(id,title,content,button)=>`<form id="${id}" class="card"><h3>${title}</h3>${content}<button>${button}</button></form>`;
 const formData=f=>Object.fromEntries(new FormData(f));
+function canLeave(){if(options.embedded&&window.QaxcHasPendingEdits?.()&&!confirm('当前修改尚未保存，确定离开？'))return false;window.QaxcClearPendingEdits?.();return true}
 function bindForm(id,fn){const f=document.getElementById(id);if(f)f.onsubmit=e=>{e.preventDefault();run(()=>fn(formData(f),f))}}
-function login(){state=null;root.innerHTML=`<header><h1>作业协同</h1><a class="return-original" href="${location.origin}/">← 返回原系统</a><a href="/">巡查工作台</a><a href="/#rectification">整改复核</a><a href="/#archives">成果归档</a></header>${form('login','登录',input('username','老平台账号','')+input('password','密码','','password'),'登录')}<p class="muted">使用工作巡查平台原账号和密码；首次登录后请联系管理员分配项目权限。</p>`;bindForm('login',async d=>{await api('/api/login',d);await refresh()})}
+function login(){if(options.embedded){options.onExpired?.();return}state=null;root.innerHTML=`<header><h1>作业协同</h1><a class="return-original" href="${location.origin}/">← 返回原系统</a><a href="/">巡查工作台</a><a href="/#rectification">整改复核</a><a href="/#archives">成果归档</a></header>${form('login','登录',input('username','老平台账号','')+input('password','密码','','password'),'登录')}<p class="muted">使用工作巡查平台原账号和密码；首次登录后请联系管理员分配项目权限。</p>`;bindForm('login',async d=>{await api('/api/login',d);await refresh()})}
 let stateEpoch=0;
-async function refresh(){const epoch=stateEpoch;const next=await api('/api/work/state');if(epoch!==stateEpoch)return;const existing=new Map((state?.tasks||[]).map(t=>[t.id,t]));next.tasks=next.tasks.map(t=>(existing.get(t.id)?.revision||0)>t.revision?existing.get(t.id):t);state=next;if(!state.projects.some(p=>p.id===pid))pid=state.projects[0]?.id||'';render()}
+async function refresh(){if(disposed)return;const epoch=stateEpoch;const next=await api('/api/work/state');if(disposed||epoch!==stateEpoch)return;const existing=new Map((state?.tasks||[]).map(t=>[t.id,t]));next.tasks=next.tasks.map(t=>(existing.get(t.id)?.revision||0)>t.revision?existing.get(t.id):t);if(options.projectId){next.projects=next.projects.filter(p=>p.id===options.projectId);next.tasks=next.tasks.filter(t=>t.projectId===options.projectId);next.reminders=next.reminders.filter(r=>next.tasks.some(t=>t.id===r.taskId))}state=next;if(!state.projects.some(p=>p.id===pid))pid=state.projects[0]?.id||'';render()}
 function applyTask(t){if(!t?.id||!Array.isArray(t.issues))throw Error('服务器未返回最新任务，请稍后重试');stateEpoch++;const index=state.tasks.findIndex(x=>x.id===t.id);if(index<0)state.tasks.push(t);else state.tasks[index]=t;if(t.status==='archived')state.reminders=state.reminders.filter(x=>x.taskId!==t.id)}
 function current(){return state.tasks.find(t=>t.id===taskId)}
 async function action(name,d={}){const t=current();let updated;try{updated=await post(name,{...d,taskId:t.id,revision:t.revision})}catch(err){if(err.status===409){await refresh();const actual=current()?.issues.find(i=>i.id===d.issueId);if(modulePage==='rectification'&&actual){issueFilter=actual.status==='returned'?'assigned':actual.status;render()}throw Error('任务状态已变化，页面已自动同步，请查看最新结果')}throw err}applyTask(updated);if(name==='reply'){delete replyDrafts[d.issueId];evidence=evidence.filter(e=>e.issueId!==d.issueId)}if(modulePage==='rectification'&&issueFilter!=='all'){const item=updated.issues.find(i=>i.id===d.issueId);if(item)issueFilter=item.status==='returned'?'assigned':item.status}render();toast(({accept:updated.status==='accepted'?'成果已接收，可直接办理最终归档':'成果已退回补充',archive:'已归档，当前显示最终成果',deliver:'成果已生成，请继续接收确认',review:d.decision==='close'?'复核已通过，问题已销项':'已退回整改',reply:'整改回复已提交，当前待复核',reassign:'分派已保存，当前待整改'})[name]||'操作已保存');}
@@ -42,8 +50,8 @@ async function action(name,d={}){const t=current();let updated;try{updated=await
 const moduleNames={tasks:'任务管理',rectification:'整改复核',archive:'成果归档'};
 const urlModule=new URLSearchParams(location.search).get('module')||new URLSearchParams(location.search).get('section');
 let modulePage=moduleNames[urlModule]?urlModule:'tasks',issueFilter='all';
-function navShell(content){const nav=[['home','◫','工作台','/#home'],['tasks','☷','任务管理','/work?module=tasks'],['knowledge','▤','知识库','/#knowledge'],['form','＋','一键上报','/#form'],['reports','▧','报告中心','/#reports'],['rectification','✓','整改复核','/#rectification'],['archive','▣','成果归档','/#archives'],['profile','○','个人中心','/#profile']];return `<div class="shell"><aside class="sidebar"><div class="brandmark">察</div><div class="brand">质量安全小察</div><p class="muted">把现场记录，变成可靠成果</p><nav class="nav">${nav.map(([id,icon,label,href])=>`<a class="${modulePage===id?'active':''}" href="${href}"><span class="navicon">${icon}</span>${label}</a>`).join('')}</nav><div class="sidebottom">项目协同工作空间</div></aside><main class="main"><div class="topbar"><span class="muted">工作空间 / ${moduleNames[modulePage]}</span><div class="row"><a class="return-original" href="${location.origin}/">← 返回原系统</a><button id="reload" class="secondary">刷新</button><button id="logout" class="secondary">退出</button></div></div><h1>${moduleNames[modulePage]}</h1>${content}</main></div>`}
-function render(){if(!state)return;const t=current();const url=new URL(location.href);url.searchParams.set('module',modulePage);url.searchParams.delete('section');if(t)url.searchParams.set('task',t.id);else url.searchParams.delete('task');history.replaceState(null,'',url);root.innerHTML=navShell(t?detail(t):moduleList());document.getElementById('logout').onclick=()=>run(async()=>{await api('/api/logout',{});login()});document.getElementById('reload').onclick=()=>run(refresh);if(t)bindDetail(t);else bindList();root.querySelectorAll('[data-filter-issue]').forEach(b=>b.onclick=()=>{issueFilter=b.dataset.filterIssue;render()})}
+function navShell(content){if(options.embedded)return `<h1>${moduleNames[modulePage]}</h1><div class="row"><button id="reload" class="secondary">刷新任务</button><button id="logout" hidden>退出</button></div>${content}<div id="toast" role="status"></div>`;const nav=[['home','◫','工作台','/#home'],['tasks','☷','任务管理','/work?module=tasks'],['knowledge','▤','知识库','/#knowledge'],['form','＋','一键上报','/#form'],['reports','▧','报告中心','/#reports'],['rectification','✓','整改复核','/#rectification'],['archive','▣','成果归档','/#archives'],['profile','○','个人中心','/#profile']];return `<div class="shell"><aside class="sidebar"><div class="brandmark">察</div><div class="brand">质量安全小察</div><p class="muted">把现场记录，变成可靠成果</p><nav class="nav">${nav.map(([id,icon,label,href])=>`<a class="${modulePage===id?'active':''}" href="${href}"><span class="navicon">${icon}</span>${label}</a>`).join('')}</nav><div class="sidebottom">项目协同工作空间</div></aside><main class="main"><div class="topbar"><span class="muted">工作空间 / ${moduleNames[modulePage]}</span><div class="row"><a class="return-original" href="${location.origin}/">← 返回原系统</a><button id="reload" class="secondary">刷新</button><button id="logout" class="secondary">退出</button></div></div><h1>${moduleNames[modulePage]}</h1>${content}</main></div>`}
+function render(){if(disposed||!state)return;const t=current();const url=new URL(location.href);url.searchParams.set('module',modulePage);url.searchParams.delete('section');if(t)url.searchParams.set('task',t.id);else url.searchParams.delete('task');history.replaceState(null,'',url);root.innerHTML=navShell(t?detail(t):moduleList());document.getElementById('logout').onclick=()=>run(async()=>{await api('/api/logout',{});login()});document.getElementById('reload').onclick=()=>{if(canLeave())run(refresh)};if(t)bindDetail(t);else bindList();root.querySelectorAll('[data-filter-issue]').forEach(b=>b.onclick=()=>{issueFilter=b.dataset.filterIssue;render()})}
 function moduleList(){if(modulePage==='tasks')return list();const tasks=state.tasks;return `<p class="muted">${modulePage==='rectification'?'按任务查看问题，依次完成分派、整改和复核。':'完成问题销项后，办理成果交接、接收和归档。'}</p><div class="cards">${tasks.map(t=>`<article class="card"><span class="tag">${labels[t.status]}</span><h3>${esc(t.title)}</h3><p>${esc(t.number)}</p><p>${t.issues.filter(i=>i.status==='closed').length}/${t.issues.length} 条问题已销项</p><button data-open="${t.id}">进入${moduleNames[modulePage]}</button></article>`).join('')||'<div class="empty">暂无任务</div>'}</div>`}
 function detail(t){const holder=document.createElement('div');holder.innerHTML=fullDetail(t);const back=holder.querySelector('#back');back.textContent='← 返回'+moduleNames[modulePage];const summary=`<div class="module-summary"><h2>${esc(t.title)}</h2><p class="muted">${esc(t.number)} · ${labels[t.status]} · 截止 ${esc(t.dueDate)}</p></div>`;let body='';
  if(modulePage==='rectification'){
@@ -54,7 +62,7 @@ function detail(t){const holder=document.createElement('div');holder.innerHTML=f
   body=`<p class="muted">分派责任人 → 提交整改证据 → 复核销项。优先处理待复核与退回事项。</p><div class="status-tabs">${groups.map(([id,label,count])=>`<button class="${issueFilter===id?'':'secondary'}" data-filter-issue="${id}">${label} <strong>${count}</strong></button>`).join('')}</div>${t.fieldStatus!=='accepted'?`<div class="notice">现场材料尚未接收，请先在<a href="/work?module=tasks&task=${t.id}">任务管理</a>中办理。</div>`:''}${filtered.map(el=>`<section class="card issue-card">${el.outerHTML}</section>`).join('')||'<div class="empty">此状态暂无问题</div>'}${issues.every(i=>i.status==='closed')?`<div class="notice">${issues.length?'所有问题已销项。':'本次无隐患。'}<a href="/work?module=archive&task=${t.id}">进入成果归档 →</a></div>`:''}`;
  }else if(modulePage==='archive'){
   const panel=holder.querySelector('#archive');const blocked=t.issues.filter(i=>i.status!=='closed').length;const pending=t.records.filter(r=>r.status!=='confirmed').length;const delivery=panel.querySelector('#deliver');if(delivery&&(blocked||pending||t.fieldStatus!=='accepted')){delivery.outerHTML=`<div class="notice">尚有 ${blocked} 条问题未销项、${pending} 条记录未确认。请完成前序处理后生成成果。<a href="/work?module=rectification&task=${t.id}">查看整改复核 →</a></div>`}
-  body=`<div class="process-steps"><span class="${t.deliveries.length?'complete':''}">1. 生成成果</span><span class="${['handover','accepted','archived'].includes(t.status)?'complete':''}">2. 接收确认</span><span class="${t.status==='archived'?'complete':''}">3. 最终归档</span></div>${panel.outerHTML}`;
+  body=`${t.status==='archived'&&t.deliveries.length?`<a class="secondary" href="#/b/archive-review/${encodeURIComponent(t.deliveries[t.deliveries.length-1].id)}">生成 / 打开复盘</a>`:''}<div class="process-steps"><span class="${t.deliveries.length?'complete':''}">1. 生成成果</span><span class="${['handover','accepted','archived'].includes(t.status)?'complete':''}">2. 接收确认</span><span class="${t.status==='archived'?'complete':''}">3. 最终归档</span></div>${panel.outerHTML}`;
  }else{
   holder.querySelector('#rectification')?.closest('section').remove();holder.querySelector('#archive')?.remove();back.remove();body=holder.innerHTML+`<div class="card"><h3>后续办理</h3><p>现场材料接收后，进入对应模块继续办理。</p><div class="row"><a href="/work?module=rectification&task=${t.id}">整改复核 →</a><a href="/work?module=archive&task=${t.id}">成果归档 →</a></div></div>`;
  }
@@ -68,7 +76,7 @@ function list(){const p=state.projects.find(p=>p.id===pid);const admin=(state.us
  ${admin?`<details><summary>高级任务配置</summary><p>调整字段、检查清单、记录类型、整改证据要求和报告章节。发布后版本递增，已有任务保持原配置。</p>${form('scenario','发布场景配置',`<textarea name="config" rows="18">${esc(JSON.stringify(s,null,2))}</textarea>`,'发布新版本')}</details>`:''}`;
 }
 function bindList(){
- root.querySelectorAll('[data-open]').forEach(b=>b.onclick=e=>{e.preventDefault();taskId=b.dataset.open;evidence=[];draft=null;render()});
+ root.querySelectorAll('[data-open]').forEach(b=>b.onclick=e=>{e.preventDefault();if(!canLeave())return;taskId=b.dataset.open;evidence=[];draft=null;render()});
  const p=root.querySelector('[name=project]');if(p)p.onchange=()=>{pid=p.value;render()};
  const s=root.querySelector('[name=scene]');if(s)s.onchange=()=>{sid=s.value;render()};
  bindForm('project',async d=>{await api('/api/projects',d);await refresh()});
@@ -106,7 +114,7 @@ function fullDetail(t){
 function selectedEvidence(scope=''){return evidence.filter(e=>e.selected!==false&&(e.issueId||'')===scope).map(e=>e.id)}
 function bindDetail(t){
  
- document.getElementById('back').onclick=()=>{taskId='';draft=null;evidence=[];issueFilter='all';render()};
+ document.getElementById('back').onclick=()=>{if(!canLeave())return;taskId='';draft=null;evidence=[];issueFilter='all';render()};
  const receiveForm=document.getElementById('receiveField');
  if(receiveForm){
   receiveForm.noValidate=true;
@@ -173,7 +181,11 @@ function bindDetail(t){
  root.querySelectorAll('[data-evidence]').forEach(el=>el.onchange=()=>{evidence.find(e=>e.id===el.dataset.evidence).selected=el.checked});
  root.querySelectorAll('[data-materials]').forEach(materials=>materials.onclick=()=>run(()=>action('materials',{evidence:[...new Set([...t.materials,...selectedEvidence(materials.dataset.materials)])]})));
  root.querySelectorAll('[data-recognize]').forEach(b=>b.onclick=()=>run(async()=>{const r=await post('recognize',{taskId:t.id,evidenceId:b.dataset.recognize,kind:b.dataset.kind});const textarea=document.querySelector('#record textarea');if(r.text&&textarea)textarea.value+=(textarea.value?'\n':'')+r.text;toast(r.message||'提取内容已加入草稿，请人工核对')}));
- bindForm('knowledge',async d=>{const r=await post('knowledge',{...d,taskId:t.id});document.getElementById('knowledgeResult').innerHTML=`<p class="notice">${esc(r.message||'查询结果仅供核对参考')}</p>${(r.items||[]).map(x=>`<article class="card"><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p><small>${esc(x.reference)}</small></article>`).join('')}`});
+ bindForm('knowledge',async d=>{const r=await post('knowledge',{...d,taskId:t.id});if(disposed)return;document.getElementById('knowledgeResult').innerHTML=`<p class="notice">${esc(r.message||'查询结果仅供核对参考')}</p><p>发布版本：${esc(r.knowledge_release_id||'暂无')} · 使用前须人工确认</p>${(r.warnings||[]).map(w=>`<p class="muted">${esc(w.message)}</p>`).join('')}${(r.items||[]).map(x=>`<article class="card"><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p><small>${esc(x.reference)}</small></article>`).join('')}`});
 }
 async function boot(){try{await refresh()}catch(err){if(err.status===401)return;root.innerHTML=`<section class="card"><h1>连接暂时中断</h1><p>${esc(err.message)}</p><button id="retryConnection">重新连接</button></section>`;document.querySelector('#retryConnection').onclick=boot}}
 fetch('/api/host-session',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:'{}'}).catch(()=>{}).finally(boot);
+
+return ()=>{disposed=true;stateEpoch++;clearTimeout(timer);host.replaceChildren()};
+}};
+if(document.querySelector('#work'))window.QaxcWork.mount(document.querySelector('#work'));

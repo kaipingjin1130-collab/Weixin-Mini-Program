@@ -1,0 +1,23 @@
+[Unit]
+Description=Quality safety shared processing worker
+After=network.target postgresql.service qaxc-platform-api.service
+
+[Service]
+Type=simple
+User=qaxc-b
+Group=qaxc-b
+WorkingDirectory=/opt/qaxc-ab
+EnvironmentFile=/etc/qaxc-platform.env
+Environment=PYTHONDONTWRITEBYTECODE=1
+ExecStart=/opt/qaxc-ab/b-risk-knowledge/.venv/bin/python /opt/qaxc-ab/platform-module/run_platform.py worker
+Restart=on-failure
+RestartSec=5
+UMask=0077
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectSystem=strict
+ProtectHome=true
+ReadWritePaths=/var/lib/qaxc-platform
+
+[Install]
+WantedBy=multi-user.target

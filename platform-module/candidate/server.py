@@ -16,6 +16,7 @@ PREFIX=os.environ.get("QAXC_ROOT_PATH", "").rstrip("/")
 if PREFIX and not re.fullmatch(r"/[a-z][a-z0-9-]*", PREFIX): raise RuntimeError("Invalid module prefix")
 COOKIE_PATH=(PREFIX+"/")
 COOKIE_SECURE="; Secure" if PREFIX else ""
+COOKIE_NAME='qaxc_session'
 DATA = Path(os.environ.get('QAXC_DATA', ROOT / 'data'))
 SESSIONS = {}
 SESSION_USERS = {}
@@ -236,7 +237,7 @@ class Handler(BaseHTTPRequestHandler):
   token=self.headers.get('Authorization','').removeprefix('Bearer ')
   if not token:
    from http.cookies import SimpleCookie
-   cookie=SimpleCookie(self.headers.get('Cookie','')); token=cookie['qaxc_session'].value if 'qaxc_session' in cookie else ''
+   cookie=SimpleCookie(self.headers.get('Cookie','')); token=cookie[COOKIE_NAME].value if COOKIE_NAME in cookie else ''
   with SESSION_LOCK: valid=SESSIONS.get(token,0)>time.time()
   if not valid: raise Problem('请登录工作台',401)
   user=SESSION_USERS.get(token)
@@ -259,6 +260,9 @@ class Handler(BaseHTTPRequestHandler):
      self.send('',302,mime='text/plain',headers={'Location':PREFIX+'/'}); return
     if not path.startswith(PREFIX+'/'): raise Problem('接口不存在',404)
     path=path[len(PREFIX):]
+   if method=='GET' and path=='/work' and PREFIX:
+    query=urlsplit(self.path).query
+    self.send('',302,mime='text/plain',headers={'Location':PREFIX+'/#/work'+('?' + query if query else '?module=tasks')});return
    if method=='GET' and path in ['/','/app.js','/followup.js','/style.css','/work','/work.js']:
     f=ROOT/'web'/({'/':'index.html','/work':'work.html'}.get(path,path.lstrip('/')))
     self.send(module_asset(f),mime={'/':'text/html; charset=utf-8','/work':'text/html; charset=utf-8','/work.js':'text/javascript; charset=utf-8','/app.js':'text/javascript; charset=utf-8','/followup.js':'text/javascript; charset=utf-8','/style.css':'text/css; charset=utf-8'}[path]); return
@@ -294,11 +298,19 @@ class Handler(BaseHTTPRequestHandler):
     with SESSION_LOCK:
      token=secrets.token_urlsafe(32); SESSIONS[token]=time.time()+86400
      SESSION_USERS[token]=user
-    self.send({'token':token,'user':user},headers={'Set-Cookie':f'qaxc_session={token}; HttpOnly; SameSite=Strict; Path={COOKIE_PATH}; Max-Age=86400{COOKIE_SECURE}'}); return
+    self.send({'token':token,'user':user},headers={'Set-Cookie':f'{COOKIE_NAME}={token}; HttpOnly; SameSite=Strict; Path={COOKIE_PATH}; Max-Age=86400{COOKIE_SECURE}'}); return
    token=self.auth()
    if path=='/api/logout':
     with SESSION_LOCK: SESSIONS.pop(token,None); SESSION_USERS.pop(token,None)
-    self.send({'ok':True},headers={'Set-Cookie':f'qaxc_session=; HttpOnly; SameSite=Strict; Path={COOKIE_PATH}; Max-Age=0{COOKIE_SECURE}'}); return
+    self.send({'ok':True},headers={'Set-Cookie':f'{COOKIE_NAME}=; HttpOnly; SameSite=Strict; Path={COOKIE_PATH}; Max-Age=0{COOKIE_SECURE}'}); return
+   if path=='/api/work/knowledge' and method=='POST':
+    from knowledge_service import query
+    request_id=required(d,'requestId',100)
+    question=required(d,'question',4000)
+    with db() as c:
+     w=workflow.Workflow(SimpleNamespace(Problem=Problem,required=required),c,SESSION_USERS[token])
+     task=json.loads(json.dumps(w.task(d.get('taskId'))))
+    self.send(query(task,question,request_id,token,Problem));return
    with db() as c:
     self.db_connection=c
     if method=='POST': c.execute('BEGIN IMMEDIATE')

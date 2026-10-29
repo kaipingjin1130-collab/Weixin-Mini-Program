@@ -120,7 +120,7 @@ def install(s):
                     raise s.Problem('知识中心服务尚未配置', 503)
                 headers = {'Authorization': 'Bearer ' + key, 'X-AB-Session': token,
                            'Content-Type': self.headers.get('Content-Type', 'application/json')}
-                for name in ('Idempotency-Key', 'X-Request-ID'):
+                for name in ('Idempotency-Key', 'X-Request-ID', 'X-Project-ID'):
                     if self.headers.get(name): headers[name] = self.headers[name]
                 query = urlsplit(self.path).query
                 req = Request(base.rstrip('/') + target + ('?' + query if query else ''),

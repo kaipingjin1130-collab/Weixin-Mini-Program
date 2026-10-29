@@ -48,7 +48,7 @@ def current_actor(request: Request) -> Actor:
     from .config import settings
     if settings.auth_mode == 'a':
         from .platform_identity import persist_actor
-        return persist_actor(resolve_a_actor(request, settings))
+        return scope_actor(persist_actor(resolve_a_actor(request, settings)), request)
     token = request.headers.get("authorization", "")
     identities = {"Bearer dev-admin": "admin", "Bearer dev-processor": "processor",
                   "Bearer dev-learner": "learner", "Bearer dev-outsider": "outsider",
@@ -63,7 +63,24 @@ def current_actor(request: Request) -> Actor:
         user = db.scalar(select(UserLink).where(UserLink.issuer == "local-demo", UserLink.subject_id == subject))
         if not user:
             raise Problem(401, "UNAUTHENTICATED", "演示身份尚未初始化。")
-        return actor_for_user(db, user)
+        return scope_actor(actor_for_user(db, user), request)
+
+
+def scope_actor(actor: Actor, request: Request) -> Actor:
+    """A selected project can narrow live grants, never add permissions.
+
+    Persist the full authority response before narrowing this request so a UI
+    filter cannot change the stable identity used by already queued work.
+    """
+    selected = request.headers.get('x-project-id', '')
+    if selected:
+        if selected not in actor.grants:
+            raise Problem(403, 'PROJECT_FORBIDDEN', '当前项目不可访问，请重新选择项目。')
+        actor.grants = {selected}
+        actor.roles = {selected: actor.roles.get(selected, set())}
+        if actor.permissions is not None:
+            actor.permissions = {selected: actor.permissions.get(selected, set())}
+    return actor
 
 
 def resolve_a_actor(request: Request, settings) -> Actor:

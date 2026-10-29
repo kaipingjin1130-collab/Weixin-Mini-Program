@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const source=fs.readFileSync(require('node:path').join(__dirname,'../candidate/web/app.js'),'utf8');
 function setup(script=source){
- const ctx=vm.createContext({document:{querySelector:()=>({})},location:{hash:''},window:{addEventListener(){}},fetch:()=>({catch:()=>({finally(){}})})});
+ const ctx=vm.createContext({sessionStorage:{getItem:()=>null,setItem(){},removeItem(){}},document:{querySelector:()=>({addEventListener(){}}),createElement:()=>({}),head:{append(){}}},location:{hash:''},window:{addEventListener(){}},fetch:()=>({catch:()=>({finally(){}})})});
  vm.runInContext(script,ctx);
  vm.runInContext(`state={reports:[{id:'original',status:'submitted',project:'项目',contract:'合同',number:'001',inspector:'甲',date:'2026-10-22',issues:[]},{id:'draft',status:'draft',project:'项目',contract:'合同',number:'002',inspector:'乙',date:'2026-10-21',issues:[]}],projects:[{id:'p'}],knowledge:[]};lifecycleState={projects:[{id:'p',name:'项目',contract:'合同'}],tasks:[{id:'task',projectId:'p',title:'临时巡查',number:'T1',inspectors:'甲',sourceReportId:'original',records:[{sourceReportId:'original'}],fieldBriefs:[{id:'b',version:1,createdAt:'2026-10-28T10:00:00+08:00'},{id:'b',version:1,createdAt:'2026-10-28T10:00:00+08:00'}],deliveries:[{id:'d',version:1,createdAt:'2026-10-28T11:00:00+08:00'},{id:'d2',version:2,createdAt:'2026-10-28T12:00:00+08:00'}]},{id:'empty',projectId:'p',records:[],fieldBriefs:[],deliveries:[]}]};`,ctx);
  return code=>vm.runInContext(code,ctx);
@@ -34,4 +34,16 @@ test('deployment URL prefix is added once to document and download links',()=>{
  assert.equal(run("reportCatalog().find(r=>r.id==='b').url"),'/quality/api/work/brief/b');
  assert.equal(run("reportCatalog().find(r=>r.id==='d').wordUrl"),'/quality/api/work/word/d');
  assert.doesNotMatch(run('home()'),/brief\/quality\//);
+});
+
+test('deep knowledge routes retain the matching unified navigation section',()=>{
+ const run=setup();for(const [route,section] of [['/training/questions','blearn'],['/settings/models','bprocess'],['/knowledge/drafts','bprocess'],['/reviews','bprocess'],['/archive-review/id','bretro'],['/jobs','bservices'],['/imports/id','bsources']])assert.equal(run(`bPageFor('${route}')`),section);
+});
+
+test('grouped navigation retains every original destination and adds risk records',()=>{
+ const run=setup();const ids=JSON.parse(run("JSON.stringify(navigationGroups.flatMap(g=>g.items.flatMap(i=>[i.id,...(i.children||[]).map(c=>c.id)])))"));
+ const expected=['home','tasks','form','reports','rectification','archives','bknowledge','bsources','bprocess','bpackages','bretro','blearn','bservices','profile','projects','brisks'];
+ assert.deepEqual(ids.slice().sort(),expected.sort());assert.equal(new Set(ids).size,ids.length);
+ assert.equal(run("bPageFor('/records/test')"),'brisks');assert.equal(run("bPageFor('/imports/test')"),'bsources');
+ assert.deepEqual(JSON.parse(run('JSON.stringify(navigationGroups.map(g=>g.label))')),['工程风险管理','知识管理','个人中心']);
 });

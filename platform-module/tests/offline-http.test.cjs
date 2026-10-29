@@ -1,7 +1,7 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),path=require('node:path'),vm=require('node:vm'),{spawn}=require('node:child_process');
 test('offline drafts synchronize through real backend and appear in web state without duplicates',{timeout:20000},async()=>{
  const root=path.resolve(__dirname,'..');const dir=fs.mkdtempSync(path.join(root,'offline-http-'));
- const py=spawn('D:\\python313\\python.exe',['-u','-c',"import server; server.init(); h=server.ThreadingHTTPServer(('127.0.0.1',0),server.Handler); print(h.server_port,flush=True); h.serve_forever()"],{cwd:path.join(root,'candidate'),env:{...process.env,QAXC_DATA:dir,QAXC_ROOT_PATH:'/quality',QAXC_AUTH_URL:'',QAXC_PASSWORD:'offline-test-password'},windowsHide:true});
+ const py=spawn(process.env.QAXC_TEST_PYTHON || 'python',['-u','-c',"import server; server.init(); h=server.ThreadingHTTPServer(('127.0.0.1',0),server.Handler); print(h.server_port,flush=True); h.serve_forever()"],{cwd:path.join(root,'candidate'),env:{...process.env,QAXC_DATA:dir,QAXC_ROOT_PATH:'/quality',QAXC_AUTH_URL:'',QAXC_PASSWORD:'offline-test-password'},windowsHide:true});
  try{const port=await new Promise((resolve,reject)=>{py.stdout.once('data',b=>resolve(Number(String(b).trim())));py.once('error',reject);py.once('exit',c=>reject(Error('backend exit '+c)))});const base='http://127.0.0.1:'+port+'/quality';let token='';
  async function req(url,data){const r=await fetch(base+url,{method:data?'POST':'GET',headers:{'Content-Type':'application/json',Authorization:'Bearer '+token},body:data?JSON.stringify(data):undefined});const v=await r.json();if(!r.ok)throw Error(v.error);return v}
  token=(await req('/api/login',{username:'admin',password:'offline-test-password'})).token;
