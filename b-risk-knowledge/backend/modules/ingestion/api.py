@@ -47,7 +47,7 @@ class ConfirmInput(BaseModel):
     decision: Literal['confirmed', 'rejected']
 
 
-def source_in(db, ident, actor, action='read'):
+def source_in(db, ident, actor, action='knowledge.read'):
     source = db.get(DataSource, ident)
     if not source:
         raise Problem(404, 'NOT_FOUND', '来源不存在。')
@@ -79,7 +79,7 @@ def inputs(actor: Actor = Depends(current_actor)):
 
 @router.post('/sources', status_code=201)
 def add_source(data: SourceInput, request: Request, actor: Actor = Depends(current_actor)):
-    authorize(actor, 'run', data.project_id)
+    authorize(actor, 'knowledge.process', data.project_id)
     if data.mapping_template != DEFAULT_TEMPLATE[data.kind]:
         raise Problem(422, 'MAPPING_KIND_MISMATCH', '映射模板与来源类型不匹配。')
     try:
@@ -98,14 +98,14 @@ def add_source(data: SourceInput, request: Request, actor: Actor = Depends(curre
 @router.get('/sources')
 def sources(actor: Actor = Depends(current_actor), limit: int = Query(50, ge=1, le=100), cursor: str | None = None):
     with Session() as db:
-        rows, next_cursor = paginate(db, select(DataSource).where(DataSource.project_id.in_(actor.projects())), DataSource, limit, cursor)
+        rows, next_cursor = paginate(db, select(DataSource).where(DataSource.project_id.in_(actor.projects('knowledge.read'))), DataSource, limit, cursor)
         return {'items': [source_dto(s) for s in rows], 'next_cursor': next_cursor}
 
 
 @router.post('/imports/preview')
 def import_preview(data: PreviewInput, actor: Actor = Depends(current_actor)):
     with Session() as db:
-        source = source_in(db, data.source_id, actor, 'run')
+        source = source_in(db, data.source_id, actor, 'knowledge.process')
         return preview(source, data.input_asset_id, actor)
 
 
@@ -114,7 +114,7 @@ def import_submit(data: ImportInput, request: Request, actor: Actor = Depends(cu
     if settings.auth_mode == 'a' and data.fail_after is not None:
         raise Problem(422, 'DEMO_DISABLED', '正式平台不支持模拟中断。')
     with Session() as db:
-        source = source_in(db, data.source_id, actor, 'run')
+        source = source_in(db, data.source_id, actor, 'knowledge.process')
         batch, run, replayed = submit_import(source, data, actor, key, request.state.request_id)
         return JSONResponse(status_code=200 if replayed else 202, content=jsonable_encoder({
             'id': batch.id, 'job_id': run.id, 'replayed': replayed}))
@@ -123,7 +123,7 @@ def import_submit(data: ImportInput, request: Request, actor: Actor = Depends(cu
 @router.get('/imports')
 def imports(actor: Actor = Depends(current_actor), limit: int = Query(20, ge=1, le=100), cursor: str | None = None):
     with Session() as db:
-        query = select(ImportBatch).join(DataSource).where(DataSource.project_id.in_(actor.projects()))
+        query = select(ImportBatch).join(DataSource).where(DataSource.project_id.in_(actor.projects('knowledge.read')))
         rows, next_cursor = paginate(db, query, ImportBatch, limit, cursor)
         return {'items': [{'id': b.id, 'source_id': b.source_id, 'source_name': db.get(DataSource, b.source_id).name,
                            'status': b.status, 'counts': b.counts, 'created_at': b.created_at} for b in rows], 'next_cursor': next_cursor}
@@ -157,9 +157,9 @@ def records(actor: Actor = Depends(current_actor), project_id: str | None = None
             quality_status: Literal['valid', 'needs_review'] | None = None, from_date: date | None = None,
             to_date: date | None = None, limit: int = Query(20, ge=1, le=100), cursor: str | None = None):
     with Session() as db:
-        query = select(SourceRecord).where(SourceRecord.project_id.in_(actor.projects()))
+        query = select(SourceRecord).where(SourceRecord.project_id.in_(actor.projects('knowledge.read')))
         if project_id:
-            authorize(actor, 'read', project_id)
+            authorize(actor, 'knowledge.read', project_id)
             query = query.where(SourceRecord.project_id == project_id)
         if source_id:
             source_in(db, source_id, actor)
@@ -178,7 +178,7 @@ def records(actor: Actor = Depends(current_actor), project_id: str | None = None
         if to_date:
             query = query.where(SourceRecord.occurred_on <= to_date.isoformat())
         totals = dict(db.execute(select(SourceRecord.record_kind, func.count()).where(
-            SourceRecord.project_id.in_(actor.projects())).group_by(SourceRecord.record_kind)).all())
+            SourceRecord.project_id.in_(actor.projects('knowledge.read'))).group_by(SourceRecord.record_kind)).all())
         parents = {}
         merges = 0
         def root(ident):
@@ -187,7 +187,7 @@ def records(actor: Actor = Depends(current_actor), project_id: str | None = None
                 ident = parents[ident]
             return ident
         confirmed = db.scalars(select(RecordLink).join(SourceRecord, SourceRecord.id == RecordLink.from_record).where(
-            SourceRecord.project_id.in_(actor.projects()), SourceRecord.record_kind == 'detail', RecordLink.review_state == 'confirmed')).all()
+            SourceRecord.project_id.in_(actor.projects('knowledge.read')), SourceRecord.record_kind == 'detail', RecordLink.review_state == 'confirmed')).all()
         for link in confirmed:
             a, b = root(link.from_record), root(link.to_record)
             if a != b:
@@ -209,9 +209,9 @@ def reports(actor: Actor = Depends(current_actor), project_id: str | None = None
             quality_status: Literal['valid', 'needs_review'] | None = None, from_date: date | None = None,
             to_date: date | None = None, limit: int = Query(20, ge=1, le=100), after_id: str = ''):
     with Session() as db:
-        filters = [SourceRecord.project_id.in_(actor.projects())]
+        filters = [SourceRecord.project_id.in_(actor.projects('knowledge.read'))]
         if project_id:
-            authorize(actor, 'read', project_id)
+            authorize(actor, 'knowledge.read', project_id)
             filters.append(SourceRecord.project_id == project_id)
         if source_id:
             source_in(db, source_id, actor)
@@ -244,7 +244,7 @@ def reports(actor: Actor = Depends(current_actor), project_id: str | None = None
 def evidence_dto(db, evidence, actor):
     version = db.get(SourceRecordVersion, evidence.record_version_id)
     row = db.get(SourceRecord, version.record_id)
-    authorize(actor, 'read', row.project_id)
+    authorize(actor, 'knowledge.read', row.project_id)
     origin = db.get(FileAsset, version.provenance.get('input_asset_id'))
     if not origin or origin.availability != 'available' or origin.project_id != row.project_id:
         raise Problem(410, 'SOURCE_WITHDRAWN', '来源已撤回或不可用。')
@@ -300,7 +300,7 @@ def confirm_link(ident: str, data: ConfirmInput, request: Request, actor: Actor 
         # Lock records in fixed order so confirmation cannot race a version replacement.
         rows = db.scalars(select(SourceRecord).where(SourceRecord.id.in_([link.from_record, link.to_record])).order_by(SourceRecord.id).with_for_update()).all()
         for row in rows:
-            authorize(actor, 'audit', row.project_id)
+            authorize(actor, 'knowledge.review', row.project_id)
             current = db.scalar(select(SourceRecordVersion.id).where(SourceRecordVersion.record_id == row.id, SourceRecordVersion.version == row.current_version))
             if link.version_refs.get(row.id) != current:
                 raise Problem(409, 'COMPARISON_STALE', '来源版本已变化，请重新比较。')

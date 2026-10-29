@@ -20,6 +20,9 @@ integration_router = APIRouter(prefix='/integration/v1/task-packages', tags=['B0
 
 
 async def submit_shared(request, actor, key):
+    from ...integrations.a.runtime import enabled
+    if enabled():
+        raise Problem(409, 'USE_A_IMPORTS', '请从 A 成果页面创建 v1 成果接入。')
     data = await body_json(request)
     package, replayed = receive(data, actor, key, request.state.request_id)
     return JSONResponse(status_code=200 if replayed else 202, content=jsonable_encoder(receipt(package, replayed)))
@@ -53,16 +56,16 @@ def samples(actor: Actor = Depends(current_actor)):
 @router.get('/samples/{name}')
 def sample_data(name: str, project_id: str = 'demo-airport', task_id: str = Query('b05-demo-task', max_length=100,
                 pattern=r'^[A-Za-z0-9][A-Za-z0-9_.:-]*$'), actor: Actor = Depends(current_actor)):
-    authorize(actor, 'package_receive', project_id)
+    authorize(actor, 'imports.create', project_id)
     return sample(name, project_id, task_id)
 
 
 @router.get('')
 def packages(actor: Actor = Depends(current_actor), project_id: str | None = None, state: str | None = None,
              limit: int = Query(20, ge=1, le=100), cursor: str | None = None):
-    projects = actor.projects('package_read')
+    projects = actor.projects('imports.read')
     if project_id:
-        authorize(actor, 'package_read', project_id)
+        authorize(actor, 'imports.read', project_id)
         projects = [project_id]
     if state and state not in {'received', 'validating', 'processing', 'ready', 'failed', 'withdrawn'}:
         raise Problem(422, 'INVALID_STATUS', '未知任务包状态。')
@@ -71,7 +74,15 @@ def packages(actor: Actor = Depends(current_actor), project_id: str | None = Non
         if state:
             query = query.where(TaskPackage.state == state)
         rows, after = paginate(db, query, TaskPackage, limit, cursor)
-        return {'items': [summary(db, p) for p in rows], 'next_cursor': after}
+        output = []
+        for package in rows:
+            try:
+                package_in(db, package.id, actor)
+                output.append(summary(db, package))
+            except Problem as exc:
+                if exc.status not in {403, 410}:
+                    raise
+        return {'items': output, 'next_cursor': after}
 
 
 @integration_router.get('/{ident}')
@@ -81,6 +92,9 @@ def integration_status(ident: str, actor: Actor = Depends(package_service_actor)
 
 
 async def withdraw_shared(ident, request, actor, key):
+    from ...integrations.a.runtime import enabled
+    if enabled():
+        raise Problem(409, 'USE_A_IMPORTS', '请从 v1 成果接入详情撤回，以保持状态一致。')
     data = await body_json(request)
     from .validation import contract_response
     # Reuse the exact B00 body; do not add internal row_version requirements.

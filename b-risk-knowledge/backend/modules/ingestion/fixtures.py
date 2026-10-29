@@ -41,4 +41,4 @@ def seed_assets():
 
 def catalog(actor):
     return [{'asset_id': fixture_id(ref), 'label': title, 'kind': kind, 'project_id': project, 'is_mock': True}
-            for ref, filename, project, kind, title in CATALOG if project in actor.projects() and kind != 'image']
+            for ref, filename, project, kind, title in CATALOG if project in actor.projects('knowledge.read') and kind != 'image']

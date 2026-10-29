@@ -7,7 +7,9 @@ from .assessment import available_relation
 
 def summary(db, package):
     stream = db.get(TaskStream, package.stream_id)
-    return {**status_dto(db, package), 'id': package.id, 'producer': package.producer,
+    from ...integrations.a.models import AImport
+    imported = db.scalar(select(AImport.id).where(AImport.receipt_id == package.id))
+    return {**status_dto(db, package), 'id': package.id, 'a_import_id': imported, 'producer': package.producer,
         'task_id': package.task_id, 'package_id': package.package_id, 'package_version': package.package_version,
         'project_id': package.project_id, 'scene_code': package.scene_code, 'is_demo': package.is_demo,
         'name': package.snapshot['task']['name'] if package.state != 'withdrawn' else '已撤回任务包',
@@ -56,6 +58,17 @@ def detail(db, package, event_after=0):
     assets = {a['attachment_id']: a for a in package.snapshot['attachments']}
     previous = db.scalar(select(TaskPackage).where(TaskPackage.stream_id == package.stream_id,
         TaskPackage.package_version < package.package_version, TaskPackage.state != 'withdrawn').order_by(TaskPackage.package_version.desc()).limit(1))
+    from ...integrations.a.runtime import enabled
+    if previous and previous.producer == 'a' and enabled():
+        # A withdrawal must also block old content exposed through a newer diff.
+        from ...platform_archives import guard
+        from ...auth import Problem
+        try:
+            guard(previous, None)
+        except Problem as exc:
+            if exc.status not in {403, 410}:
+                raise
+            previous = None
     versions = db.scalars(select(TaskPackage).where(TaskPackage.stream_id == package.stream_id).order_by(TaskPackage.package_version.desc())).all()
     return {**result, 'snapshot_available': True, 'task': package.snapshot['task'], 'participants': package.snapshot['participants'],
         'issues': package.snapshot['issues'], 'data_completeness': package.snapshot['data_completeness'],

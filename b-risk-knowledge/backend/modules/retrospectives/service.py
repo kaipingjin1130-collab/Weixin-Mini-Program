@@ -16,16 +16,16 @@ from .sources import guard_sources
 from .engine import build_task, TEMPLATE
 
 
-def current(db, ident, actor, action='read', lock=False):
+def current(db, ident, actor, action='retrospective.read', lock=False):
     q = select(Retrospective).where(Retrospective.id == ident)
     parent = db.scalar(q.with_for_update() if lock else q)
     if not parent:
         raise Problem(404, 'NOT_FOUND', '复盘不存在。')
     authorize(actor, action, parent.project_id)
-    if action == 'read' and not (actor.can('run', parent.project_id) or actor.can('audit', parent.project_id)):
+    if actor.permissions is None and action == 'retrospective.read' and not (actor.can('retrospective.edit', parent.project_id) or actor.can('retrospective.review', parent.project_id)):
         raise Problem(403, 'FORBIDDEN', '复盘加工区需要加工或审核权限。')
     revision = db.scalar(select(RetrospectiveRevision).where(RetrospectiveRevision.parent_id == ident, RetrospectiveRevision.version == parent.current_revision))
-    guard_sources(db, revision, actor)
+    guard_sources(db, revision, actor, action=action)
     return parent, revision
 
 
@@ -47,12 +47,15 @@ def generate(data, actor, request_id):
     with Session.begin() as db:
         evidence_specs = []
         if data.mode == 'task_process':
-            snapshot, caps = ready_snapshot(db, data.task_package_id, actor)
+            snapshot, caps = ready_snapshot(db, data.task_package_id, actor, action='retrospective.generate')
             if len(snapshot['events']) > 500 or len(snapshot['attachments']) > 100:
                 raise Problem(422, 'B06_SCOPE_TOO_LARGE', '当前复盘同步处理范围为500条事件、100个附件以内；大包需接入既有后台队列后处理，未截断来源。')
-            package = package_in(db, data.task_package_id, actor)
+            package = package_in(db, data.task_package_id, actor, 'retrospective.generate')
             project, title = package.project_id, snapshot['task']['name']
             key = 'task:'+package.stream_id+':'+data.template_version
+            from ...integrations.a.runtime import enabled as v1_enabled
+            if v1_enabled() and package.producer == 'a':
+                key = 'a-delivery:'+package.id+':'+data.template_version
             sources = {'task_package_id': package.id, 'package_version': package.package_version, 'content_hash': package.content_hash,
                 'capabilities': caps, 'scene_code': package.scene_code, 'record_version_ids': []}
             summary, timeline, findings, suggestions = build_task(snapshot)
@@ -64,7 +67,7 @@ def generate(data, actor, request_id):
                 if available_relation(db, relation).verification_state == 'verified':
                     evidence_specs.append(('attachment:'+relation.external_attachment_id, 'task_attachment', {'section': '任务附件：'+relation.external_attachment_id}, relation.external_attachment_id, relation.asset_id))
         else:
-            rows = [source_context(db, ident, actor, 'run', current=True) for ident in sorted(data.record_version_ids)]
+            rows = [source_context(db, ident, actor, 'retrospective.generate', current=True) for ident in sorted(data.record_version_ids)]
             if len({r.project_id for _, r, _ in rows}) != 1:
                 raise Problem(422, 'MIXED_PROJECTS', '历史复盘只接受同一项目的固定来源版本。')
             project, title = rows[0][1].project_id, '历史案例复盘'
@@ -85,7 +88,7 @@ def generate(data, actor, request_id):
                 findings.append({'id': f'history-{n}', 'type': 'historical_fact', 'claim_kind': 'fact',
                     'text': str(version.effective_fields.get('description') or '来源未填写描述')[:4000], 'event_refs': [], 'evidence_refs': refs[:10], 'review_state': 'unconfirmed'})
             suggestions = [{'id': 'historical-suggestion', 'type': 'mock_suggestion', 'claim_kind': 'suggestion', 'text': '建议将本组历史问题用于新人识别风险的案例练习；原始描述不能证明整改与复核已经发生。', 'event_refs': [], 'evidence_refs': [], 'review_state': 'unconfirmed'}]
-        authorize(actor, 'run', project)
+        authorize(actor, 'retrospective.generate', project)
         digest = fingerprint({'sources': {k: v for k, v in sources.items() if k != 'capabilities'}, 'template': TEMPLATE})
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:k,0))'), {'k': 'retro:'+key})
         parent = db.scalar(select(Retrospective).where(Retrospective.source_key == key).with_for_update())
@@ -147,7 +150,7 @@ def validate(db, revision, findings, suggestions, approving=False):
 
 def edit(ident, data, actor, request_id):
     with Session.begin() as db:
-        parent, prior = current(db, ident, actor, 'run', lock=True)
+        parent, prior = current(db, ident, actor, 'retrospective.edit', lock=True)
         check_revision(parent, prior, data)
         guard_sources(db, prior, actor, current=True)
         findings, suggestions = [f.model_dump() for f in data.findings], [f.model_dump() for f in data.suggestions]
@@ -176,7 +179,7 @@ def edit(ident, data, actor, request_id):
 
 def transition(ident, data, actor, action, request_id, review_id=None):
     with Session.begin() as db:
-        parent, revision = current(db, ident, actor, 'run' if action == 'submitted' else 'audit', lock=True)
+        parent, revision = current(db, ident, actor, 'retrospective.edit' if action == 'submitted' else 'retrospective.review', lock=True)
         check_revision(parent, revision, data)
         if review_id and review_id != revision.id:
             raise Problem(409, 'REVIEW_VERSION_CHANGED', '审核对象不是当前复盘版本。')
@@ -198,7 +201,7 @@ def transition(ident, data, actor, action, request_id, review_id=None):
 
 def convert(ident, data, actor, request_id):
     with Session.begin() as db:
-        parent, revision = current(db, ident, actor, 'run', lock=True)
+        parent, revision = current(db, ident, actor, 'retrospective.edit', lock=True)
         check_revision(parent, revision, data)
         guard_sources(db, revision, actor, current=True)
         if revision.state != 'approved':

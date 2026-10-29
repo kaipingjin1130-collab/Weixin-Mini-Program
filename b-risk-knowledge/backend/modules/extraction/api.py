@@ -43,7 +43,7 @@ def test(actor:Actor=Depends(current_actor)):
 
 @router.get('/knowledge/taxonomies')
 def taxonomies(project_id:str,actor:Actor=Depends(current_actor)):
-    authorize(actor,'run',project_id)
+    authorize(actor,'knowledge.process',project_id)
     with Session() as db:
         rows=db.scalars(select(TaxonomyRevision).where(TaxonomyRevision.project_id==project_id).order_by(TaxonomyRevision.version.desc())).all()
         return {'items':[taxonomy_dto(r) for r in rows],'suggested_categories':DEFAULT_CATEGORIES}
@@ -65,7 +65,7 @@ def job(ident:str,actor:Actor=Depends(current_actor)):
     with Session() as db:
         run=db.get(ProcessingRun,ident)
         if not run or run.kind!='knowledge_extraction':raise Problem(404,'NOT_FOUND','知识萃取任务不存在。')
-        authorize(actor,'run',run.project_id)
+        authorize(actor,'knowledge.process',run.project_id)
         data=db.scalar(select(ExtractionRun).where(ExtractionRun.run_id==ident))
         # Recheck selected sources before returning model-derived results.
         from .service import prepare

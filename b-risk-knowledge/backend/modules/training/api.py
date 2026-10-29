@@ -21,7 +21,7 @@ def generate(data:Generate,request:Request,actor:Actor=Depends(current_actor)):
 @router.get('/training/questions')
 def questions(actor:Actor=Depends(current_actor),state:str|None=None,type:str|None=None,scene_code:str|None=None,
               source_version:str|None=None,limit:int=Query(20,ge=1,le=100),cursor:str|None=None,review_only:bool=False):
-    projects=actor.projects('training_review' if review_only else 'training_manage')
+    projects=actor.projects('training.review' if review_only else 'training.manage')
     if not projects:raise Problem(403,'FORBIDDEN','当前身份没有题库管理或审核权限。')
     with Session() as db:
         query=select(TrainingQuestion).join(QuestionRevision,(QuestionRevision.question_id==TrainingQuestion.id)&(QuestionRevision.version==TrainingQuestion.current_revision)).where(TrainingQuestion.project_id.in_(projects))
@@ -33,7 +33,7 @@ def questions(actor:Actor=Depends(current_actor),state:str|None=None,type:str|No
         if source_version:query=query.where(QuestionRevision.source_versions.contains([source_version]))
         rows,after=paginate(db,query,TrainingQuestion,limit,cursor);output=[]
         for parent in rows:
-            try:output.append(s.dto(*s.question(db,parent.id,actor,'training_review' if review_only else 'training_manage'),db=db))
+            try:output.append(s.dto(*s.question(db,parent.id,actor,'training.review' if review_only else 'training.manage'),db=db))
             except Problem as exc:
                 if exc.status not in {403,409,410}:raise
         return {'items':output,'next_cursor':after}
@@ -42,7 +42,7 @@ def questions(actor:Actor=Depends(current_actor),state:str|None=None,type:str|No
 @router.get('/training/questions/{ident}')
 def detail(ident:str,actor:Actor=Depends(current_actor)):
     with Session() as db:
-        action='training_manage' if actor.projects('training_manage') else 'training_review'
+        action='training.manage' if actor.projects('training.manage') else 'training.review'
         parent,rev=s.question(db,ident,actor,action)
         revisions=db.scalars(select(QuestionRevision).where(QuestionRevision.question_id==ident).order_by(QuestionRevision.version.desc())).all()
         actions=db.scalars(select(ReviewAction).where(ReviewAction.object_type=='question_revision',ReviewAction.object_id==ident).order_by(ReviewAction.created_at)).all()
@@ -63,7 +63,7 @@ def submit_question(ident:str,data:VersionAction,request:Request,actor:Actor=Dep
 
 @router.get('/training/packages')
 def packages(actor:Actor=Depends(current_actor),learner:bool=False,limit:int=Query(20,ge=1,le=100),cursor:str|None=None):
-    projects=actor.projects('read' if learner else 'training_manage')
+    projects=actor.projects('training.learn' if learner else 'training.manage')
     if not projects:raise Problem(403,'FORBIDDEN','当前身份没有学习包管理权限。')
     with Session() as db:
         query=select(LearningPackage).where(LearningPackage.project_id.in_(projects))
@@ -72,7 +72,7 @@ def packages(actor:Actor=Depends(current_actor),learner:bool=False,limit:int=Que
         for package in rows:
             try:
                 if learner:s.learner_scope(package,actor)
-                count=len(s.package_rows(db,package,actor));output.append(s.package_dto(package,count))
+                count=len(s.package_rows(db,package,actor,action='training.learn' if learner else 'training.manage'));output.append(s.package_dto(package,count))
             except Problem as exc:
                 if exc.status not in {403,409,410}:raise
         return {'items':output,'next_cursor':after}
@@ -88,8 +88,8 @@ def package_detail(ident:str,actor:Actor=Depends(current_actor)):
     with Session() as db:
         package=db.get(LearningPackage,ident)
         if not package:raise Problem(404,'NOT_FOUND','学习包不存在。')
-        authorize(actor,'training_manage',package.project_id)
-        rows=s.package_rows(db,package,actor)
+        authorize(actor,'training.manage',package.project_id)
+        rows=s.package_rows(db,package,actor,action='training.manage')
         return {**s.package_dto(package,len(rows)),'questions':[{'position':row.position,**s.dto(parent,rev)} for row,parent,rev in rows]}
 
 
@@ -106,7 +106,7 @@ def start(data:Start,request:Request,actor:Actor=Depends(current_actor),key=Depe
 @router.get('/training/attempts')
 def my_attempts(actor:Actor=Depends(current_actor),limit:int=Query(20,ge=1,le=100),cursor:str|None=None):
     with Session() as db:
-        query=select(TrainingAttempt).join(LearningPackage).where(TrainingAttempt.learner_id==actor.id,LearningPackage.project_id.in_(actor.projects()))
+        query=select(TrainingAttempt).join(LearningPackage).where(TrainingAttempt.learner_id==actor.id,LearningPackage.project_id.in_(actor.projects('training.learn')))
         # paginate uses created_at; attempts use started_at, so stable ID/keyset order here.
         if cursor:query=query.where(TrainingAttempt.id>cursor)
         rows=db.scalars(query.order_by(TrainingAttempt.id).limit(limit+1)).all()
@@ -157,9 +157,9 @@ def feedback(ident:str,data:Feedback,actor:Actor=Depends(current_actor)):
 
 @router.get('/training/results')
 def results(actor:Actor=Depends(current_actor),project_id:str|None=None,limit:int=Query(20,ge=1,le=100),cursor:str|None=None):
-    projects=actor.projects('training_manage')
+    projects=actor.projects('training.manage')
     if not projects:raise Problem(403,'FORBIDDEN','当前身份没有教学结果查看权限。')
-    if project_id:authorize(actor,'training_manage',project_id);projects=[project_id]
+    if project_id:authorize(actor,'training.manage',project_id);projects=[project_id]
     with Session() as db:
         query=select(TrainingAttempt).join(LearningPackage).where(LearningPackage.project_id.in_(projects))
         if cursor:query=query.where(TrainingAttempt.id>cursor)

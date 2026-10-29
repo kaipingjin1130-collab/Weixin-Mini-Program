@@ -18,7 +18,7 @@ def grade_attempt(run_id:str):
         attempt_id=run.object_id;actor_id=run.actor_id;expected=run.payload['config_fingerprint']
     try:
         with Session() as db:
-            actor=actor_for(db,actor_id);attempt,package=attempt_in(db,attempt_id,actor)
+            actor=actor_for(db,actor_id,db.get(ProcessingRun,run_id));attempt,package=attempt_in(db,attempt_id,actor)
             rows=package_rows(db,package,actor)
             ids=list(db.scalars(select(TrainingAnswer.id).where(TrainingAnswer.attempt_id==attempt_id)))
         require_config(expected)
@@ -30,7 +30,7 @@ def grade_attempt(run_id:str):
             require_config(expected)
             score,message,model=grade_case(value,rubric)
             with Session.begin() as db:
-                actor=actor_for(db,actor_id);attempt,package=attempt_in(db,attempt_id,actor,lock=True);package_rows(db,package,actor)
+                actor=actor_for(db,actor_id,db.get(ProcessingRun,run_id));attempt,package=attempt_in(db,attempt_id,actor,lock=True);package_rows(db,package,actor)
                 answer=db.get(TrainingAnswer,ident)
                 if answer.row_version!=original_version or answer.confirmed_score is not None:continue
                 answer.suggested_score=score;answer.model_ref=model;answer.score_kind='model_suggestion';answer.row_version+=1

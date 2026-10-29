@@ -1,11 +1,12 @@
+import { permits } from './permissions';
 import { apiFetch, inPlatform } from './platform';
 import React, { useEffect, useRef, useState } from 'react';
 import { AlertCircle, CheckCircle2, FileInput, RefreshCw, Upload } from 'lucide-react';
 import './task-packages.css';
 
-type Project={id:string;name:string;roles:string[];can_run:boolean;can_manage:boolean};
+type Project={id:string;name:string;permissions?:string[];roles:string[];can_run:boolean;can_manage:boolean};
 type Notice={code:string;message:string;path:string};
-type Package={id:string;name:string;producer:string;task_id:string;package_version:number;project_id:string;status:string;
+type Package={id:string;a_import_id?:string|null;name:string;producer:string;task_id:string;package_version:number;project_id:string;status:string;
   is_current:boolean;retrospective_id?:string|null;is_demo:boolean;created_at:string;capabilities:string[];warnings:Notice[];missing_fields:string[];
   latest_received_version:number;current_ready_version:number;current_package_id:string|null};
 type Event={event_id:string;event_type:string;occurred_at:string|null;actor:{actor_id:string|null;actor_role:string};payload:object;related_object_id?:string;evidence_refs:string[];is_known:boolean};
@@ -54,9 +55,10 @@ export function TaskPackages({identity,path,projects,navigate}:{identity:string;
   const [reason,setReason]=useState('');const [opened,setOpened]=useState<{id:string;url:string|null;text:string|null}|null>(null);
   const keys=useRef<{hash:string;key:string}|null>(null);const withdrawKey=useRef<{body:string;key:string}|null>(null);
   const scope=useRef('');scope.current=[identity,path,project,scenario,group,body].join('|');
-  const canImport=projects.find(p=>p.id===project)?.can_run;
-  const canWithdraw=detail&&projects.find(p=>p.id===detail.project_id)?.roles.some(r=>['admin','reviewer'].includes(r));
-  const canRetry=detail&&projects.find(p=>p.id===detail.project_id)?.can_run;
+  const v1=projects.some(p=>p.permissions!=null);
+  const canImport=!v1&&permits(projects.find(p=>p.id===project),'imports.create');
+  const canWithdraw=detail&&!v1&&permits(projects.find(p=>p.id===detail.project_id),'imports.withdraw');
+  const canRetry=detail&&!v1&&permits(projects.find(p=>p.id===detail.project_id),'imports.create');
   async function api<T>(url:string,init:RequestInit={}):Promise<T>{const response=await apiFetch('/api/v1/task-packages'+url,{...init,
     headers:{'Content-Type':'application/json',Authorization:`Bearer dev-${identity}`,...init.headers}});
     const result=await response.json().catch(()=>({}));if(!response.ok)throw new Error(result.message||'接入服务暂未就绪，请稍后刷新。');return result;}
@@ -95,9 +97,11 @@ export function TaskPackages({identity,path,projects,navigate}:{identity:string;
     else{const url=URL.createObjectURL(blob);const link=document.createElement('a');link.href=url;link.download='任务附件';link.click();URL.revokeObjectURL(url);}});
   const pages=<div className="panel-footer"><span>仅展示当前授权项目</span><div className="pagination"><button disabled={!history.length||loading} onClick={()=>{setCursor(history.at(-1)||'');setHistory(history.slice(0,-1));}}>上一页</button><button disabled={!next||loading} onClick={()=>{setHistory([...history,cursor]);setCursor(next||'');}}>下一页</button></div></div>;
   if(!projects.length)return <section className="panel empty"><h2>当前没有可用项目</h2><p>请刷新以重新加载授权范围，或核对当前身份权限。</p></section>;
+  if(v1&&importing)return <section className="panel"><h2>A 成果接入</h2><p>请在 A 的成果归档中选择指定版本并点击“接入知识中心”。已有资料可继续查看。</p><a href="/quality/#archives">打开成果归档</a></section>;
   return <div className="task-packages-module">
-    <div className="ingest-banner"><FileInput size={21}/><div><strong>{inPlatform ? "小察归档成果接入" : "A任务包接入 · 模拟数据"}</strong><span>保留任务、事件、问题和附件的归档版本。补正或更新后的旧成果停止使用；缺失信息不会自动补全。</span></div></div>
-    <div className="ingest-toolbar"><div className="ingest-tabs"><button className={!importing?'selected':''} onClick={()=>navigate('/task-packages')}>任务包清单</button>{projects.some(p=>p.can_run)&&<button className={importing?'selected':''} onClick={()=>navigate('/task-packages/import')}>接入归档成果</button>}</div><button className="button ghost" onClick={()=>{setOpened(null);setRefresh(v=>v+1);}}><RefreshCw size={15}/>刷新</button></div>
+    <div className="ingest-banner"><FileInput size={21}/><div><strong>{inPlatform ? "小察归档成果接入" : "A任务包接入 · 模拟数据"}</strong><span>{v1?'保留指定成果版本；新版本产生后旧版本仍可使用，明确撤回才停止引用。缺失信息不会自动补全。':'保留任务、事件、问题和附件的归档版本。补正或更新后的旧成果停止使用；缺失信息不会自动补全。'}</span></div></div>
+    <div className="ingest-toolbar"><div className="ingest-tabs"><button className={!importing?'selected':''} onClick={()=>navigate('/task-packages')}>任务包清单</button>{!v1&&projects.some(p=>permits(p,'imports.create'))&&<button className={importing?'selected':''} onClick={()=>navigate('/task-packages/import')}>接入归档成果</button>}</div><button className="button ghost" onClick={()=>{setOpened(null);setRefresh(v=>v+1);}}><RefreshCw size={15}/>刷新</button></div>
+    {detail?.a_import_id&&<button className="button primary" onClick={()=>navigate('/imports/'+detail.a_import_id)}>接入与复盘状态</button>}
     {error&&<div className="feedback error" role="alert"><AlertCircle size={18}/>{error}</div>}{notice&&<div className="feedback success" role="status"><CheckCircle2 size={18}/>{notice}</div>}
     {!ident&&<div className="package-filters"><label>项目范围<select aria-label="任务包项目" value={project} onChange={e=>setProject(e.target.value)}>{projects.map(p=><option value={p.id} key={p.id}>{p.name}</option>)}</select></label>{!importing&&<label>接入状态<select aria-label="任务包状态" value={filter} onChange={e=>setFilter(e.target.value)}><option value="">全部状态</option>{['received','validating','processing','ready','failed','withdrawn'].map(s=><option key={s} value={s}>{labels[s]}</option>)}</select></label>}</div>}
     {loading?<div className="loading">正在读取任务包…</div>:importing?!canImport?<section className="panel empty"><h2>当前项目没有导入权限</h2></section>:inPlatform?<section className="panel package-import"><div className="panel-heading"><h2>选择当前项目已归档成果</h2><span>自动接入已有记录和附件，无需重复填写</span></div><div className="package-import-inner">{archives.filter(a=>a.project_id===project).map(a=><article key={a.id}><h3>{a.title} · 第{a.version}版</h3><button className="button primary" disabled={busy} onClick={()=>void action(async()=>{const response=await apiFetch('/api/v1/platform-archives',{method:'POST',headers:{'Content-Type':'application/json','Idempotency-Key':crypto.randomUUID()},body:JSON.stringify({delivery_id:a.id})});const data=await response.json();if(!response.ok)throw new Error(data.message);navigate('/task-packages/'+data.receipt_id);})}>接入此成果</button></article>)}{!archives.some(a=>a.project_id===project)&&<p>当前项目没有已归档成果，请先在小察任务工作台完成接收与归档。</p>}</div></section>:<>

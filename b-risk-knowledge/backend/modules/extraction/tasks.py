@@ -48,12 +48,12 @@ def extract(run_id:str):
         run.status='running';run.error=None;run.attempts+=1;run.row_version+=1;run.progress=10
     try:
         with Session() as db:
-            run=db.get(ProcessingRun,run_id);actor=actor_for(db,run.actor_id);data=Generate.model_validate(run.payload)
+            run=db.get(ProcessingRun,run_id);actor=actor_for(db,run.actor_id,run);data=Generate.model_validate(run.payload)
             job=db.scalar(select(ExtractionRun).where(ExtractionRun.run_id==run_id))
             _,_,payload,_=prepare(db,data,actor);config_hash=job.config_fingerprint
         output,meta=structured(Output,SYSTEM,payload,config_hash) if data.mode=='llm' else mock_output(payload)
         with Session.begin() as db:
-            run=db.get(ProcessingRun,run_id);actor=actor_for(db,run.actor_id)
+            run=db.get(ProcessingRun,run_id);actor=actor_for(db,run.actor_id,run)
             taxonomy,rows,_,evidence=prepare(db,data,actor)
             allowed={c['code']:c['name'] for c in taxonomy.categories}
             if len({c.category_code for c in output.cards})!=len(output.cards):raise Problem(422,'DUPLICATE_CATEGORY_CARD','模型须按类别合并，不接受同类别重复卡。')
@@ -64,7 +64,7 @@ def extract(run_id:str):
                 for point in card.construction_points:check_quotes(point,evidence,required=point.claim_kind=='source_summary')
             result=[]
             for card in output.cards:
-                template='extract-'+fingerprint({'run':run.input_hash,'category':card.category_code})[:40]
+                template='extract-'+fingerprint({'knowledge.process':run.input_hash,'category':card.category_code})[:40]
                 refs={ident for f in card.facts for ident in f.evidence_ids}|{ident for p in card.construction_points for ident in p.evidence_ids}
                 versions=sorted({evidence[e].id for e in refs});anchor=versions[0]
                 db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:k,0))'),{'k':'extracted:'+run.project_id+':'+template})

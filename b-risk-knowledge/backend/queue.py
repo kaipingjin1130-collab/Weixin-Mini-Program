@@ -81,7 +81,7 @@ async def recover_stalled():
     jobs = await queue_app.job_manager.get_stalled_jobs(queue="b01", seconds_since_heartbeat=10)
     for job in jobs:
         # Only this registered queue/task is recovered; no other application's jobs.
-        if job.task_name in {"b01.demo_check", "b02.source_import", "b03.knowledge_generation", "b04.release_build", "b05.task_package_import", "b07.knowledge_extraction", "b07.training_grading"}:
+        if job.task_name in {"b01.demo_check", "b02.source_import", "b03.knowledge_generation", "b04.release_build", "b05.task_package_import", "b07.knowledge_extraction", "b07.training_grading", "a.v1.import", "a.v1.retrospective"}:
             await queue_app.job_manager.retry_job(job)
 
 
@@ -102,3 +102,4 @@ from .modules.retrospectives import models as retrospective_models  # noqa: E402
 from .modules.training import models as training_models  # noqa: E402,F401
 from .modules.extraction import tasks as extraction_tasks  # noqa: E402,F401
 from .modules.training import tasks as training_tasks  # noqa: E402,F401
+from .integrations.a import tasks as a_integration_tasks  # noqa: E402,F401

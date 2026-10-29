@@ -106,15 +106,17 @@ def me(actor: Actor = Depends(current_actor)):
     projects = sorted(actor.grants) if actor.permissions is not None else actor.projects()
     return {"id": actor.id, "name": actor.name, "subject": actor.subject, "mode": settings.auth_mode,
             "projects": [{"id": p, "name": getattr(actor, 'project_names', {}).get(p, PROJECTS.get(p, p)), "roles": sorted(actor.roles.get(p, [])),
-                          "can_run": actor.can("run", p), "can_manage": actor.can("manage", p)}
+                          "permissions": sorted(actor.permissions.get(p, set())) if actor.permissions is not None else None,
+                          "can_run": actor.can("knowledge.process", p), "can_manage": actor.can("manage", p)}
                          for p in projects]}
 
 
 @app.get("/api/v1/dashboard")
 def dashboard(actor: Actor = Depends(current_actor)):
+    from .job_service import visible_jobs
     with Session() as db:
         rows = db.execute(select(ProcessingRun.status, func.count()).where(
-            ProcessingRun.project_id.in_(actor.projects())).group_by(ProcessingRun.status)).all()
+            visible_jobs(actor)).group_by(ProcessingRun.status)).all()
         counts = dict(rows)
     return {"counts": counts, "review_count": 0, "review_module_available": False}
 
@@ -131,8 +133,9 @@ def submit(data: CreateRun, request: Request, actor: Actor = Depends(current_act
 def jobs(actor: Actor = Depends(current_actor), limit: int = Query(20, ge=1, le=100),
          cursor: str | None = Query(None, max_length=512), status: str | None = None,
          kind: str | None = Query(None, max_length=64)):
+    from .job_service import visible_jobs
     with Session() as db:
-        query = select(ProcessingRun).where(ProcessingRun.project_id.in_(actor.projects()))
+        query = select(ProcessingRun).where(visible_jobs(actor))
         if kind:
             query = query.where(ProcessingRun.kind == kind)
         if status:
@@ -149,7 +152,8 @@ def job_detail(run_id: str, actor: Actor = Depends(current_actor)):
         run = db.get(ProcessingRun, run_id)
         if not run:
             raise Problem(404, "NOT_FOUND", "任务不存在。")
-        authorize(actor, "read", run.project_id)
+        from .job_service import job_action
+        authorize(actor, job_action(run), run.project_id)
         return job_dto(run)
 
 
@@ -166,11 +170,15 @@ def asset_content(asset_id: str, actor: Actor = Depends(current_actor)):
         asset = db.get(FileAsset, asset_id)
         if not asset:
             raise Problem(404, "NOT_FOUND", "文件不存在。")
-        authorize(actor, "read", asset.project_id)
+        from .integrations.a.runtime import enabled
+        from .modules.task_packages.models import TaskPackageAsset
+        is_package = db.scalar(select(TaskPackageAsset.id).where(TaskPackageAsset.asset_id == asset_id).limit(1))
+        authorize(actor, ('imports.read' if is_package else 'knowledge.process') if enabled() else 'read', asset.project_id)
         from .modules.task_packages.service import guard_asset
         guard_asset(db, asset_id, actor)
         if asset.mime_type in {'text/csv', 'application/json', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}:
-            authorize(actor, 'run', asset.project_id)
+            if not (enabled() and is_package):
+                authorize(actor, 'knowledge.process', asset.project_id)
         if asset.availability != "available":
             raise Problem(410, "ASSET_UNAVAILABLE", "文件已撤回或暂不可用。")
         path = asset_path(asset.storage_key)
@@ -270,3 +278,5 @@ from .modules.retrospectives.api import router as retrospective_router
 app.include_router(retrospective_router)
 from .modules.training.api import router as training_router
 app.include_router(training_router)
+from .integrations.a.imports import router as a_import_router
+app.include_router(a_import_router)

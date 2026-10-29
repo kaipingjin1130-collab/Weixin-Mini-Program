@@ -16,22 +16,22 @@ def active_release(db, project):
     return db.scalar(select(KnowledgeRelease).where(KnowledgeRelease.active_scope == project, KnowledgeRelease.state == 'active'))
 
 
-def publication_source(db, revision, actor):
+def publication_source(db, revision, actor, action='knowledge.read'):
     item = db.get(KnowledgeItem, revision.item_id)
-    authorize(actor, 'read', item.project_id)
+    authorize(actor, action, item.project_id)
     if item.withdrawn_at:
         raise Problem(410, 'KNOWLEDGE_WITHDRAWN', '此知识已撤回，不能继续查看或引用。')
     if revision.state != 'approved':
         raise Problem(409, 'REVISION_NOT_APPROVED', '只能发布已审核通过的固定版本。')
-    source, row, evidence = item_source(db, item, actor)
+    source, row, evidence = item_source(db, item, actor, action=action)
     return item, source, evidence
 
 
-def public_revision(db, revision_id, actor, release_id=None, allow_history=False):
+def public_revision(db, revision_id, actor, release_id=None, allow_history=False, action='knowledge.read'):
     revision = db.get(KnowledgeRevision, revision_id)
     if not revision:
         raise Problem(404, 'NOT_FOUND', '知识版本不存在。')
-    item, source, evidence = publication_source(db, revision, actor)
+    item, source, evidence = publication_source(db, revision, actor, action)
     release = active_release(db, item.project_id)
     if allow_history:
         query = select(KnowledgeRelease).join(ReleaseEntry).where(ReleaseEntry.knowledge_revision_id == revision.id,
@@ -50,7 +50,7 @@ def approved_for_release(db, ident, actor, project, current=True):
     if not revision:
         raise Problem(404, 'REVISION_NOT_FOUND', '知识版本不存在。')
     item, source, _ = publication_source(db, revision, actor)
-    authorize(actor, 'audit', item.project_id)
+    authorize(actor, 'knowledge.publish', item.project_id)
     if project != item.project_id:
         raise Problem(422, 'MIXED_PROJECTS', '发布批次只允许同一项目的知识。')
     if current and revision.version != item.current_revision:
@@ -60,7 +60,7 @@ def approved_for_release(db, ident, actor, project, current=True):
 
 
 def create_release(data, actor, key, request_id):
-    authorize(actor, 'audit', data.project_id)
+    authorize(actor, 'knowledge.publish', data.project_id)
     digest = fingerprint(data.model_dump())
     with Session.begin() as db:
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:key,0))'), {'key': f'submit:{actor.id}:{key}'})
@@ -98,7 +98,7 @@ def activate(ident, data, actor, request_id):
         release = db.get(KnowledgeRelease, ident)
         if not release:
             raise Problem(404, 'NOT_FOUND', '发布批次不存在。')
-        authorize(actor, 'audit', release.active_scope)
+        authorize(actor, 'knowledge.publish', release.active_scope)
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:key,0))'), {'key': 'active-release:'+release.active_scope})
         db.refresh(release, with_for_update=True)
         active = active_release(db, release.active_scope)
@@ -125,7 +125,7 @@ def activate(ident, data, actor, request_id):
 
 
 def release_dto(db, release, actor):
-    authorize(actor, 'audit', release.active_scope)
+    authorize(actor, 'knowledge.publish', release.active_scope)
     run = db.get(ProcessingRun, release.run_id)
     entries = db.scalars(select(ReleaseEntry).where(ReleaseEntry.release_id == release.id)).all()
     return {'id': release.id, 'version': release.version, 'project_id': release.active_scope,
@@ -140,7 +140,7 @@ def withdraw(ident, data, actor, request_id):
         item = db.scalar(select(KnowledgeItem).where(KnowledgeItem.id == ident).with_for_update())
         if not item:
             raise Problem(404, 'NOT_FOUND', '知识不存在。')
-        authorize(actor, 'audit', item.project_id)
+        authorize(actor, 'knowledge.publish', item.project_id)
         if item.row_version != data.row_version:
             raise Problem(409, 'VERSION_CONFLICT', '知识已更新，请刷新后再撤回。')
         if not item.withdrawn_at:
@@ -151,9 +151,9 @@ def withdraw(ident, data, actor, request_id):
 
 
 def public_query(actor, project=None, scene=None, card_type=None, include_history=False):
-    projects = actor.projects()
+    projects = actor.projects('knowledge.read')
     if project:
-        authorize(actor, 'read', project)
+        authorize(actor, 'knowledge.read', project)
         projects = [project]
     query = select(KnowledgeItem, KnowledgeRevision, KnowledgeRelease).select_from(KnowledgeItem).join(KnowledgeRevision,
         KnowledgeRevision.item_id == KnowledgeItem.id).join(ReleaseEntry,

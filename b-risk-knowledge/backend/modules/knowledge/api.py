@@ -20,7 +20,7 @@ router = APIRouter(prefix='/api/v1', tags=['质量核查与知识加工'])
 
 
 def curate_projects(actor):
-    projects = [p for p in actor.projects() if actor.can('run', p) or actor.can('audit', p)]
+    projects = [p for p in actor.projects('knowledge.read') if actor.can('knowledge.process', p) or actor.can('knowledge.review', p)]
     if not projects:
         raise Problem(403, 'FORBIDDEN', '当前身份没有质量加工或审核权限。')
     return projects
@@ -80,7 +80,7 @@ def update_issue(ident: str, data: PatchIssue, request: Request, actor: Actor = 
         issue = db.scalar(select(QualityIssue).where(QualityIssue.id == ident).with_for_update())
         if not issue:
             raise Problem(404, 'NOT_FOUND', '质量问题不存在。')
-        version, row, _ = source_context(db, issue.record_version_id, actor, 'run', current=True)
+        version, row, _ = source_context(db, issue.record_version_id, actor, 'knowledge.process', current=True)
         if issue.row_version != data.row_version:
             raise Problem(409, 'VERSION_CONFLICT', '问题已被其他成员处理，请刷新。')
         issue.status, issue.row_version = data.status, issue.row_version + 1
@@ -100,20 +100,20 @@ def schema(actor: Actor = Depends(current_actor), version: str = 'knowledge-card
 @router.get('/knowledge/source-options')
 def source_options(actor: Actor = Depends(current_actor), project_id: str | None = None,
                    limit: int = Query(20, ge=1, le=100), cursor: str | None = None):
-    projects = [p for p in actor.projects('run')]
+    projects = [p for p in actor.projects('knowledge.process')]
     if not projects:
         raise Problem(403, 'FORBIDDEN', '当前身份不能生成候选。')
     with Session() as db:
         query = select(SourceRecord).where(SourceRecord.project_id.in_(projects))
         if project_id:
-            authorize(actor, 'run', project_id)
+            authorize(actor, 'knowledge.process', project_id)
             query = query.where(SourceRecord.project_id == project_id)
         rows, next_cursor = paginate(db, query, SourceRecord, limit, cursor)
         output = []
         for row in rows:
             version = db.scalar(select(SourceRecordVersion).where(SourceRecordVersion.record_id == row.id, SourceRecordVersion.version == row.current_version))
             try:
-                source_context(db, version.id, actor, 'run')
+                source_context(db, version.id, actor, 'knowledge.process')
             except Problem as exc:
                 if exc.status == 410:
                     continue
@@ -140,7 +140,7 @@ def generation(ident: str, actor: Actor = Depends(current_actor)):
         run = db.get(ProcessingRun, ident)
         if not run or run.kind != 'knowledge_generation':
             raise Problem(404, 'NOT_FOUND', '生成任务不存在。')
-        authorize(actor, 'run', run.project_id)
+        authorize(actor, 'knowledge.process', run.project_id)
         entries = db.scalars(select(GenerationEntry).where(GenerationEntry.run_id == run.id)).all()
         counts = {'created': 0, 'skipped': 0, 'failed': 0}
         for entry in entries:
@@ -155,13 +155,13 @@ def knowledge(actor: Actor = Depends(current_actor), state: str | None = None, p
               limit: int = Query(20, ge=1, le=100), cursor: str | None = None):
     with Session() as db:
         query = select(KnowledgeItem).join(KnowledgeRevision, (KnowledgeRevision.item_id == KnowledgeItem.id) &
-               (KnowledgeRevision.version == KnowledgeItem.current_revision)).where(KnowledgeItem.project_id.in_(actor.projects()))
+               (KnowledgeRevision.version == KnowledgeItem.current_revision)).where(KnowledgeItem.project_id.in_(actor.projects('knowledge.read')))
         if state:
             query = query.where(KnowledgeRevision.state == state)
         if project_id:
-            authorize(actor, 'read', project_id)
+            authorize(actor, 'knowledge.read', project_id)
             query = query.where(KnowledgeItem.project_id == project_id)
-        editable = [p for p in actor.projects() if actor.can('run', p) or actor.can('audit', p)]
+        editable = [p for p in actor.projects('knowledge.read') if actor.can('knowledge.process', p) or actor.can('knowledge.review', p)]
         if not editable:
             raise Problem(403, 'FORBIDDEN', '此为知识加工区，学员请等待审核发布后的知识入口。')
         query = query.where(KnowledgeItem.project_id.in_(editable))
@@ -220,7 +220,7 @@ def reviews(actor: Actor = Depends(current_actor), state: str = 'pending_review'
         result = questions(actor=actor,state=state,type=None,scene_code=None,source_version=None,limit=limit,cursor=cursor,review_only=True)
         result['items'] = [{**i,'review_id':i['revision_id']} for i in result['items']]
         return result
-    projects = actor.projects('audit')
+    projects = actor.projects('retrospective.review' if object_type == 'retrospective_revision' else 'knowledge.review')
     if not projects:
         raise Problem(403, 'FORBIDDEN', '当前身份没有审核权限。')
     if object_type == 'retrospective_revision':
@@ -270,7 +270,7 @@ def review_object(ident, actor):
         revision = db.get(KnowledgeRevision, ident)
         if not revision:
             raise Problem(404, 'REVIEW_NOT_FOUND', '审核待办不存在。')
-        item, current = current_item(db, revision.item_id, actor, 'audit')
+        item, current = current_item(db, revision.item_id, actor, 'knowledge.review')
         return item.id
 
 

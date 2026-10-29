@@ -8,6 +8,31 @@ from .models import ProcessingRun, RetryRequest, new_id, utcnow
 from .db import Session
 
 
+JOB_READ = {'a_import': 'imports.read', 'task_package_import': 'imports.read',
+            'a_retrospective': 'retrospective.read', 'source_import': 'knowledge.process',
+            'knowledge_generation': 'knowledge.process', 'knowledge_extraction': 'knowledge.process',
+            'release_build': 'knowledge.publish', 'training_grading': 'training.manage'}
+
+
+def job_action(run, retry=False):
+    from .integrations.a.runtime import enabled
+    if not enabled():
+        return ('training_manage' if run.kind == 'training_grading' else 'audit' if run.kind == 'release_build'
+                else 'package_receive' if run.kind == 'task_package_import' else 'run') if retry else 'read'
+    if retry and run.kind in {'a_import', 'a_retrospective', 'task_package_import'}:
+        raise Problem(409, 'USE_IMPORT_RETRY', '请从成果接入详情重试，以同步接入与复盘状态。')
+    return JOB_READ.get(run.kind, 'run')
+
+
+def visible_jobs(actor):
+    from .integrations.a.runtime import enabled
+    from sqlalchemy import and_, or_, false
+    if not enabled():
+        return ProcessingRun.project_id.in_(actor.projects())
+    return or_(false(), *(and_(ProcessingRun.kind == kind, ProcessingRun.project_id.in_(actor.projects(action)))
+                         for kind, action in JOB_READ.items()))
+
+
 def fingerprint(value):
     return hashlib.sha256(json.dumps(value, ensure_ascii=False, sort_keys=True, separators=(",", ":")).encode()).hexdigest()
 
@@ -35,6 +60,9 @@ def enqueue(db, run_id):
     elif run.kind == 'training_grading':
         from .modules.training.tasks import grade_attempt
         task = grade_attempt
+    elif run.kind in {'a_import', 'a_retrospective'}:
+        from .integrations.a.tasks import import_job, retrospective_job
+        task = import_job if run.kind == 'a_import' else retrospective_job
     # The library INSERT and the SQLAlchemy ORM flush share one physical transaction.
     connection = db.connection().connection.driver_connection
     return task.configure(connection=connection, lock=lock).defer(run_id=run_id)
@@ -83,7 +111,7 @@ def retry_run(actor, run_id, version, key, request_id):
         run = db.scalar(select(ProcessingRun).where(ProcessingRun.id == run_id).with_for_update())
         if not run:
             raise Problem(404, "NOT_FOUND", "任务不存在。")
-        authorize(actor, 'training_manage' if run.kind == 'training_grading' else 'audit' if run.kind == 'release_build' else 'package_receive' if run.kind == 'task_package_import' else 'run', run.project_id)
+        authorize(actor, job_action(run, retry=True), run.project_id)
         prior = db.scalar(select(RetryRequest).where(RetryRequest.actor_id == actor.id,
                                                      RetryRequest.idempotency_key == key))
         if prior:

@@ -1,0 +1,7 @@
+{
+  "source_system": "a",
+  "org_id": "replace-with-org-id",
+  "project_ids": ["replace-with-project-id"],
+  "allowed_actions": ["delivery.meta", "delivery.snapshot", "delivery.attachment"],
+  "enabled": true
+}

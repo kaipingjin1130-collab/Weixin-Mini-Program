@@ -31,7 +31,7 @@ async def body_json(request):
     return strict_json(bytes(body))
 
 
-def scope(actor, data, action='package_receive'):
+def scope(actor, data, action='imports.create'):
     if not isinstance(data, dict) or not all(isinstance(data.get(k), str) for k in ('project_id', 'org_id', 'producer')):
         raise Problem(422, 'INVALID_PACKAGE_ENVELOPE', '缺少有效的项目、组织或来源标识。')
     authorize(actor, action, data['project_id'])

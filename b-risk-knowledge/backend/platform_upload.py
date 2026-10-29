@@ -21,7 +21,7 @@ class Upload(BaseModel):
 
 @router.post('/platform-inputs', status_code=201)
 def upload(data: Upload, actor=Depends(current_actor)):
-    authorize(actor, 'run', data.project_id)
+    authorize(actor, 'knowledge.process', data.project_id)
     if data.kind not in MIME:
         raise Problem(422, 'INVALID_FILE_TYPE', '请选择CSV、Excel或JSON治理文件。')
     try:
@@ -47,7 +47,7 @@ def upload(data: Upload, actor=Depends(current_actor)):
 def catalog(actor):
     reverse = {v: k for k, v in MIME.items()}
     with Session() as db:
-        rows = db.scalars(select(FileAsset).where(FileAsset.project_id.in_(actor.projects('run')),
+        rows = db.scalars(select(FileAsset).where(FileAsset.project_id.in_(actor.projects('knowledge.process')),
             FileAsset.org_id == actor.org_id, FileAsset.storage_key.startswith('platform-inputs/'),
             FileAsset.availability == 'available')).all()
         return [{'asset_id': r.id, 'label': r.storage_key.rsplit('/', 1)[-1],

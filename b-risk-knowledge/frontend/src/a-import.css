@@ -1,0 +1,15 @@
+.a-import-detail{font:15px/1.7 "Microsoft YaHei UI","Microsoft YaHei",sans-serif}
+.a-import-body{padding:24px;display:grid;gap:20px;min-width:0}
+.a-import-body p,.a-import-body h3{margin:0}
+.a-import-body ul{margin:0;padding-left:24px}
+.a-import-status{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px;margin:0}
+.a-import-status>div{padding:16px;border:1px solid var(--line,#e4ebef);border-radius:8px}
+.a-import-status dt{font-size:13px;color:var(--muted,#72838d)}
+.a-import-status dd{margin:8px 0 0;font-size:20px;font-weight:600;overflow-wrap:anywhere}
+.a-import-actions{display:flex;gap:12px;flex-wrap:wrap}
+.a-import-withdraw{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:12px;align-items:end;padding-top:20px;border-top:1px solid var(--line,#e4ebef)}
+.a-import-withdraw label{display:grid;gap:8px;font-size:14px}
+.a-import-withdraw input{width:100%;min-width:0;min-height:44px;padding:10px 12px;border:1px solid var(--line,#e4ebef);border-radius:8px;font:inherit}
+.a-import-withdraw p{grid-column:1/-1;font-size:13px;color:var(--muted,#72838d)}
+.a-import-detail input:focus-visible{outline:3px solid #80b5d5;outline-offset:3px}
+@media(max-width:600px){.a-import-body{padding:16px}.a-import-status{grid-template-columns:1fr}.a-import-withdraw{grid-template-columns:1fr}}

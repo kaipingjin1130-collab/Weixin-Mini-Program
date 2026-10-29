@@ -1,3 +1,4 @@
+import { AImport } from './AImport';
 import { PlatformServices } from './PlatformServices';
 import { ArchiveReview } from './ArchiveReview';
 import React, { useEffect, useState } from 'react';
@@ -13,7 +14,7 @@ import { Training } from './Training';
 import { Extraction } from './Extraction';
 import { apiFetch, currentPath, inPlatform, navigatePath } from './platform';
 
-type Project = { id: string; name: string; roles: string[]; can_run: boolean; can_manage: boolean };
+type Project = { id: string; name: string; roles: string[]; can_run: boolean; can_manage: boolean; permissions?: string[] };
 type Me = { id: string; name: string; subject: string; mode: string; projects: Project[] };
 type Job = { id: string; title: string; kind: string; project_id: string; status: string; attempts: number;
   progress: number; result_ref: string | null; error: string | null; row_version: number; created_at: string; updated_at: string };
@@ -33,7 +34,7 @@ export function App({ embedded = false }: { embedded?: boolean }) {
   const [sessionExpired, setSessionExpired] = useState(false);
   const isServices = path === '/platform/services';
   const isArchiveReview = path.startsWith('/archive-review/');
-  const isAImport = false;
+  const isAImport = /^\/imports\/ai_[a-f0-9]{32}$/.test(path);
   const [governanceOpen, setGovernanceOpen] = useState(['/sources','/imports','/records'].some(p => currentPath().startsWith(p)));
   const isRetrieval = ['/search','/releases','/knowledge/library'].includes(path) || /^\/knowledge\/[^/]+$/.test(path) && path !== '/knowledge/drafts';
   const isKnowledge = !isRetrieval && ['/quality','/knowledge','/reviews'].some(p => path.startsWith(p));
@@ -101,7 +102,7 @@ export function App({ embedded = false }: { embedded?: boolean }) {
         const health = await api<{ worker_online: boolean }>('/health');
         if (stale) return;
         setOnline(health.worker_online);
-        if (isServices || isArchiveReview || isIngestion || isKnowledge || isRetrieval || isPackages || isRetrospectives || isTraining || isExtraction) return;
+        if (isAImport || isServices || isArchiveReview || isIngestion || isKnowledge || isRetrieval || isPackages || isRetrospectives || isTraining || isExtraction) return;
         if (path === '/settings/access') {
           if (!current.projects.some(p => p.can_manage)) return;
           const [a, logs] = await Promise.all([api<Access>('/access'), api<{ items: typeof audit }>('/audit-events?limit=10')]);
@@ -124,7 +125,7 @@ export function App({ embedded = false }: { embedded?: boolean }) {
   }, [identity, path, status, kind, cursor, refresh]);
 
   useEffect(() => {
-    if (!me || isServices || isArchiveReview || path === '/settings/access' || isIngestion || isKnowledge || isRetrieval || isPackages || isRetrospectives || isTraining || isExtraction) return;
+    if (!me || isAImport || isServices || isArchiveReview || path === '/settings/access' || isIngestion || isKnowledge || isRetrieval || isPackages || isRetrospectives || isTraining || isExtraction) return;
     let stale = false;
     const timer = window.setInterval(async () => {
       try {
@@ -164,9 +165,16 @@ export function App({ embedded = false }: { embedded?: boolean }) {
     link.href = url; link.download = `演示检查结果-${job.id.slice(0, 8)}.txt`; link.click(); URL.revokeObjectURL(url);
     setNotice('演示结果已下载。');
   });
-  const canRun = me?.projects.some(p => p.can_run);
+  const canRun = !inPlatform && me?.projects.some(p => p.can_run);
+  const canRetry = (job: Job) => {
+    const scope = me?.projects.find(p => p.id === job.project_id);
+    if (scope?.permissions == null) return !!scope?.can_run;
+    const action: Record<string, string> = { source_import: 'knowledge.process', knowledge_generation: 'knowledge.process',
+      knowledge_extraction: 'knowledge.process', release_build: 'knowledge.publish', training_grading: 'training.manage' };
+    return !!action[job.kind] && scope.permissions.includes(action[job.kind]);
+  };
   const canManage = me?.projects.some(p => p.can_manage);
-  const title = isServices ? '平台服务' : isArchiveReview ? '归档成果复盘' : isTraining ? (path.startsWith('/learn')?'我的学习':'培训与学习记录') : isExtraction ? (path==='/settings/models'?'云端模型配置':'施工要点知识萃取') : isRetrospectives ? '过程复盘与经验' : isPackages ? '归档成果与证据' : isRetrieval ? (path === '/releases' ? '知识发布管理' : path === '/search' ? '知识检索' : '已发布知识库') : isKnowledge ? '知识加工与审核' : isIngestion ? (path.startsWith('/sources') ? '历史数据来源' : path.startsWith('/imports') ? '历史项目' : '风险数据') : path === '/settings/access' ? '成员与权限' : path === '/jobs' ? '处理任务' : '我的工作台';
+  const title = isAImport ? 'A 成果接入' : isServices ? '平台服务' : isArchiveReview ? '归档成果复盘' : isTraining ? (path.startsWith('/learn')?'我的学习':'培训与学习记录') : isExtraction ? (path==='/settings/models'?'云端模型配置':'施工要点知识萃取') : isRetrospectives ? '过程复盘与经验' : isPackages ? '归档成果与证据' : isRetrieval ? (path === '/releases' ? '知识发布管理' : path === '/search' ? '知识检索' : '已发布知识库') : isKnowledge ? '知识加工与审核' : isIngestion ? (path.startsWith('/sources') ? '历史数据来源' : path.startsWith('/imports') ? '历史项目' : '风险数据') : path === '/settings/access' ? '成员与权限' : path === '/jobs' ? '处理任务' : '我的工作台';
   const activeCount = (counts.queued || 0) + (counts.running || 0) + (counts.retrying || 0);
 
   return <div className="app-shell">
@@ -198,9 +206,9 @@ export function App({ embedded = false }: { embedded?: boolean }) {
         }}>{profiles.map(([id, label]) => <option value={id} key={id}>{label}</option>)}</select></div>}
       </header>}
       <main>
-        {embedded && !isRetrieval && !isServices && <nav aria-label="业务功能" className="heading-actions" style={{flexWrap:'wrap',marginBottom:20}}>{(isIngestion ? [['/sources','数据来源'],['/imports','历史项目'],['/records','风险数据']] : isTraining ? [['/learn','我的学习'],['/training/questions','题库与学习包']] : isKnowledge || isExtraction ? [['/extraction','知识萃取'],['/quality','质量核查'],['/knowledge/drafts','知识草稿'],['/reviews','内容审核'],['/settings/models','模型设置']] : isRetrieval ? [['/knowledge/library','已发布知识'],['/search','检索'],['/releases','发布管理']] : isPackages ? [['/task-packages','成果清单'],['/task-packages/import','接入成果']] : [['/retrospectives','复盘清单']]).map(([url,label])=><button key={url} className={path===url?'button primary':'button ghost'} onClick={()=>navigate(url)}>{label}</button>)}</nav>}
+        {embedded && !isAImport && !isRetrieval && !isServices && <nav aria-label="业务功能" className="heading-actions" style={{flexWrap:'wrap',marginBottom:20}}>{(isIngestion ? [['/sources','数据来源'],['/imports','历史项目'],['/records','风险数据']] : isTraining ? [['/learn','我的学习'],['/training/questions','题库与学习包']] : isKnowledge || isExtraction ? [['/extraction','知识萃取'],['/quality','质量核查'],['/knowledge/drafts','知识草稿'],['/reviews','内容审核'],['/settings/models','模型设置']] : isRetrieval ? [['/knowledge/library','已发布知识'],['/search','检索'],['/releases','发布管理']] : isPackages ? [['/task-packages','成果清单'],['/task-packages/import','接入成果']] : [['/retrospectives','复盘清单']]).map(([url,label])=><button key={url} className={path===url?'button primary':'button ghost'} onClick={()=>navigate(url)}>{label}</button>)}</nav>}
         <div className="page-heading"><div><div className="eyebrow">工作空间</div><h1>{title}</h1>
-          <p>{isTraining ? '固定审核来源、题目与学习包版本，保留作答、建议评分和教员复核。' : isExtraction ? '按类别合并历史记录，调用云端模型提炼可追溯的施工要点。' : isRetrospectives ? '复用已有过程记录与证据，核查实际流程，形成可审核的经验草稿。' : isPackages ? '接收作业快照，核对事件、证据和版本，减少重复准备资料。' : isRetrieval ? '固定审核版本发布，以项目权限检索知识并打开来源。' : isKnowledge ? '复用来源证据生成候选，核查质量问题后逐版本审核。' : isIngestion ? '一次接入模拟资料，保留原文、治理生效值与来源证据。' : path === '/settings/access' ? '按项目分配角色，保留每次授权与撤销的记录。' : '查看处理进度、定位失败任务，保留每一次执行结果。'}</p></div>
+          <p>{isAImport ? '指定版本接入、证据校验与过程复盘。' : isTraining ? '固定审核来源、题目与学习包版本，保留作答、建议评分和教员复核。' : isExtraction ? '按类别合并历史记录，调用云端模型提炼可追溯的施工要点。' : isRetrospectives ? '复用已有过程记录与证据，核查实际流程，形成可审核的经验草稿。' : isPackages ? '接收作业快照，核对事件、证据和版本，减少重复准备资料。' : isRetrieval ? '固定审核版本发布，以项目权限检索知识并打开来源。' : isKnowledge ? '复用来源证据生成候选，核查质量问题后逐版本审核。' : isIngestion ? '一次接入模拟资料，保留原文、治理生效值与来源证据。' : path === '/settings/access' ? '按项目分配角色，保留每次授权与撤销的记录。' : '查看处理进度、定位失败任务，保留每一次执行结果。'}</p></div>
           <div className="heading-actions">{!embedded && <button className="button ghost" onClick={() => setRefresh(v => v + 1)} disabled={loading}><RefreshCw size={16} />刷新</button>}
             {!inPlatform && !isIngestion && !isKnowledge && !isRetrieval && !isPackages && !isRetrospectives && !isTraining && !isExtraction && path !== '/settings/access' && <button className="button primary" disabled={!canRun || busy} onClick={() => {
               setProject(me?.projects.find(p => p.can_run)?.id || 'demo-airport'); setShowCreate(true);
@@ -210,7 +218,7 @@ export function App({ embedded = false }: { embedded?: boolean }) {
         {sessionExpired && <div className="feedback error" role="alert">登录已失效，请返回平台重新登录。<a href="/quality/">返回平台</a></div>}
         {error && <div className="feedback error" role="alert"><AlertCircle size={18} />{error}<button onClick={() => setRefresh(v => v + 1)}>重新加载</button></div>}
         {notice && <div className="feedback success" role="status"><CheckCircle2 size={18} />{notice}<button aria-label="关闭提示" onClick={() => setNotice('')}><X size={16} /></button></div>}
-        {sessionExpired ? null : isAImport ? <section className="panel empty"><h2>成果接入</h2><p>此成果的接入页面尚未开放，请返回平台查看。</p><a href="/quality/">返回平台</a></section> : loading ? <div className="loading"><LoaderCircle className="spin" size={24} /><span>正在读取工作区…</span></div> :
+        {sessionExpired ? null : isAImport ? (me ? <AImport id={path.split('/').pop()!} identity={me.id} projects={me.projects} navigate={navigate}/> : <p>{error || '正在读取身份…'}</p>) : loading ? <div className="loading"><LoaderCircle className="spin" size={24} /><span>正在读取工作区…</span></div> :
           error ? null : isServices ? <PlatformServices key={refresh} navigate={navigate} /> : isArchiveReview ? <ArchiveReview key={path} deliveryId={decodeURIComponent(path.split('/')[2])} navigate={navigate} /> : isTraining ? <Training key={identity} api={api} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isExtraction ? <Extraction key={identity} api={api} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isRetrospectives ? <Retrospectives key={identity} api={api} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
@@ -267,7 +275,7 @@ export function App({ embedded = false }: { embedded?: boolean }) {
                       <td><span className={`status ${job.status}`}><i />{statuses[job.status]}</span></td>
                       <td><div className="progress-cell"><div className="progress-track"><span style={{ width: `${job.progress}%` }} /></div><span>{job.progress}%</span></div></td>
                       <td className="muted nowrap">{fmt(job.created_at)}</td><td><div className="row-actions">{job.kind === 'source_import' && <button className="text-button" onClick={() => navigate('/imports')}>历史项目</button>}<button className="text-button" onClick={() => setSelected(job)}>详情</button>
-                        {job.status === 'failed' && me?.projects.find(p => p.id === job.project_id)?.can_run && <button className="text-button" disabled={busy} onClick={() => void retry(job)}>重试任务</button>}
+                        {job.status === 'failed' && canRetry(job) && <button className="text-button" disabled={busy} onClick={() => void retry(job)}>重试任务</button>}
                         {job.result_ref && <button className="icon-button" aria-label="下载任务结果" disabled={busy} onClick={() => void download(job)}><Download size={17} /></button>}</div></td></tr>)}
                   </tbody></table></div>}
                 <div className="panel-footer"><span>显示 {jobs.length} 条 · 任务状态自动更新</span><div className="pagination"><button disabled={!history.length} onClick={() => { setCursor(history[history.length - 1]); setHistory(history.slice(0, -1)); }}>上一页</button>
@@ -293,7 +301,7 @@ export function App({ embedded = false }: { embedded?: boolean }) {
       {selected.error && <div className="detail-error"><strong>处理说明</strong><p>{selected.error}</p></div>}
       <p className="small-note">此为本地模拟数据任务，不代表实际工程检查。所有进度和结果均来自后台执行记录。</p>
       {selected.result_ref && <button className="button primary" disabled={busy} onClick={() => void download(selected)}><Download size={16} />下载演示结果</button>}
-      {selected.status === 'failed' && me?.projects.find(p => p.id === selected.project_id)?.can_run && <button className="button primary" disabled={busy} onClick={() => void retry(selected)}><RefreshCw size={16} />重试任务</button>}
+      {selected.status === 'failed' && canRetry(selected) && <button className="button primary" disabled={busy} onClick={() => void retry(selected)}><RefreshCw size={16} />重试任务</button>}
     </aside></div>}
   </div>;
 }

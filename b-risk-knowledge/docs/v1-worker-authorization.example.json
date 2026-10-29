@@ -1,0 +1,6 @@
+{
+  "org_id": "replace-with-org-id",
+  "projects": {
+    "replace-with-project-id": ["knowledge.read", "knowledge.process", "knowledge.publish", "training.learn"]
+  }
+}

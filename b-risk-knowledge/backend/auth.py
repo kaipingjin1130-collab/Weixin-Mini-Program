@@ -24,10 +24,28 @@ class Actor:
     def can(self, action: str, project: str) -> bool:
         if project not in self.grants:
             return False
+        from .integrations.a.runtime import enabled
         if self.permissions is not None:
-            # Coarse legacy actions remain closed until each route is mapped individually.
+            if action in self.permissions.get(project, set()):
+                return True
+            if enabled():
+                return False
+        # Compatibility belongs only to role-based legacy identities. Explicit
+        # v1 grants above are never expanded into another permission.
+        action = {
+            'knowledge.read': 'read', 'knowledge.process': 'run',
+            'knowledge.review': 'audit', 'knowledge.publish': 'audit',
+            'imports.read': 'package_read', 'imports.create': 'package_receive',
+            'imports.retry': 'package_receive', 'imports.withdraw': 'package_withdraw',
+            'retrospective.read': 'read', 'retrospective.generate': 'run',
+            'retrospective.edit': 'run', 'retrospective.review': 'audit',
+            'training.learn': 'read', 'training.manage': 'training_manage',
+            'training.review': 'training_review',
+        }.get(action, action)
+        if self.permissions is not None:
             return action in self.permissions.get(project, set())
         allowed = {
+            'retrospective_read': {'admin', 'processor', 'reviewer'},
             "read": {"admin", "processor", "reviewer", "teacher", "learner"},
             "run": {"admin", "processor"},
             "manage": {"admin"},
@@ -38,7 +56,7 @@ class Actor:
             "package_receive": {"admin", "processor", "a_service"},
             "package_withdraw": {"admin", "reviewer", "a_service"},
         }
-        return bool(self.roles.get(project, set()) & allowed[action])
+        return bool(self.roles.get(project, set()) & allowed.get(action, set()))
 
     def projects(self, action="read"):
         return sorted(p for p in self.grants if self.can(action, p))
@@ -127,12 +145,12 @@ def resolve_a_actor(request: Request, settings) -> Actor:
         raise Problem(503, 'IDENTITY_UNAVAILABLE', '身份服务暂不可用或返回无效数据。')
 
 
-def actor_for_user(db, user):
+def actor_for_user(db, user, run=None):
     if user is None:
         raise Problem(403, 'IDENTITY_REVOKED', '任务身份已不可用。')
     if user.issuer.startswith('qaxc:'):
         from .platform_identity import worker_actor
-        return worker_actor(user)
+        return worker_actor(user, run)
     from sqlalchemy import select
     from .models import RoleBinding
     roles = {}

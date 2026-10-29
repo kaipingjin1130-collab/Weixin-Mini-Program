@@ -47,7 +47,7 @@ def build_release(run_id: str):
         for n, ident in enumerate(entry_ids, 1):
             with Session.begin() as db:
                 run = db.get(ProcessingRun, run_id)
-                actor = actor_for(db, run.actor_id)
+                actor = actor_for(db, run.actor_id, run)
                 entry = db.get(ReleaseEntry, ident)
                 if entry.state == 'ready':
                     continue

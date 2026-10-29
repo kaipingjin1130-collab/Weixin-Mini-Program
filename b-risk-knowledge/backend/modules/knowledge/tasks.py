@@ -10,10 +10,10 @@ from .models import KnowledgeItem, KnowledgeRevision, GenerationEntry
 from .service import source_context, validate_card, link_claims
 
 
-def actor_for(db, ident):
+def actor_for(db, ident, run=None):
     user = db.get(UserLink, ident)
     from ...auth import actor_for_user
-    return actor_for_user(db, user)
+    return actor_for_user(db, user, run)
 
 
 @queue_app.task(name='b03.knowledge_generation', queue='b01')
@@ -31,10 +31,10 @@ def generate(run_id: str):
                 if db.scalar(select(GenerationEntry.id).where(GenerationEntry.run_id == run_id, GenerationEntry.record_version_id == ident)):
                     continue
                 run = db.get(ProcessingRun, run_id)
-                actor = actor_for(db, run.actor_id)
+                actor = actor_for(db, run.actor_id, run)
                 try:
                     with db.begin_nested():
-                        source, row, evidence = source_context(db, ident, actor, 'run', current=True)
+                        source, row, evidence = source_context(db, ident, actor, 'knowledge.process', current=True)
                         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:key,0))'),
                                    {'key': f"knowledge:{ident}:{payload['type']}:{payload['template_version']}"})
                         existing = db.scalar(select(KnowledgeItem).where(KnowledgeItem.record_version_id == ident,

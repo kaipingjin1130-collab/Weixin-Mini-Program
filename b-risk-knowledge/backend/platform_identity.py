@@ -18,10 +18,15 @@ def persist_actor(actor):
     return actor
 
 
-def worker_actor(user):
+def worker_actor(user, run=None):
     from .config import settings
     if settings.auth_mode != 'a' or user.issuer != 'qaxc:' + settings.a_org_id:
         raise Problem(403, 'IDENTITY_REVOKED', '任务身份不属于当前平台。')
+    from .integrations.a.runtime import enabled, service_actor
+    if enabled():
+        if run is None or run.actor_id != user.id:
+            raise Problem(403, 'SERVICE_SCOPE_DENIED', '后台授权必须绑定已提交的具体任务。')
+        return service_actor(user, run.project_id, run.kind)
     try:
         response = httpx.post(settings.a_base + '/integration/v1/identity/subject',
             headers={'Authorization': 'Bearer ' + settings.b_to_a_key},

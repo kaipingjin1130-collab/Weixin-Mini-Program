@@ -8,7 +8,7 @@ from ..ingestion.models import SourceRecordVersion, SourceRecord, EvidenceItem
 from .models import KnowledgeItem, KnowledgeRevision, KnowledgeEvidenceLink, ReviewAction, QualityIssue
 
 
-def source_context(db, version_id, actor, action='read', current=False):
+def source_context(db, version_id, actor, action='knowledge.read', current=False):
     version = db.get(SourceRecordVersion, version_id)
     if not version:
         raise Problem(404, 'SOURCE_VERSION_NOT_FOUND', '来源版本不存在。')
@@ -23,11 +23,11 @@ def source_context(db, version_id, actor, action='read', current=False):
     return version, row, evidence
 
 
-def item_source(db, item, actor, action='read', current=False):
+def item_source(db, item, actor, action='knowledge.read', current=False):
     if item.retrospective_revision_id:
         authorize(actor, action, item.project_id)
         from ..retrospectives.sources import context
-        return context(db, item.retrospective_revision_id, actor, current=current)
+        return context(db, item.retrospective_revision_id, actor, current=current, action=action)
     source, row, evidence = source_context(db, item.record_version_id, actor, action, current)
     from ..extraction.models import KnowledgeSource
     extra = db.scalars(select(KnowledgeSource).where(KnowledgeSource.item_id == item.id)).all()
@@ -94,7 +94,7 @@ def generation_preview(db, data, actor):
         raise Problem(422, 'DUPLICATE_SOURCE_VERSION', '生成范围含重复来源版本。')
     items, projects = [], set()
     for ident in data.record_version_ids:
-        version, row, evidence = source_context(db, ident, actor, 'run', current=True)
+        version, row, evidence = source_context(db, ident, actor, 'knowledge.process', current=True)
         projects.add(row.project_id)
         items.append({'record_version_id': version.id, 'record_id': row.id, 'source_version': version.version,
                       'description': version.effective_fields.get('description'), 'project_id': row.project_id,
@@ -125,7 +125,7 @@ def submit_generation(data, actor, key, request_id):
         return run, False
 
 
-def current_item(db, item_id, actor, action='read', lock=False):
+def current_item(db, item_id, actor, action='knowledge.read', lock=False):
     query = select(KnowledgeItem).where(KnowledgeItem.id == item_id)
     item = db.scalar(query.with_for_update() if lock else query)
     if not item:
@@ -136,7 +136,7 @@ def current_item(db, item_id, actor, action='read', lock=False):
     revision = db.scalar(select(KnowledgeRevision).where(KnowledgeRevision.item_id == item.id,
                                                         KnowledgeRevision.version == item.current_revision))
     item_source(db, item, actor)
-    if action == 'read' and not (actor.can('run', item.project_id) or actor.can('audit', item.project_id)):
+    if action == 'knowledge.read' and not (actor.can('knowledge.process', item.project_id) or actor.can('knowledge.review', item.project_id)):
         raise Problem(403, 'FORBIDDEN', '此为尚未发布的知识加工区，需要加工或审核权限。')
     return item, revision
 
@@ -148,9 +148,9 @@ def check_revision(item, revision, data):
 
 def save_draft(item_id, data, actor, request_id):
     with Session.begin() as db:
-        item, prior = current_item(db, item_id, actor, 'run', lock=True)
+        item, prior = current_item(db, item_id, actor, 'knowledge.process', lock=True)
         check_revision(item, prior, data)
-        source, _, _ = item_source(db, item, actor, 'run', current=True)
+        source, _, _ = item_source(db, item, actor, 'knowledge.process', current=True)
         if data.content.type != item.type:
             raise Problem(422, 'CARD_TYPE_MISMATCH', '知识类型不能在编辑时变更。')
         old_facts = {(f['text'], tuple(f['evidence_ids'])) for f in prior.content['facts']}
@@ -175,7 +175,7 @@ def save_draft(item_id, data, actor, request_id):
 
 def transition(item_id, data, actor, action, request_id, review_id=None):
     with Session.begin() as db:
-        item, revision = current_item(db, item_id, actor, 'run' if action == 'submitted' else 'audit', lock=True)
+        item, revision = current_item(db, item_id, actor, 'knowledge.process' if action == 'submitted' else 'knowledge.review', lock=True)
         check_revision(item, revision, data)
         if review_id and review_id != revision.id:
             raise Problem(409, 'REVIEW_VERSION_CHANGED', '审核对象已不是当前版本。')

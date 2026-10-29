@@ -27,7 +27,7 @@ def create(data: Create, request: Request, actor: Actor = Depends(current_actor)
 @router.get('')
 def listing(actor: Actor = Depends(current_actor), mode: str | None = None, state: str | None = None,
             limit: int = Query(20, ge=1, le=100), cursor: str | None = None, review_only: bool = False):
-    projects = actor.projects('audit') if review_only else [p for p in actor.projects() if actor.can('run', p) or actor.can('audit', p)]
+    projects = actor.projects('retrospective.review' if review_only else 'retrospective.read')
     if not projects:
         raise Problem(403, 'FORBIDDEN', '复盘加工区需要加工或审核权限。')
     with Session() as db:
@@ -40,7 +40,7 @@ def listing(actor: Actor = Depends(current_actor), mode: str | None = None, stat
         output = []
         for parent in rows:
             try:
-                output.append(dto(*current(db, parent.id, actor)))
+                output.append(dto(*current(db, parent.id, actor, 'retrospective.review' if review_only else 'retrospective.read')))
             except Problem as exc:
                 if exc.status not in {403, 410}:
                     raise

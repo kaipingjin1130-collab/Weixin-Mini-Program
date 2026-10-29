@@ -9,22 +9,22 @@ from ..knowledge.service import source_context
 from .models import Retrospective, RetrospectiveRevision, RetrospectiveSource, RetrospectiveEvidence
 
 
-def guard_sources(db, revision, actor, current=False):
+def guard_sources(db, revision, actor, current=False, action='retrospective.read'):
     parent = db.get(Retrospective, revision.parent_id)
-    authorize(actor, 'read', parent.project_id)
+    authorize(actor, action, parent.project_id)
     if revision.sources.get('task_package_id'):
-        return ready_snapshot(db, revision.sources['task_package_id'], actor, require_current=current)
+        return ready_snapshot(db, revision.sources['task_package_id'], actor, require_current=current, action=action)
     for ident in revision.sources['record_version_ids']:
-        source_context(db, ident, actor, current=current)
+        source_context(db, ident, actor, action=action, current=current)
     return None
 
 
-def context(db, revision_id, actor, current=False):
+def context(db, revision_id, actor, current=False, action='knowledge.read'):
     revision = db.get(RetrospectiveRevision, revision_id)
     if not revision:
         raise Problem(404, 'SOURCE_VERSION_NOT_FOUND', '复盘来源版本不存在。')
     parent = db.get(Retrospective, revision.parent_id)
-    guard_sources(db, revision, actor, current)
+    guard_sources(db, revision, actor, current, action)
     if revision.state != 'approved':
         raise Problem(409, 'RETROSPECTIVE_NOT_APPROVED', '经验来源复盘尚未审核通过。')
     descriptors = []

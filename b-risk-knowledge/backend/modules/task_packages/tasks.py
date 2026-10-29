@@ -16,8 +16,8 @@ def worker_package(db, ident, run, lock_row=True):
     user = db.get(UserLink, run.actor_id)
     if not user:
         raise Problem(403, 'IDENTITY_REVOKED', '提交身份已不可用。')
-    actor = actor_for_user(db, user)
-    return package_in(db, ident, actor, 'package_receive', available=True, lock_row=lock_row), actor
+    actor = actor_for_user(db, user, run)
+    return package_in(db, ident, actor, 'imports.create', available=True, lock_row=lock_row), actor
 
 
 @queue_app.task(name='b05.task_package_import', queue='b01')

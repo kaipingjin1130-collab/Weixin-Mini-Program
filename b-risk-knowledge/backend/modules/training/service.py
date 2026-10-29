@@ -13,20 +13,20 @@ from .models import TrainingQuestion, QuestionRevision, LearningPackage, Learnin
 from .schemas import Content, LearnerQuestion
 
 
-def sources(db, revision, actor):
+def sources(db, revision, actor, action='training.learn'):
     output=[]
     for ident in revision.source_versions:
-        output.append(public_revision(db, ident, actor, allow_history=True))
+        output.append(public_revision(db, ident, actor, allow_history=True, action=action))
     return output
 
 
-def question(db, ident, actor, action='training_manage', lock=False):
+def question(db, ident, actor, action='training.manage', lock=False):
     q=select(TrainingQuestion).where(TrainingQuestion.id==ident)
     parent=db.scalar(q.with_for_update() if lock else q)
     if not parent:raise Problem(404,'NOT_FOUND','题目不存在。')
     authorize(actor,action,parent.project_id)
     revision=db.scalar(select(QuestionRevision).where(QuestionRevision.question_id==ident,QuestionRevision.version==parent.current_revision))
-    sources(db,revision,actor)
+    sources(db,revision,actor,action)
     return parent,revision
 
 
@@ -55,8 +55,8 @@ def generate(data,actor,request_id):
     with Session.begin() as db:
         prepared=[]
         for ident in data.knowledge_revision_ids:
-            item,revision,_,_,_=public_revision(db,ident,actor,allow_history=True)
-            authorize(actor,'training_manage',item.project_id)
+            item,revision,_,_,_=public_revision(db,ident,actor,allow_history=True,action='training.manage')
+            authorize(actor,'training.manage',item.project_id)
             prepared.append((item,revision))
         result=[]
         for item,source in prepared:
@@ -109,7 +109,7 @@ def edit(ident,data,actor,request_id):
 
 def transition(ident,data,actor,action,request_id,review_id=None):
     with Session.begin() as db:
-        parent,revision=question(db,ident,actor,'training_manage' if action=='submitted' else 'training_review',lock=True)
+        parent,revision=question(db,ident,actor,'training.manage' if action=='submitted' else 'training.review',lock=True)
         check_revision(parent,revision,data)
         if review_id and review_id!=revision.id:raise Problem(409,'REVIEW_VERSION_CHANGED','当前题目版本已变化。')
         if revision.state not in {'submitted':{'draft','changes_requested'},'approved':{'pending_review'},'changes_requested':{'pending_review'}}[action]:
@@ -123,21 +123,21 @@ def transition(ident,data,actor,action,request_id,review_id=None):
         return dto(parent,revision)
 
 
-def package_rows(db,package,actor,current=False):
-    authorize(actor,'read',package.project_id)
+def package_rows(db,package,actor,current=False,action='training.learn'):
+    authorize(actor,action,package.project_id)
     rows=db.scalars(select(LearningPackageItem).where(LearningPackageItem.package_version_id==package.id).order_by(LearningPackageItem.position)).all()
     output=[]
     for row in rows:
         revision=db.get(QuestionRevision,row.question_revision_id);parent=db.get(TrainingQuestion,revision.question_id)
         if parent.project_id!=package.project_id or revision.state!='approved' or (current and parent.current_revision!=revision.version):
             raise Problem(409,'QUESTION_NOT_APPROVED','学习包题目不是可用的已审核版本。')
-        sources(db,revision,actor);output.append((row,parent,revision))
+        sources(db,revision,actor,action);output.append((row,parent,revision))
     if not output:raise Problem(409,'EMPTY_PACKAGE','学习包没有题目。')
     return output
 
 
 def create_package(data,actor,request_id):
-    authorize(actor,'training_manage',data.project_id)
+    authorize(actor,'training.manage',data.project_id)
     if len(set(data.question_revision_ids))!=len(data.question_revision_ids):raise Problem(422,'DUPLICATE_QUESTION','学习包题目不能重复。')
     with Session.begin() as db:
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:k,0))'),{'k':'learning-package:'+data.package_key})
@@ -150,7 +150,7 @@ def create_package(data,actor,request_id):
             rev=db.get(QuestionRevision,ident)
             if not rev:raise Problem(404,'QUESTION_NOT_FOUND','题目版本不存在。')
             db.add(LearningPackageItem(package_version_id=package.id,question_revision_id=ident,position=n+1))
-        db.flush();package_rows(db,package,actor,current=True)
+        db.flush();package_rows(db,package,actor,current=True,action='training.manage')
         audit(db,actor,'learning_package_created','learning_package',package.id,package.project_id,request_id,package.version)
         return package_dto(package,len(data.question_revision_ids))
 
@@ -163,17 +163,17 @@ def publish(ident,data,actor,request_id):
     with Session.begin() as db:
         package=db.scalar(select(LearningPackage).where(LearningPackage.id==ident).with_for_update())
         if not package:raise Problem(404,'NOT_FOUND','学习包不存在。')
-        authorize(actor,'training_manage',package.project_id)
+        authorize(actor,'training.manage',package.project_id)
         if package.row_version!=data.row_version:raise Problem(409,'VERSION_CONFLICT','学习包状态已变化。')
-        rows=package_rows(db,package,actor,current=True)
+        rows=package_rows(db,package,actor,current=True,action='training.manage')
         if package.state!='published':package.state='published';package.row_version+=1
         audit(db,actor,'learning_package_published','learning_package',ident,package.project_id,request_id,package.version)
         return package_dto(package,len(rows))
 
 
 def learner_scope(package,actor):
-    authorize(actor,'read',package.project_id)
-    if not set(package.role_scope)&actor.roles.get(package.project_id,set()):raise Problem(403,'ROLE_SCOPE_DENIED','当前项目角色不在学习包适用范围内。')
+    authorize(actor,'training.learn',package.project_id)
+    if actor.permissions is None and not set(package.role_scope)&actor.roles.get(package.project_id,set()):raise Problem(403,'ROLE_SCOPE_DENIED','当前项目角色不在学习包适用范围内。')
     if package.state!='published':raise Problem(409,'PACKAGE_NOT_PUBLISHED','学习包尚未发布。')
 
 
@@ -198,7 +198,7 @@ def attempt_in(db,ident,actor,lock=False,teacher=False):
     attempt=db.scalar(q.with_for_update() if lock else q)
     if not attempt:raise Problem(404,'NOT_FOUND','学习记录不存在。')
     package=db.get(LearningPackage,attempt.package_version_id)
-    authorize(actor,'training_manage' if teacher else 'read',package.project_id)
+    authorize(actor,'training.manage' if teacher else 'training.learn',package.project_id)
     if not teacher and attempt.learner_id!=actor.id:raise Problem(403,'NOT_YOUR_ATTEMPT','不能读取其他成员的学习记录。')
     if not teacher:learner_scope(package,actor)
     return attempt,package
@@ -271,7 +271,7 @@ def result(db,ident,actor,teacher=False):
     attempt,package=attempt_in(db,ident,actor,teacher=teacher)
     if attempt.state!='submitted':raise Problem(409,'NOT_SUBMITTED','作答尚未提交，暂不开放答案。')
     available=True
-    try:rows=package_rows(db,package,actor)
+    try:rows=package_rows(db,package,actor,action='training.manage' if teacher else 'training.learn')
     except Problem as exc:
         if exc.status not in {403,409,410}:raise
         rows=[];available=False
@@ -299,7 +299,7 @@ def confirm_score(answer_id,data,actor,request_id):
         answer=db.get(TrainingAnswer,answer_id)
         if not answer:raise Problem(404,'NOT_FOUND','作答不存在。')
         attempt,package=attempt_in(db,answer.attempt_id,actor,lock=True,teacher=True)
-        package_rows(db,package,actor)
+        package_rows(db,package,actor,action='training.manage')
         if attempt.state!='submitted':raise Problem(409,'NOT_SUBMITTED','作答尚未提交。')
         db.refresh(answer,with_for_update=True)
         if answer.row_version!=data.row_version:raise Problem(409,'VERSION_CONFLICT','此评分已经被更新。')
@@ -313,6 +313,6 @@ def confirm_score(answer_id,data,actor,request_id):
 
 def prepare_grading_retry(db,run,actor):
     attempt,package=attempt_in(db,run.object_id,actor,teacher=True)
-    package_rows(db,package,actor)
+    package_rows(db,package,actor,action='training.manage')
     from ..extraction.llm import require_config,metadata
     run.payload={**run.payload,'config_fingerprint':fingerprint(metadata(require_config()))}

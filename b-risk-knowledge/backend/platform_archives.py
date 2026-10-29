@@ -28,6 +28,23 @@ def call(subject, operation, **data):
         raise Problem(503, 'SOURCE_UNAVAILABLE', '平台成果服务暂不可用。')
 
 def mapped(subject, delivery_id, org_id):
+    from .integrations.a.runtime import enabled, client
+    if enabled():
+        from sqlalchemy import select
+        from .db import Session
+        from .integrations.a.models import AImport
+        with Session() as db:
+            row = db.scalar(select(AImport).where(AImport.org_id == org_id, AImport.delivery_id == delivery_id))
+            if not row:
+                raise Problem(404, 'IMPORT_NOT_FOUND', '未登记的 A 成果接入。')
+            with client() as a:
+                _, mapped_value, _ = a.prepare(delivery_id, org_id=org_id, project_id=row.project_id,
+                                                task_id=row.task_id, version=row.delivery_version)
+        package = mapped_value['package']
+        package['package_id'] = 'qaxc:' + delivery_id
+        for attachment in package['attachments']:
+            attachment['access_ref'] = {'connector_id': 'qaxc', 'object_id': delivery_id + ':' + attachment['attachment_id']}
+        return package
     snapshot = call(subject, 'archive', delivery_id=delivery_id)['snapshot']
     raw = json.dumps(snapshot, ensure_ascii=False).encode()
     try:
@@ -48,6 +65,12 @@ def verify(data, actor):
         raise Problem(409, 'SOURCE_CHANGED', '成果内容与平台归档版本不一致。')
 
 def guard(package, actor):
+    from .integrations.a.runtime import enabled, client
+    if enabled():
+        with client() as a:
+            a.metadata(package.package_id[5:], org_id=package.org_id, project_id=package.project_id,
+                       task_id=package.task_id, version=package.package_version)
+        return
     snapshot = call(actor.subject, 'archive', delivery_id=package.package_id[5:])['snapshot']
     if snapshot['project']['id'] != package.project_id:
         raise Problem(403, 'SOURCE_SCOPE_DENIED', '成果项目不一致。')
@@ -57,6 +80,24 @@ def retrieve(package, relation, declared):
     from .models import UserLink
     from .storage import asset_path
     from .auth import actor_for_user
+    from .integrations.a.runtime import enabled, client
+    if enabled():
+        delivery = package.package_id[5:]
+        if relation.access_ref != {'connector_id': 'qaxc', 'object_id': delivery + ':' + declared['attachment_id']}:
+            raise Problem(403, 'ATTACHMENT_SCOPE_DENIED', '附件引用与成果不一致。')
+        with client() as a:
+            a.metadata(delivery, org_id=package.org_id, project_id=package.project_id,
+                       task_id=package.task_id, version=package.package_version)
+            raw = a.snapshot(delivery, org_id=package.org_id, project_id=package.project_id)
+            evidence = next((e for e in json.loads(raw)['evidence'] if e['id'] == declared['attachment_id']), None)
+            if evidence is None or any(evidence[k] != declared[v] for k, v in [('size','size'), ('sha256','sha256'), ('mime','mime_type')]):
+                raise Problem(409, 'ATTACHMENT_SCOPE_DENIED', '附件与冻结清单不一致。')
+            content = a.attachment(delivery, evidence, org_id=package.org_id, project_id=package.project_id)
+        key = f'task-packages/{package.id}/{relation.id}'
+        path = asset_path(key)
+        path.parent.mkdir(parents=True, exist_ok=True)
+        path.write_bytes(content)
+        return key, len(content)
     with Session() as db:
         actor = actor_for_user(db, db.get(UserLink, package.actor_id))
     authorize(actor, 'package_receive', package.project_id)
@@ -75,6 +116,9 @@ def retrieve(package, relation, declared):
 
 @router.get('')
 def archives(actor=Depends(current_actor)):
+    from .integrations.a.runtime import enabled
+    if enabled():
+        raise Problem(404, 'LEGACY_DISABLED', '请从 A 成果页面使用新接入接口。')
     return call(actor.subject, 'archives')
 
 class Import(BaseModel):
@@ -82,6 +126,9 @@ class Import(BaseModel):
 
 @router.post('', status_code=202)
 def receive_archive(data: Import, request: Request, actor=Depends(current_actor), key=Depends(key_header)):
+    from .integrations.a.runtime import enabled
+    if enabled():
+        raise Problem(409, 'USE_A_IMPORTS', '请使用 v1 成果接入接口。')
     from .modules.task_packages.service import receive, receipt
     package = mapped(actor.subject, data.delivery_id, actor.org_id)
     authorize(actor, 'package_receive', package['project_id'])

@@ -48,7 +48,7 @@ def citation_for(db, evidence_id, revision, actor, claim_path, allow_history=Fal
 
 
 def search(data, actor, output_types=None, *, raw_object=None, exclude_retrospectives=False):
-    authorize(actor, 'read', data.project_id)
+    authorize(actor, 'knowledge.read', data.project_id)
     started = time.perf_counter()
     output_types = output_types or ['answer', 'checkpoints', 'cases']
     with Session.begin() as db:

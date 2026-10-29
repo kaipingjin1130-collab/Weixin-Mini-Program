@@ -37,7 +37,7 @@ def get_input(db, source, asset_id):
 
 
 def preview(source, asset_id, actor):
-    authorize(actor, 'run', source.project_id)
+    authorize(actor, 'knowledge.process', source.project_id)
     with Session() as db:
         asset, rows = get_input(db, source, asset_id)
         output = []
@@ -57,7 +57,7 @@ def preview(source, asset_id, actor):
 
 
 def submit_import(source, data, actor, key, request_id):
-    authorize(actor, 'run', source.project_id)
+    authorize(actor, 'knowledge.process', source.project_id)
     digest = fingerprint(data.model_dump())
     from ...job_service import enqueue
     with Session.begin() as db:

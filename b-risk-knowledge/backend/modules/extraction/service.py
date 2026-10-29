@@ -18,7 +18,7 @@ def taxonomy_dto(row):
 
 
 def save_taxonomy(data,actor,request_id):
-    authorize(actor,'run',data.project_id)
+    authorize(actor,'knowledge.process',data.project_id)
     if len({c.code for c in data.categories})!=len(data.categories):raise Problem(422,'DUPLICATE_CATEGORY','分类编码不能重复。')
     with Session.begin() as db:
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:k,0))'),{'k':'taxonomy:'+data.project_id})
@@ -33,10 +33,10 @@ def prepare(db,data,actor):
     if len(set(data.record_version_ids))!=len(data.record_version_ids):raise Problem(422,'DUPLICATE_SOURCE','来源不能重复。')
     taxonomy=db.get(TaxonomyRevision,data.taxonomy_id)
     if not taxonomy:raise Problem(404,'TAXONOMY_NOT_FOUND','请先保存分类版本。')
-    authorize(actor,'run',taxonomy.project_id)
+    authorize(actor,'knowledge.process',taxonomy.project_id)
     rows=[];wire=[];evidence_map={}
     for ident in data.record_version_ids:
-        version,row,evidence=source_context(db,ident,actor,'run',current=True)
+        version,row,evidence=source_context(db,ident,actor,'knowledge.process',current=True)
         if row.project_id!=taxonomy.project_id:raise Problem(422,'MIXED_PROJECTS','分类与来源须属于同一项目。')
         anchored=[e for e in evidence if e.evidence_type=='source_row' and e.relation_confidence=='anchored']
         if not anchored:raise Problem(422,'UNANCHORED_SOURCE','来源缺少明确行证据，不能自动萃取。')

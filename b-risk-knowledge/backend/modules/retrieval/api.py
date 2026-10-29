@@ -64,11 +64,11 @@ def submit(data: CreateRelease, request: Request, actor: Actor = Depends(current
 def releases(actor: Actor = Depends(current_actor), project_id: str | None = None,
              limit: int = Query(20, ge=1, le=100), cursor: str | None = None):
     with Session() as db:
-        projects = actor.projects('audit')
+        projects = actor.projects('knowledge.publish')
         if not projects:
             raise Problem(403, 'FORBIDDEN', '发布管理需要审核权限。')
         if project_id:
-            authorize(actor, 'audit', project_id)
+            authorize(actor, 'knowledge.publish', project_id)
             projects = [project_id]
         rows, after = paginate(db, select(KnowledgeRelease).where(KnowledgeRelease.active_scope.in_(projects)), KnowledgeRelease, limit, cursor)
         return {'items': [release_dto(db, row, actor) for row in rows], 'next_cursor': after,
@@ -77,7 +77,7 @@ def releases(actor: Actor = Depends(current_actor), project_id: str | None = Non
 
 @router.get('/releases/options')
 def options(actor: Actor = Depends(current_actor), project_id: str = Query(...)):
-    authorize(actor, 'audit', project_id)
+    authorize(actor, 'knowledge.publish', project_id)
     with Session() as db:
         rows = db.execute(select(KnowledgeItem, KnowledgeRevision).join(KnowledgeRevision,
             (KnowledgeRevision.item_id == KnowledgeItem.id) & (KnowledgeRevision.version == KnowledgeItem.current_revision)).where(
@@ -120,7 +120,15 @@ def library(actor: Actor = Depends(current_actor), project_id: str | None = None
     with Session() as db:
         rows = db.execute(public_query(actor, project_id, scene_code, card_type).where(KnowledgeRevision.id > after_id)
                           .order_by(KnowledgeRevision.id).limit(limit+1)).all()
-        return {'items': [card_dto(*r) for r in rows[:limit]],
+        output = []
+        for item, revision, release in rows[:limit]:
+            try:
+                public_revision(db, revision.id, actor, release.id)
+                output.append(card_dto(item, revision, release))
+            except Problem as exc:
+                if exc.status not in {403, 409, 410}:
+                    raise
+        return {'items': output,
                 'next_cursor': rows[limit-1][1].id if len(rows) > limit else None}
 
 
@@ -132,7 +140,7 @@ def published_detail(ident, actor, revision_id=None):
         if not row:
             item = db.get(KnowledgeItem, ident)
             if item:
-                authorize(actor, 'read', item.project_id)
+                authorize(actor, 'knowledge.read', item.project_id)
                 if item.withdrawn_at:
                     raise Problem(410, 'KNOWLEDGE_WITHDRAWN', '此知识已撤回。')
             raise Problem(404, 'NOT_PUBLISHED', '当前范围内没有可用的已发布版本。')
@@ -182,7 +190,7 @@ def public_evidence_content(ident: str, revision_id: str, historical: bool = Fal
         asset = db.get(FileAsset, evidence.asset_id) if evidence and evidence.asset_id else None
         if not asset or not asset.mime_type.startswith('image/'):
             raise Problem(422, 'NO_PREVIEW', '此证据只提供结构化来源行，没有可预览图片。')
-        authorize(actor, 'read', asset.project_id)
+        authorize(actor, 'knowledge.read', asset.project_id)
         if asset.availability != 'available':
             raise Problem(410, 'ASSET_UNAVAILABLE', '图片已撤回或不可用。')
         path = asset_path(asset.storage_key)
@@ -205,7 +213,7 @@ def feedback(ident: str, data: Feedback, actor: Actor = Depends(current_actor)):
         run = db.get(SearchRun, ident)
         if not run:
             raise Problem(404, 'NOT_FOUND', '查询记录不存在。')
-        authorize(actor, 'read', run.project_id)
+        authorize(actor, 'knowledge.read', run.project_id)
         if run.actor_id != actor.id:
             raise Problem(403, 'FORBIDDEN', '只能反馈自己的查询。')
         run.feedback = data.model_dump()

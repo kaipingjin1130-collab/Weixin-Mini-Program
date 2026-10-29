@@ -14,7 +14,7 @@ def lock(db, key):
     db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:key,0))'), {'key': 'b05:'+key})
 
 
-def package_in(db, ident, actor, action='package_read', available=False, lock_row=False):
+def package_in(db, ident, actor, action='imports.read', available=False, lock_row=False):
     query = select(TaskPackage).where(TaskPackage.id == ident)
     package = db.scalar(query.with_for_update() if lock_row else query)
     if not package:
@@ -22,7 +22,7 @@ def package_in(db, ident, actor, action='package_read', available=False, lock_ro
     scope(actor, {'project_id': package.project_id, 'org_id': package.org_id, 'producer': package.producer}, action)
     if available and package.state == 'withdrawn':
         raise Problem(410, 'PACKAGE_WITHDRAWN', '此任务包已撤回，正文和附件不能继续使用。')
-    if package.producer == 'a' and (available or action == 'package_read') and package.state != 'withdrawn':
+    if package.producer == 'a' and (available or action == 'imports.read') and package.state != 'withdrawn':
         from ...platform_archives import guard
         guard(package, actor)
     return package
@@ -39,7 +39,7 @@ def refresh_transport(db, package, data, actor, request_id):
             audit(db, actor, 'package_transport_ref_refreshed', 'task_package', package.id, package.project_id, request_id)
 
 
-def receive(data, actor, key, request_id):
+def receive(data, actor, key, request_id, enqueue_processing=True):
     digest, notices = validate_package(data, actor)
     with Session.begin() as db:
         lock(db, f"request:{actor.id}:{data['producer']}:submit:{key}")
@@ -50,7 +50,7 @@ def receive(data, actor, key, request_id):
         if prior:
             if prior.content_hash != digest:
                 raise Problem(409, 'IDEMPOTENCY_CONFLICT', '同一提交标识对应不同业务内容。')
-            package = package_in(db, prior.package_id, actor, 'package_receive')
+            package = package_in(db, prior.package_id, actor, 'imports.create')
             refresh_transport(db, package, data, actor, request_id)
             return package, True
         stream = db.scalar(select(TaskStream).where(TaskStream.producer == data['producer'], TaskStream.task_id == data['task_id']))
@@ -86,7 +86,8 @@ def receive(data, actor, key, request_id):
             for declared in data['attachments']:
                 db.add(TaskPackageAsset(package_id=ident, external_attachment_id=declared['attachment_id'], access_ref=deepcopy(declared['access_ref'])))
             stream.latest_received_version = max(stream.latest_received_version, data['package_version'])
-            run.queue_job_id = enqueue(db, run.id)
+            if enqueue_processing:
+                run.queue_job_id = enqueue(db, run.id)
             audit(db, actor, 'task_package_received', 'task_package', ident, data['project_id'], request_id)
             replayed = False
         db.add(PackageRequest(actor_id=actor.id, producer=data['producer'], operation='submit', idempotency_key=key,
@@ -118,7 +119,7 @@ def status_dto(db, package):
 
 def withdraw(ident, reason, actor, key, request_id):
     with Session.begin() as db:
-        package = package_in(db, ident, actor, 'package_withdraw')
+        package = package_in(db, ident, actor, 'imports.withdraw')
         lock(db, f'request:{actor.id}:{package.producer}:withdraw:{key}')
         # Same lock order as final pointer promotion: stream, then package.
         lock(db, f'stream:{package.producer}:{package.task_id}')
@@ -155,18 +156,19 @@ def withdraw(ident, reason, actor, key, request_id):
 
 
 def prepare_retry(db, run, actor):
-    package = package_in(db, run.object_id, actor, 'package_receive', available=True, lock_row=True)
+    package = package_in(db, run.object_id, actor, 'imports.create', available=True, lock_row=True)
     package.state = 'received'
     package.validation_errors = []
     package.row_version += 1
 
 
-def ready_snapshot(db, ident, actor, require_current=True):
-    package = package_in(db, ident, actor, available=True)
+def ready_snapshot(db, ident, actor, require_current=True, action='imports.read'):
+    package = package_in(db, ident, actor, action, available=True)
     if package.state != 'ready':
         raise Problem(409, 'PACKAGE_NOT_READY', '任务包尚未处理完成。')
     stream = db.get(TaskStream, package.stream_id)
-    if require_current and stream.current_package_id != ident:
+    from ...integrations.a.runtime import enabled as v1_enabled
+    if require_current and stream.current_package_id != ident and not (v1_enabled() and package.producer == 'a'):
         raise Problem(409, 'PACKAGE_NOT_CURRENT', '任务包已不是当前可用版本。')
     return deepcopy(package.snapshot), status_dto(db, package)['capabilities']
 

@@ -31,7 +31,7 @@ def source_import(run_id: str):
                 # Revocation also stops new background consumption, not just API access.
                 user = db.get(UserLink, run.actor_id)
                 from ...auth import actor_for_user
-                authorize(actor_for_user(db, user), 'run', source.project_id)
+                authorize(actor_for_user(db, user, run), 'knowledge.process', source.project_id)
                 if db.scalar(select(ImportRow.id).where(ImportRow.batch_id == batch_id, ImportRow.row_number == number)):
                     continue
                 apply_row(db, source, batch, number, raw, governed, locator)
