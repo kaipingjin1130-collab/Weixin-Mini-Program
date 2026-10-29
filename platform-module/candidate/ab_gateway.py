@@ -117,6 +117,9 @@ def install(s):
                     raise s.Problem('请求超过15MB限制', 413)
                 body = None
                 if method != 'GET':
+                    # Consume the bounded body before rejection: closing a socket
+                    # with unread bytes can reset it and hide the 403 response.
+                    body = self.rfile.read(length)
                     if not hmac.compare_digest(self.headers.get('X-CSRF-Token', ''), csrf(token)):
                         raise s.Problem('安全校验失败，请刷新页面', 403)
                     origin = self.headers.get('Origin')
@@ -124,7 +127,6 @@ def install(s):
                         raise s.Problem('写请求缺少同源Origin', 403)
                     if origin and urlsplit(origin).netloc != self.headers.get('Host'):
                         raise s.Problem('不接受跨站请求', 403)
-                    body = self.rfile.read(length)
                 base = os.environ.get('QAXC_B_URL', '')
                 key = os.environ.get('A_TO_B_KEY', '')
                 if not base or not key:

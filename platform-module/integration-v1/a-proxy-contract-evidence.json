@@ -1,0 +1,405 @@
+{
+  "scope": "Real A/B localhost HTTP; isolated test identity and synthetic fixtures; not production acceptance",
+  "responses": [
+    {
+      "method": "POST",
+      "path": "/quality/b/integration/v1/a-imports",
+      "request": {
+        "source_system": "a",
+        "project_id": "v1-p-e45c2fe5e804451a8bf39b63f55813b5",
+        "task_id": "v1-t-0fd9ea74ddef478b9d65d0b3988d055f",
+        "delivery_id": "v1-d-0f72260da3c1483abbdb3716388fbadd",
+        "delivery_version": 1
+      },
+      "status": 403,
+      "schema": "error",
+      "schema_valid": true,
+      "response": {
+        "code": "FORBIDDEN",
+        "message": "安全校验失败，请刷新页面",
+        "details": [],
+        "request_id": "4300b07a1791a87c9d58324cb3188af0"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/quality/b/integration/v1/a-imports",
+      "request": {
+        "source_system": "a",
+        "project_id": "v1-p-e45c2fe5e804451a8bf39b63f55813b5",
+        "task_id": "v1-t-0fd9ea74ddef478b9d65d0b3988d055f",
+        "delivery_id": "v1-d-0f72260da3c1483abbdb3716388fbadd",
+        "delivery_version": 1
+      },
+      "status": 202,
+      "schema": "import_response",
+      "schema_valid": true,
+      "response": {
+        "import_id": "ai_36aa103d0b4046c99f18df685388c7bd",
+        "version": 1,
+        "project_id": "v1-p-e45c2fe5e804451a8bf39b63f55813b5",
+        "task_id": "v1-t-0fd9ea74ddef478b9d65d0b3988d055f",
+        "delivery_id": "v1-d-0f72260da3c1483abbdb3716388fbadd",
+        "delivery_version": 1,
+        "status": "queued",
+        "receipt_id": null,
+        "warnings": [],
+        "missing_fields": [],
+        "capabilities": {
+          "can_view_materials": false,
+          "can_generate_retrospective": false,
+          "evidence_complete": false
+        },
+        "retrospective_id": null,
+        "retrospective_status": "not_created",
+        "updated_at": "2026-10-29T07:13:42.564359+00:00",
+        "replayed": false,
+        "error": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/quality/b/integration/v1/a-imports",
+      "request": {
+        "source_system": "a",
+        "project_id": "v1-p-e45c2fe5e804451a8bf39b63f55813b5",
+        "task_id": "v1-t-0fd9ea74ddef478b9d65d0b3988d055f",
+        "delivery_id": "v1-d-0f72260da3c1483abbdb3716388fbadd",
+        "delivery_version": 1
+      },
+      "status": 200,
+      "schema": "import_response",
+      "schema_valid": true,
+      "response": {
+        "import_id": "ai_36aa103d0b4046c99f18df685388c7bd",
+        "version": 1,
+        "project_id": "v1-p-e45c2fe5e804451a8bf39b63f55813b5",
+        "task_id": "v1-t-0fd9ea74ddef478b9d65d0b3988d055f",
+        "delivery_id": "v1-d-0f72260da3c1483abbdb3716388fbadd",
+        "delivery_version": 1,
+        "status": "queued",
+        "receipt_id": null,
+        "warnings": [],
+        "missing_fields": [],
+        "capabilities": {
+          "can_view_materials": false,
+          "can_generate_retrospective": false,
+          "evidence_complete": false
+        },
+        "retrospective_id": null,
+        "retrospective_status": "not_created",
+        "updated_at": "2026-10-29T07:13:42.564359+00:00",
+        "replayed": true,
+        "error": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/quality/b/integration/v1/a-imports/ai_36aa103d0b4046c99f18df685388c7bd",
+      "request": null,
+      "status": 200,
+      "schema": "import_response",
+      "schema_valid": true,
+      "response": {
+        "import_id": "ai_36aa103d0b4046c99f18df685388c7bd",
+        "version": 5,
+        "project_id": "v1-p-e45c2fe5e804451a8bf39b63f55813b5",
+        "task_id": "v1-t-0fd9ea74ddef478b9d65d0b3988d055f",
+        "delivery_id": "v1-d-0f72260da3c1483abbdb3716388fbadd",
+        "delivery_version": 1,
+        "status": "ready",
+        "receipt_id": "05bf49e5-d2d9-4bf9-b802-9acf17512e3c",
+        "warnings": [
+          {
+            "code": "missing_event_time",
+            "path": "/events",
+            "message": "部分事件实际时间未知，已保持为空，未使用导出时间代替。"
+          },
+          {
+            "code": "unknown_event_type",
+            "path": "/events",
+            "message": "含未知事件类型，已保留原文；不用于确定性流程判断。"
+          }
+        ],
+        "missing_fields": [
+          "attachments",
+          "event_times",
+          "events",
+          "events[].occurred_at",
+          "issues",
+          "participants"
+        ],
+        "capabilities": {
+          "can_view_materials": true,
+          "can_generate_retrospective": true,
+          "evidence_complete": false
+        },
+        "retrospective_id": null,
+        "retrospective_status": "not_created",
+        "updated_at": "2026-10-29T07:13:47.512541+00:00",
+        "replayed": false,
+        "error": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/quality/b/integration/v1/a-imports?project_id=v1-p-e45c2fe5e804451a8bf39b63f55813b5&delivery_id=v1-d-0f72260da3c1483abbdb3716388fbadd&delivery_version=1",
+      "request": null,
+      "status": 200,
+      "schema": "import_list",
+      "schema_valid": true,
+      "response": {
+        "items": [
+          {
+            "import_id": "ai_36aa103d0b4046c99f18df685388c7bd",
+            "version": 5,
+            "project_id": "v1-p-e45c2fe5e804451a8bf39b63f55813b5",
+            "task_id": "v1-t-0fd9ea74ddef478b9d65d0b3988d055f",
+            "delivery_id": "v1-d-0f72260da3c1483abbdb3716388fbadd",
+            "delivery_version": 1,
+            "status": "ready",
+            "receipt_id": "05bf49e5-d2d9-4bf9-b802-9acf17512e3c",
+            "warnings": [
+              {
+                "code": "missing_event_time",
+                "path": "/events",
+                "message": "部分事件实际时间未知，已保持为空，未使用导出时间代替。"
+              },
+              {
+                "code": "unknown_event_type",
+                "path": "/events",
+                "message": "含未知事件类型，已保留原文；不用于确定性流程判断。"
+              }
+            ],
+            "missing_fields": [
+              "attachments",
+              "event_times",
+              "events",
+              "events[].occurred_at",
+              "issues",
+              "participants"
+            ],
+            "capabilities": {
+              "can_view_materials": true,
+              "can_generate_retrospective": true,
+              "evidence_complete": false
+            },
+            "retrospective_id": null,
+            "retrospective_status": "not_created",
+            "updated_at": "2026-10-29T07:13:47.512541+00:00",
+            "replayed": false,
+            "error": null
+          }
+        ]
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/quality/b/integration/v1/a-imports/ai_36aa103d0b4046c99f18df685388c7bd/retrospective",
+      "request": null,
+      "status": 200,
+      "schema": "retrospective_response",
+      "schema_valid": true,
+      "response": {
+        "import_id": "ai_36aa103d0b4046c99f18df685388c7bd",
+        "receipt_id": "05bf49e5-d2d9-4bf9-b802-9acf17512e3c",
+        "delivery_version": 1,
+        "retrospective_id": null,
+        "retrospective_version": null,
+        "status": "not_created",
+        "warnings": [
+          {
+            "code": "missing_event_time",
+            "path": "/events",
+            "message": "部分事件实际时间未知，已保持为空，未使用导出时间代替。"
+          },
+          {
+            "code": "unknown_event_type",
+            "path": "/events",
+            "message": "含未知事件类型，已保留原文；不用于确定性流程判断。"
+          }
+        ],
+        "missing_fields": [
+          "attachments",
+          "event_times",
+          "events",
+          "events[].occurred_at",
+          "issues",
+          "participants"
+        ],
+        "result_path": null
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/quality/b/integration/v1/a-imports/ai_36aa103d0b4046c99f18df685388c7bd/retrospectives",
+      "request": {
+        "expected_version": 5
+      },
+      "status": 202,
+      "schema": "retrospective_response",
+      "schema_valid": true,
+      "response": {
+        "import_id": "ai_36aa103d0b4046c99f18df685388c7bd",
+        "receipt_id": "05bf49e5-d2d9-4bf9-b802-9acf17512e3c",
+        "delivery_version": 1,
+        "retrospective_id": null,
+        "retrospective_version": null,
+        "status": "queued",
+        "warnings": [
+          {
+            "code": "missing_event_time",
+            "path": "/events",
+            "message": "部分事件实际时间未知，已保持为空，未使用导出时间代替。"
+          },
+          {
+            "code": "unknown_event_type",
+            "path": "/events",
+            "message": "含未知事件类型，已保留原文；不用于确定性流程判断。"
+          }
+        ],
+        "missing_fields": [
+          "attachments",
+          "event_times",
+          "events",
+          "events[].occurred_at",
+          "issues",
+          "participants"
+        ],
+        "result_path": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/quality/b/integration/v1/a-imports/ai_36aa103d0b4046c99f18df685388c7bd/retrospective",
+      "request": null,
+      "status": 200,
+      "schema": "retrospective_response",
+      "schema_valid": true,
+      "response": {
+        "import_id": "ai_36aa103d0b4046c99f18df685388c7bd",
+        "receipt_id": "05bf49e5-d2d9-4bf9-b802-9acf17512e3c",
+        "delivery_version": 1,
+        "retrospective_id": "1c90f80d-3860-4a99-8adb-abba7d7bc8ff",
+        "retrospective_version": 1,
+        "status": "ready",
+        "warnings": [
+          {
+            "code": "missing_event_time",
+            "path": "/events",
+            "message": "部分事件实际时间未知，已保持为空，未使用导出时间代替。"
+          },
+          {
+            "code": "unknown_event_type",
+            "path": "/events",
+            "message": "含未知事件类型，已保留原文；不用于确定性流程判断。"
+          }
+        ],
+        "missing_fields": [
+          "attachments",
+          "event_times",
+          "events",
+          "events[].occurred_at",
+          "issues",
+          "participants"
+        ],
+        "result_path": "/quality/b/#/retrospectives/1c90f80d-3860-4a99-8adb-abba7d7bc8ff"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/quality/b/integration/v1/a-imports/ai_36aa103d0b4046c99f18df685388c7bd/retry",
+      "request": {
+        "expected_version": 8
+      },
+      "status": 409,
+      "schema": "error",
+      "schema_valid": true,
+      "response": {
+        "code": "INVALID_STATE",
+        "message": "仅失败任务可以重试。",
+        "details": [],
+        "request_id": "c962aed6-6f84-4311-bd20-c86f93e3a99d"
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/quality/b/integration/v1/a-imports/ai_36aa103d0b4046c99f18df685388c7bd",
+      "request": null,
+      "status": 403,
+      "schema": "error",
+      "schema_valid": true,
+      "response": {
+        "code": "FORBIDDEN",
+        "message": "当前身份没有此项目的操作权限。",
+        "details": [],
+        "request_id": "038d1eb4-15d4-40a0-b50a-295ce9e443a4"
+      }
+    },
+    {
+      "method": "POST",
+      "path": "/quality/b/integration/v1/a-imports/ai_36aa103d0b4046c99f18df685388c7bd/withdraw",
+      "request": {
+        "expected_version": 8,
+        "reason": "A代理验收撤回"
+      },
+      "status": 200,
+      "schema": "import_response",
+      "schema_valid": true,
+      "response": {
+        "import_id": "ai_36aa103d0b4046c99f18df685388c7bd",
+        "version": 9,
+        "project_id": "v1-p-e45c2fe5e804451a8bf39b63f55813b5",
+        "task_id": "v1-t-0fd9ea74ddef478b9d65d0b3988d055f",
+        "delivery_id": "v1-d-0f72260da3c1483abbdb3716388fbadd",
+        "delivery_version": 1,
+        "status": "withdrawn",
+        "receipt_id": "05bf49e5-d2d9-4bf9-b802-9acf17512e3c",
+        "warnings": [
+          {
+            "code": "missing_event_time",
+            "path": "/events",
+            "message": "部分事件实际时间未知，已保持为空，未使用导出时间代替。"
+          },
+          {
+            "code": "unknown_event_type",
+            "path": "/events",
+            "message": "含未知事件类型，已保留原文；不用于确定性流程判断。"
+          }
+        ],
+        "missing_fields": [
+          "attachments",
+          "event_times",
+          "events",
+          "events[].occurred_at",
+          "issues",
+          "participants"
+        ],
+        "capabilities": {
+          "can_view_materials": false,
+          "can_generate_retrospective": false,
+          "evidence_complete": false
+        },
+        "retrospective_id": "1c90f80d-3860-4a99-8adb-abba7d7bc8ff",
+        "retrospective_status": "withdrawn",
+        "updated_at": "2026-10-29T07:13:54.641955+00:00",
+        "replayed": false,
+        "error": null
+      }
+    },
+    {
+      "method": "GET",
+      "path": "/quality/b/integration/v1/a-imports/ai_36aa103d0b4046c99f18df685388c7bd",
+      "request": null,
+      "status": 401,
+      "schema": "error",
+      "schema_valid": true,
+      "response": {
+        "code": "UNAUTHENTICATED",
+        "message": "请登录工作台",
+        "details": [],
+        "request_id": "e1bdbd834d1f6f4c8f84155e2cc7cc20"
+      }
+    }
+  ]
+}

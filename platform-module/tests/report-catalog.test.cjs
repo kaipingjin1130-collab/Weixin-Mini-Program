@@ -98,3 +98,14 @@ test('one report-centre menu preserves four tabs and deep-route selection',()=>{
 test('untrusted task content is escaped in the unified table',()=>{
  const run=setup();run("lifecycleState.tasks[0].title='<img src=x onerror=alert(1)>'");assert.doesNotMatch(run('home()'),/<img src=x/);
 });
+test('A import deep links select results intake while historical batches retain their tab',()=>{
+ const run=setup();
+ for(const path of ['/imports/ai_0123456789abcdef0123456789abcdef','/imports/ai_0123456789abcdef0123456789abcdef/detail']){
+  assert.equal(run(`bPageFor('${path}')`),'bpackages');
+  run(`page=bPageFor('${path}')`);
+  assert.equal(run('reportCentreSection()'),'bpackages');
+  assert.match(run('reportCentreTabs()'),/aria-current="page">成果接入/);
+  assert.equal(run('names[page]'),'成果接入');
+ }
+ for(const path of ['/imports','/imports/01234567-89ab-cdef-0123-456789abcdef','/imports/ai_invalid'])assert.equal(run(`bPageFor('${path}')`),'bsources');
+});

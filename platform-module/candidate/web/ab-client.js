@@ -51,8 +51,11 @@
       const buttons = [];
       const add = (action,label) => buttons.push(`<button class="secondary small" data-ab-action="${action}">${label}</button>`);
       if (!job && meta.eligible && permissions.includes('imports.create')) add('create','接入知识中心');
-      if (job?.status==='failed' && meta.eligible && permissions.includes('imports.retry')) add('retry','重试接入');
-      if (job?.status==='ready' && meta.eligible && job.capabilities?.can_generate_retrospective && permissions.includes('retrospective.generate')) add('retrospectives','生成复盘');
+      if (meta.eligible && permissions.includes('imports.retry')) {
+        if (job?.status==='failed') add('retry','重试接入');
+        else if (job?.status==='ready' && job.retrospective_status==='failed') add('retry','重试复盘');
+      }
+      if (job?.status==='ready' && job.retrospective_status==='not_created' && meta.eligible && job.capabilities?.can_generate_retrospective && permissions.includes('retrospective.generate')) add('retrospectives','生成复盘');
       if (job && job.status!=='withdrawn' && permissions.includes('imports.withdraw')) add('withdraw','撤回 B 接入');
       const warning = [...(job?.warnings||[]).map(x=>x.message),...(job?.missing_fields||[]).map(x=>typeof x==='string'?x:JSON.stringify(x))];
       element.innerHTML = `<p>知识中心：${job?esc(statusNames[job.status]||job.status):'尚未接入'}${!meta.eligible?' · '+esc(meta.ineligible_reason||'不符合接入条件'):''}</p>`+
@@ -93,6 +96,7 @@
       }
       return;
     }
+    document.querySelectorAll('[data-ab-legacy-retrospective]').forEach(element=>{element.hidden=true;});
     document.querySelectorAll('[data-ab-delivery]:not([data-ab-loaded])').forEach(element=>{
       element.dataset.abLoaded='1';load(element);
     });

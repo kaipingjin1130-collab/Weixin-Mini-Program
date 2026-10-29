@@ -34,6 +34,8 @@ def schema(name, value):
 
 def contract_response(response):
     path=response.request.url.path
+    if path.startswith('/quality/b/'):
+        path=path[len('/quality/b'):]
     if not path.startswith('/integration/v1/a-'):
         return
     response.read()
@@ -43,7 +45,7 @@ def contract_response(response):
     elif path.endswith('/a-imports') and response.request.method=='GET':name='import_list'
     else:name='import_response'
     schema(name,response.json())
-    key=(response.request.method,name,response.status_code,response.json().get('status'),response.json().get('replayed'))
+    key=(response.request.url.path.startswith('/quality/b/'),response.request.method,name,response.status_code,response.json().get('status'),response.json().get('replayed'))
     EVIDENCE.setdefault(key,{'method':response.request.method,'path':str(response.request.url).split(response.request.url.host+':'+str(response.request.url.port))[-1],
         'request':json.loads(response.request.content) if response.request.content else None,
         'status':response.status_code,'schema':name,'schema_valid':True,'response':response.json()})
@@ -308,6 +310,10 @@ def test_v1_fine_permissions_and_published_knowledge(live):
     answer=b.post('/integration/v1/a-knowledge/query',headers=h,json=request)
     assert answer.status_code==200,answer.text;schema('knowledge_response',answer.json())
     assert answer.json()['status']=='answered' and answer.json()['citations'],answer.json()
+    via_a=httpx.post(a.V1_TEST_BASE+'/api/work/knowledge',headers={'Authorization':'Bearer '+h['X-AB-Session']},json={'taskId':task,'question':k['title']},trust_env=False)
+    assert via_a.status_code==200,via_a.text
+    assert via_a.json()['status']=='answered' and via_a.json()['citations']
+    assert via_a.json()['version']==answer.json()['knowledge_release_id']
     assert b.get('/api/v1/knowledge/'+kid,headers=h).status_code==403
     assert b.get('/api/v1/access',headers=h).status_code==403
     assert b.post(url+'/retrospectives',headers={**h,'Idempotency-Key':uuid4().hex},json={'expected_version':1}).status_code==403
@@ -363,3 +369,47 @@ def test_v1_missing_attachment_and_retrospective_retry(live,monkeypatch):
     cfg['service']['project_ids']=[];conf.write_text(json.dumps(cfg),encoding='utf-8')
     denied=b.get(url,headers=h)
     assert denied.status_code==403,denied.text
+
+
+def test_a_real_cookie_proxy_contract_and_live_revocation(live,monkeypatch):
+    b,a,login,cfg,conf,project,task,deliveries=live
+    monkeypatch.setenv('QAXC_LOOPBACK_HTTP_DEV','1')
+    origin=a.V1_TEST_BASE.removesuffix('/quality')
+    body={'source_system':'a','project_id':project,'task_id':task,'delivery_id':deliveries[0],'delivery_version':1}
+    prefix='/quality/b/integration/v1/a-imports'
+    with httpx.Client(base_url=origin,trust_env=False,timeout=30,event_hooks={'response':[contract_response]}) as browser:
+        signed=browser.post('/quality/api/login',json={'password':'v1-isolated-test-password'})
+        assert signed.status_code==200 and browser.cookies
+        csrf=browser.get('/quality/api/csrf-token').json()['csrf_token']
+        headers={'Origin':origin,'X-CSRF-Token':csrf,'Idempotency-Key':uuid4().hex}
+        assert browser.post(prefix,json=body).status_code==403
+        assert browser.post(prefix,headers={**headers,'Origin':'https://outside.invalid'},json=body).status_code==403
+        created=browser.post(prefix,headers=headers,json=body);assert created.status_code==202,created.text
+        ident=created.json()['import_id'];url=prefix+'/'+ident
+        assert browser.post(prefix,headers=headers,json=body).status_code==200
+        with Session() as db:run_id=db.get(AImport,ident).run_id
+        queued(run_id)
+        state=browser.get(url).json();assert state['status']=='ready'
+        restored=browser.get(prefix,params={k:body[k] for k in ('project_id','delivery_id','delivery_version')})
+        assert restored.status_code==200 and restored.json()['items'][0]['import_id']==ident
+        assert browser.get(url+'/retrospective').json()['status']=='not_created'
+        retro=browser.post(url+'/retrospectives',headers={**headers,'Idempotency-Key':uuid4().hex},json={'expected_version':state['version']})
+        assert retro.status_code==202,retro.text
+        with Session() as db:run_id=db.get(AImport,ident).retrospective_run_id
+        queued(run_id)
+        assert browser.get(url+'/retrospective').json()['status']=='ready'
+        current=browser.get(url).json()
+        assert browser.post(url+'/retry',headers={**headers,'Idempotency-Key':uuid4().hex},json={'expected_version':current['version']}).status_code==409
+        cfg['grants']['admin'][project]=['knowledge.read'];conf.write_text(json.dumps(cfg),encoding='utf-8')
+        assert browser.get(url).status_code==403
+        # A's own task-context knowledge endpoint reaches the actual B service.
+        answer=browser.post('/quality/api/work/knowledge',headers=headers,json={'taskId':task,'question':'现场检查'})
+        assert answer.status_code==200,answer.text
+        assert answer.json()['status']=='insufficient_evidence' and answer.json()['items']==[]
+        assert answer.json()['requiresConfirmation'] is True
+        import ab_v1
+        cfg['grants']['admin'][project]=sorted(ab_v1.PERMISSIONS);conf.write_text(json.dumps(cfg),encoding='utf-8')
+        withdrawn=browser.post(url+'/withdraw',headers={**headers,'Idempotency-Key':uuid4().hex},json={'expected_version':current['version'],'reason':'A代理验收撤回'})
+        assert withdrawn.status_code==200 and withdrawn.json()['status']=='withdrawn'
+        a.SESSIONS.clear();a.SESSION_USERS.clear()
+        assert browser.get(url).status_code==401
