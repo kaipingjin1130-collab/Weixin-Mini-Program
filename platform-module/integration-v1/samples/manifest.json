@@ -1,0 +1,16 @@
+[
+  {
+    "file": "completed-task-demo.json",
+    "origin": "local-inspector/examples/completed-task-demo.json",
+    "sha256": "064612da07c50a15ef0698cd68fdc6b25c226bb5c25738b0c399feb9b2a027d0",
+    "is_demo": true,
+    "note": "原有协同测试样例，保持原ID及快照；非本轮生产接口导出"
+  },
+  {
+    "file": "completed-task-demo.zip",
+    "origin": "local-inspector/examples/completed-task-demo.zip",
+    "sha256": "fc001702e3245380e14fbe684e398f825fe6af144adcb15d690bbe7e1848ea69",
+    "is_demo": true,
+    "note": "原有协同测试样例，保持原ID及快照；非本轮生产接口导出"
+  }
+]
