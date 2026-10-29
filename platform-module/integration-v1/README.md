@@ -1,5 +1,7 @@
 # A 方联调实施记录（2026-10-29）
 
+最新状态：v1 已按后续用户授权部署，最终代码 `b1a7748`，详见 [上线与验收记录](PRODUCTION-DEPLOYMENT.md)。下文保留初始交付约定及历史阶段描述。
+
 基线：ABversion `a798237250c219af7061c26fc247d580f5e5ca19`。
 工作分支：`codex/a-integration-v1`。仅修改 platform-module 下的 A 代码、文档和测试。
 本轮依据用户提供的《AB联调开发约定v1》，reference 保留原件，不修改其中 Schema 或约定。

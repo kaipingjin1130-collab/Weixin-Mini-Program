@@ -1,5 +1,7 @@
 # B 新 v1 协议对接交付与验收
 
+后续状态：用户另行授权后，v1 已部署并完成真实账号只读验收，最终运行代码 `b1a7748`。详见 [上线记录](../../platform-module/integration-v1/PRODUCTION-DEPLOYMENT.md)；本文件下文保留 B 交付时的验收边界。
+
 日期：2026-10-29。开发基线：`d691151`；交付前已快进合入 A 的最新 `bf44d18`（统一工作台与报告中心），分支：`codex/ab-fusion-integration`。本交付落实 `platform-module/integration-v1/B-HANDOFF.md`；合同 reference 保持原样，未修改 A 代码或覆盖 A 的联调成果。
 
 ## 阶段与结果
