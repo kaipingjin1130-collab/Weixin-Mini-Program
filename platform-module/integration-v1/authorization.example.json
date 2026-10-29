@@ -1,0 +1,14 @@
+{
+  "org_id": "demo-org",
+  "is_demo": true,
+  "service": {
+    "org_id": "demo-org",
+    "project_ids": ["demo-project-001"],
+    "allowed_actions": ["metadata.read", "snapshot.read", "evidence.read"]
+  },
+  "grants": {
+    "demo-user-001": {
+      "demo-project-001": ["knowledge.read", "imports.read", "imports.create", "imports.retry", "imports.withdraw", "retrospective.read", "retrospective.generate", "training.learn"]
+    }
+  }
+}

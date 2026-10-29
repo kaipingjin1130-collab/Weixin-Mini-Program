@@ -61,6 +61,9 @@ def init():
   CREATE TABLE IF NOT EXISTS favorites(id TEXT PRIMARY KEY);
   ''')
   workflow.init(c)
+  import ab_v1
+  ab_v1.init(c)
+ if ab_v1.enabled(): ab_v1.config()
 
 def now(): return datetime.now().astimezone().isoformat(timespec='seconds')
 def uid(): return uuid.uuid4().hex
@@ -214,9 +217,10 @@ def snapshot_docx(snap,brief=False):
 
 def module_asset(file):
  text=file.read_text(encoding='utf-8')
+ if file.name=='ab-client.js': return text.encode() # This client derives its prefix from its own script URL.
  if not PREFIX: return text.encode()
  # Known root-relative URLs in controlled static assets only. Regex does not touch // URLs.
- text=re.sub(r"([\"'`])/(?!/)(?=api/|media/|work(?:[?\"'`]|\.js)|style\.css|app\.js|followup\.js|#|[\"'`])",lambda m:m[1]+PREFIX+'/',text)
+ text=re.sub(r"([\"'`])/(?!/)(?=api/|media/|work(?:[?\"'`]|\.js)|style\.css|app\.js|followup\.js|ab-client\.js|#|[\"'`])",lambda m:m[1]+PREFIX+'/',text)
  return text.encode()
 
 def module_report(text):
@@ -263,9 +267,9 @@ class Handler(BaseHTTPRequestHandler):
    if method=='GET' and path=='/work' and PREFIX:
     query=urlsplit(self.path).query
     self.send('',302,mime='text/plain',headers={'Location':PREFIX+'/#/work'+('?' + query if query else '?module=tasks')});return
-   if method=='GET' and path in ['/','/app.js','/followup.js','/style.css','/work','/work.js']:
+   if method=='GET' and path in ['/','/app.js','/followup.js','/ab-client.js','/style.css','/work','/work.js']:
     f=ROOT/'web'/({'/':'index.html','/work':'work.html'}.get(path,path.lstrip('/')))
-    self.send(module_asset(f),mime={'/':'text/html; charset=utf-8','/work':'text/html; charset=utf-8','/work.js':'text/javascript; charset=utf-8','/app.js':'text/javascript; charset=utf-8','/followup.js':'text/javascript; charset=utf-8','/style.css':'text/css; charset=utf-8'}[path]); return
+    self.send(module_asset(f),mime={'/':'text/html; charset=utf-8','/work':'text/html; charset=utf-8','/work.js':'text/javascript; charset=utf-8','/app.js':'text/javascript; charset=utf-8','/ab-client.js':'text/javascript; charset=utf-8','/followup.js':'text/javascript; charset=utf-8','/style.css':'text/css; charset=utf-8'}[path]); return
    d={}
    if method=='POST':
     origin=self.headers.get('Origin')
@@ -298,7 +302,9 @@ class Handler(BaseHTTPRequestHandler):
     with SESSION_LOCK:
      token=secrets.token_urlsafe(32); SESSIONS[token]=time.time()+86400
      SESSION_USERS[token]=user
-    self.send({'token':token,'user':user},headers={'Set-Cookie':f'{COOKIE_NAME}={token}; HttpOnly; SameSite=Strict; Path={COOKIE_PATH}; Max-Age=86400{COOKIE_SECURE}'}); return
+    secure=COOKIE_SECURE
+    if os.environ.get('QAXC_LOOPBACK_HTTP_DEV')=='1' and self.client_address[0] in ('127.0.0.1','::1') and urlsplit('//'+self.headers.get('Host','')).hostname in ('localhost','127.0.0.1','::1'): secure=''
+    self.send({'token':token,'user':user},headers={'Set-Cookie':f'{COOKIE_NAME}={token}; HttpOnly; SameSite=Strict; Path={COOKIE_PATH}; Max-Age=86400{secure}'}); return
    token=self.auth()
    if path=='/api/logout':
     with SESSION_LOCK: SESSIONS.pop(token,None); SESSION_USERS.pop(token,None)
@@ -448,6 +454,8 @@ class Handler(BaseHTTPRequestHandler):
 
 import ab_gateway
 ab_gateway.install(sys.modules[__name__])
+import ab_v1
+ab_v1.install(sys.modules[__name__])
 
 if __name__=='__main__':
  parser=argparse.ArgumentParser(); parser.add_argument('--host',default='127.0.0.1'); parser.add_argument('--port',type=int,default=8765); args=parser.parse_args()

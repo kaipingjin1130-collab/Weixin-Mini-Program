@@ -13,13 +13,13 @@ class AuthError(Exception):
 
 def enabled(): return bool(os.environ.get('QAXC_AUTH_URL'))
 
-def call(action, data=None, cookie=''):
+def call(action, data=None, cookie='', timeout=8):
  url=os.environ['QAXC_AUTH_URL'].rstrip('/')+'/'+action
  headers={'Content-Type':'application/json','X-Qaxc-Service-Key':os.environ['QAXC_AUTH_KEY']}
  if cookie: headers['Cookie']=cookie
  try:
   req=Request(url,json.dumps(data or {}).encode(),headers,method='POST')
-  with build_opener(ProxyHandler({}),NoRedirect()).open(req,timeout=8) as res:
+  with build_opener(ProxyHandler({}),NoRedirect()).open(req,timeout=timeout) as res:
    result=json.loads(res.read(1024*1024))
  except HTTPError as e:
   if e.code in (401,403): raise AuthError('老平台账号或密码不正确，或账号已停用',401)

@@ -56,6 +56,15 @@ def install(s):
     def csrf(token):
         return hmac.new(csrf_secret, token.encode(), hashlib.sha256).hexdigest()
 
+    s.ab_csrf = csrf
+
+    def error(self, message, status):
+        if os.environ.get('AB_INTEGRATION_VERSION') == '1.0':
+            self.send({'code': {401:'UNAUTHENTICATED',403:'FORBIDDEN',404:'NOT_FOUND',413:'PAYLOAD_TOO_LARGE',503:'DEPENDENCY_UNAVAILABLE'}.get(status,'REQUEST_FAILED'),
+                       'message':message,'details':[], 'request_id':self.headers.get('X-Request-ID') or secrets.token_hex(16)},status)
+        else:
+            self.send({'message':message},status)
+
     def handle(self, method):
         path = urlsplit(self.path).path
         prefix = s.PREFIX
@@ -111,6 +120,8 @@ def install(s):
                     if not hmac.compare_digest(self.headers.get('X-CSRF-Token', ''), csrf(token)):
                         raise s.Problem('安全校验失败，请刷新页面', 403)
                     origin = self.headers.get('Origin')
+                    if os.environ.get('AB_INTEGRATION_VERSION') == '1.0' and not origin:
+                        raise s.Problem('写请求缺少同源Origin', 403)
                     if origin and urlsplit(origin).netloc != self.headers.get('Host'):
                         raise s.Problem('不接受跨站请求', 403)
                     body = self.rfile.read(length)
@@ -126,7 +137,8 @@ def install(s):
                 req = Request(base.rstrip('/') + target + ('?' + query if query else ''),
                               data=body, headers=headers, method=method)
                 try:
-                    response = build_opener(ProxyHandler({}), NoRedirect()).open(req, timeout=45)
+                    timeout = 15 if target == '/integration/v1/a-knowledge/query' else 45
+                    response = build_opener(ProxyHandler({}), NoRedirect()).open(req, timeout=timeout)
                 except HTTPError as exc:
                     response = exc
                 with response:
@@ -145,13 +157,13 @@ def install(s):
                 raise s.Problem('页面不存在', 404)
             self.send(file.read_bytes(), mime=mimetypes.guess_type(file.name)[0] or 'application/octet-stream')
         except s.host_auth.AuthError as exc:
-            self.send({'message': exc.message}, exc.status)
+            error(self, exc.message, exc.status)
         except s.Problem as exc:
-            self.send({'message': exc.message}, exc.status)
+            error(self, exc.message, exc.status)
         except (ValueError, TypeError, KeyError):
-            self.send({'message': '请求格式无效'}, 400)
+            error(self, '请求格式无效', 400)
         except (URLError, TimeoutError, OSError):
-            self.send({'message': '知识中心暂时无法连接，请稍后重试'}, 503)
+            error(self, '知识中心暂时无法连接，请稍后重试', 503)
 
     s.Handler.handle_request = handle
     for verb in ('PUT', 'PATCH', 'DELETE'):

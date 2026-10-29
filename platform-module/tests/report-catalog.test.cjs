@@ -47,3 +47,10 @@ test('grouped navigation retains every original destination and adds risk record
  assert.equal(run("bPageFor('/records/test')"),'brisks');assert.equal(run("bPageFor('/imports/test')"),'bsources');
  assert.deepEqual(JSON.parse(run('JSON.stringify(navigationGroups.map(g=>g.label))')),['工程风险管理','知识管理','个人中心']);
 });
+
+test('navigation permits all groups to remain expanded together',()=>{
+ const run=setup();const html=run('navigation()');
+ assert.doesNotMatch(html,/name="primary-navigation"/);
+ assert.equal((html.match(/class="nav-group" open/g)||[]).length,3);
+ assert.equal((html.match(/class="nav-subgroup" open/g)||[]).length,3);
+});

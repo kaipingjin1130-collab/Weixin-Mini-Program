@@ -297,4 +297,3 @@ export function App({ embedded = false }: { embedded?: boolean }) {
     </aside></div>}
   </div>;
 }
-

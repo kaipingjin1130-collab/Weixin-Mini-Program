@@ -19,7 +19,7 @@ async function api(path,data){
  const attempts=data?1:3;
  for(let attempt=0;attempt<attempts;attempt++){
   try{
-   const r=await fetch(path,{method:data?'POST':'GET',credentials:'same-origin',cache:'no-store',headers:data?{'Content-Type':'application/json'}:{},body:data?JSON.stringify(data):undefined,signal:AbortSignal.timeout(15000)});
+   const r=await fetch(path,{method:data?'POST':'GET',credentials:'same-origin',cache:'no-store',headers:data?{'Content-Type':'application/json',...(path==='/api/work/knowledge'?{'X-CSRF-Token':(await (await fetch('/api/csrf-token',{credentials:'same-origin'})).json()).csrf_token}:{})}:{},body:data?JSON.stringify(data):undefined,signal:AbortSignal.timeout(15000)});
    if(r.status===401){if(path!=='/api/login')login();throw Object.assign(Error('登录已过期，请重新登录'),{status:401})}
    const result=await r.json();
    if(!r.ok)throw Object.assign(Error(result.error||result.message||'请求失败'),{status:r.status});
@@ -108,7 +108,7 @@ function fullDetail(t){
  ${t.status==='handover'&&(t.receiverName?manager:t.receiver===state.user.id)?form('accept',t.receiverName?'登记成果接收结果（平台负责人代录）':'接收确认',select('decision','处理结果',[{id:'accept',name:'确认接收'},{id:'return',name:'退回补充'}])+input('text','接收意见／退回原因'),'提交接收意见'):''}
  ${t.status==='accepted'&&manager?'<button id="archiveTask">归档并生成最终任务包</button>':''}
  ${manager&&['archived','accepted'].includes(t.status)?'<button id="reopen" class="secondary">发起补正（保留历史版本）</button>':''}
- ${t.deliveries.slice(-1).map(d=>`<div class="entry"><strong>${t.status==='archived'?'最终归档成果':'当前成果'} · v${d.version}</strong> · ${esc(d.createdAt)}<p class="flex"><a target="_blank" rel="noopener" href="/api/work/report/${d.id}">查看报告／打印 PDF</a><a href="/api/work/word/${d.id}">下载正式报告 Word</a><a href="/api/work/package/${d.id}">下载成果包 ZIP</a><a href="/api/work/snapshot/${d.id}">JSON 快照</a><a href="/api/work/issues/${d.id}">问题清单 CSV</a></p></div>`).join('')}</section>
+ ${t.deliveries.slice(-1).map(d=>`<div class="entry"><strong>${t.status==='archived'?'最终归档成果':'当前成果'} · v${d.version}</strong> · ${esc(d.createdAt)}<p class="flex"><a target="_blank" rel="noopener" href="/api/work/report/${d.id}">查看报告／打印 PDF</a><a href="/api/work/word/${d.id}">下载正式报告 Word</a><a href="/api/work/package/${d.id}">下载成果包 ZIP</a><a href="/api/work/snapshot/${d.id}">JSON 快照</a><a href="/api/work/issues/${d.id}">问题清单 CSV</a></p><div data-ab-delivery="${esc(d.id)}"></div></div>`).join('')}</section>
  <details><summary>操作留痕（${t.events.length}）</summary>${t.events.map(x=>`<p>${esc(x.actorName)} · ${esc(actionNames[x.action]||x.action)} · ${esc(x.detail)}<br><small>${esc(x.uploadedAt)}</small></p>`).join('')}</details>`;
 }
 function selectedEvidence(scope=''){return evidence.filter(e=>e.selected!==false&&(e.issueId||'')===scope).map(e=>e.id)}
@@ -181,7 +181,7 @@ function bindDetail(t){
  root.querySelectorAll('[data-evidence]').forEach(el=>el.onchange=()=>{evidence.find(e=>e.id===el.dataset.evidence).selected=el.checked});
  root.querySelectorAll('[data-materials]').forEach(materials=>materials.onclick=()=>run(()=>action('materials',{evidence:[...new Set([...t.materials,...selectedEvidence(materials.dataset.materials)])]})));
  root.querySelectorAll('[data-recognize]').forEach(b=>b.onclick=()=>run(async()=>{const r=await post('recognize',{taskId:t.id,evidenceId:b.dataset.recognize,kind:b.dataset.kind});const textarea=document.querySelector('#record textarea');if(r.text&&textarea)textarea.value+=(textarea.value?'\n':'')+r.text;toast(r.message||'提取内容已加入草稿，请人工核对')}));
- bindForm('knowledge',async d=>{const r=await post('knowledge',{...d,taskId:t.id});if(disposed)return;document.getElementById('knowledgeResult').innerHTML=`<p class="notice">${esc(r.message||'查询结果仅供核对参考')}</p><p>发布版本：${esc(r.knowledge_release_id||'暂无')} · 使用前须人工确认</p>${(r.warnings||[]).map(w=>`<p class="muted">${esc(w.message)}</p>`).join('')}${(r.items||[]).map(x=>`<article class="card"><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p><small>${esc(x.reference)}</small></article>`).join('')}`});
+ bindForm('knowledge',async d=>{const r=await post('knowledge',{...d,taskId:t.id});if(disposed)return;document.getElementById('knowledgeResult').innerHTML=`<p class="notice">${esc(r.message||(r.status==='insufficient_evidence'?'资料不足，请补充条件或核对来源':r.status==='degraded'?'知识服务降级，结果需人工核对':'查询结果仅供核对参考'))}</p><p>发布版本：${esc(r.knowledge_release_id||'暂无')} · 使用前须人工确认</p>${(r.warnings||[]).map(w=>`<p class="muted">${esc(w.message)}</p>`).join('')}${(r.items||[]).map(x=>`<article class="card"><h3>${esc(x.title)}</h3><p>${esc(x.text)}</p><small>${esc(x.reference)}${(x.citation_ids||[]).map(id=>{const c=(r.citations||[]).find(c=>c.citation_id===id);return c?' · '+esc(c.source_title)+' '+esc(c.locator):''}).join('')}</small></article>`).join('')}`});
 }
 async function boot(){try{await refresh()}catch(err){if(err.status===401)return;root.innerHTML=`<section class="card"><h1>连接暂时中断</h1><p>${esc(err.message)}</p><button id="retryConnection">重新连接</button></section>`;document.querySelector('#retryConnection').onclick=boot}}
 fetch('/api/host-session',{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json'},body:'{}'}).catch(()=>{}).finally(boot);

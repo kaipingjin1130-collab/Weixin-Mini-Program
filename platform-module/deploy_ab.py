@@ -133,9 +133,9 @@ def activate():
     shutil.copytree(target,BACKUP/'application')
     with sqlite3.connect('/var/lib/qaxc-test/inspections.sqlite3') as src, sqlite3.connect(BACKUP/'inspections.sqlite3') as dest:
         src.backup(dest)
-    for filename in ('server.py','ab_gateway.py','knowledge_service.py'):
+    for filename in ('server.py','ab_gateway.py','knowledge_service.py','ab_v1.py','ab_admin.py','host_auth.py'):
         shutil.copy2(ROOT/'platform-module/candidate'/filename,target/filename)
-    for filename in ('app.js', 'work.js', 'style.css'):
+    for filename in ('app.js', 'work.js', 'style.css', 'ab-client.js', 'index.html', 'work.html'):
         shutil.copy2(ROOT/'platform-module/candidate/web'/filename, target/'web'/filename)
     write(Path('/etc/systemd/system/qaxc-test.service.d/ab.conf'),'[Service]\nEnvironmentFile=/etc/qaxc-b-bridge.env\n',0o644)
     run('systemctl','daemon-reload')
