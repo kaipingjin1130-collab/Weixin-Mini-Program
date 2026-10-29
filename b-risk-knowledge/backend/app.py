@@ -247,7 +247,9 @@ def delete_binding(binding_id: str, data: DeleteBinding, request: Request,
 @app.get("/api/v1/audit-events")
 def audit_events(actor: Actor = Depends(current_actor), limit: int = Query(20, ge=1, le=100),
                  cursor: str | None = Query(None, max_length=512)):
-    projects = actor.projects("audit")
+    from .integrations.a.runtime import enabled
+    projects = (sorted({p for permission in ("knowledge.review", "retrospective.review", "training.review")
+                        for p in actor.projects(permission)}) if enabled() else actor.projects("audit"))
     if not projects:
         raise Problem(403, "FORBIDDEN", "当前身份无权查看操作记录。")
     with Session() as db:

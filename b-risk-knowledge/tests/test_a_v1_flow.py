@@ -316,11 +316,17 @@ def test_v1_fine_permissions_and_published_knowledge(live):
     assert via_a.json()['version']==answer.json()['knowledge_release_id']
     assert b.get('/api/v1/knowledge/'+kid,headers=h).status_code==403
     assert b.get('/api/v1/access',headers=h).status_code==403
+    assert b.get('/api/v1/audit-events',headers=h).status_code==403
     assert b.post(url+'/retrospectives',headers={**h,'Idempotency-Key':uuid4().hex},json={'expected_version':1}).status_code==403
     # A read-only retrospective grant must open the actual detail without knowledge/admin grants.
     cfg['grants']['admin'][project]=['retrospective.read'];conf.write_text(json.dumps(cfg),encoding='utf-8')
     assert b.get('/api/v1/retrospectives/'+rid,headers=h).status_code==200
     assert b.patch('/api/v1/retrospectives/'+rid+'/draft',headers=h,json=version(d,summary=d['summary'],findings=d['findings'],suggestions=d['suggestions'])).status_code==403
+    assert b.get('/api/v1/audit-events',headers=h).status_code==403
+    cfg['grants']['admin'][project]=['retrospective.review'];conf.write_text(json.dumps(cfg),encoding='utf-8')
+    audit=b.get('/api/v1/audit-events',headers=h)
+    assert audit.status_code==200,audit.text
+    assert all(event['project_id']==project for event in audit.json()['items'])
     cfg['grants']['admin'][project]=['knowledge.read'];conf.write_text(json.dumps(cfg),encoding='utf-8')
     with a.db() as db:db.execute('INSERT INTO ab_source_withdrawals VALUES(?,?,?,?)',(deliveries[0],a.now(),'test','admin'))
     assert b.get('/api/v1/published/knowledge/'+kid,headers=h).status_code==410
