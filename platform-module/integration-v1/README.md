@@ -3,7 +3,7 @@
 基线：ABversion `a798237250c219af7061c26fc247d580f5e5ca19`。
 工作分支：`codex/a-integration-v1`。仅修改 platform-module 下的 A 代码、文档和测试。
 本轮依据用户提供的《AB联调开发约定v1》，reference 保留原件，不修改其中 Schema 或约定。
-本地 Git 远端抓取 beta-version/new-agent 超时，尚未完成这两个分支最新版本核对。
+2026-10-29 已通过 GitHub API 核对 ABversion/new-agent/beta-version 的最新提交，详见 B-HANDOFF.md；ABversion 仍为本轮主基线。
 
 ## 启用及兼容边界
 
