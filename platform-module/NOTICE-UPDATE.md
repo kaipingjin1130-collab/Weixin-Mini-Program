@@ -19,3 +19,9 @@ Word 导出标题为“隐患清单”，包含序号、隐患问题描述、影
 先部署 `candidate/server.py`、`candidate/workflow.py`、新增 `candidate/notice.py` 和 `candidate/web/app.js` 到实际运行目录，备份源码与 SQLite 数据后重启既有服务；不要覆盖账号、附件、环境配置或数据库。随后编译上传 `platform-module/miniprogram`，拟用版本号 `1.0.3`。仅上传源码不等于后台部署或微信提交审核。
 
 本轮 Word XML、图片封装与中文文件名已做自动检查。打包文档渲染器因缺少 LibreOffice 无法运行，发布前仍需核验实际 Word 排版和微信编译、真机功能。发布结果以实际后台记录为准。
+
+## 2026-10-30 后台部署核验
+
+已核对线上部署回执：源码提交 `9c1bb3a` 部署成功，服务 `qaxc-test` 为 `active`，未登录接口返回401。实际目录 `/opt/qaxc-fusion-a1b9411/platform-module/candidate`，备份 `/var/backups/qaxc-notice-20261030-180206`。四个文件摘要与本次部署清单一致。
+
+部署前后业务数量一致：项目1、用户5、成员关系2、巡查报告7、任务15、现场报告4、成果10、证据26。公网页面返回200并包含告知单字段及隐患清单。微信编译上传及审核仍须另行完成，不计入后台部署结果。
