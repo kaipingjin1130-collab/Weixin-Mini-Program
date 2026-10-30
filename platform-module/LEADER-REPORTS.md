@@ -29,9 +29,9 @@
 
 ## 部署
 
-线上运行代码位于 `/opt/qaxc-test`。需同时部署以下文件，并重启 `qaxc-test`：
+当前线上运行代码位于 `/opt/qaxc-fusion-a1b9411/platform-module/candidate`，由整合平台启动器加载，服务名仍为 `qaxc-test`。`/opt/qaxc-test` 是保留的旧目录，不能作为当前部署目标。需同时部署以下文件，并重启 `qaxc-test`：
 
-| 仓库来源（`platform-module/candidate/` 下） | 线上目标（`/opt/qaxc-test/` 下） |
+| 仓库来源（`platform-module/candidate/` 下） | 线上目标（当前运行的 `platform-module/candidate/` 下） |
 | --- | --- |
 | `server.py` | `server.py` |
 | `workflow.py` | `workflow.py` |
@@ -43,7 +43,20 @@
 
 小程序请使用 `platform-module/miniprogram/`；本次修改 `pages/work/work.js` 和 `pages/work/work.wxml`，需重新编译、预览及按发布流程上传微信版本。仓库 `local-inspector/` 是保留的独立版，不是此次线上整合版的发布目录。
 
-本次浏览器控制因无法可靠识别 Edge 当前网址而被工具停止，尚未替换线上文件，也未完成微信真机验收。
+### 2026-10-30 腾讯云部署结果
+
+已部署源码提交 `67c5474b21ba2497bfbb8301093f2b4d9b44ef0b`，服务已恢复运行。执行前逐文件核对运行源码与更新前 Git 基线一致，从 GitHub 固定提交读取更新文件并核对摘要；备份后原子替换五个源码文件。
+
+- 运行目录：`/opt/qaxc-fusion-a1b9411/platform-module/candidate`。
+- 数据库：`/var/lib/qaxc-test/inspections.sqlite3`。
+- 代码及 SQLite 备份：`/var/backups/qaxc-leaders-20261030-153746`。
+- 更新前后数量一致：项目1、用户5、巡查报告6、任务14、现场简报4、成果10、证据26。
+- 新增 `leader_reads` 表已验证存在；未修改原始报告、业务附件、账号、密钥和 A/B 配置。
+- 公网 `app.js`、`work.js` 已逐字节对应部署路径转换后的提交源码；未登录访问负责人接口仍返回401。
+- 实际网页已显示“负责人汇总”、顶部待阅、标记已阅和导出汇总包入口。当前登录账号的指定报告列表为空，未为验收修改真实任务的负责人。
+- 页面地址：`https://fxbxcx.jkec.info/quality/#leaders`。
+
+已完成网页及后台部署。小程序此次新增的负责人选择控件仍需使用更新源码重新编译、真机预览并按微信流程发布；既有小程序执行已指定负责人的派发任务，上报后的报告即可由新后台同步到负责人汇总。
 
 ## 验证
 
