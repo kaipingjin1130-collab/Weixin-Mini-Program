@@ -138,6 +138,28 @@ class LeaderReports(unittest.TestCase):
         result = self.request('/quality/api/work/assign-leader', dict(taskId=task['id'], revision=task['revision'], leaderId='', requestId='stale'), self.owner)
         self.assertEqual(result[0], 409)
 
+    def test_join_project_in_inspection_module_then_select_as_leader(self):
+        with s.db() as c:
+            c.execute('DELETE FROM memberships WHERE project_id=? AND user_id=?', (self.pid, 'host:admin:10'))
+        self.post('add-member', projectId=self.pid, userId='host:admin:10', role='inspector')
+        task = self.task('host:admin:10')
+        self.submit(task)
+        self.assertEqual(len(self.inbox(self.other)), 1)
+
+    def test_adding_existing_member_preserves_their_role(self):
+        with s.db() as c:
+            c.execute("UPDATE memberships SET role='manager' WHERE project_id=? AND user_id=?", (self.pid, 'host:admin:8'))
+        result = self.post('add-member', projectId=self.pid, userId='host:admin:8', role='inspector')
+        self.assertEqual(result['role'], 'manager')
+        with s.db() as c:
+            self.assertEqual(c.execute('SELECT role FROM memberships WHERE project_id=? AND user_id=?', (self.pid, 'host:admin:8')).fetchone()[0], 'manager')
+
+    def test_join_requires_project_management_permission(self):
+        result = self.request('/quality/api/work/add-member', dict(projectId=self.pid, userId='host:admin:10', role='inspector', requestId='forged-join'), self.worker)
+        self.assertEqual(result[0], 403)
+        result = self.request('/quality/api/work/add-member', dict(projectId=self.pid, userId='missing', role='inspector', requestId='missing-user'), self.owner)
+        self.assertEqual(result[0], 400)
+
 
 if __name__ == '__main__':
     unittest.main(verbosity=2)

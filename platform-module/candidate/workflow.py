@@ -180,7 +180,7 @@ class Workflow:
    digest=hashlib.pbkdf2_hmac('sha256',password.encode(),bytes.fromhex(salt),200000).hex()
    self.c.execute('INSERT INTO users VALUES(?,?,?,?,?)',(uid,username,self.text(d,'name',100),salt,digest))
    return {'id':uid}
-  if path=='members':
+  if path in ['members','add-member']:
    pid=self.text(d,'projectId');self.allow(pid,['manager'])
    role=d.get('role')
    if role not in ROLES: self.fail('角色不支持')
@@ -190,6 +190,11 @@ class Workflow:
     row=self.c.execute('SELECT id FROM users WHERE username=?',(d.get('username'),)).fetchone()
     uid=row['id'] if row else None
    if not self.c.execute('SELECT 1 FROM users WHERE id=?',(uid,)).fetchone(): self.fail('账号不存在，请管理员先创建')
+   if path=='add-member':
+    # Joining a project must never overwrite an existing member's role.
+    self.c.execute('INSERT OR IGNORE INTO memberships VALUES(?,?,?)',(pid,uid,role))
+    actual=self.c.execute('SELECT role FROM memberships WHERE project_id=? AND user_id=?',(pid,uid)).fetchone()['role']
+    return {'ok':True,'userId':uid,'role':actual}
    if uid==self.user['id']: self.fail('请由管理员调整自己的角色')
    self.c.execute('INSERT OR REPLACE INTO memberships VALUES(?,?,?)',(pid,uid,role))
    return {'ok':True}

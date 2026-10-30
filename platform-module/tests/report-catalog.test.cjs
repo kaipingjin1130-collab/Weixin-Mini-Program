@@ -44,7 +44,7 @@ test('deep knowledge routes retain the matching unified navigation section',()=>
 
 test('grouped navigation retains every original destination and adds risk records',()=>{
  const run=setup();const ids=JSON.parse(run("JSON.stringify(navigationGroups.flatMap(g=>g.items.flatMap(i=>[i.id,...(i.children||[]).map(c=>c.id)])))"));
- const expected=['home','reports','leaders','rectification','bknowledge','bprocess','bretro','blearn','bservices','profile','projects','brisks'];
+ const expected=['home','reports','leaders','members','rectification','bknowledge','bprocess','bretro','blearn','bservices','profile','projects','brisks'];
  assert.deepEqual(ids.slice().sort(),expected.sort());assert.equal(new Set(ids).size,ids.length);
  assert.equal(run("bPageFor('/records/test')"),'brisks');assert.equal(run("bPageFor('/imports/test')"),'bsources');
  assert.deepEqual(JSON.parse(run('JSON.stringify(navigationGroups.map(g=>g.label))')),['工程风险管理','知识管理','个人中心']);
@@ -119,4 +119,18 @@ test('leader export and report links receive the deployment prefix exactly once'
  const prefixed=source.replace(/(["'`])\/(?!\/)(?=api\/|media\/|work(?:[?"'`]|\.js)|style\.css|app\.js|followup\.js|ab-client\.js|#|["'`])/g,(_m,q)=>q+'/quality/');
  assert.ok(prefixed.includes('fetch(`/quality/api/work/leader-export?'));
  assert.ok(!prefixed.includes('/quality/quality/'));
+});
+
+test('inspection workspace has its own project member entry and scoped member panel',()=>{
+ const run=setup();run(`state.user={id:'admin'};lifecycleState.users=[{id:'new',name:'<新成员>'}];lifecycleState.projects=[{id:'p',name:'项目甲',contract:'合同',role:'admin',members:[{id:'existing',name:'已有成员',role:'inspector'}]},{id:'q',name:'其他项目',members:[]}];selectedProject='p';`);
+ const html=run('members()');assert.ok(html.includes('成员与负责人'));assert.ok(html.includes('加入当前项目'));assert.ok(html.includes('&lt;新成员&gt;'));assert.ok(!html.includes('其他项目'));
+ assert.ok(!html.includes('返回原系统'));assert.ok(run("navigation().includes('成员与负责人')"));
+});
+test('quick member selection updates leader without replacing report draft or signatures',()=>{
+ const run=setup();run(`state.codes=[{id:'code',project_id:'p'}];edit={codeId:'code',scope:'未保存的检查结论',signatures:[{name:'甲',signature:'signed'}],issues:[{description:'未保存问题'}]};lifecycleState.projects=[{id:'p',members:[{id:'lead',name:'负责人'}]}];leaderSelect={innerHTML:''};document.getElementById=id=>id==='leaderId'?leaderSelect:null;setReportLeader('lead');`);
+ assert.equal(run('edit.leaderId'),'lead');assert.equal(run('edit.scope'),'未保存的检查结论');assert.equal(run('edit.signatures[0].signature'),'signed');assert.equal(run('edit.issues[0].description'),'未保存问题');assert.equal(run('dirty'),true);assert.ok(run("leaderSelect.innerHTML.includes('selected')"));
+});
+test('read-only project members cannot see join controls',()=>{
+ const run=setup();run("state.user={id:'reader'};lifecycleState.users=[{id:'new',name:'其他账号'}]");
+ const html=run("membershipPanel({id:'p',role:'inspector',members:[]})");assert.ok(!html.includes('data-add-project-member'));assert.ok(!html.includes('其他账号'));
 });
