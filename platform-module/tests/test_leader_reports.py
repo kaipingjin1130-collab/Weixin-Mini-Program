@@ -54,6 +54,13 @@ class LeaderReports(unittest.TestCase):
         self.assertEqual(result[0], 200)
         return result[1]
 
+    def submitted_report(self, leader=''):
+        code = self.request('/quality/api/codes', dict(projectId=self.pid, participants='现场成员'), self.owner)[1]['id']
+        signature = self.request('/quality/api/media', dict(base64=self.image), self.owner)[1]['id']
+        status, report, _ = self.request('/quality/api/reports', dict(codeId=code, date='2026-10-30', inspector='现场成员', signature=signature, scope='检查结论', noHazard=True, issues=[], leaderId=leader, submit=True), self.owner)
+        self.assertEqual(status, 200)
+        return report
+
     def test_optional_leader_does_not_block_submission(self):
         self.submit(self.task(''))
         self.assertEqual(self.inbox(), [])
@@ -159,6 +166,81 @@ class LeaderReports(unittest.TestCase):
         self.assertEqual(result[0], 403)
         result = self.request('/quality/api/work/add-member', dict(projectId=self.pid, userId='missing', role='inspector', requestId='missing-user'), self.owner)
         self.assertEqual(result[0], 400)
+
+    def test_historical_report_routing_preserves_signed_report_and_word(self):
+        report = self.submitted_report()
+        with s.db() as c:
+            original = tuple(c.execute('SELECT payload,revision,updated FROM reports WHERE id=?', (report['id'],)).fetchone())
+        before_word = self.request('/quality/api/export/'+report['id'], token=self.owner)[1]
+        result = self.post('assign-document-leader', key='inspection:'+report['id'], leaderId='host:admin:8', assignmentRevision=0)
+        self.assertEqual(result['assignmentRevision'], 1)
+        self.assertEqual(self.inbox()[0]['id'], report['id'])
+        with s.db() as c:
+            self.assertEqual(tuple(c.execute('SELECT payload,revision,updated FROM reports WHERE id=?', (report['id'],)).fetchone()), original)
+        after_word = self.request('/quality/api/export/'+report['id'], token=self.owner)[1]
+        with zipfile.ZipFile(io.BytesIO(before_word)) as before, zipfile.ZipFile(io.BytesIO(after_word)) as after:
+            self.assertEqual(before.read('word/document.xml'), after.read('word/document.xml'))
+            for path in before.namelist():
+                if path.startswith('word/media/'):
+                    self.assertEqual(before.read(path), after.read(path))
+        state = self.request('/quality/api/state', token=self.lead)[1]
+        self.assertEqual(next(r for r in state['reports'] if r['id']==report['id'])['leaderId'], 'host:admin:8')
+
+    def test_historical_report_permission_conflict_and_cancellation(self):
+        report = self.submitted_report()
+        key = 'inspection:'+report['id']
+        denied = self.request('/quality/api/work/assign-document-leader', dict(key=key, leaderId='host:admin:8', assignmentRevision=0, requestId='ordinary-assignment'), self.worker)
+        self.assertEqual(denied[0], 403)
+        self.post('assign-document-leader', key=key, leaderId='host:admin:8', assignmentRevision=0)
+        conflict = self.request('/quality/api/work/assign-document-leader', dict(key=key, leaderId='host:admin:10', assignmentRevision=0, requestId='stale-routing'), self.owner)
+        self.assertEqual(conflict[0], 409)
+        result = self.post('assign-document-leader', key=key, leaderId='', assignmentRevision=1)
+        self.assertEqual(len(result['history']), 2)
+        self.assertEqual(self.inbox(), [])
+
+    def test_archived_brief_and_delivery_can_route_without_changing_snapshots(self):
+        task = self.submit(self.task(''))
+        task = self.post('receive-field', taskId=task['id'], revision=task['revision'], decision='accept', receiverName='接收人', text='接收')
+        task = self.post('deliver', taskId=task['id'], revision=task['revision'], text='交接摘要')
+        task = self.post('accept', taskId=task['id'], revision=task['revision'], decision='accept', text='确认接收')
+        task = self.post('archive', taskId=task['id'], revision=task['revision'])
+        with s.db() as c:
+            before = {table:[tuple(row) for row in c.execute('SELECT * FROM '+table)] for table in ['tasks','field_reports','deliveries']}
+        brief = task['fieldBriefs'][0]['id']
+        delivery = task['deliveries'][-1]['id']
+        self.post('assign-document-leader', key='brief:'+brief, leaderId='host:admin:8', assignmentRevision=0)
+        self.post('assign-document-leader', key='delivery:'+delivery, leaderId='host:admin:8', assignmentRevision=0)
+        self.assertEqual({r['key'] for r in self.inbox()}, {'brief:'+brief, 'delivery:'+delivery})
+        with s.db() as c:
+            after = {table:[tuple(row) for row in c.execute('SELECT * FROM '+table)] for table in ['tasks','field_reports','deliveries']}
+        self.assertEqual(before, after)
+
+    def test_routing_reassignment_removes_old_owner_export_access(self):
+        report = self.submitted_report('host:admin:8')
+        key = 'inspection:'+report['id']
+        self.post('assign-document-leader', key=key, leaderId='host:admin:10', assignmentRevision=0)
+        self.assertEqual(self.inbox(), [])
+        self.assertEqual(self.inbox(self.other)[0]['key'], key)
+        self.assertEqual(self.request('/quality/api/work/leader-export?key='+key, token=self.lead)[0], 403)
+
+    def test_routing_rejects_cross_project_leader_and_draft(self):
+        report = self.submitted_report()
+        bad = self.request('/quality/api/work/assign-document-leader', dict(key='inspection:'+report['id'], leaderId='missing-account', assignmentRevision=0, requestId='invalid-owner'), self.owner)
+        self.assertEqual(bad[0], 400)
+        with s.db() as c:
+            c.execute("UPDATE reports SET status='draft' WHERE id=?", (report['id'],))
+        draft = self.request('/quality/api/work/assign-document-leader', dict(key='inspection:'+report['id'], leaderId='host:admin:8', assignmentRevision=0, requestId='draft-owner'), self.owner)
+        self.assertEqual(draft[0], 409)
+
+    def test_cached_routing_request_rechecks_management_permission(self):
+        report = self.submitted_report()
+        with s.db() as c:
+            c.execute("UPDATE memberships SET role='manager' WHERE project_id=? AND user_id=?", (self.pid, 'host:admin:8'))
+        payload = dict(key='inspection:'+report['id'], leaderId='host:admin:10', assignmentRevision=0, requestId='replayed-routing')
+        self.assertEqual(self.request('/quality/api/work/assign-document-leader', payload, self.lead)[0], 200)
+        with s.db() as c:
+            c.execute("UPDATE memberships SET role='inspector' WHERE project_id=? AND user_id=?", (self.pid, 'host:admin:8'))
+        self.assertEqual(self.request('/quality/api/work/assign-document-leader', payload, self.lead)[0], 403)
 
 
 if __name__ == '__main__':

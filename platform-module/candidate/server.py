@@ -84,7 +84,7 @@ def unpack(r):
 def get_report(c,rid):
  r=c.execute('SELECT * FROM reports WHERE id=?',(rid,)).fetchone()
  if not r: raise Problem('报告不存在',404)
- return unpack(r)
+ return leader_reports.decorate_report(c,unpack(r))
 
 def validate_report(c,d,submit):
  code=c.execute('SELECT codes.*, projects.name, projects.contract FROM codes JOIN projects ON projects.id=codes.project_id WHERE codes.id=?',(d.get('codeId'),)).fetchone()
@@ -334,6 +334,7 @@ class Handler(BaseHTTPRequestHandler):
      if method=='GET':
       if action=='state': self.send(w.state());return
       if action=='leader-inbox': self.send(leader_reports.inbox(w));return
+      if action=='document-leader': self.send(leader_reports.document(w,parse_qs(urlsplit(self.path).query).get('key',[''])[0]));return
       if action=='leader-export':
        keys=parse_qs(urlsplit(self.path).query).get('key',[])
        rows=leader_reports.select(w,keys)
@@ -379,6 +380,7 @@ class Handler(BaseHTTPRequestHandler):
       if d.get('taskId'): w.task(d['taskId'])
       if d.get('projectId'): w.role(d['projectId'])
       if d.get('reportId'): w.role(get_report(c,d['reportId'])['projectId'])
+      if action=='assign-document-leader': w.allow(leader_reports.document(w,d.get('key'))['projectId'],['manager'])
       self.send(json.loads(previous['result']));return
      result=w.upload(d) if action=='upload' else w.dispatch(action,d)
      c.execute('INSERT INTO operations VALUES(?,?,?,?)',(user['id'],request_id,fingerprint,workflow.dump(result)))
@@ -386,7 +388,7 @@ class Handler(BaseHTTPRequestHandler):
     if not host_auth.is_admin(user) and method=='POST': raise Problem('成员请使用作业协同入口办理任务',403)
     if method=='GET':
      if path=='/api/state':
-      reports=[unpack(r) for r in c.execute('SELECT * FROM reports ORDER BY updated DESC')]
+      reports=[leader_reports.decorate_report(c,unpack(r)) for r in c.execute('SELECT * FROM reports ORDER BY updated DESC')]
       projects=[dict(r) for r in c.execute('SELECT * FROM projects ORDER BY created DESC')]
       if not host_auth.is_admin(user):
        allowed={r['project_id'] for r in c.execute('SELECT project_id FROM memberships WHERE user_id=?',(user['id'],))}

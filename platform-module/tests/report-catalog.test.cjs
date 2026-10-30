@@ -134,3 +134,13 @@ test('read-only project members cannot see join controls',()=>{
  const run=setup();run("state.user={id:'reader'};lifecycleState.users=[{id:'new',name:'其他账号'}]");
  const html=run("membershipPanel({id:'p',role:'inspector',members:[]})");assert.ok(!html.includes('data-add-project-member'));assert.ok(!html.includes('其他账号'));
 });
+
+test('submitted report detail offers routing controls only to project managers',()=>{
+ const run=setup();run(`state.user={id:'admin'};lifecycleState.projects=[{id:'p',members:[{id:'lead',name:'<负责人>'}]}];`);
+ const panel=run("historicalLeaderPanel({id:'old',projectId:'p',leaderId:'lead'})");assert.ok(panel.includes('补充／调整负责人'));assert.ok(panel.includes('inspection:old'));assert.ok(panel.includes('&lt;负责人&gt;'));
+ run("state.user={id:'reader'}");assert.ok(!run("historicalLeaderPanel({id:'old',projectId:'p'})").includes('data-document-leader'));
+});
+test('task document cards provide per-version historical routing without modifying rows',()=>{
+ const run=setup();run(`state.user={id:'admin'};lifecycleState.projects=[{id:'p',members:[]}];row={catalogId:'delivery:archive',id:'archive',kind:'delivery',projectId:'p',label:'正式成果',version:2,url:'/api/work/report/archive',wordUrl:'/api/work/word/archive',taskId:'task'};snapshot=JSON.stringify(row);`);
+ assert.ok(run('taskReportCard(row)').includes('data-document-leader="delivery:archive"'));assert.equal(run('JSON.stringify(row)===snapshot'),true);
+});

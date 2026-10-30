@@ -6,6 +6,53 @@ import json
 import zipfile
 
 
+def assignment(c, key, fallback=''):
+    row = c.execute('SELECT payload FROM document_leaders WHERE document_key=?', (key,)).fetchone()
+    return json.loads(row[0]) if row else dict(leaderId=fallback, assignmentRevision=0, history=[])
+
+
+def decorate_report(c, report):
+    routing = assignment(c, 'inspection:'+report['id'], report.get('leaderId', ''))
+    return dict(report, leaderId=routing['leaderId'], leaderAssignmentRevision=routing['assignmentRevision'])
+
+
+def document(w, key):
+    if not isinstance(key, str) or ':' not in key:
+        w.fail('报告标识不正确')
+    kind, doc_id = key.split(':', 1)
+    if kind == 'inspection':
+        source = w.s.get_report(w.c, doc_id)
+        w.role(source['projectId'])
+        if source['status'] != 'submitted':
+            w.fail('草稿请在填报页面选择负责人，提交后可在此补选', 409)
+        fallback = source.get('leaderId', '')
+    elif kind in ('brief', 'delivery'):
+        table = 'field_reports' if kind == 'brief' else 'deliveries'
+        row = w.c.execute('SELECT task_id,payload FROM '+table+' WHERE id=?', (doc_id,)).fetchone()
+        if not row:
+            w.fail('报告不存在', 404)
+        task = w.task(row['task_id'])
+        source = json.loads(row['payload'])['task']
+        fallback = task.get('leaderId', '')
+    else:
+        w.fail('报告类型不支持')
+    routing = assignment(w.c, key, fallback)
+    user = w.c.execute('SELECT name FROM users WHERE id=?', (routing['leaderId'],)).fetchone()
+    return dict(routing, key=key, projectId=source['projectId'], title=source.get('title') or source.get('number', ''), leaderName=user[0] if user else '')
+
+
+def assign_document(w, data):
+    current = document(w, data.get('key'))
+    w.allow(current['projectId'], ['manager'])
+    if data.get('assignmentRevision') != current['assignmentRevision']:
+        w.fail('负责人已被调整，请刷新后重试', 409)
+    leader = w.leader(current['projectId'], data.get('leaderId', ''))
+    history = current['history'] + [dict(previousLeaderId=current['leaderId'], leaderId=leader, actorId=w.user['id'], actorName=w.user['name'], createdAt=w.s.now())]
+    routing = dict(leaderId=leader, assignmentRevision=current['assignmentRevision']+1, history=history)
+    w.c.execute('INSERT OR REPLACE INTO document_leaders VALUES(?,?)', (current['key'], json.dumps(routing, ensure_ascii=False)))
+    return document(w, current['key'])
+
+
 def validate_leader(c, project_id, value):
     if value in ('', None):
         return ''
@@ -43,15 +90,16 @@ def inbox(w):
 
     for task in state['tasks']:
         leader = task.get('leaderId', '')
-        if not leader or (leader != w.user['id'] and not is_admin(w.user)):
-            continue
         for kind, docs in [('brief', task.get('fieldBriefs', [])), ('delivery', task.get('deliveries', []))]:
             table = 'field_reports' if kind == 'brief' else 'deliveries'
             for doc in docs:
+                effective = assignment(w.c, kind+':'+doc['id'], leader)['leaderId']
+                if not effective or (effective != w.user['id'] and not is_admin(w.user)):
+                    continue
                 row = w.c.execute('SELECT payload FROM '+table+' WHERE id=?', (doc['id'],)).fetchone()
                 if row:
                     snap = json.loads(row[0])
-                    add(kind, doc['id'], snap['task'], leader, doc['version'], doc['createdAt'], snap['task'], task['id'])
+                    add(kind, doc['id'], snap['task'], effective, doc['version'], doc['createdAt'], snap['task'], task['id'])
     for row in w.c.execute("SELECT * FROM reports WHERE status='submitted'"):
         report = w.s.get_report(w.c, row['id'])
         add('inspection', report['id'], report, report.get('leaderId', ''), report['revision'], report['updated'], report)

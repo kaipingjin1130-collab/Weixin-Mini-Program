@@ -41,6 +41,7 @@ def init(c):
  CREATE TABLE IF NOT EXISTS operations(user_id TEXT NOT NULL, request_id TEXT NOT NULL, fingerprint TEXT NOT NULL, result TEXT NOT NULL, PRIMARY KEY(user_id,request_id));
  CREATE TABLE IF NOT EXISTS scenarios(id TEXT PRIMARY KEY, payload TEXT NOT NULL);
  CREATE TABLE IF NOT EXISTS leader_reads(user_id TEXT NOT NULL, document_key TEXT NOT NULL, read_at TEXT NOT NULL, PRIMARY KEY(user_id,document_key));
+ CREATE TABLE IF NOT EXISTS document_leaders(document_key TEXT PRIMARY KEY, payload TEXT NOT NULL);
  CREATE TABLE IF NOT EXISTS field_reports(id TEXT PRIMARY KEY, task_id TEXT NOT NULL REFERENCES tasks(id), payload TEXT NOT NULL);
  ''')
  for s in SCENARIOS:
@@ -139,6 +140,7 @@ class Workflow:
   self.task(r['task_id'])
   return json.loads(r['payload'])
  def dispatch(self,path,d):
+  if path=='assign-document-leader': return leader_reports.assign_document(self,d)
   if path=='leader-read':
    rows=leader_reports.select(self,d.get('keys'))
    for row in rows:
