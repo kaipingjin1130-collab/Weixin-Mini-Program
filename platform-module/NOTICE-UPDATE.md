@@ -8,6 +8,12 @@
 
 模板回归 4 项、告知单及继承集成测试 37 项、平台集成测试 9 项通过。代表样例 4 页、全空白样例 2 页、长文本多照片样例 6 页均通过 Word 实际渲染与逐页检查。云端部署状态以另行记录的部署回执为准。
 
+### Word 模板云端部署回执
+
+2026-10-30 已将源码提交 `f9a8943b8f2d839321a4eb8aadef79b4caae2327` 部署到 `/opt/qaxc-fusion-a1b9411/platform-module/candidate`。部署脚本版本 `d9a0da8`，回执目录 `/tmp/qaxc-notice-template-d9a0da8`，备份 `/var/backups/qaxc-notice-template-20261030-185810`。
+
+终端确认 `WORD_TEMPLATE_SMOKE_OK`、`WORD TEMPLATE VERIFIED`、未登录鉴权检查401、服务active。部署前后数量一致：projects1、users5、memberships2、reports8、tasks16、field_reports4、deliveries10、evidence26。模板包与导出代码摘要核对通过，服务器实际生成的Word包含原公司标识、模板页眉和灰底编号栏。
+
 2026-10-30
 
 小程序现场巡查及网页“新建巡查”增加告知单编号、项目名称、项目进度、委托单位、建设单位、施工单位、监理单位、检查时间、事由、受检人员及日期。巡查业务字段、隐患文字、图片和签名均可留空；仍按项目权限保存，每条隐患独立关联图片。空白清单不自动宣称“未发现隐患”。已填写签名仍校验签名人与检查人员名单一致。
