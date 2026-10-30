@@ -63,7 +63,7 @@ test('camera and album upload directly to hazard without polluting record',async
  await p.photo({currentTarget:{dataset:{source:'camera',target:'issue'}}});await p.photo({currentTarget:{dataset:{source:'album',target:'issue'}}});assert.equal(options[0].sourceType[0],'camera');assert.equal(options[0].count,1);assert.equal(options[1].count,9);assert.equal(uploads[0][2],'issue');
 });
 
-test('unsigned brief cannot be submitted',async()=>{const {p,calls}=setup();p.data.record={text:'',evidence:[]};p.data.task.issues=[{id:'saved1'}];p.data.inspectors='张三';p.data.signer='张三';await p.submitField();assert.equal(calls.length,0)});
+test('unsigned optional checklist can be submitted',async()=>{const {p,calls}=setup();p.data.record={text:'',evidence:[]};p.data.task.issues=[{id:'saved1'}];p.data.inspectors='张三';p.data.signer='张三';await p.submitField();assert.ok(calls.some(c=>c.url.endsWith('/submit-field')))});
 test('failed signature upload retains drawing for retry',async()=>{const {p,wx}=setup(true);p.signDirty=true;wx.canvasToTempFilePath=o=>o.success({tempFilePath:'/sign.png'});wx.getFileSystemManager=()=>({readFile:o=>o.success({data:'image'})});await assert.rejects(()=>p.captureSign());assert.equal(p.signDirty,true)});
 
 test('multiple saved hazards collapse individually and retain distinct photos',async()=>{
@@ -81,19 +81,12 @@ test('multiple saved hazards collapse individually and retain distinct photos',a
  p.toggleIssue({currentTarget:{dataset:{id:'i1'}}});assert.equal(p.data.expandedIssueId,'');
 });
 
-test('zero saved hazards blocks brief even with summary and signature',async()=>{
- const {p,calls,wx}=setup();let message='';wx.showModal=o=>{message=o.content};
- p.data.record={text:'',evidence:[]};p.data.inspectors='检查员';p.data.signer='检查员';p.data.signature='signature';p.data.note='检查摘要';
- await p.submitField();assert.equal(calls.length,0);assert.ok(message.includes('至少保存一条隐患'));
-});
+test('empty checklist can submit without inventing no-hazard conclusion',async()=>{const {p,calls}=setup();p.data.record={text:'',evidence:[]};await p.submitField();assert.equal(calls[0].data.noHazard,false)});
 
 test('explicit no-hazard conclusion can submit without issues',async()=>{
  const {p,calls}=setup();p.data.record={text:'',evidence:[]};p.data.noHazard=true;p.data.note='检查二层未发现隐患';p.data.inspectors='张三';p.data.signer='张三';p.data.signature='sign';await p.submitField();assert.equal(calls[0].data.noHazard,true);
 });
-test('no-hazard submission requires conclusion and cannot contradict saved issue',async()=>{
- const {p,calls}=setup();p.data.record={text:'',evidence:[]};p.data.noHazard=true;p.data.note=' ';await p.submitField();assert.equal(calls.length,0);
- p.data.note='结论';p.data.task.issues=[{id:'existing'}];await p.submitField();assert.equal(calls.length,0);
-});
+test('no-hazard conclusion cannot contradict saved issues',async()=>{const {p,calls}=setup();p.data.record={text:'',evidence:[]};p.data.noHazard=true;p.data.task.issues=[{id:'existing'}];await p.submitField();assert.equal(calls.length,0)});
 
 test('editing saved issue uses edit endpoint and resets after success',async()=>{
  const {p,calls}=setup();p.data.editingIssueId='existing';p.data.issue={description:'修改隐患',evidence:['photo']};await p.addIssue();const req=calls.find(c=>c.url.endsWith('/edit-issue'));assert.equal(req.data.issueId,'existing');assert.equal(p.data.editingIssueId,'');
@@ -110,8 +103,8 @@ test('manual risk is trimmed, saved and reset; presets replace manual values',as
  assert.equal(calls.find(c=>c.url.endsWith('/issue')).data.risk,'较大风险');assert.equal(p.data.customRisk,null);
  p.riskInput({detail:{value:'自定义'}});p.riskPick({detail:{value:'2'}});assert.equal(p.data.customRisk,null);assert.equal(p.data.riskIndex,2);
 });
-test('blank manual risk blocks save and custom risk survives editing',async()=>{
- const {p,calls}=setup();p.data.issue.description='问题';p.riskInput({detail:{value:'   '}});await p.addIssue();assert.equal(calls.length,0);
+test('blank manual risk is optional and custom risk survives editing',async()=>{
+ const {p,calls}=setup();p.data.issue.description='问题';p.riskInput({detail:{value:'   '}});await p.addIssue();assert.equal(calls[0].data.risk,'');
  p.data.task.issues=[{id:'custom',risk:'一级风险',status:'unassigned',history:[],evidence:[],description:'原问题'}];await p.editIssue({currentTarget:{dataset:{id:'custom'}}});assert.equal(p.data.customRisk,'一级风险');
  await p.addIssue();assert.equal(calls.find(c=>c.url.endsWith('/edit-issue')).data.risk,'一级风险');
 });

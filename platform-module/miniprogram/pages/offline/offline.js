@@ -2,7 +2,7 @@ const store=require('../../utils/offline');
 const api=require('../../utils/api');
 const blank=()=>({id:store.uid(),category:'施工安全',subcategory:'',location:'',description:'',reference:'',suggestion:'',risk:'中',photos:[]});
 Page({
- data:{busy:false,drafts:[],context:null,draft:null,editor:null,projectIndex:0,checkOptions:[],message:'',categories:['工程质量','施工安全','消防安全','文明施工','其他']},
+ data:{noticeFields:[{"key": "noticeNumber", "label": "告知单编号"}, {"key": "projectName", "label": "项目名称"}, {"key": "progress", "label": "项目进度"}, {"key": "client", "label": "委托单位"}, {"key": "developer", "label": "建设单位"}, {"key": "contractor", "label": "施工单位"}, {"key": "supervisor", "label": "监理单位"}, {"key": "inspectionDate", "label": "检查时间"}, {"key": "subject", "label": "事由"}, {"key": "recipient", "label": "受检单位人员"}, {"key": "recipientDate", "label": "受检日期"}],busy:false,drafts:[],context:null,draft:null,editor:null,projectIndex:0,checkOptions:[],message:'',categories:['工程质量','施工安全','消防安全','文明施工','其他']},
  onLoad(){this.reload()},
  onHide(){this.persist()},
  onUnload(){this.persist()},
@@ -19,7 +19,7 @@ Page({
  checks(e){if(this.data.busy)return;this.setData({'draft.checklist':e.detail.value,checkOptions:this.data.checkOptions.map(x=>({...x,checked:e.detail.value.includes(x.text)}))});this.persist()},
  add(){this.setData({editor:blank()});this.persist()},
  edit(e){const i=this.data.draft.issues.find(x=>x.id===e.currentTarget.dataset.id);this.setData({editor:JSON.parse(JSON.stringify(i))});this.persist()},
- saveIssue(){const i=this.data.editor;if(!i.description.trim()){this.error(Error('请填写隐患描述'));return}if(!i.risk.trim()){this.error(Error('请填写风险等级'));return}const issues=this.data.draft.issues.slice();const pos=issues.findIndex(x=>x.id===i.id);if(pos<0)issues.push(i);else issues[pos]=i;const d={...this.data.draft,issues,editor:null};try{store.update(d);this.setData({draft:d,editor:null,message:'本条隐患已保存在手机'});}catch(e){this.error(e)}},
+ saveIssue(){const i=this.data.editor;const issues=this.data.draft.issues.slice();const pos=issues.findIndex(x=>x.id===i.id);if(pos<0)issues.push(i);else issues[pos]=i;const d={...this.data.draft,issues,editor:null};try{store.update(d);this.setData({draft:d,editor:null,message:'本条隐患已保存在手机'});}catch(e){this.error(e)}},
  async photo(e){await this.run(async()=>{const count=9-this.data.editor.photos.length;if(count<=0)throw Error('每条隐患最多9张照片');const r=await new Promise((resolve,reject)=>wx.chooseMedia({count:e.currentTarget.dataset.source==='camera'?1:count,mediaType:['image'],sourceType:[e.currentTarget.dataset.source],sizeType:['compressed'],success:resolve,fail:e=>e.errMsg.includes('cancel')?resolve(null):reject(Error('无法拍照或选图，请检查授权'))}));if(!r)return;for(const f of r.tempFiles){if(f.size>10*1024*1024)throw Error('单张照片不能超过10MB');const p=await store.savePhoto(f.tempFilePath);this.setData({'editor.photos':[...this.data.editor.photos,p]});if(!this.persist())return}})},
  preview(e){wx.previewImage({current:e.currentTarget.dataset.path,urls:[e.currentTarget.dataset.path]})},
  removePhoto(e){this.setData({'editor.photos':this.data.editor.photos.filter(p=>p.id!==e.currentTarget.dataset.id)});this.persist()},

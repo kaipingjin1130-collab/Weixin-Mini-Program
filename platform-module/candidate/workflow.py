@@ -1,3 +1,4 @@
+import notice
 """Developer A workflow. SQLite transactions are owned by server.Handler."""
 import base64
 import leader_reports
@@ -61,6 +62,10 @@ class Workflow:
  def __init__(self,s,c,user): self.s,self.c,self.user=s,c,user
  def fail(self,msg,status=400): raise self.s.Problem(msg,status)
  def text(self,d,k,n=4000): return self.s.required(d,k,n)
+ def optional(self,d,k,n=4000):
+  value=d.get(k,'')
+  if not isinstance(value,str) or len(value)>n: self.fail('字段格式错误或超过长度限制')
+  return value.strip()
  def role(self,pid):
   if not self.c.execute('SELECT 1 FROM projects WHERE id=?',(pid,)).fetchone(): self.fail('项目不存在',404)
   if is_admin(self.user): return 'admin'
@@ -116,7 +121,7 @@ class Workflow:
   today=datetime.now().astimezone().date().isoformat()
   reminders=[]
   for t in tasks:
-   if t['status']!='archived' and t['dueDate']<today: reminders.append(dict(taskId=t['id'],text=t['title']+'：任务逾期'))
+   if t['status']!='archived' and t['dueDate'] and t['dueDate']<today: reminders.append(dict(taskId=t['id'],text=t['title']+'：任务逾期'))
    for i in t['issues']:
     if i['status']!='closed' and i['dueDate']<today: reminders.append(dict(taskId=t['id'],text=t['title']+'：问题逾期 '+i['description']))
   users=[public_user(r) for r in self.c.execute('SELECT * FROM users')] if is_admin(self.user) else []
@@ -226,7 +231,7 @@ class Workflow:
    if not row: self.fail('场景不存在')
    scenario=json.loads(row[0]);fields=d.get('fields',{})
    if not isinstance(fields,dict): self.fail('任务字段格式错误')
-   optional={'inspection':{'检查区域','检查重点'},'handover':{'设备编号','验收范围'}}.get(scenario['id'],set()) if adhoc else set()
+   optional=set(scenario['fields'])
    values={}
    for k in scenario['fields']:
     if k in optional:
@@ -237,16 +242,18 @@ class Workflow:
    inspectors=d.get('inspectors','')
    if not isinstance(inspectors,str) or len(inspectors)>1000: self.fail('检查人员名单格式错误')
    fields=values
-   obj=d.get('object','') if adhoc else self.text(d,'object',200)
+   obj=self.optional(d,'object',200)
    if not isinstance(obj,str) or len(obj)>200: self.fail('检查对象格式错误或超过200字')
    t=dict(id=self.s.uid(),number='TASK-'+datetime.now().strftime('%Y%m%d')+'-'+secrets.token_hex(4).upper(),
-          projectId=pid,inspectors=inspectors.strip(),title=self.text(d,'title',200),objectId=self.s.uid(),object=obj.strip(),
-          dueDate=self.checkdate(d.get('dueDate')),scenario=scenario,fields=fields,materials=self.evidence(pid,d.get('materials',[])),
+          projectId=pid,inspectors=inspectors.strip(),title=self.optional(d,'title',200) or '巡查隐患清单',objectId=self.s.uid(),object=obj.strip(),
+          dueDate=self.checkdate(d.get('dueDate')) if d.get('dueDate') else '',scenario=scenario,fields=fields,materials=self.evidence(pid,d.get('materials',[])),
           checklist=[],assignee=self.user['id'] if adhoc else self.member(pid,d.get('assignee'),['inspector','manager']),
           receiver='' if adhoc or 'receiverName' in d else self.member(pid,d.get('receiver'),['receiver','manager']),
           receiverName='' if adhoc or 'receiverName' not in d else self.text(d,'receiverName',100),
           leaderId=self.leader(pid,d.get('leaderId','')),source='adhoc' if adhoc else 'platform',createdBy=self.user['id'],createdByName=self.user['name'],
           status='ready',fieldStatus='collecting',fieldBriefs=[],revision=1,records=[],issues=[],events=[],deliveries=[],createdAt=self.s.now(),updatedAt=self.s.now())
+   try: t['notice']=notice.clean(d.get('notice',{}))
+   except ValueError as e: self.fail(str(e))
    self.stamp(t,'create','现场自主发起临时巡查' if adhoc else '平台建立派发任务')
    self.c.execute('INSERT INTO tasks VALUES(?,?,?,?)',(t['id'],pid,dump(t),1));return t
   if path=='knowledge':
@@ -280,19 +287,22 @@ class Workflow:
    if any(r['status']!='confirmed' for r in t['records']): self.fail('请先在网页平台确认历史现场记录草稿')
    no_hazard=d.get('noHazard') is True
    if no_hazard and t['issues']: self.fail('已有隐患记录，不能选择未发现隐患')
-   if not no_hazard and not t['issues']: self.fail('请至少保存一条隐患记录，或明确选择未发现隐患并填写检查结论')
-   self.text(d,'text')
    t['noHazard']=no_hazard
-   inspectors=self.text(d,'inspectors',1000)
-   signer=self.text(d,'signer',100)
-   names=[n.strip() for n in re.split(r'[,，、;；\n]+',inspectors) if n.strip()]
-   if signer not in names: self.fail('签名人须在检查人员名单中')
-   sid=self.text(d,'signature',200);self.evidence(pid,[sid])
-   meta=json.loads(self.c.execute('SELECT payload FROM evidence WHERE id=?',(sid,)).fetchone()[0])
-   if not meta['mime'].startswith('image/'): self.fail('签名必须为图片')
+   inspectors=self.optional(d,'inspectors',1000)
+   signer=self.optional(d,'signer',100)
+   sid=self.optional(d,'signature',200)
+   if sid:
+    names=[n.strip() for n in re.split(r'[,，、;；\n]+',inspectors) if n.strip()]
+    if signer not in names: self.fail('已签名时，签名人须在检查人员名单中')
+    self.evidence(pid,[sid])
+    meta=json.loads(self.c.execute('SELECT payload FROM evidence WHERE id=?',(sid,)).fetchone()[0])
+    if not meta['mime'].startswith('image/'): self.fail('签名必须为图片')
    t['inspectors']=inspectors
-   t['fieldSignature']=dict(name=signer,evidenceId=sid,signedAt=self.s.now(),submittedBy=self.user['id'])
-   t['fieldSummary']=self.text(d,'text');t['fieldStatus']='submitted'
+   t['fieldSignature']=dict(name=signer,evidenceId=sid,signedAt=self.s.now(),submittedBy=self.user['id']) if sid else None
+   try: t['notice']=notice.clean(d.get('notice',t.get('notice',{})))
+   except ValueError as e: self.fail(str(e))
+   if 'leaderId' in d: t['leaderId']=self.leader(pid,d['leaderId'])
+   t['fieldSummary']=self.optional(d,'text');t['fieldStatus']='submitted'
    bid=self.s.uid();briefs=t.setdefault('fieldBriefs',[]);version=len(briefs)+1
    briefs.append(dict(id=bid,version=version,createdAt=self.s.now()))
    self.stamp(t,path,t['fieldSummary']);self.persist(t)
@@ -318,7 +328,7 @@ class Workflow:
     t['materials']=self.evidence(pid,d.get('evidence',[]))
    else:
     if t['status']!='ready': self.fail('任务已经开始',409)
-    if d.get('checklist')!=t['scenario']['checklist']: self.fail('请逐项确认全部准备清单')
+    if not isinstance(d.get('checklist',[]),list) or any(x not in t['scenario']['checklist'] for x in d.get('checklist',[])): self.fail('准备清单格式错误')
     t['checklist']=d['checklist'];t['status']='active'
   elif path=='record':
    self.allow(pid,['manager','inspector'])
@@ -354,9 +364,8 @@ class Workflow:
     if not old: self.fail('隐患不存在',404)
     if old['status']!='unassigned' or old['history']: self.fail('已进入整改办理的隐患不能修改',409)
    evidence=self.evidence(pid,d.get('evidence',[]))
-   if t['scenario']['workflow']['requireEvidence'] and not evidence: self.fail('此场景的问题必须关联证据')
    risk=d.get('risk','中')
-   if risk not in ['低','中','高']: self.fail('风险等级不支持')
+   if not isinstance(risk,str) or len(risk)>100: self.fail('风险等级格式错误')
    details={}
    for key in ['category','subcategory','location','reference','suggestion']:
     value=d.get(key,'')
@@ -365,12 +374,12 @@ class Workflow:
    if details['category'] and details['category'] not in ['工程质量','施工安全','消防安全','文明施工','其他']: self.fail('隐患类别不支持')
    if old:
     self.stamp(t,'edit-issue',dump(old))
-    old.update(description=self.text(d,'description'),risk=risk,evidence=evidence,updatedAt=self.s.now(),**details)
+    old.update(description=self.optional(d,'description'),risk=risk,evidence=evidence,updatedAt=self.s.now(),**details)
     return self.persist(t)
    t['noHazard']=False
    assigned=bool(d.get('assignee') or d.get('reviewer'))
    if assigned: self.allow(pid,['manager'])
-   t['issues'].append(dict(id=self.s.uid(),description=self.text(d,'description'),risk=risk,**details,
+   t['issues'].append(dict(id=self.s.uid(),description=self.optional(d,'description'),risk=risk,**details,
       assignee=self.member(pid,d.get('assignee'),['rectifier','manager']) if assigned else '',reviewer=self.member(pid,d.get('reviewer'),['reviewer','manager']) if assigned else '',
       dueDate=self.checkdate(d.get('dueDate') or (datetime.now().astimezone()+timedelta(days=t['scenario']['workflow']['defaultDays'])).date().isoformat()),status='assigned' if assigned else 'unassigned',evidence=evidence,history=[],createdAt=self.s.now()))
    i=t['issues'][-1]

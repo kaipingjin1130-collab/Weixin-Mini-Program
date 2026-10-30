@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
 import workflow
 import leader_reports
+import notice
 import host_auth
 PREFIX=os.environ.get("QAXC_ROOT_PATH", "").rstrip("/")
 if PREFIX and not re.fullmatch(r"/[a-z][a-z0-9-]*", PREFIX): raise RuntimeError("Invalid module prefix")
@@ -93,7 +94,6 @@ def validate_report(c,d,submit):
  if not isinstance(issues,list) or len(issues)>100: raise Problem('隐患条数应在100条以内')
  nohazard=d.get('noHazard') is True
  if nohazard and issues: raise Problem('无隐患检查不能同时包含隐患条目')
- if submit and not issues and not nohazard: raise Problem('请添加隐患，或明确选择未发现隐患')
  clean=[]
  for item in issues:
   if not isinstance(item,dict): raise Problem('隐患格式错误')
@@ -102,10 +102,6 @@ def validate_report(c,d,submit):
   if not isinstance(photos,list) or len(photos)>9: raise Problem('每条隐患最多9张照片')
   for p in photos: media_check(c,p)
   row['photos']=photos
-  if submit:
-   if not all(row[k].strip() for k in ['description','category']): raise Problem('请补齐每条隐患的描述和分类')
-   if row['risk'] not in ['低','中','高']: raise Problem('请选择风险等级')
-   if not photos: raise Problem('每条隐患至少需要一张现场照片')
   clean.append(row)
  inspector=str(d.get('inspector','')).strip()
  names=[n.strip() for n in re.split(r'[,，、;；\n]+',inspector) if n.strip()]
@@ -125,10 +121,8 @@ def validate_report(c,d,submit):
  signatures=[{'name':n,'signature':signed.get(n,'')} for n in names]
  signature=signatures[0]['signature'] if signatures else ''
  scope=str(d.get('scope','')).strip()[:4000]
- if submit and (not names or any(not x['signature'] for x in signatures)): raise Problem('正式提交需要每位检查人姓名及各自的手写签名')
- if submit and nohazard and not scope: raise Problem('无隐患检查请填写检查范围与结论')
  date=str(d.get('date',''))
- try: datetime.strptime(date,'%Y-%m-%d')
+ try: datetime.strptime(date,'%Y-%m-%d') if date else None
  except ValueError: raise Problem('检查日期格式不正确')
  return dict(codeId=code['id'],projectId=code['project_id'],project=code['name'],contract=code['contract'],number=code['number'],participants=code['participants'],date=date,inspector=inspector,scope=scope,noHazard=nohazard,issues=clean,signature=signature,signatures=signatures)
 
@@ -140,6 +134,8 @@ def save_report(c,d):
  if old and d.get('revision')!=old['revision']: raise Problem('草稿已在另一页面更新，请重新打开，避免覆盖',409)
  submit=d.get('submit') is True
  payload=validate_report(c,d,submit)
+ try: payload['notice']=notice.clean(d.get('notice',json.loads(old['payload']).get('notice',{}) if old else {}))
+ except ValueError as e: raise Problem(str(e))
  previous=json.loads(old['payload']) if old else {}
  leader=d.get('leaderId',previous.get('leaderId','') if previous.get('projectId')==payload['projectId'] else '')
  try: payload['leaderId']=leader_reports.validate_leader(c,payload['projectId'],leader)
@@ -158,21 +154,29 @@ def make_docx(c,r):
   m=c.execute('SELECT * FROM media WHERE id=?',(mid,)).fetchone()
   n=len(images)+1; ext='.png' if m['mime']=='image/png' else '.jpg'; images.append((n,ext,(DATA/'uploads'/m['name']).read_bytes()))
   # Preserve aspect ratio for PNG and JPEG headers, without third-party libraries.
-  w,h=dimensions(images[-1][2]); width=min(5486400,w*9525); height=int(width*h/w)
+  w,h=dimensions(images[-1][2]); width=min(2600000,w*9525); height=int(width*h/w)
   if height>6400800: width=int(width*6400800/height); height=6400800
   body.append(f'<w:p><w:r><w:drawing><wp:inline><wp:extent cx="{width}" cy="{height}"/><wp:docPr id="{n}" name="照片{n}"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="{n}" name="image{n}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rId{n}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="{width}" cy="{height}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>')
- para(r.get('title','质量安全巡查报告'),True)
- for k,label in [('contract','合同'),('project','项目'),('number','巡查编号'),('date','检查日期'),('inspector','检查人'),('scope','检查范围与结论')]: para(label+'：'+r.get(k,''))
+ para('隐患清单',True)
+ for key,label in notice.FIELDS.items(): para(label+'：'+r.get('notice',{}).get(key,''))
+ for k,label in [('contract','合同'),('project','项目'),('number','系统巡查编号'),('date','检查日期'),('inspector','检查人'),('scope','检查范围与结论')]: para(label+'：'+r.get(k,''))
  para('报告状态：'+r.get('statusLabel',('草稿（未正式签署）' if r['status']=='draft' else '已提交')))
  if r['noHazard']: para('本次在上述检查范围内未发现隐患。')
+ body.append('<w:tbl><w:tblPr><w:tblW w:w="9638" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblBorders>'+''.join('<w:'+edge+' w:val="single" w:sz="4" w:color="999999"/>' for edge in ['top','left','bottom','right','insideH','insideV'])+'</w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="650"/><w:gridCol w:w="4488"/><w:gridCol w:w="4500"/></w:tblGrid>')
+ def cell(text,width):
+  body.append('<w:tc><w:tcPr><w:tcW w:w="'+str(width)+'" w:type="dxa"/></w:tcPr>');para(text);body.append('</w:tc>')
+ body.append('<w:tr><w:trPr><w:tblHeader/></w:trPr>');cell('序号',650);cell('隐患问题描述',4488);cell('影像资料',4500);body.append('</w:tr>')
  for i,item in enumerate(r['issues'],1):
-  para(f'问题 {i}｜{item["category"]}｜风险：{item["risk"]}',True)
-  for k,label in [('subcategory','子分类'),('location','部位'),('description','问题描述'),('reference','规范依据'),('suggestion','整改建议')]: para(label+'：'+item.get(k,''))
+  body.append('<w:tr>');cell(str(i),650)
+  details='\n'.join([item.get('description','')]+[label+'：'+item[k] for k,label in [('category','类别'),('subcategory','子分类'),('risk','风险等级'),('location','部位'),('reference','规范依据'),('suggestion','整改建议')] if item.get(k)])
+  cell(details,4488);body.append('<w:tc><w:tcPr><w:tcW w:w="4500" w:type="dxa"/></w:tcPr>')
   for mid in item['photos']: picture(mid)
+  body.append('<w:p/></w:tc></w:tr>')
+ body.append('</w:tbl><w:p/>')
  for signer in r.get('signatures', [{'name':r.get('inspector',''),'signature':r.get('signature','')}]):
   para('检查人手写签名：'+signer['name'])
   if signer['signature']: picture(signer['signature'])
- para('本地试用版生成。风险等级及规范依据由检查人确认；手写签名图片不等同于第三方可信电子签章。')
+
  namespaces='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"'
  xml='<?xml version="1.0" encoding="UTF-8"?><w:document '+namespaces+'><w:body>'+''.join(body)+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/></w:sectPr></w:body></w:document>'
  stream=io.BytesIO()
@@ -218,6 +222,7 @@ def snapshot_docx(snap,brief=False):
    scope=(t.get('fieldSummary','') if brief else t.get('handoverSummary',''))+'\n'+'\n'.join(k+'：'+v for k,v in t['fields'].items())+
          (('\n接收意见：'+t['receipt']['text']) if t.get('receipt') else ''),
    noHazard=t.get('noHazard',False),issues=([dict(category='现场确认记录与证据',risk='人工核对',description='\n'.join(r['type']+' / '+r['authorName']+' / '+r['occurredAt']+'：'+r['text'] for r in t['records']),photos=[eid for eid in photos if any(eid in r['evidence'] for r in t['records']) and not any(eid in i['evidence'] for i in t['issues'])])] if t['records'] else [])+issue_rows,signatures=[dict(name=t['fieldSignature']['name'],signature=t['fieldSignature']['evidenceId'])] if t.get('fieldSignature') else [])
+  report['notice']=t.get('notice',{})
   return make_docx(mc,report)
 
 def module_asset(file):
@@ -350,7 +355,7 @@ class Handler(BaseHTTPRequestHandler):
        if not row: raise Problem('现场简报不存在',404)
        w.task(row['task_id']);snap=json.loads(row['payload'])
        if kind=='brief-word':
-        self.send(snapshot_docx(snap,brief=True),mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',headers={'Content-Disposition':'attachment; filename="field-brief.docx"'});return
+        self.send(snapshot_docx(snap,brief=True),mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',headers={'Content-Disposition':notice.disposition(snap['task'].get('notice',{}).get('noticeNumber'),snap['task']['number'])});return
        for item in snap['evidence']: item.pop('filename',None)
        self.send(module_report(workflow.report_html(snap)) if kind=='brief' else snap,mime='text/html; charset=utf-8' if kind=='brief' else 'application/json; charset=utf-8');return
       if action.startswith('evidence/'):
@@ -369,7 +374,7 @@ class Handler(BaseHTTPRequestHandler):
         value=json.loads(json.dumps(snap))
         for item in value['evidence']: item.pop('filename',None)
         mime='application/json; charset=utf-8';filename='task.json'
-       self.send(value,mime=mime,headers={'Content-Disposition':'attachment; filename="'+filename+'"'} if filename else {});return
+       self.send(value,mime=mime,headers={'Content-Disposition':notice.disposition(snap['task'].get('notice',{}).get('noticeNumber'),snap['task']['number']) if kind=='word' else 'attachment; filename="'+filename+'"'} if filename else {});return
       raise Problem('接口不存在',404)
      request_id=required(d,'requestId',100)
      fingerprint=hashlib.sha256((path+json.dumps(d,sort_keys=True,ensure_ascii=False)).encode()).hexdigest()
@@ -408,7 +413,7 @@ class Handler(BaseHTTPRequestHandler):
        if not matched: raise Problem('无此证据访问权限',403)
       self.send((DATA/'uploads'/m['name']).read_bytes(),mime=m['mime']); return
      if path.startswith('/api/export/'):
-      r=get_report(c,path.split('/')[-1]); w.role(r['projectId']);self.send(make_docx(c,r),mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',headers={'Content-Disposition':f'attachment; filename="inspection-{r["number"]}.docx"'}); return
+      r=get_report(c,path.split('/')[-1]); w.role(r['projectId']);self.send(make_docx(c,r),mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',headers={'Content-Disposition':notice.disposition(r.get('notice',{}).get('noticeNumber'),r['number'])}); return
     else:
      if path=='/api/projects':
       name=required(d,'name',100); contract=required(d,'contract',200); pid=d.get('id') or uid()

@@ -1,5 +1,5 @@
 let cache={};
-function base(){return (wx.getStorageSync('server')||'https://fxbxcx.jkec.info/quality').replace(/\/$/,'')}
+function base(){return 'https://fxbxcx.jkec.info/quality'}
 function token(){return wx.getStorageSync('token')||''}
 function request(path,data){return new Promise((resolve,reject)=>wx.request({url:base()+path,method:data?'POST':'GET',header:{'Content-Type':'application/json','Authorization':'Bearer '+token()},data,timeout:30000,success:r=>{if(r.statusCode>=200&&r.statusCode<300)resolve(r.data);else{if(r.statusCode===401)wx.removeStorageSync('token');reject(Error((r.data&&r.data.error)||('请求失败，HTTP '+r.statusCode)))}},fail:e=>{const detail=String(e&&e.errMsg||'未知网络错误').slice(0,240);reject(Error('无法连接工作台\n服务地址：'+base()+'\n原因：'+detail))}}))}
 function upload(path){return new Promise((resolve,reject)=>wx.getFileSystemManager().readFile({filePath:path,encoding:'base64',success:r=>request('/api/media',{base64:r.data}).then(x=>resolve(x.id),reject),fail:()=>reject(Error('无法读取照片，请重新拍摄'))}))}
