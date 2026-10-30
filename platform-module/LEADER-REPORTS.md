@@ -111,3 +111,14 @@ node --test platform-module/tests/report-catalog.test.cjs platform-module/tests/
 接口：`GET /api/work/document-leader?key=inspection:报告ID` 获取分发状态；`POST /api/work/assign-document-leader` 包含 `key`、`leaderId`、`assignmentRevision`、`requestId`。文档键支持 `inspection`、`brief`、`delivery`，独立修订号用于防止覆盖其他人员的调整。重复请求返回前重新检查管理权限。
 
 本轮77项检查通过：登录与鉴权9项、负责人及成员HTTP流程17项、网页及小程序51项；新增覆盖历史报告补选／取消、归档文档分发、Word照片签名不变、原始记录和快照逐项不变、负责人变更后原负责人导出被拒绝、修订冲突及幂等重放权限撤销。
+
+
+### 2026-10-30 历史报告分发补选部署验证
+
+源码提交 `1b816cc17191a73621b4045c0bbc233a55632227` 已部署；运行目录保持 `/opt/qaxc-fusion-a1b9411/platform-module/candidate`，更新 `server.py`、`workflow.py`、`leader_reports.py`、`web/app.js`，启动时新增 `document_leaders` 表。
+
+- 代码及 SQLite 备份：`/var/backups/qaxc-history-routing-20261030-170008`。
+- 更新前后数量一致：项目1、用户5、成员关系2、巡查报告7、任务15、现场简报4、成果10、证据26。
+- 公网脚本与提交源码的部署路径转换结果一致，历史分发接口未登录时返回401。
+- 管理员重新登录后，实际报告中心显示简报与成果的“补充／调整负责人”按钮；巡查报告详情也显示当前负责人及同名按钮。
+- 实际弹窗正确读取当前负责人和项目成员选项；页面仅做打开／关闭核验，未保存或改变真实报告负责人。完整保存、同步、导出及签名快照保全流程已通过隔离测试。
