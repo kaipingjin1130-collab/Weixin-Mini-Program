@@ -1,0 +1,13 @@
+{
+  "before": {
+    "server.py": "0109b5ac45d561f9d0774728405a7a2e0c63a2cc45598cbc1d955d192f2e7186",
+    "workflow.py": "c95a710b1ef50d7d457d222acb849c9ea4fe864b2e89b53eb56a1c81bcecbfde",
+    "web/app.js": "e4859212deb59eaed6962fa2bdc220ab7be883c47a94a71f7a8ce59bd9d5bf57"
+  },
+  "after": {
+    "server.py": "aeebe4c75cf74416eb094fd279b910ef4d203107e886a26459c36aa0d19e5e3d",
+    "workflow.py": "7015d63aae3c58f6c273b3abb03d8685ca3025aa16e52dd53b5f668c6ec57c06",
+    "notice.py": "8846bfd4bad09475791c5f2e5dd3dd877f9c99e6b8c6634519365ce679b9ec6d",
+    "web/app.js": "5366403f0f110194d7e6ccf4dc098f2383d375db65e72b19bf6a6cb55e9e06e7"
+  }
+}
