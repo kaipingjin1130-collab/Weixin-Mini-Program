@@ -326,6 +326,7 @@ class Handler(BaseHTTPRequestHandler):
     self.db_connection=c
     if method=='POST': c.execute('BEGIN IMMEDIATE')
     user=SESSION_USERS[token]
+    if path=='/api/session' and method=='GET': self.send({'user':user});return
     w=workflow.Workflow(SimpleNamespace(Problem=Problem,required=required,uid=uid,now=now,get_report=get_report,image_type=image_type,dimensions=dimensions,DATA=DATA,KNOWLEDGE=KNOWLEDGE),c,user)
     if host_auth.enabled() and path=='/api/work/users': raise Problem('请使用老平台账号登录一次，再分配项目权限',403)
     if path.startswith('/api/work/'):

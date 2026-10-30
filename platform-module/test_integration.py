@@ -73,6 +73,12 @@ class Integration(unittest.TestCase):
  def test_imported_user_no_local_password_login(self):
   self.login()
   with s.db() as c:self.assertIsNone(s.workflow.login(c,'host:admin:7','anything'))
+ def test_session_identity_requires_login_and_keeps_selected_account(self):
+  self.assertEqual(self.request('/quality/api/session')[0],401)
+  owner,_=self.login();member,_=self.login('member')
+  self.assertTrue(self.request('/quality/api/session',token=owner)[1]['user']['isAdmin'])
+  self.assertEqual(self.request('/quality/api/session',token=member)[1]['user']['id'],'host:admin:8')
+  self.assertFalse(self.request('/quality/api/session',token=member)[1]['user']['isAdmin'])
 
 if __name__=='__main__':unittest.main(verbosity=2)
 

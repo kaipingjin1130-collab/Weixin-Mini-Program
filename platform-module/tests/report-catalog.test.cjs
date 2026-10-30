@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const source=fs.readFileSync(require('node:path').join(__dirname,'../candidate/web/app.js'),'utf8');
 function setup(script=source){
- const ctx=vm.createContext({setInterval(){},URLSearchParams,sessionStorage:{getItem:()=>null,setItem(){},removeItem(){}},document:{querySelector:()=>({addEventListener(){}}),createElement:()=>({}),head:{append(){}}},location:{hash:''},window:{addEventListener(){}},fetch:()=>({catch:()=>({finally(){}})})});
+ const ctx=vm.createContext({setInterval(){},URLSearchParams,sessionStorage:{getItem:()=>null,setItem(){},removeItem(){}},document:{querySelector:()=>({addEventListener(){}}),createElement:()=>({}),head:{append(){}}},location:{hash:''},window:{addEventListener(){}},fetch:()=>new Promise(()=>{})});
  vm.runInContext(script,ctx);
  vm.runInContext(`state={reports:[{id:'original',status:'submitted',project:'项目',contract:'合同',number:'001',inspector:'甲',date:'2026-10-22',issues:[]},{id:'draft',status:'draft',project:'项目',contract:'合同',number:'002',inspector:'乙',date:'2026-10-21',issues:[]}],projects:[{id:'p'}],knowledge:[]};lifecycleState={projects:[{id:'p',name:'项目',contract:'合同'}],tasks:[{id:'task',projectId:'p',title:'临时巡查',number:'T1',inspectors:'甲',sourceReportId:'original',records:[{sourceReportId:'original'}],fieldBriefs:[{id:'b',version:1,createdAt:'2026-10-28T10:00:00+08:00'},{id:'b',version:1,createdAt:'2026-10-28T10:00:00+08:00'}],deliveries:[{id:'d',version:1,createdAt:'2026-10-28T11:00:00+08:00'},{id:'d2',version:2,createdAt:'2026-10-28T12:00:00+08:00'}]},{id:'empty',projectId:'p',records:[],fieldBriefs:[],deliveries:[]}]};`,ctx);
  return code=>vm.runInContext(code,ctx);

@@ -25,3 +25,18 @@ test('login service failure preserves its reason instead of a save warning',asyn
  await assert.rejects(c.api('/api/login',{username:'member',password:'unused'}),/老平台认证服务暂不可用/);
  assert.equal(c.logins(),0);
 });
+
+function sessionClient(status,fail=false){
+ const calls=[],context={AbortSignal,fetch:async(path,options)=>{calls.push({path,options});if(fail)throw Error('network');return {status}}};
+ vm.createContext(context);vm.runInContext(source.slice(source.indexOf('async function restoreHostSession(){'),source.indexOf('restoreHostSession().finally(boot);')),context);
+ return {restore:context.restoreHostSession,calls};
+}
+test('refresh preserves explicit inspection login instead of replacing it with host identity',async()=>{
+ const c=sessionClient(200);await c.restore();assert.deepEqual(c.calls.map(c=>c.path),['/api/session']);
+});
+test('host sign-in is restored only when inspection session is absent',async()=>{
+ const c=sessionClient(401);await c.restore();assert.deepEqual(c.calls.map(c=>c.path),['/api/session','/api/host-session']);assert.equal(c.calls[1].options.method,'POST');
+});
+test('temporary service failure never switches to another host account',async()=>{
+ const c=sessionClient(503);await c.restore();assert.equal(c.calls.length,1);const down=sessionClient(0,true);await down.restore();assert.equal(down.calls.length,1);
+});
