@@ -1,0 +1,11 @@
+{
+  "commit": "f9a8943b8f2d839321a4eb8aadef79b4caae2327",
+  "before": {
+    "server.py": "aeebe4c75cf74416eb094fd279b910ef4d203107e886a26459c36aa0d19e5e3d"
+  },
+  "after": {
+    "server.py": "9a444bef096a63c30f836695a93a14a8c197947dd34bc333182abda47beb5562",
+    "notice_docx.py": "d25b49e446ea40d5426bce76880058b2d2478fc6336153562631956df127cfb1",
+    "templates/hazard-notice.docx": "38bb17a3fa250f46ce1dc61e58a43ea510c92ff292ecfeb9f0e42d7bceda185d"
+  }
+}
