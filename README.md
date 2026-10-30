@@ -1,5 +1,7 @@
 # 质量安全小察 · ABversion
 
+2026-10-30：新增可选巡查负责人、站内待阅及多成员报告汇总，使用与部署见 [负责人汇总说明](platform-module/LEADER-REPORTS.md)。
+
 本分支整合小察平台 A 与 `new-agent` 的 B 模块（基线 `397c58ad0259d428a10965096f07444aa01a79cf`）。
 
 - `platform-module/candidate/`：线上小察服务源码、现有账号适配、B 同源代理和六个左侧菜单入口。

@@ -1,5 +1,6 @@
 """Developer A workflow. SQLite transactions are owned by server.Handler."""
 import base64
+import leader_reports
 from host_auth import is_admin
 import copy
 import csv
@@ -39,6 +40,7 @@ def init(c):
  CREATE TABLE IF NOT EXISTS deliveries(id TEXT PRIMARY KEY, task_id TEXT NOT NULL REFERENCES tasks(id), version INTEGER NOT NULL, payload TEXT NOT NULL, UNIQUE(task_id,version));
  CREATE TABLE IF NOT EXISTS operations(user_id TEXT NOT NULL, request_id TEXT NOT NULL, fingerprint TEXT NOT NULL, result TEXT NOT NULL, PRIMARY KEY(user_id,request_id));
  CREATE TABLE IF NOT EXISTS scenarios(id TEXT PRIMARY KEY, payload TEXT NOT NULL);
+ CREATE TABLE IF NOT EXISTS leader_reads(user_id TEXT NOT NULL, document_key TEXT NOT NULL, read_at TEXT NOT NULL, PRIMARY KEY(user_id,document_key));
  CREATE TABLE IF NOT EXISTS field_reports(id TEXT PRIMARY KEY, task_id TEXT NOT NULL REFERENCES tasks(id), payload TEXT NOT NULL);
  ''')
  for s in SCENARIOS:
@@ -75,6 +77,9 @@ class Workflow:
   r=self.c.execute('SELECT role FROM memberships WHERE project_id=? AND user_id=?',(pid,uid)).fetchone()
   if not r or (roles and r['role'] not in roles): self.fail('请选择符合角色要求的项目成员')
   return uid
+ def leader(self,pid,value):
+  try: return leader_reports.validate_leader(self.c,pid,value)
+  except ValueError as e: self.fail(str(e))
  def evidence(self,pid,ids):
   if not isinstance(ids,list) or len(ids)>30 or any(not isinstance(x,str) for x in ids): self.fail('证据列表格式错误（最多30项）')
   for eid in ids:
@@ -134,6 +139,11 @@ class Workflow:
   self.task(r['task_id'])
   return json.loads(r['payload'])
  def dispatch(self,path,d):
+  if path=='leader-read':
+   rows=leader_reports.select(self,d.get('keys'))
+   for row in rows:
+    self.c.execute('INSERT OR REPLACE INTO leader_reads VALUES(?,?,?)',(self.user['id'],row['key'],self.s.now()))
+   return {'ok':True}
   if path=='report-followup':
    report=self.s.get_report(self.c,self.text(d,'reportId',100))
    pid=report['projectId'];self.allow(pid,['manager'])
@@ -150,7 +160,7 @@ class Workflow:
           title='巡查报告后续办理 · '+report['number'],objectId=self.s.uid(),object=report['scope'][:200],
           dueDate=due,scenario=scenario,fields={k:report['scope'][:1000] for k in scenario['fields']},
           materials=[],checklist=[],assignee=self.user['id'],receiver='',receiverName=receiver,
-          source='report',sourceReportId=report['id'],createdBy=self.user['id'],createdByName=self.user['name'],
+          leaderId=report.get('leaderId',''),source='report',sourceReportId=report['id'],createdBy=self.user['id'],createdByName=self.user['name'],
           status='active',fieldStatus='collecting',fieldBriefs=[],revision=1,records=[],issues=[],events=[],deliveries=[],
           createdAt=self.s.now(),updatedAt=self.s.now())
    self.stamp(t,'report-followup','从已签署巡查报告发起后续办理，保留原报告')
@@ -228,7 +238,7 @@ class Workflow:
           checklist=[],assignee=self.user['id'] if adhoc else self.member(pid,d.get('assignee'),['inspector','manager']),
           receiver='' if adhoc or 'receiverName' in d else self.member(pid,d.get('receiver'),['receiver','manager']),
           receiverName='' if adhoc or 'receiverName' not in d else self.text(d,'receiverName',100),
-          source='adhoc' if adhoc else 'platform',createdBy=self.user['id'],createdByName=self.user['name'],
+          leaderId=self.leader(pid,d.get('leaderId','')),source='adhoc' if adhoc else 'platform',createdBy=self.user['id'],createdByName=self.user['name'],
           status='ready',fieldStatus='collecting',fieldBriefs=[],revision=1,records=[],issues=[],events=[],deliveries=[],createdAt=self.s.now(),updatedAt=self.s.now())
    self.stamp(t,'create','现场自主发起临时巡查' if adhoc else '平台建立派发任务')
    self.c.execute('INSERT INTO tasks VALUES(?,?,?,?)',(t['id'],pid,dump(t),1));return t
@@ -246,6 +256,12 @@ class Workflow:
   t=self.task(d.get('taskId'));pid=t['projectId']
   if d.get('revision')!=t['revision']: self.fail('任务已更新，请刷新后重试，避免覆盖他人修改',409)
   if t['status']=='archived' and path!='reopen': self.fail('归档任务只读，请负责人发起补正后再操作',409)
+  if path=='assign-leader':
+   if self.role(pid) not in ['admin','manager']:
+    if self.user['id']!=t['assignee'] or t.get('fieldStatus','collecting')!='collecting': self.fail('仅项目管理人员或尚未上报的任务执行人可指定负责人',403)
+   t['leaderId']=self.leader(pid,d.get('leaderId',''))
+   self.stamp(t,'assign-leader','指定负责人：'+(t['leaderId'] or '未指定'))
+   return self.persist(t)
   if path=='reopen':
    self.allow(pid,['manager'])
    if t['status'] not in ['archived','accepted']: self.fail('仅已接收或归档任务可发起补正',409)

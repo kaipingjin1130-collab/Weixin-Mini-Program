@@ -11,6 +11,7 @@ from types import SimpleNamespace
 ROOT = Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
 import workflow
+import leader_reports
 import host_auth
 PREFIX=os.environ.get("QAXC_ROOT_PATH", "").rstrip("/")
 if PREFIX and not re.fullmatch(r"/[a-z][a-z0-9-]*", PREFIX): raise RuntimeError("Invalid module prefix")
@@ -139,6 +140,10 @@ def save_report(c,d):
  if old and d.get('revision')!=old['revision']: raise Problem('草稿已在另一页面更新，请重新打开，避免覆盖',409)
  submit=d.get('submit') is True
  payload=validate_report(c,d,submit)
+ previous=json.loads(old['payload']) if old else {}
+ leader=d.get('leaderId',previous.get('leaderId','') if previous.get('projectId')==payload['projectId'] else '')
+ try: payload['leaderId']=leader_reports.validate_leader(c,payload['projectId'],leader)
+ except ValueError as e: raise Problem(str(e))
  revision=old['revision']+1 if old else 1
  status='submitted' if submit else 'draft'
  c.execute('INSERT OR REPLACE INTO reports VALUES(?,?,?,?,?,?)',(rid,payload['codeId'],status,json.dumps(payload,ensure_ascii=False),revision,now()))
@@ -327,6 +332,12 @@ class Handler(BaseHTTPRequestHandler):
      action=path.removeprefix('/api/work/')
      if method=='GET':
       if action=='state': self.send(w.state());return
+      if action=='leader-inbox': self.send(leader_reports.inbox(w));return
+      if action=='leader-export':
+       keys=parse_qs(urlsplit(self.path).query).get('key',[])
+       rows=leader_reports.select(w,keys)
+       value=leader_reports.export_bundle(w,rows,make_docx,snapshot_docx)
+       self.send(value,mime='application/zip',headers={'Content-Disposition':'attachment; filename="inspection-summary.zip"'});return
       if action.startswith('evidence-meta/'):
        row=c.execute('SELECT * FROM evidence WHERE id=?',(action.split('/')[-1],)).fetchone()
        if not row: raise Problem('证据不存在',404)

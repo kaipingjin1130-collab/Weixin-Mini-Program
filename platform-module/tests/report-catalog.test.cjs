@@ -4,7 +4,7 @@ const fs=require('node:fs');
 const vm=require('node:vm');
 const source=fs.readFileSync(require('node:path').join(__dirname,'../candidate/web/app.js'),'utf8');
 function setup(script=source){
- const ctx=vm.createContext({URLSearchParams,sessionStorage:{getItem:()=>null,setItem(){},removeItem(){}},document:{querySelector:()=>({addEventListener(){}}),createElement:()=>({}),head:{append(){}}},location:{hash:''},window:{addEventListener(){}},fetch:()=>({catch:()=>({finally(){}})})});
+ const ctx=vm.createContext({setInterval(){},URLSearchParams,sessionStorage:{getItem:()=>null,setItem(){},removeItem(){}},document:{querySelector:()=>({addEventListener(){}}),createElement:()=>({}),head:{append(){}}},location:{hash:''},window:{addEventListener(){}},fetch:()=>({catch:()=>({finally(){}})})});
  vm.runInContext(script,ctx);
  vm.runInContext(`state={reports:[{id:'original',status:'submitted',project:'项目',contract:'合同',number:'001',inspector:'甲',date:'2026-10-22',issues:[]},{id:'draft',status:'draft',project:'项目',contract:'合同',number:'002',inspector:'乙',date:'2026-10-21',issues:[]}],projects:[{id:'p'}],knowledge:[]};lifecycleState={projects:[{id:'p',name:'项目',contract:'合同'}],tasks:[{id:'task',projectId:'p',title:'临时巡查',number:'T1',inspectors:'甲',sourceReportId:'original',records:[{sourceReportId:'original'}],fieldBriefs:[{id:'b',version:1,createdAt:'2026-10-28T10:00:00+08:00'},{id:'b',version:1,createdAt:'2026-10-28T10:00:00+08:00'}],deliveries:[{id:'d',version:1,createdAt:'2026-10-28T11:00:00+08:00'},{id:'d2',version:2,createdAt:'2026-10-28T12:00:00+08:00'}]},{id:'empty',projectId:'p',records:[],fieldBriefs:[],deliveries:[]}]};`,ctx);
  return code=>vm.runInContext(code,ctx);
@@ -44,7 +44,7 @@ test('deep knowledge routes retain the matching unified navigation section',()=>
 
 test('grouped navigation retains every original destination and adds risk records',()=>{
  const run=setup();const ids=JSON.parse(run("JSON.stringify(navigationGroups.flatMap(g=>g.items.flatMap(i=>[i.id,...(i.children||[]).map(c=>c.id)])))"));
- const expected=['home','reports','rectification','bknowledge','bprocess','bretro','blearn','bservices','profile','projects','brisks'];
+ const expected=['home','reports','leaders','rectification','bknowledge','bprocess','bretro','blearn','bservices','profile','projects','brisks'];
  assert.deepEqual(ids.slice().sort(),expected.sort());assert.equal(new Set(ids).size,ids.length);
  assert.equal(run("bPageFor('/records/test')"),'brisks');assert.equal(run("bPageFor('/imports/test')"),'bsources');
  assert.deepEqual(JSON.parse(run('JSON.stringify(navigationGroups.map(g=>g.label))')),['工程风险管理','知识管理','个人中心']);
@@ -108,4 +108,15 @@ test('A import deep links select results intake while historical batches retain 
   assert.equal(run('names[page]'),'成果接入');
  }
  for(const path of ['/imports','/imports/01234567-89ab-cdef-0123-456789abcdef','/imports/ai_invalid'])assert.equal(run(`bPageFor('${path}')`),'bsources');
+});
+
+test('leader inbox filters by project and member while escaping report content',()=>{
+ const run=setup();run(`leaderInbox=[{key:'brief:b',kind:'brief',id:'b',title:'<script>bad</script>',inspectors:'甲',projectId:'p',project:'项目',number:'001',leaderName:'负责人',version:1,createdAt:'2026-10-30',issues:0,unread:true},{key:'brief:c',kind:'brief',id:'c',title:'其他项目',inspectors:'乙',projectId:'q'}];selectedProject='p';leaderMember='';`);
+ assert.equal(run('leaderRows().length'),1);const html=run('leaders()');assert.ok(html.includes('&lt;script&gt;bad&lt;/script&gt;'));assert.ok(!html.includes('<script>bad'));
+ run("leaderMember='乙'");assert.equal(run('leaderRows().length'),0);
+});
+test('leader export and report links receive the deployment prefix exactly once',()=>{
+ const prefixed=source.replace(/(["'`])\/(?!\/)(?=api\/|media\/|work(?:[?"'`]|\.js)|style\.css|app\.js|followup\.js|ab-client\.js|#|["'`])/g,(_m,q)=>q+'/quality/');
+ assert.ok(prefixed.includes('fetch(`/quality/api/work/leader-export?'));
+ assert.ok(!prefixed.includes('/quality/quality/'));
 });

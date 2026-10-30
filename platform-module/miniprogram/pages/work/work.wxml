@@ -14,6 +14,7 @@
   <button class="secondary small" bindtap="back">返回任务列表</button>
   <view class="card"><view class="h2">发起临时巡查</view><view class="note">由你作为执行人，无需平台预先派单。准备清单确认后即可登记隐患，成果接收人由平台后续指定。</view>
    <view class="label">所属合同</view><picker range="{{eligibleProjects}}" range-key="contractLabel" value="{{adhocProjectIndex}}" bindchange="adhocProjectPick"><view class="picker">{{eligibleProjects[adhocProjectIndex].contractLabel}} ▾</view></picker>
+   <view class="label">项目负责人（选填）</view><picker range="{{leaderOptions}}" range-key="name" value="{{leaderIndex}}" bindchange="leaderPick"><view class="picker">{{leaderOptions[leaderIndex].name}} ▾</view></picker><view class="muted">提交的简报将自动同步至该负责人的网页汇总列表。</view>
    <view class="label">检查场景</view><picker range="{{scenarios}}" range-key="name" value="{{scenarioIndex}}" bindchange="adhocScenarioPick"><view class="picker">{{scenarios[scenarioIndex].name}} ▾</view></picker>
    <view class="label">巡查名称</view><input maxlength="200" value="{{newTask.title}}" data-key="newTask.title" bindinput="input"/>
    <view class="label">检查人员名单</view><input maxlength="1000" placeholder="多人用逗号分隔，例如：张三、李四" value="{{newTask.inspectors}}" data-key="newTask.inspectors" bindinput="input"/><view class="label">检查对象／设备（选填）</view><input maxlength="200" placeholder="例如二号楼或设备名称" value="{{newTask.object}}" data-key="newTask.object" bindinput="input"/>

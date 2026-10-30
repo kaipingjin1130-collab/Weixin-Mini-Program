@@ -1,0 +1,60 @@
+# 巡查负责人及报告汇总 · 2026-10-30
+
+## 使用
+
+1. 在项目中分配成员。负责人须是该项目的成员账号，不能只填写姓名。
+2. 网页分派任务、小程序发起临时巡查、网页新建巡查报告时，均有“项目负责人（选填）”。默认“不指定负责人”，留空不影响原流程。
+3. 网页任务详情可指定或调整负责人。管理员、项目管理人员可以调整；执行人只能在现场材料尚未上报时调整自己的任务。归档任务保持只读。
+4. 成员正式提交后，负责人进入左侧“负责人汇总”查看报告、标记已阅，或使用顶部“负责人待阅”入口。打开网页时每30秒同步站内待阅列表，也可手动刷新。
+5. 按顶部项目范围及执行人员筛选，勾选同一项目的多份报告，点击“导出所选汇总包”。ZIP 内有 `summary.html`（打开后可打印或保存 PDF）、`summary.csv`、`manifest.json` 及 `reports/` 中含照片和签名的原始 Word。
+
+原始报告、现场简报、正式成果分别标注类型和版本。历史版本不覆盖；补充后重新上报生成新的待阅项。汇总按所选文档逐份列示，不将不同版本的隐患自动去重，不生成新的联合签名或替代原始报告。最多一次选择100份。
+
+## 权限和兼容
+
+- `leaderId` 为可选字段，缺省视为未指定。历史任务不会自动选择负责人。已有未归档任务可在详情补选，已提交的简报和成果随即出现在该负责人的汇总中。
+- 原报告草稿由旧客户端保存且未传负责人字段时，保留同一项目中原有的负责人。
+- 本次任务负责人是报告汇总责任人，独立于项目 `manager` 角色，不自动赋予整改分派、审核等管理权限。
+- 负责人只收到指定给自己的、当前仍有项目访问权限的已提交文档；管理员可查看全部已指定文档。移除项目权限后，列表和导出均重新校验权限。
+- 已阅记录按用户和文档保存。调整负责人后，新负责人拥有独立已阅状态。原始签名及文档快照不改写。
+- 两端共用后台，报告提交事务完成后自动进入站内汇总；本版不调用微信订阅消息、短信或邮件服务。
+
+## API
+
+- 新建 `tasks` / `adhoc-tasks`、保存 `/api/reports`：可选 `leaderId`。
+- `POST /api/work/assign-leader`：`taskId`、`revision`、`leaderId`、`requestId`；可传空串取消指定。沿用修订冲突和幂等请求校验。
+- `GET /api/work/leader-inbox`：当前用户的提交文档列表和待阅状态。
+- `POST /api/work/leader-read`：`keys`（1至100个文档键）、`requestId`。
+- `GET /api/work/leader-export?key=brief:文档ID&key=inspection:报告ID`：同项目汇总 ZIP，服务端重新校验负责人、提交状态及项目权限。
+
+## 部署
+
+线上运行代码位于 `/opt/qaxc-test`。需同时部署以下文件，并重启 `qaxc-test`：
+
+| 仓库来源（`platform-module/candidate/` 下） | 线上目标（`/opt/qaxc-test/` 下） |
+| --- | --- |
+| `server.py` | `server.py` |
+| `workflow.py` | `workflow.py` |
+| `leader_reports.py` | `leader_reports.py`（新增） |
+| `web/app.js` | `web/app.js` |
+| `web/work.js` | `web/work.js` |
+
+先核对线上版本并备份这五个文件及 `/var/lib/qaxc-test/inspections.sqlite3`；SQLite 应使用 backup API 或停服后备份。启动时自动新增 `leader_reads` 表，不删除或迁移原报告。不要覆盖数据目录、账号适配、A/B配置或密钥。启动失败时恢复原文件并重启，新增表可保留。
+
+小程序请使用 `platform-module/miniprogram/`；本次修改 `pages/work/work.js` 和 `pages/work/work.wxml`，需重新编译、预览及按发布流程上传微信版本。仓库 `local-inspector/` 是保留的独立版，不是此次线上整合版的发布目录。
+
+本次浏览器控制因无法可靠识别 Edge 当前网址而被工具停止，尚未替换线上文件，也未完成微信真机验收。
+
+## 验证
+
+在仓库根目录运行：
+
+```powershell
+python platform-module/test_integration.py
+python platform-module/tests/test_leader_reports.py
+node --test platform-module/tests/report-catalog.test.cjs platform-module/tests/login-errors.test.cjs platform-module/tests/leader-field-client.test.cjs
+```
+
+共59项通过：登录与项目权限8项，负责人HTTP流程8项，报告列表及汇总页面17项，登录错误处理3项，更新后的小程序现场端23项。包含空负责人、草稿排除、多个成员汇总、Word照片签名保留、历史版本及新版本待阅、调整负责人、权限撤销和修订冲突。
+
+额外尝试的 A/B pytest 检查因本机缺少 `pytest` 未运行；未将其计入通过数。
