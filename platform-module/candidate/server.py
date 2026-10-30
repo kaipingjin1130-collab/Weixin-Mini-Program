@@ -146,47 +146,14 @@ def save_report(c,d):
  return get_report(c,rid)
 
 def make_docx(c,r):
- """Minimal standards-based OOXML, including embedded photos and signature."""
- body=[]; images=[]
- def para(t,bold=False):
-  body.append('<w:p><w:r>'+('<w:rPr><w:b/></w:rPr>' if bold else '')+'<w:t xml:space="preserve">'+escape(t)+'</w:t></w:r></w:p>')
- def picture(mid):
-  m=c.execute('SELECT * FROM media WHERE id=?',(mid,)).fetchone()
-  n=len(images)+1; ext='.png' if m['mime']=='image/png' else '.jpg'; images.append((n,ext,(DATA/'uploads'/m['name']).read_bytes()))
-  # Preserve aspect ratio for PNG and JPEG headers, without third-party libraries.
-  w,h=dimensions(images[-1][2]); width=min(2600000,w*9525); height=int(width*h/w)
-  if height>6400800: width=int(width*6400800/height); height=6400800
-  body.append(f'<w:p><w:r><w:drawing><wp:inline><wp:extent cx="{width}" cy="{height}"/><wp:docPr id="{n}" name="照片{n}"/><a:graphic><a:graphicData uri="http://schemas.openxmlformats.org/drawingml/2006/picture"><pic:pic><pic:nvPicPr><pic:cNvPr id="{n}" name="image{n}"/><pic:cNvPicPr/></pic:nvPicPr><pic:blipFill><a:blip r:embed="rId{n}"/><a:stretch><a:fillRect/></a:stretch></pic:blipFill><pic:spPr><a:xfrm><a:off x="0" y="0"/><a:ext cx="{width}" cy="{height}"/></a:xfrm><a:prstGeom prst="rect"><a:avLst/></a:prstGeom></pic:spPr></pic:pic></a:graphicData></a:graphic></wp:inline></w:drawing></w:r></w:p>')
- para('隐患清单',True)
- for key,label in notice.FIELDS.items(): para(label+'：'+r.get('notice',{}).get(key,''))
- for k,label in [('contract','合同'),('project','项目'),('number','系统巡查编号'),('date','检查日期'),('inspector','检查人'),('scope','检查范围与结论')]: para(label+'：'+r.get(k,''))
- para('报告状态：'+r.get('statusLabel',('草稿（未正式签署）' if r['status']=='draft' else '已提交')))
- if r['noHazard']: para('本次在上述检查范围内未发现隐患。')
- body.append('<w:tbl><w:tblPr><w:tblW w:w="9638" w:type="dxa"/><w:tblLayout w:type="fixed"/><w:tblBorders>'+''.join('<w:'+edge+' w:val="single" w:sz="4" w:color="999999"/>' for edge in ['top','left','bottom','right','insideH','insideV'])+'</w:tblBorders></w:tblPr><w:tblGrid><w:gridCol w:w="650"/><w:gridCol w:w="4488"/><w:gridCol w:w="4500"/></w:tblGrid>')
- def cell(text,width):
-  body.append('<w:tc><w:tcPr><w:tcW w:w="'+str(width)+'" w:type="dxa"/></w:tcPr>');para(text);body.append('</w:tc>')
- body.append('<w:tr><w:trPr><w:tblHeader/></w:trPr>');cell('序号',650);cell('隐患问题描述',4488);cell('影像资料',4500);body.append('</w:tr>')
- for i,item in enumerate(r['issues'],1):
-  body.append('<w:tr>');cell(str(i),650)
-  details='\n'.join([item.get('description','')]+[label+'：'+item[k] for k,label in [('category','类别'),('subcategory','子分类'),('risk','风险等级'),('location','部位'),('reference','规范依据'),('suggestion','整改建议')] if item.get(k)])
-  cell(details,4488);body.append('<w:tc><w:tcPr><w:tcW w:w="4500" w:type="dxa"/></w:tcPr>')
-  for mid in item['photos']: picture(mid)
-  body.append('<w:p/></w:tc></w:tr>')
- body.append('</w:tbl><w:p/>')
- for signer in r.get('signatures', [{'name':r.get('inspector',''),'signature':r.get('signature','')}]):
-  para('检查人手写签名：'+signer['name'])
-  if signer['signature']: picture(signer['signature'])
+ """Export both platform reports and mobile snapshots with the company template."""
+ import notice_docx
+ def read_image(mid):
+  media=c.execute('SELECT * FROM media WHERE id=?',(mid,)).fetchone()
+  if not media: raise Problem('照片不存在，请重新上传')
+  return (DATA/'uploads'/media['name']).read_bytes(),media['mime']
+ return notice_docx.render(r,read_image,dimensions)
 
- namespaces='xmlns:w="http://schemas.openxmlformats.org/wordprocessingml/2006/main" xmlns:r="http://schemas.openxmlformats.org/officeDocument/2006/relationships" xmlns:wp="http://schemas.openxmlformats.org/drawingml/2006/wordprocessingDrawing" xmlns:a="http://schemas.openxmlformats.org/drawingml/2006/main" xmlns:pic="http://schemas.openxmlformats.org/drawingml/2006/picture"'
- xml='<?xml version="1.0" encoding="UTF-8"?><w:document '+namespaces+'><w:body>'+''.join(body)+'<w:sectPr><w:pgSz w:w="11906" w:h="16838"/><w:pgMar w:top="1134" w:right="1134" w:bottom="1134" w:left="1134"/></w:sectPr></w:body></w:document>'
- stream=io.BytesIO()
- with zipfile.ZipFile(stream,'w',zipfile.ZIP_DEFLATED) as z:
-  z.writestr('[Content_Types].xml','<Types xmlns="http://schemas.openxmlformats.org/package/2006/content-types"><Default Extension="rels" ContentType="application/vnd.openxmlformats-package.relationships+xml"/><Default Extension="xml" ContentType="application/xml"/><Default Extension="png" ContentType="image/png"/><Default Extension="jpg" ContentType="image/jpeg"/><Override PartName="/word/document.xml" ContentType="application/vnd.openxmlformats-officedocument.wordprocessingml.document.main+xml"/></Types>')
-  z.writestr('_rels/.rels','<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships"><Relationship Id="rId1" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/officeDocument" Target="word/document.xml"/></Relationships>')
-  z.writestr('word/document.xml',xml)
-  z.writestr('word/_rels/document.xml.rels','<Relationships xmlns="http://schemas.openxmlformats.org/package/2006/relationships">'+''.join(f'<Relationship Id="rId{n}" Type="http://schemas.openxmlformats.org/officeDocument/2006/relationships/image" Target="media/image{n}{ext}"/>' for n,ext,_ in images)+'</Relationships>')
-  for n,ext,data in images: z.writestr(f'word/media/image{n}{ext}',data)
- return stream.getvalue()
 
 def dimensions(b):
  import struct
