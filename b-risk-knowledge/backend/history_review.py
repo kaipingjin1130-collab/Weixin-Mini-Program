@@ -192,7 +192,7 @@ def report_findings(document_id: str, actor=Depends(reviewer)):
 @router.get('/findings')
 def findings(q: str = Query('', max_length=100), project: str = Query('', max_length=200),
              document_id: str = Query('', max_length=36),
-             offset: int = Query(0, ge=0, le=200000), limit: int = Query(20, ge=1, le=100),
+             offset: int = Query(0, ge=0, le=200000), limit: int = Query(20, ge=1, le=200),
              actor=Depends(reviewer)):
     ensure_schema()
     result = rows('''SELECT f.id, f.document_id, d.original_name, f.project_name, f.engineering_project_name,

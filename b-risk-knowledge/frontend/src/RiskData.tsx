@@ -42,6 +42,8 @@ const READER = '/history-reader';
 const STORE_KEY = 'historyReview.visibleColumnsV2';
 const ORDER_KEY = 'historyReview.columnOrder';
 const WIDTH_KEY = 'historyReview.columnWidths';
+const PAGE_SIZE_KEY = 'historyReview.pageSize';
+const PAGE_SIZES = [20, 30, 50, 100, 200];
 const DEFAULT_FIELDS = ['engineering_project_name', 'inspection_date', 'problem_description', 'source_category', 'rectification_requirement', 'reported_response'];
 const OPTIONAL_SPECIALS = ['_photos', '_source', '_status', '_actions'];
 const EDIT_ORDER = ['project_name', 'engineering_project_name', 'inspection_date', 'inspection_location', 'problem_description', 'source_category', 'source_grade', 'hazard_category', 'basis_or_clause', 'rectification_requirement', 'rectification_advice', 'rectification_deadline', 'reported_response', 'reinspection_conclusion'];
@@ -63,6 +65,12 @@ function loadFields(): string[] {
     const parsed = raw ? JSON.parse(raw) : null;
     return Array.isArray(parsed) && parsed.length ? parsed.filter((x) => typeof x === 'string') : DEFAULT_VISIBLE;
   } catch { return DEFAULT_VISIBLE; }
+}
+function loadPageSize(): number {
+  try {
+    const value = Number(localStorage.getItem(PAGE_SIZE_KEY));
+    return PAGE_SIZES.includes(value) ? value : 30;
+  } catch { return 30; }
 }
 function loadWidths(): Record<string, number> {
   try {
@@ -165,6 +173,7 @@ export function RiskData({ api }: { api: Api }) {
   const [documentFilter, setDocumentFilter] = useState('');
   const [input, setInput] = useState(''); const [query, setQuery] = useState('');
   const [offset, setOffset] = useState(0); const [more, setMore] = useState(false);
+  const [pageSize, setPageSize] = useState<number>(loadPageSize);
   const [pendingOnly, setPendingOnly] = useState(false);
   const [selectedDrafts, setSelectedDrafts] = useState<string[]>([]);
   const [expanded, setExpanded] = useState<Set<string>>(new Set());
@@ -227,14 +236,14 @@ export function RiskData({ api }: { api: Api }) {
     if (tab !== 'findings') return;
     let stale = false; setLoading(true); setError('');
     api<{ items: Finding[]; has_more: boolean }>(REVIEW + '/findings?' + new URLSearchParams({
-      q: query, project, document_id: documentFilter, offset: String(offset), limit: '30',
+      q: query, project, document_id: documentFilter, offset: String(offset), limit: String(pageSize),
     })).then((page) => {
       if (stale) return;
       setItems(pendingOnly ? page.items.filter((x) => x.draft_id) : page.items);
       setMore(page.has_more);
     }).catch((e) => { if (!stale) setError(e.message); }).finally(() => { if (!stale) setLoading(false); });
     return () => { stale = true; };
-  }, [api, tab, query, project, documentFilter, offset, pendingOnly, refresh]);
+  }, [api, tab, query, project, documentFilter, offset, pendingOnly, pageSize, refresh]);
 
   useEffect(() => {
     if (tab !== 'reports') return;
@@ -565,10 +574,18 @@ export function RiskData({ api }: { api: Api }) {
               </tbody>
             </table>
           </div>
+          <div className="history-pagesize">每页显示
+            <select aria-label="每页显示条数" value={pageSize} onChange={(e) => {
+              const next = Number(e.target.value);
+              setPageSize(next); setOffset(0);
+              try { localStorage.setItem(PAGE_SIZE_KEY, String(next)); } catch { /* 忽略本地存储异常 */ }
+            }}>{PAGE_SIZES.map((n) => <option key={n} value={n}>{n}</option>)}</select>
+            条
+          </div>
           <div className="history-pagination">
-            <button className="button secondary" disabled={offset === 0} onClick={() => setOffset(Math.max(0, offset - 30))}>上一页</button>
-            <span>第 {offset / 30 + 1} 页 · 本页 {items.length} 条</span>
-            <button className="button secondary" disabled={!more} onClick={() => setOffset(offset + 30)}>下一页</button>
+            <button className="button secondary" disabled={offset === 0} onClick={() => setOffset(Math.max(0, offset - pageSize))}>上一页</button>
+            <span>第 {Math.floor(offset / pageSize) + 1} 页 · 本页 {items.length} 条</span>
+            <button className="button secondary" disabled={!more} onClick={() => setOffset(offset + pageSize)}>下一页</button>
           </div>
         </>}
 
