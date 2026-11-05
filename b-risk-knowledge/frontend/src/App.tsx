@@ -1,3 +1,6 @@
+import {Scenes} from './Scenes';
+import {Standards} from './Standards';
+import {Workflows} from './Workflows';
 import { AImport } from './AImport';
 import { PlatformServices } from './PlatformServices';
 import { ArchiveReview } from './ArchiveReview';
@@ -6,6 +9,7 @@ import { Activity, ArrowRight, CheckCircle2, ChevronRight, ClipboardList, Downlo
   FolderLock, LayoutDashboard, LoaderCircle, Play, RefreshCw, ShieldCheck, Users, X, AlertCircle, BookOpen } from 'lucide-react';
 import './style.css';
 import { Ingestion } from './Ingestion';
+import { RiskData } from './RiskData';
 import { Knowledge } from './Knowledge';
 import { Retrieval } from './Retrieval';
 import { TaskPackages } from './TaskPackages';
@@ -15,16 +19,16 @@ import { Extraction } from './Extraction';
 import { apiFetch, currentPath, inPlatform, navigatePath } from './platform';
 
 type Project = { id: string; name: string; roles: string[]; can_run: boolean; can_manage: boolean; permissions?: string[] };
-type Me = { id: string; name: string; subject: string; mode: string; projects: Project[] };
+type Me = { id: string; name: string; subject: string; mode: string; projects: Project[]; can_manage_models?: boolean };
 type Job = { id: string; title: string; kind: string; project_id: string; status: string; attempts: number;
-  progress: number; result_ref: string | null; error: string | null; row_version: number; created_at: string; updated_at: string };
+  progress: number; result_ref: string | null; result_links?:{label:string;path:string}[]; error: string | null; row_version: number; created_at: string; updated_at: string };
 type Binding = { id: string; user_id: string; project_id: string; role: string; row_version: number };
 type Access = { users: { id: string; name: string; authorized_projects: string[] }[];
   projects: { id: string; name: string }[]; bindings: Binding[] };
 
 const statuses: Record<string, string> = { queued: '等待处理', running: '正在处理', retrying: '自动重试中', succeeded: '已完成', failed: '处理失败' };
 const roles: Record<string, string> = { admin: '管理员', processor: '资料加工', reviewer: '内容审核', teacher: '培训教员', learner: '学习成员', a_service: '模拟A服务' };
-const projectNames: Record<string, string> = { 'demo-airport': '机场检查 · 演示', 'demo-metro': '地铁监护 · 演示' };
+const jobKinds: Record<string, string> = { demo_check: '演示检查', source_import: '历史数据接入', knowledge_generation: '模板知识候选', knowledge_extraction: '施工要点萃取', release_build: '发布索引构建', task_package_import: '任务包处理', a_import: 'A 成果接入', a_retrospective: 'A 成果复盘', training_generation:'培训题目生成', retrospective_generation:'案例复盘生成', training_grading: '培训案例评分' };
 const fmt = (date: string) => new Date(date).toLocaleString('zh-CN', { month: '2-digit', day: '2-digit', hour: '2-digit', minute: '2-digit', second: '2-digit' });
 const profiles = [['admin', '本地管理员'], ['processor', '资料加工员'], ['learner', '新成员'], ['teacher', '培训教员'], ['outsider', '其他项目成员']];
 
@@ -39,9 +43,12 @@ export function App({ embedded = false }: { embedded?: boolean }) {
   const isRetrieval = ['/search','/releases','/knowledge/library'].includes(path) || /^\/knowledge\/[^/]+$/.test(path) && path !== '/knowledge/drafts';
   const isKnowledge = !isRetrieval && ['/quality','/knowledge','/reviews'].some(p => path.startsWith(p));
   const isTraining = path.startsWith('/training') || path.startsWith('/learn');
-  const isExtraction = path.startsWith('/extraction') || path === '/settings/models';
+  const isWorkflows = path.startsWith('/workflows');
+  const isStandards = path.startsWith('/standards');
+  const isExtraction = isWorkflows || isStandards || path.startsWith('/extraction') || path === '/settings/models' || path === '/settings/scenes';
   const isRetrospectives = path.startsWith('/retrospectives');
   const isPackages = path.startsWith('/task-packages');
+  const isRiskData = path === '/records';
   const isIngestion = !isAImport && ['/sources', '/imports', '/records'].some(p => path.startsWith(p));
   const [me, setMe] = useState<Me | null>(null);
   const [jobs, setJobs] = useState<Job[]>([]);
@@ -96,6 +103,8 @@ export function App({ embedded = false }: { embedded?: boolean }) {
       try {
         const current = await api<Me>('/me');
         if (stale) return;
+        const names=(window as Window & {QaxcProjectNames?:Record<string,string>}).QaxcProjectNames||{};
+        if(embedded)current.projects=current.projects.map(p=>({...p,name:names[p.id]||p.name}));
         const selectedProject = (window as Window & { QaxcProjectId?: string }).QaxcProjectId;
         if (embedded && selectedProject) current.projects = current.projects.filter(p => p.id === selectedProject);
         setMe(current);
@@ -170,11 +179,12 @@ export function App({ embedded = false }: { embedded?: boolean }) {
     const scope = me?.projects.find(p => p.id === job.project_id);
     if (scope?.permissions == null) return !!scope?.can_run;
     const action: Record<string, string> = { source_import: 'knowledge.process', knowledge_generation: 'knowledge.process',
-      knowledge_extraction: 'knowledge.process', release_build: 'knowledge.publish', training_grading: 'training.manage' };
+      knowledge_extraction: 'knowledge.process', release_build: 'knowledge.publish', training_generation:'training.manage', retrospective_generation:'retrospective.generate', training_grading: 'training.manage' };
     return !!action[job.kind] && scope.permissions.includes(action[job.kind]);
   };
   const canManage = me?.projects.some(p => p.can_manage);
-  const title = isAImport ? 'A 成果接入' : isServices ? '平台服务' : isArchiveReview ? '归档成果复盘' : isTraining ? (path.startsWith('/learn')?'我的学习':'培训与学习记录') : isExtraction ? (path==='/settings/models'?'云端模型配置':'施工要点知识萃取') : isRetrospectives ? '过程复盘与经验' : isPackages ? '归档成果与证据' : isRetrieval ? (path === '/releases' ? '知识发布管理' : path === '/search' ? '知识检索' : '已发布知识库') : isKnowledge ? '知识加工与审核' : isIngestion ? (path.startsWith('/sources') ? '历史数据来源' : path.startsWith('/imports') ? '历史项目' : '风险数据') : path === '/settings/access' ? '成员与权限' : path === '/jobs' ? '处理任务' : '我的工作台';
+  const projectNames: Record<string, string> = Object.fromEntries((me?.projects || []).map(p => [p.id, p.name]));
+  const title = isAImport ? 'A 成果接入' : isServices ? '平台服务' : isArchiveReview ? '归档成果复盘' : isTraining ? (path.startsWith('/learn')?'我的学习':'培训与学习记录') : isExtraction ? (isWorkflows?'隐患分析与知识成果':isStandards?'规范原文与版本':path==='/settings/models'?'云端模型配置':path==='/settings/scenes'?'场景与流程配置':'施工要点知识萃取') : isRetrospectives ? '过程复盘与经验' : isPackages ? '归档成果与证据' : isRetrieval ? (path === '/releases' ? '知识发布管理' : path === '/search' ? '知识检索' : '已发布知识库') : isKnowledge ? '知识加工与审核' : isIngestion ? (isRiskData ? '风险数据' : path.startsWith('/sources') ? '历史数据来源' : path.startsWith('/imports') ? '历史项目' : '风险数据') : path === '/settings/access' ? '成员与权限' : path === '/jobs' ? '处理任务' : '我的工作台';
   const activeCount = (counts.queued || 0) + (counts.running || 0) + (counts.retrying || 0);
 
   return <div className="app-shell">
@@ -206,10 +216,10 @@ export function App({ embedded = false }: { embedded?: boolean }) {
         }}>{profiles.map(([id, label]) => <option value={id} key={id}>{label}</option>)}</select></div>}
       </header>}
       <main>
-        {embedded && !isAImport && !isRetrieval && !isServices && <nav aria-label="业务功能" className="heading-actions" style={{flexWrap:'wrap',marginBottom:20}}>{(isIngestion ? [['/sources','数据来源'],['/imports','历史项目'],['/records','风险数据']] : isTraining ? [['/learn','我的学习'],['/training/questions','题库与学习包']] : isKnowledge || isExtraction ? [['/extraction','知识萃取'],['/quality','质量核查'],['/knowledge/drafts','知识草稿'],['/reviews','内容审核'],['/settings/models','模型设置']] : isRetrieval ? [['/knowledge/library','已发布知识'],['/search','检索'],['/releases','发布管理']] : isPackages ? [['/task-packages','成果清单'],['/task-packages/import','接入成果']] : [['/retrospectives','复盘清单']]).map(([url,label])=><button key={url} className={path===url?'button primary':'button ghost'} onClick={()=>navigate(url)}>{label}</button>)}</nav>}
+        {embedded && !isAImport && !isRetrieval && !isServices && !isIngestion && <nav aria-label="业务功能" className="heading-actions" style={{flexWrap:'wrap',marginBottom:20}}>{(isIngestion ? [['/sources','数据来源'],['/imports','历史项目'],['/records','风险数据']] : isTraining ? [['/learn','我的学习'],['/training/questions','题库与学习包']] : isKnowledge || isExtraction ? [['/workflows','隐患与指导书'],['/standards','规范原文'],['/extraction','知识萃取'],['/quality','质量核查'],['/knowledge/drafts','知识草稿'],['/reviews','内容审核'],['/settings/models','模型设置'],['/settings/scenes','场景配置']] : isRetrieval ? [['/knowledge/library','已发布知识'],['/search','检索'],['/releases','发布管理']] : isPackages ? [['/task-packages','成果清单'],['/task-packages/import','接入成果']] : [['/retrospectives','复盘清单']]).map(([url,label])=><button key={url} className={path===url?'button primary':'button ghost'} onClick={()=>navigate(url)}>{label}</button>)}</nav>}
         <div className="page-heading"><div><div className="eyebrow">工作空间</div><h1>{title}</h1>
-          <p>{isAImport ? '指定版本接入、证据校验与过程复盘。' : isTraining ? '固定审核来源、题目与学习包版本，保留作答、建议评分和教员复核。' : isExtraction ? '按类别合并历史记录，调用云端模型提炼可追溯的施工要点。' : isRetrospectives ? '复用已有过程记录与证据，核查实际流程，形成可审核的经验草稿。' : isPackages ? '接收作业快照，核对事件、证据和版本，减少重复准备资料。' : isRetrieval ? '固定审核版本发布，以项目权限检索知识并打开来源。' : isKnowledge ? '复用来源证据生成候选，核查质量问题后逐版本审核。' : isIngestion ? '一次接入模拟资料，保留原文、治理生效值与来源证据。' : path === '/settings/access' ? '按项目分配角色，保留每次授权与撤销的记录。' : '查看处理进度、定位失败任务，保留每一次执行结果。'}</p></div>
-          <div className="heading-actions">{!embedded && <button className="button ghost" onClick={() => setRefresh(v => v + 1)} disabled={loading}><RefreshCw size={16} />刷新</button>}
+          <p>{isAImport ? '指定版本接入、证据校验与过程复盘。' : isTraining ? '固定审核来源、题目与学习包版本，保留作答、建议评分和教员复核。' : isWorkflows ? '按固定来源版本登记事件、分析分类、编制汇编和指导书，经审核发布后进入培训。' : isStandards ? '保存规范原文与适用版本，核对来源后审核发布。' : isExtraction ? '按类别合并历史记录，调用云端模型提炼可追溯的施工要点。' : isRetrospectives ? '复用已有过程记录与证据，核查实际流程，形成可审核的经验草稿。' : isPackages ? '接收作业快照，核对事件、证据和版本，减少重复准备资料。' : isRetrieval ? '固定审核版本发布，以项目权限检索知识并打开来源。' : isKnowledge ? '复用来源证据生成候选，核查质量问题后逐版本审核。' : isIngestion ? (isRiskData ? '查看原报告当前解析版本、字段证据和关联图片。' : '一次接入模拟资料，保留原文、治理生效值与来源证据。') : path === '/settings/access' ? '按项目分配角色，保留每次授权与撤销的记录。' : '查看处理进度、定位失败任务，保留每一次执行结果。'}</p></div>
+          <div className="heading-actions">{embedded && isIngestion && <nav aria-label="风险数据视图" className="toprow-tabs">{[['/sources','数据来源'],['/imports','历史项目'],['/records','风险数据']].map(([url,label])=><button key={url} className={path===url?'button primary':'button ghost'} onClick={()=>navigate(url)}>{label}</button>)}</nav>}{!embedded && <button className="button ghost" onClick={() => setRefresh(v => v + 1)} disabled={loading}><RefreshCw size={16} />刷新</button>}
             {!inPlatform && !isIngestion && !isKnowledge && !isRetrieval && !isPackages && !isRetrospectives && !isTraining && !isExtraction && path !== '/settings/access' && <button className="button primary" disabled={!canRun || busy} onClick={() => {
               setProject(me?.projects.find(p => p.can_run)?.id || 'demo-airport'); setShowCreate(true);
             }}><Play size={16} />运行演示检查</button>}</div>
@@ -220,11 +230,12 @@ export function App({ embedded = false }: { embedded?: boolean }) {
         {notice && <div className="feedback success" role="status"><CheckCircle2 size={18} />{notice}<button aria-label="关闭提示" onClick={() => setNotice('')}><X size={16} /></button></div>}
         {sessionExpired ? null : isAImport ? (me ? <AImport id={path.split('/').pop()!} identity={me.id} projects={me.projects} navigate={navigate}/> : <p>{error || '正在读取身份…'}</p>) : loading ? <div className="loading"><LoaderCircle className="spin" size={24} /><span>正在读取工作区…</span></div> :
           error ? null : isServices ? <PlatformServices key={refresh} navigate={navigate} /> : isArchiveReview ? <ArchiveReview key={path} deliveryId={decodeURIComponent(path.split('/')[2])} navigate={navigate} /> : isTraining ? <Training key={identity} api={api} path={path} navigate={navigate} projects={me?.projects || []} /> :
-          isExtraction ? <Extraction key={identity} api={api} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
+          isWorkflows ? <Workflows key={identity+':'+me?.projects.map(p=>p.id).join(',')} api={api} projects={me?.projects || []} identity={identity}/> : isStandards ? <Standards key={identity+':'+me?.projects.map(p=>p.id).join(',')} api={api} projects={me?.projects || []} identity={identity}/> : path === '/settings/scenes' ? <div className="knowledge-module training-module"><Scenes api={api} projects={me?.projects || []}/></div> : isExtraction ? <Extraction key={identity} api={api} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} canManageModels={!!me?.can_manage_models} /> :
           isRetrospectives ? <Retrospectives key={identity} api={api} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isPackages ? <TaskPackages key={identity} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isRetrieval ? <Retrieval key={identity} identity={identity} path={path} navigate={navigate} projects={me?.projects || []} /> :
           isKnowledge ? <Knowledge key={identity} api={api} path={path} navigate={navigate} projects={me?.projects || []} identity={identity} /> :
+          isRiskData ? <RiskData key={identity} api={api} /> :
           isIngestion ? <Ingestion key={identity} api={api} path={path} navigate={navigate} projects={me?.projects || []} identity={identity} /> :
           path === '/settings/access' ? !canManage ? <section className="panel empty"><FolderLock size={38} /><h2>当前身份没有管理权限</h2><p>可以切换到本地管理员验证授权流程。后端同样会拒绝越权请求。</p></section> :
             access && <div className="access-layout">
@@ -264,14 +275,14 @@ export function App({ embedded = false }: { embedded?: boolean }) {
               <section className="panel jobs-panel">
                 <div className="panel-heading"><div><h2>{path === '/jobs' ? '任务列表' : '最近处理任务'}</h2><span>仅展示当前身份可访问的项目</span></div>
                   <select aria-label="任务类型筛选" value={kind} onChange={e => { setKind(e.target.value); setCursor(''); setHistory([]); }}>
-                    <option value="">全部类型</option><option value="demo_check">演示检查</option><option value="source_import">历史数据接入</option><option value="knowledge_generation">知识候选生成</option><option value="release_build">发布索引构建</option><option value="task_package_import">A任务包接入</option></select>
+                    <option value="">全部类型</option>{Object.entries(jobKinds).map(([value,label]) => <option value={value} key={value}>{label}</option>)}</select>
                   <select aria-label="任务状态筛选" value={status} onChange={e => { setStatus(e.target.value); setCursor(''); setHistory([]); }}>
                     <option value="">全部状态</option>{Object.entries(statuses).map(([k, v]) => <option key={k} value={k}>{v}</option>)}</select></div>
                 {!jobs.length ? <div className="empty"><FileCheck2 size={42} /><h2>{status ? '没有符合条件的任务' : '还没有处理任务'}</h2>
                   <p>{status ? '切换筛选条件查看其他任务。' : canRun ? '运行一次演示检查，验证提交、执行和结果保存的完整过程。' : '当前身份可查看项目任务，请等待加工人员提交。'}</p>
                   {canRun && !status && <button className="button secondary" onClick={() => setShowCreate(true)}>开始一次演示<ArrowRight size={16} /></button>}</div> :
                   <div className="table-wrap"><table><thead><tr><th>任务 / 项目</th><th>状态</th><th>进度</th><th>提交时间</th><th>操作</th></tr></thead><tbody>
-                    {jobs.map(job => <tr key={job.id}><td><button className="job-title" onClick={() => setSelected(job)}>{job.title}</button><small>{projectNames[job.project_id]}<span className="subtle-separator">·</span>{job.kind === 'source_import' ? '历史项目接入' : job.kind === 'knowledge_generation' ? '知识候选生成' : job.kind === 'release_build' ? '发布索引构建' : job.kind === 'task_package_import' ? 'A任务包接入' : '演示任务'}</small></td>
+                    {jobs.map(job => <tr key={job.id}><td><button className="job-title" onClick={() => setSelected(job)}>{job.title}</button><small>{projectNames[job.project_id] || job.project_id}<span className="subtle-separator">·</span>{jobKinds[job.kind] || job.kind}</small></td>
                       <td><span className={`status ${job.status}`}><i />{statuses[job.status]}</span></td>
                       <td><div className="progress-cell"><div className="progress-track"><span style={{ width: `${job.progress}%` }} /></div><span>{job.progress}%</span></div></td>
                       <td className="muted nowrap">{fmt(job.created_at)}</td><td><div className="row-actions">{job.kind === 'source_import' && <button className="text-button" onClick={() => navigate('/imports')}>历史项目</button>}<button className="text-button" onClick={() => setSelected(job)}>详情</button>
@@ -301,6 +312,7 @@ export function App({ embedded = false }: { embedded?: boolean }) {
       {selected.error && <div className="detail-error"><strong>处理说明</strong><p>{selected.error}</p></div>}
       <p className="small-note">此为本地模拟数据任务，不代表实际工程检查。所有进度和结果均来自后台执行记录。</p>
       {selected.result_ref && <button className="button primary" disabled={busy} onClick={() => void download(selected)}><Download size={16} />下载演示结果</button>}
+      {selected.result_links?.map(link=><button key={link.path} className="button secondary" onClick={()=>navigate(link.path)}>{link.label}</button>)}
       {selected.status === 'failed' && canRetry(selected) && <button className="button primary" disabled={busy} onClick={() => void retry(selected)}><RefreshCw size={16} />重试任务</button>}
     </aside></div>}
   </div>;

@@ -1,4 +1,5 @@
-import { Fragment, useEffect, useMemo, useState } from 'react';
+import { Fragment, useEffect, useMemo, useState, type MouseEvent as ReactMouseEvent } from 'react';
+import { ChevronDown, ChevronUp, Image as ImageIcon, Pencil } from 'lucide-react';
 import { apiFetch } from './platform';
 import './risk-data.css';
 
@@ -40,6 +41,7 @@ const REVIEW = '/history-review';
 const READER = '/history-reader';
 const STORE_KEY = 'historyReview.visibleColumnsV2';
 const ORDER_KEY = 'historyReview.columnOrder';
+const WIDTH_KEY = 'historyReview.columnWidths';
 const DEFAULT_FIELDS = ['engineering_project_name', 'inspection_date', 'problem_description', 'source_category', 'rectification_requirement', 'reported_response'];
 const OPTIONAL_SPECIALS = ['_photos', '_source', '_status', '_actions'];
 const EDIT_ORDER = ['project_name', 'engineering_project_name', 'inspection_date', 'inspection_location', 'problem_description', 'source_category', 'source_grade', 'hazard_category', 'basis_or_clause', 'rectification_requirement', 'rectification_advice', 'rectification_deadline', 'reported_response', 'reinspection_conclusion'];
@@ -51,7 +53,7 @@ const COLUMN_WIDTH: Record<string, number> = {
   problem_description: 340, project_name: 170, engineering_project_name: 170, inspection_location: 140,
   basis_or_clause: 170, rectification_requirement: 190, rectification_advice: 190, rectification_deadline: 110,
   reported_response: 190, reinspection_conclusion: 140, inspection_date: 104, source_category: 120,
-  hazard_category: 110, source_grade: 90, _photos: 104, _source: 160, _status: 92, _actions: 176,
+  hazard_category: 110, source_grade: 90, _photos: 104, _source: 160, _status: 92, _actions: 104,
 };
 const ACTION_LABEL: Record<string, string> = { save_draft: '保存草稿', confirm: '批量确认', discard: '放弃修改', conflict: '值冲突' };
 
@@ -61,6 +63,20 @@ function loadFields(): string[] {
     const parsed = raw ? JSON.parse(raw) : null;
     return Array.isArray(parsed) && parsed.length ? parsed.filter((x) => typeof x === 'string') : DEFAULT_VISIBLE;
   } catch { return DEFAULT_VISIBLE; }
+}
+function loadWidths(): Record<string, number> {
+  try {
+    const raw = localStorage.getItem(WIDTH_KEY);
+    const parsed = raw ? JSON.parse(raw) : null;
+    if (parsed && typeof parsed === 'object') {
+      const out: Record<string, number> = {};
+      for (const [key, value] of Object.entries(parsed)) {
+        if (typeof value === 'number' && value >= 56 && value <= 1000) out[key] = value;
+      }
+      return out;
+    }
+  } catch { /* 忽略损坏的列宽记录 */ }
+  return {};
 }
 function loadOrder(): string[] {
   try {
@@ -137,6 +153,7 @@ export function RiskData({ api }: { api: Api }) {
   const [logs, setLogs] = useState<LogRow[]>([]);
   const [visible, setVisible] = useState<string[]>(loadFields);
   const [order, setOrder] = useState<string[]>(loadOrder);
+  const [colWidths, setColWidths] = useState<Record<string, number>>(loadWidths);
   const [dragKey, setDragKey] = useState('');
   const [dragOverKey, setDragOverKey] = useState('');
   const [showFields, setShowFields] = useState(false);
@@ -237,6 +254,29 @@ export function RiskData({ api }: { api: Api }) {
   function saveOrder(next: string[]) {
     setOrder(next);
     try { localStorage.setItem(ORDER_KEY, JSON.stringify(next)); } catch { /* 忽略本地存储异常 */ }
+  }
+  function startResize(event: ReactMouseEvent, key: string) {
+    event.preventDefault(); event.stopPropagation();
+    const startX = event.clientX;
+    const startWidth = colWidths[key] || COLUMN_WIDTH[key] || 140;
+    const onMove = (ev: MouseEvent) => {
+      const width = Math.max(56, Math.min(1000, startWidth + ev.clientX - startX));
+      setColWidths((current) => ({ ...current, [key]: width }));
+    };
+    const onUp = () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+      setColWidths((current) => {
+        try { localStorage.setItem(WIDTH_KEY, JSON.stringify(current)); } catch { /* 忽略本地存储异常 */ }
+        return current;
+      });
+    };
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+  }
+  function resetWidths() {
+    setColWidths({});
+    try { localStorage.removeItem(WIDTH_KEY); } catch { /* 忽略本地存储异常 */ }
   }
   function moveColumn(fromKey: string, toKey: string) {
     if (!fromKey || !toKey || fromKey === toKey) return;
@@ -364,6 +404,7 @@ export function RiskData({ api }: { api: Api }) {
           {OPTIONAL_SPECIALS.map((key) => <label key={key}><input type="checkbox" checked={visible.includes(key)} onChange={(e) => toggleColumn(key, e.target.checked)} />{SPECIAL_COLUMNS[key]}</label>)}
           <button className="button ghost" onClick={() => saveColumns(DEFAULT_VISIBLE.filter((k) => fields.some((f) => f.key === k) || OPTIONAL_SPECIALS.includes(k)))}>恢复默认</button>
           <button className="button ghost" onClick={() => saveOrder(DEFAULT_ORDER)}>恢复列顺序</button>
+          <button className="button ghost" onClick={resetWidths}>恢复列宽</button>
         </div>}
         {tab === 'findings' && <p className="muted history-drag-tip">提示：拖动表头调整列顺序；点击表头右侧 × 可隐藏该列（全部列均可隐藏，在“显示字段”中恢复）；点击任意行展开该条全部字段与关联照片。</p>}
       </section>
@@ -389,11 +430,11 @@ export function RiskData({ api }: { api: Api }) {
               </tr>)}
             </tbody></table></div>
           </div>}
-          <div className="table-wrap" aria-busy={loading}>
+          <div className="table-wrap history-table-wrap" aria-busy={loading}>
             <table className="history-table">
               <thead><tr>
                 {columns.map((key) => <th key={key} draggable
-                  style={{ width: COLUMN_WIDTH[key], minWidth: COLUMN_WIDTH[key] }}
+                  style={{ width: colWidths[key] || COLUMN_WIDTH[key], minWidth: colWidths[key] || COLUMN_WIDTH[key] }}
                   className={'history-col-head' + (dragKey === key ? ' history-col-dragging' : '') + (dragOverKey === key ? ' history-col-dragover' : '')}
                   title="拖动调整列顺序"
                   onDragStart={(e) => { setDragKey(key); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', key); }}
@@ -405,6 +446,7 @@ export function RiskData({ api }: { api: Api }) {
                   <span className="history-th-label">{fieldLabel(fields, key)}</span>
                   <button type="button" className="history-col-hide" title="点击隐藏该列（可在“显示字段”中恢复）" aria-label={`隐藏${fieldLabel(fields, key)}列`} draggable={false} onMouseDown={(e) => e.stopPropagation()} onDragStart={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); hideColumn(key); }}>×</button>
                   <span className="history-drag-mark" aria-hidden="true">⋮⋮</span>
+                  <span className="history-col-resize" role="separator" aria-orientation="vertical" aria-label="拖动调节列宽" title="拖动调节列宽" onMouseDown={(e) => startResize(e, key)} onDragStart={(e) => e.preventDefault()} />
                 </span></th>)}
               </tr></thead>
               <tbody>
@@ -414,9 +456,9 @@ export function RiskData({ api }: { api: Api }) {
                     <tr className={(item.draft_id ? 'history-dirty' : '') + ' history-row'} onClick={(e) => { if ((e.target as HTMLElement).closest('button, a, input, textarea, select, summary')) return; toggleExpand(item.id); }}>
                       {columns.map((key) => {
                         if (key === '_actions') return <td key={key} className="history-actions">
-                          <button className="button secondary" onClick={() => startEdit(item)}>编辑</button>
-                          <button className="button ghost" onClick={() => void openDetail(item)}>证据</button>
-                          <button className="button ghost" onClick={() => toggleExpand(item.id)}>{isExpanded ? '收起' : '展开'}</button>
+                          <button className="button secondary icon-button" title="编辑" aria-label="编辑" onClick={() => startEdit(item)}><Pencil size={15} /></button>
+                          <button className="button ghost icon-button" title="查看证据" aria-label="查看证据" onClick={() => void openDetail(item)}><ImageIcon size={15} /></button>
+                          <button className="button ghost icon-button" title={isExpanded ? '收起' : '展开'} aria-label={isExpanded ? '收起' : '展开'} onClick={() => toggleExpand(item.id)}>{isExpanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}</button>
                         </td>;
                         if (key === '_photos') return <td key={key} className="history-cell history-cell-nowrap">
                           {item.image_count ? <button className="button ghost" onClick={() => setPhotoItem(item)}>查看 {item.image_count} 张</button> : <span className="muted">—</span>}
