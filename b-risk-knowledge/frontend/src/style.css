@@ -13,3 +13,4 @@
 :host .button{font-size:14px;border-radius:8px;min-height:44px}
 :host .panel{border-radius:10px}
 :host .app-shell{min-height:0}
+:host .embedded-main .page-heading{margin:0 0 14px;padding-top:0}:host .embedded-main>main{padding-top:0}
