@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useState, type MouseEvent as ReactMouseEvent } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { ChevronDown, ChevronUp, Image as ImageIcon, Pencil } from 'lucide-react';
 import { apiFetch } from './platform';
 import './risk-data.css';
@@ -154,6 +154,10 @@ export function RiskData({ api }: { api: Api }) {
   const [visible, setVisible] = useState<string[]>(loadFields);
   const [order, setOrder] = useState<string[]>(loadOrder);
   const [colWidths, setColWidths] = useState<Record<string, number>>(loadWidths);
+  const [resizingKey, setResizingKey] = useState('');
+  const wrapRef = useRef<HTMLDivElement>(null);
+  const resizingRef = useRef(false);
+  const [wrapWidth, setWrapWidth] = useState(0);
   const [dragKey, setDragKey] = useState('');
   const [dragOverKey, setDragOverKey] = useState('');
   const [showFields, setShowFields] = useState(false);
@@ -178,6 +182,19 @@ export function RiskData({ api }: { api: Api }) {
   const columns = useMemo(() => order.filter((k) => visible.includes(k)), [order, visible]);
   const visibleOptionCount = fields.length + OPTIONAL_SPECIALS.length;
   const shownOptionCount = visible.filter((k) => fields.some((f) => f.key === k) || OPTIONAL_SPECIALS.includes(k)).length;
+  const columnWidth = (key: string) => colWidths[key] || COLUMN_WIDTH[key] || 140;
+  const totalWidth = columns.reduce((sum, key) => sum + columnWidth(key), 0);
+  const seededWidths = Object.keys(colWidths).length > 0;
+  const tableWidth = seededWidths ? totalWidth : Math.max(totalWidth, wrapWidth);
+  useEffect(() => {
+    const wrap = wrapRef.current;
+    if (!wrap) return;
+    setWrapWidth(wrap.clientWidth);
+    if (typeof ResizeObserver === 'undefined') return;
+    const observer = new ResizeObserver(() => setWrapWidth(wrap.clientWidth));
+    observer.observe(wrap);
+    return () => observer.disconnect();
+  }, [tab]);
 
   useEffect(() => {
     if ((!detail || editing) && !photoItem) return;
@@ -255,24 +272,54 @@ export function RiskData({ api }: { api: Api }) {
     setOrder(next);
     try { localStorage.setItem(ORDER_KEY, JSON.stringify(next)); } catch { /* 忽略本地存储异常 */ }
   }
-  function startResize(event: ReactMouseEvent, key: string) {
+  function startResize(event: ReactPointerEvent, key: string) {
     event.preventDefault(); event.stopPropagation();
+    if (event.pointerType === 'mouse' && event.button !== 0) return;
     const startX = event.clientX;
-    const startWidth = colWidths[key] || COLUMN_WIDTH[key] || 140;
-    const onMove = (ev: MouseEvent) => {
-      const width = Math.max(56, Math.min(1000, startWidth + ev.clientX - startX));
-      setColWidths((current) => ({ ...current, [key]: width }));
+    const table = (event.currentTarget as HTMLElement).closest('table');
+    // 第一次拖动时先按当前渲染宽度铺满所有列，保证拖动过程 1:1、不跳动。
+    const base: Record<string, number> = { ...colWidths };
+    if (table) {
+      for (const th of Array.from(table.querySelectorAll<HTMLElement>('thead th[data-col]'))) {
+        const colKey = th.dataset.col;
+        if (!colKey) continue;
+        base[colKey] = Math.round(th.getBoundingClientRect().width);
+      }
+    }
+    const startWidth = base[key] || columnWidth(key);
+    resizingRef.current = true;
+    setResizingKey(key);
+    setDragKey(''); setDragOverKey('');
+    document.body.classList.add('history-resizing');
+    setColWidths(base);
+    const onMove = (ev: PointerEvent) => {
+      const width = Math.round(Math.max(56, Math.min(1000, startWidth + ev.clientX - startX)));
+      setColWidths({ ...base, [key]: width });
     };
-    const onUp = () => {
-      window.removeEventListener('mousemove', onMove);
-      window.removeEventListener('mouseup', onUp);
+    const finish = () => {
+      window.removeEventListener('pointermove', onMove);
+      window.removeEventListener('pointerup', finish);
+      window.removeEventListener('pointercancel', finish);
+      resizingRef.current = false;
+      setResizingKey('');
+      document.body.classList.remove('history-resizing');
       setColWidths((current) => {
         try { localStorage.setItem(WIDTH_KEY, JSON.stringify(current)); } catch { /* 忽略本地存储异常 */ }
         return current;
       });
     };
-    window.addEventListener('mousemove', onMove);
-    window.addEventListener('mouseup', onUp);
+    window.addEventListener('pointermove', onMove);
+    window.addEventListener('pointerup', finish);
+    window.addEventListener('pointercancel', finish);
+  }
+  function resetColumnWidth(key: string) {
+    setColWidths((current) => {
+      if (!(key in current)) return current;
+      const next = { ...current };
+      delete next[key];
+      try { localStorage.setItem(WIDTH_KEY, JSON.stringify(next)); } catch { /* 忽略本地存储异常 */ }
+      return next;
+    });
   }
   function resetWidths() {
     setColWidths({});
@@ -430,14 +477,14 @@ export function RiskData({ api }: { api: Api }) {
               </tr>)}
             </tbody></table></div>
           </div>}
-          <div className="table-wrap history-table-wrap" aria-busy={loading}>
-            <table className="history-table">
+          <div ref={wrapRef} className={'table-wrap history-table-wrap' + (resizingKey ? ' history-resizing' : '')} aria-busy={loading}>
+            <table className="history-table" style={{ width: tableWidth, minWidth: tableWidth }}>
               <thead><tr>
-                {columns.map((key) => <th key={key} draggable
-                  style={{ width: colWidths[key] || COLUMN_WIDTH[key], minWidth: colWidths[key] || COLUMN_WIDTH[key] }}
+                {columns.map((key) => <th key={key} draggable data-col={key}
+                  style={{ width: columnWidth(key), minWidth: columnWidth(key) }}
                   className={'history-col-head' + (dragKey === key ? ' history-col-dragging' : '') + (dragOverKey === key ? ' history-col-dragover' : '')}
                   title="拖动调整列顺序"
-                  onDragStart={(e) => { setDragKey(key); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', key); }}
+                  onDragStart={(e) => { if (resizingRef.current) { e.preventDefault(); return; } setDragKey(key); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', key); }}
                   onDragOver={(e) => { e.preventDefault(); e.dataTransfer.dropEffect = 'move'; if (dragOverKey !== key) setDragOverKey(key); }}
                   onDragLeave={() => setDragOverKey('')}
                   onDrop={(e) => { e.preventDefault(); moveColumn(dragKey || e.dataTransfer.getData('text/plain'), key); setDragKey(''); setDragOverKey(''); }}
@@ -446,7 +493,7 @@ export function RiskData({ api }: { api: Api }) {
                   <span className="history-th-label">{fieldLabel(fields, key)}</span>
                   <button type="button" className="history-col-hide" title="点击隐藏该列（可在“显示字段”中恢复）" aria-label={`隐藏${fieldLabel(fields, key)}列`} draggable={false} onMouseDown={(e) => e.stopPropagation()} onDragStart={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); hideColumn(key); }}>×</button>
                   <span className="history-drag-mark" aria-hidden="true">⋮⋮</span>
-                  <span className="history-col-resize" role="separator" aria-orientation="vertical" aria-label="拖动调节列宽" title="拖动调节列宽" onMouseDown={(e) => startResize(e, key)} onDragStart={(e) => e.preventDefault()} />
+                  <span className="history-col-resize" role="separator" aria-orientation="vertical" aria-label="拖动调节列宽（双击恢复该列默认宽度）" title="拖动调节列宽；双击恢复该列默认宽度" onPointerDown={(e) => startResize(e, key)} onDoubleClick={(e) => { e.preventDefault(); e.stopPropagation(); resetColumnWidth(key); }} onDragStart={(e) => e.preventDefault()} />
                 </span></th>)}
               </tr></thead>
               <tbody>
