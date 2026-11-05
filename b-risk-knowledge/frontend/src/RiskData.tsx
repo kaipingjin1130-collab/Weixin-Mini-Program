@@ -22,7 +22,7 @@ type Finding = {
   reinspection_conclusion: string | null; review_state: string; consolidation_id: string | null;
   draft_id?: string | null; image_count?: number | null;
 };
-type ReportRow = { document_id: string; original_name: string; findings: number; project_name: string | null; inspection_date: string | null };
+type ReportRow = { document_id: string; original_name: string; findings: number; project_name: string | null; engineering_project_name: string | null; inspection_date: string | null };
 type Draft = {
   id: string; finding_id: string; document_id: string | null; changes: Record<string, string | null>;
   old_values: Record<string, string | null>; updated_at: string; original_name: string | null;
@@ -168,6 +168,8 @@ export function RiskData({ api }: { api: Api }) {
   const [dragOverKey, setDragOverKey] = useState('');
   const [showFields, setShowFields] = useState(false);
   const [project, setProject] = useState('');
+  const [projectName, setProjectName] = useState('');
+  const [projectNames, setProjectNames] = useState<{ name: string; findings: number }[]>([]);
   const [documentFilter, setDocumentFilter] = useState('');
   const [input, setInput] = useState(''); const [query, setQuery] = useState('');
   const [offset, setOffset] = useState(0); const [more, setMore] = useState(false);
@@ -206,10 +208,11 @@ export function RiskData({ api }: { api: Api }) {
     Promise.all([
       api<Summary>(REVIEW + '/summary'),
       api<{ items: { name: string; findings: number }[] }>(REVIEW + '/projects?limit=800'),
+      api<{ items: { name: string; findings: number }[] }>(REVIEW + '/projects?field=project_name&limit=800'),
       api<{ items: Draft[] }>(REVIEW + '/drafts?limit=100'),
-    ]).then(([s, p, d]) => {
+    ]).then(([s, p, pn, d]) => {
       if (stale) return;
-      setSummary(s); setProjects(p.items); setDrafts(d.items);
+      setSummary(s); setProjects(p.items); setProjectNames(pn.items); setDrafts(d.items);
       setVisible((current) => {
         const known = new Set([...s.editable_fields.map((f) => f.key), ...OPTIONAL_SPECIALS]);
         const next = current.filter((k) => known.has(k));
@@ -236,11 +239,11 @@ export function RiskData({ api }: { api: Api }) {
   useEffect(() => {
     if (tab !== 'reports') return;
     let stale = false; setLoading(true); setError('');
-    api<{ items: ReportRow[] }>(REVIEW + '/reports?' + new URLSearchParams({ q: query, project, offset: '0', limit: '100' }))
+    api<{ items: ReportRow[] }>(REVIEW + '/reports?' + new URLSearchParams({ q: query, project, project_name: projectName, offset: '0', limit: '100' }))
       .then((page) => { if (!stale) { setReports(page.items); setMore(false); } })
       .catch((e) => { if (!stale) setError(e.message); }).finally(() => { if (!stale) setLoading(false); });
     return () => { stale = true; };
-  }, [api, tab, query, project, refresh]);
+  }, [api, tab, query, project, projectName, refresh]);
 
   useEffect(() => {
     if (tab !== 'logs') return;
@@ -442,12 +445,18 @@ export function RiskData({ api }: { api: Api }) {
             <input id="history-query" aria-label="搜索" value={input} onChange={(e) => setInput(e.target.value)} maxLength={100} placeholder={tab === 'reports' ? '报告名称或项目' : '问题描述、项目或报告'} />
             <button className="button primary" disabled={loading}>搜索</button>
           </form>
-          <label className="history-inline">项目筛选
+          <label className="history-inline">{tab === 'reports' ? '工程项目' : '项目筛选'}
             <select value={project} onChange={(e) => { setProject(e.target.value); setOffset(0); }}>
-              <option value="">全部项目（{summary?.projects ?? '—'}）</option>
+              <option value="">{tab === 'reports' ? '全部工程项目' : `全部项目（${summary?.projects ?? '—'}）`}</option>
               {projects.map((p) => <option key={p.name} value={p.name}>{p.name}（{p.findings}）</option>)}
             </select>
           </label>
+          {tab === 'reports' && <label className="history-inline">项目名称
+            <select value={projectName} onChange={(e) => setProjectName(e.target.value)}>
+              <option value="">全部项目名称（{projectNames.length}）</option>
+              {projectNames.map((p) => <option key={p.name} value={p.name}>{p.name}（{p.findings}）</option>)}
+            </select>
+          </label>}
           {documentFilter && <button className="button ghost" onClick={() => { setDocumentFilter(''); setOffset(0); }}>清除报告筛选</button>}
           {tab === 'findings' && <label className="history-inline"><input type="checkbox" checked={pendingOnly} onChange={(e) => setPendingOnly(e.target.checked)} />只看待确认修改</label>}
           {tab === 'findings' && <button className="button secondary" onClick={() => setShowFields((x) => !x)}>{summary ? `显示字段（${shownOptionCount}/${visibleOptionCount}）` : '显示字段'}</button>}
@@ -587,17 +596,22 @@ export function RiskData({ api }: { api: Api }) {
           </div>
         </>}
 
-        {tab === 'reports' && <div className="table-wrap" aria-busy={loading}><table className="history-table">
-          <thead><tr><th>历史报告</th><th>项目</th><th>检查日期</th><th>问题条目</th><th>操作</th></tr></thead>
+        {tab === 'reports' && <div className="table-wrap" aria-busy={loading}><table className="history-table history-reports-table">
+          <colgroup><col style={{ width: '30%' }} /><col style={{ width: '18%' }} /><col style={{ width: '18%' }} /><col style={{ width: '10%' }} /><col style={{ width: '8%' }} /><col style={{ width: '16%' }} /></colgroup>
+          <thead><tr><th>历史报告</th><th>项目名称</th><th>工程项目</th><th>检查日期</th><th>问题条目</th><th>操作</th></tr></thead>
           <tbody>
             {shownReports.map((r) => <tr key={r.document_id}>
-              <td>{text(r.original_name, 60)}</td><td>{text(r.project_name, 30)}</td><td>{text(r.inspection_date, 20)}</td><td>{r.findings}</td>
+              <td className="history-cell history-cell-nowrap" title={r.original_name}><button type="button" className="history-link" onClick={() => openReport(r.document_id)}>{text(r.original_name, 80)}</button></td>
+              <td className="history-cell history-cell-nowrap" title={r.project_name || ''}>{text(r.project_name, 30)}</td>
+              <td className="history-cell history-cell-nowrap" title={r.engineering_project_name || ''}>{text(r.engineering_project_name, 30)}</td>
+              <td className="history-cell history-cell-nowrap">{text(r.inspection_date, 20)}</td>
+              <td className="history-cell history-cell-nowrap">{r.findings}</td>
               <td className="history-actions">
                 <button className="button secondary" onClick={() => { setDocumentFilter(r.document_id); setTab('findings'); setOffset(0); }}>查看问题</button>
                 <button className="button ghost" onClick={() => openReport(r.document_id)}>浏览报告</button>
               </td>
             </tr>)}
-            {!shownReports.length && !loading && !error && <tr><td colSpan={5}>没有匹配的历史报告。</td></tr>}
+            {!shownReports.length && !loading && !error && <tr><td colSpan={6}>没有匹配的历史报告。</td></tr>}
           </tbody>
         </table></div>}
 

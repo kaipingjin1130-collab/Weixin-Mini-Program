@@ -148,31 +148,38 @@ def summary(actor=Depends(reviewer)):
 
 
 @router.get('/projects')
-def projects(q: str = Query('', max_length=100), limit: int = Query(1000, ge=1, le=3000), actor=Depends(reviewer)):
-    result = rows('''SELECT COALESCE(engineering_project_name, project_name) AS name, count(*) AS findings
+def projects(q: str = Query('', max_length=100), limit: int = Query(1000, ge=1, le=3000),
+             field: str = Query('', max_length=32), actor=Depends(reviewer)):
+    expression = 'project_name' if field == 'project_name' else 'COALESCE(engineering_project_name, project_name)'
+    result = rows(f'''SELECT {expression} AS name, count(*) AS findings
         FROM history_current_consolidated_findings
-        WHERE COALESCE(engineering_project_name, project_name) IS NOT NULL
-          AND (:q = '' OR position(lower(:q) in lower(COALESCE(engineering_project_name, project_name))) > 0)
+        WHERE {expression} IS NOT NULL
+          AND (:q = '' OR position(lower(:q) in lower({expression})) > 0)
         GROUP BY 1 ORDER BY 2 DESC, 1 LIMIT :limit''', {'q': q.strip(), 'limit': limit})
     return {'items': result}
 
 
 @router.get('/reports')
 def reports(q: str = Query('', max_length=100), project: str = Query('', max_length=200),
+            project_name: str = Query('', max_length=200),
             offset: int = Query(0, ge=0, le=200000), limit: int = Query(30, ge=1, le=100),
             actor=Depends(reviewer)):
     ensure_schema()
     result = rows('''WITH agg AS (
             SELECT document_id, count(*) AS findings,
-                   max(COALESCE(engineering_project_name, project_name)) AS project_name,
+                   max(project_name) AS parent_project_name,
+                   max(COALESCE(engineering_project_name, project_name)) AS engineering_project_name,
                    min(inspection_date) AS inspection_date
             FROM history_current_consolidated_findings GROUP BY document_id)
-        SELECT d.id AS document_id, d.original_name, a.findings, a.project_name, a.inspection_date
+        SELECT d.id AS document_id, d.original_name, a.findings, a.parent_project_name AS project_name,
+               a.engineering_project_name, a.inspection_date
         FROM agg a JOIN history_documents d ON d.id = a.document_id
-        WHERE (:q = '' OR position(lower(:q) in lower(concat_ws(' ', d.original_name, a.project_name))) > 0)
-          AND (:project = '' OR a.project_name = :project)
+        WHERE (:q = '' OR position(lower(:q) in lower(concat_ws(' ', d.original_name, a.parent_project_name, a.engineering_project_name))) > 0)
+          AND (:project = '' OR a.engineering_project_name = :project)
+          AND (:project_name = '' OR a.parent_project_name = :project_name)
         ORDER BY d.id LIMIT :limit OFFSET :offset''',
-        {'q': q.strip(), 'project': project.strip(), 'limit': limit + 1, 'offset': offset})
+        {'q': q.strip(), 'project': project.strip(), 'project_name': project_name.strip(),
+         'limit': limit + 1, 'offset': offset})
     return {'items': result[:limit], 'has_more': len(result) > limit}
 
 

@@ -33,3 +33,4 @@
 .history-pagesize{display:flex;justify-content:flex-end;align-items:center;gap:8px;margin-top:16px;color:#475569;font-size:13px}
 .history-pagesize select{padding:6px 8px;border:1px solid #cbd5e1;border-radius:7px;background:#fff;color:#172e28;font:inherit}
 .risk-data .history-pagination{margin-top:8px}
+.history-reports-table td{vertical-align:middle}.history-reports-table .history-actions{white-space:nowrap}
