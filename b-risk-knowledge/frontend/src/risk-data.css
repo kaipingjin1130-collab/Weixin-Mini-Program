@@ -29,3 +29,4 @@
 .history-cell-wrap{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;line-height:1.55;max-height:none}
 .history-link{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;border:0;padding:0;color:#176b53;font:inherit;text-align:left;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
 .history-link:hover{color:#0f4f3d}
+.history-cell-merged{text-align:center;color:#94a3b8;background:#fbfdff;font-size:13px}

@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
+import { Fragment, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent, type ReactNode } from 'react';
 import { ChevronDown, ChevronUp, Image as ImageIcon, Pencil } from 'lucide-react';
 import { apiFetch, inPlatform } from './platform';
 import './risk-data.css';
@@ -502,24 +502,57 @@ export function RiskData({ api }: { api: Api }) {
                   const isExpanded = expanded.has(item.id);
                   return <Fragment key={item.id}>
                     <tr className={(item.draft_id ? 'history-dirty' : '') + ' history-row'} onClick={(e) => { if ((e.target as HTMLElement).closest('button, a, input, textarea, select, summary')) return; toggleExpand(item.id); }}>
-                      {columns.map((key) => {
-                        if (key === '_actions') return <td key={key} className="history-actions">
-                          <button className="button secondary icon-button" title="编辑" aria-label="编辑" onClick={() => startEdit(item)}><Pencil size={15} /></button>
-                          <button className="button ghost icon-button" title="查看证据" aria-label="查看证据" onClick={() => void openDetail(item)}><ImageIcon size={15} /></button>
-                          <button className="button ghost icon-button" title={isExpanded ? '收起' : '展开'} aria-label={isExpanded ? '收起' : '展开'} onClick={() => toggleExpand(item.id)}>{isExpanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}</button>
-                        </td>;
-                        if (key === '_photos') return <td key={key} className="history-cell history-cell-nowrap">
-                          {item.image_count ? <button className="button ghost" onClick={() => setPhotoItem(item)}>查看 {item.image_count} 张</button> : <span className="muted">—</span>}
-                        </td>;
-                        if (key === '_source') return <td key={key} className="history-cell history-cell-nowrap" title={item.original_name || ''}>
-                          <button type="button" className="history-link" onClick={(e) => { e.stopPropagation(); openReport(item.document_id); }}>{text(item.original_name, 26)}</button>
-                        </td>;
-                        if (key === '_status') return <td key={key} className="history-cell history-cell-nowrap">{item.draft_id ? <span className="history-badge">待确认</span> : text(item.review_state, 14)}</td>;
-                        const value = (item as unknown as Record<string, string | null>)[key];
-                        const isDesc = key === 'problem_description';
-                        const isShort = ['project_name', 'engineering_project_name', 'inspection_date', 'inspection_location', 'source_category', 'source_grade', 'hazard_category'].includes(key);
-                        return <td key={key} title={value || ''} className={isDesc ? 'history-cell history-cell-wrap' : isShort ? 'history-cell history-cell-nowrap' : 'history-cell'}>{isDesc ? (value || '—') : text(value, 80)}</td>;
-                      })}
+                      {(() => {
+                        const cells: ReactNode[] = [];
+                        for (let index = 0; index < columns.length; index += 1) {
+                          const key = columns[index];
+                          if (key === '_actions') {
+                            cells.push(<td key={key} className="history-actions">
+                              <button className="button secondary icon-button" title="编辑" aria-label="编辑" onClick={() => startEdit(item)}><Pencil size={15} /></button>
+                              <button className="button ghost icon-button" title="查看证据" aria-label="查看证据" onClick={() => void openDetail(item)}><ImageIcon size={15} /></button>
+                              <button className="button ghost icon-button" title={isExpanded ? '收起' : '展开'} aria-label={isExpanded ? '收起' : '展开'} onClick={() => toggleExpand(item.id)}>{isExpanded ? <ChevronUp size={15} /> : <ChevronDown size={15} />}</button>
+                            </td>);
+                            continue;
+                          }
+                          if (key === '_photos') {
+                            cells.push(<td key={key} className="history-cell history-cell-nowrap">
+                              {item.image_count ? <button className="button ghost" onClick={() => setPhotoItem(item)}>查看 {item.image_count} 张</button> : <span className="muted">—</span>}
+                            </td>);
+                            continue;
+                          }
+                          if (key === '_source') {
+                            cells.push(<td key={key} className="history-cell history-cell-nowrap" title={item.original_name || ''}>
+                              <button type="button" className="history-link" onClick={(e) => { e.stopPropagation(); openReport(item.document_id); }}>{text(item.original_name, 26)}</button>
+                            </td>);
+                            continue;
+                          }
+                          if (key === '_status') {
+                            cells.push(<td key={key} className="history-cell history-cell-nowrap">{item.draft_id ? <span className="history-badge">待确认</span> : text(item.review_state, 14)}</td>);
+                            continue;
+                          }
+                          const value = (item as unknown as Record<string, string | null>)[key];
+                          const empty = !value || !String(value).trim();
+                          if (empty) {
+                            let span = 1;
+                            let next = index + 1;
+                            while (next < columns.length) {
+                              const nextKey = columns[next];
+                              if (SPECIALS.includes(nextKey)) break;
+                              const nextValue = (item as unknown as Record<string, string | null>)[nextKey];
+                              if (nextValue && String(nextValue).trim()) break;
+                              span += 1;
+                              next += 1;
+                            }
+                            cells.push(<td key={key} colSpan={span} className="history-cell history-cell-merged" title="该行连续空字段合并显示">—</td>);
+                            index = next - 1;
+                            continue;
+                          }
+                          const isDesc = key === 'problem_description';
+                          const isShort = ['project_name', 'engineering_project_name', 'inspection_date', 'inspection_location', 'source_category', 'source_grade', 'hazard_category'].includes(key);
+                          cells.push(<td key={key} title={value || ''} className={isDesc ? 'history-cell history-cell-wrap' : isShort ? 'history-cell history-cell-nowrap' : 'history-cell'}>{isDesc ? value : text(value, 80)}</td>);
+                        }
+                        return cells;
+                      })()}
                     </tr>
                     {isExpanded && <tr className="history-expanded"><td colSpan={columns.length}>
                       <dl className="history-fields history-fields-all">{fields.map((f) => <div key={f.key}><dt>{f.label}</dt><dd>{(item as unknown as Record<string, string | null>)[f.key] || '—'}</dd></div>)}</dl>
