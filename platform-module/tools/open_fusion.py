@@ -172,9 +172,11 @@ def open_platform(env, no_browser):
             time.sleep(1)
         else:
             raise RuntimeError('网页服务未就绪，请查看 .local/fusion-integration/launcher-unified.log。')
+    # A recently stopped worker can leave a fresh database heartbeat. Always
+    # ensure our recorded process exists before trusting that cached health.
+    start('worker', env)
     if not current['worker_online']:
         say('正在启动后台处理服务…')
-        start('worker', env)
         for _ in range(30):
             current = health()
             if current and current['worker_online']:

@@ -18,6 +18,9 @@ keys = json.loads(keys_file.read_text(encoding='utf-8'))
 os.environ.update(A_TO_B_KEY=keys['a'], B_TO_A_KEY=keys['b'], A_ORG_ID='fusion-test',
     A_INTERNAL_BASE='http://127.0.0.1:18771/quality', B_AUTH_MODE='a', B_ENV='development')
 mode = sys.argv[1]
+if (LOCAL / 'a-data/inspections.sqlite3').is_file():
+    from local_v1_config import configure as configure_local_v1
+    os.environ.update(configure_local_v1(ROOT))
 if mode in {'a', 'unified'}:
     os.environ.update(QAXC_DATA=str(LOCAL / 'a-data'), QAXC_ROOT_PATH='/quality',
         QAXC_PASSWORD=secrets.token_hex(32), QAXC_B_URL='http://127.0.0.1:18187',
@@ -29,7 +32,7 @@ if mode in {'a', 'unified'}:
     server.COOKIE_SECURE = ''
     server.COOKIE_NAME = 'qaxc_fusion_session'
     from server import host_auth
-    def fixture(action, data=None, cookie=''):
+    def fixture(action, data=None, cookie='', **kwargs):
         if action == 'session':
             # Automatic entry exists only in this loopback test runtime. Keep
             # an explicitly selected test member when opening another module.
