@@ -21,7 +21,7 @@ def withdraw(delivery_id, actor_id, reason):
     if 'imports.withdraw' not in grant['permissions']:
         raise ValueError('操作者没有撤回权限')
     with server.db() as db:
-        db.execute('INSERT OR IGNORE INTO ab_source_withdrawals VALUES(?,?,?,?)',
+        db.execute('INSERT INTO ab_source_withdrawals VALUES(?,?,?,?) ON CONFLICT DO NOTHING',
                    (delivery_id, server.now(), reason.strip(), actor_id))
 
 

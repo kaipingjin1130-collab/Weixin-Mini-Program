@@ -14,6 +14,7 @@ import workflow
 import leader_reports
 import notice
 import host_auth
+import pg_storage
 PREFIX=os.environ.get("QAXC_ROOT_PATH", "").rstrip("/")
 if PREFIX and not re.fullmatch(r"/[a-z][a-z0-9-]*", PREFIX): raise RuntimeError("Invalid module prefix")
 COOKIE_PATH=(PREFIX+"/")
@@ -38,6 +39,9 @@ class Problem(Exception):
 
 @contextmanager
 def db():
+ if pg_storage.enabled():
+  with pg_storage.connect() as c: yield c
+  return
  c=sqlite3.connect(DATA/'inspections.sqlite3', timeout=20)
  c.row_factory=sqlite3.Row
  c.execute('PRAGMA foreign_keys=ON')
@@ -142,7 +146,7 @@ def save_report(c,d):
  except ValueError as e: raise Problem(str(e))
  revision=old['revision']+1 if old else 1
  status='submitted' if submit else 'draft'
- c.execute('INSERT OR REPLACE INTO reports VALUES(?,?,?,?,?,?)',(rid,payload['codeId'],status,json.dumps(payload,ensure_ascii=False),revision,now()))
+ c.execute('INSERT INTO reports VALUES(?,?,?,?,?,?) ON CONFLICT(id) DO UPDATE SET code_id=excluded.code_id,status=excluded.status,payload=excluded.payload,revision=excluded.revision,updated=excluded.updated',(rid,payload['codeId'],status,json.dumps(payload,ensure_ascii=False),revision,now()))
  return get_report(c,rid)
 
 def make_docx(c,r):
@@ -426,7 +430,7 @@ class Handler(BaseHTTPRequestHandler):
      if path=='/api/favorites':
       kid=d.get('id')
       if kid not in {k['id'] for k in KNOWLEDGE}: raise Problem('条目不存在')
-      if d.get('selected'): c.execute('INSERT OR IGNORE INTO favorites VALUES(?)',(kid,))
+      if d.get('selected'): c.execute('INSERT INTO favorites VALUES(?) ON CONFLICT DO NOTHING',(kid,))
       else: c.execute('DELETE FROM favorites WHERE id=?',(kid,))
       self.send({'ok':True}); return
    self.db_connection=None

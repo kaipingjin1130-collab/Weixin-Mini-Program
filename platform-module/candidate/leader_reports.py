@@ -49,7 +49,7 @@ def assign_document(w, data):
     leader = w.leader(current['projectId'], data.get('leaderId', ''))
     history = current['history'] + [dict(previousLeaderId=current['leaderId'], leaderId=leader, actorId=w.user['id'], actorName=w.user['name'], createdAt=w.s.now())]
     routing = dict(leaderId=leader, assignmentRevision=current['assignmentRevision']+1, history=history)
-    w.c.execute('INSERT OR REPLACE INTO document_leaders VALUES(?,?)', (current['key'], json.dumps(routing, ensure_ascii=False)))
+    w.c.execute('INSERT INTO document_leaders VALUES(?,?) ON CONFLICT(document_key) DO UPDATE SET payload=excluded.payload', (current['key'], json.dumps(routing, ensure_ascii=False)))
     return document(w, current['key'])
 
 

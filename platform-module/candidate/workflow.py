@@ -46,7 +46,7 @@ def init(c):
  CREATE TABLE IF NOT EXISTS field_reports(id TEXT PRIMARY KEY, task_id TEXT NOT NULL REFERENCES tasks(id), payload TEXT NOT NULL);
  ''')
  for s in SCENARIOS:
-  c.execute('INSERT OR IGNORE INTO scenarios VALUES(?,?)',(s['id'],dump(s)))
+  c.execute('INSERT INTO scenarios VALUES(?,?) ON CONFLICT DO NOTHING',(s['id'],dump(s)))
 
 
 def dump(x): return json.dumps(x,ensure_ascii=False)
@@ -117,7 +117,8 @@ class Workflow:
    p['members']=[dict(x) for x in self.c.execute('SELECT u.id,u.username,u.name,m.role FROM users u JOIN memberships m ON m.user_id=u.id WHERE m.project_id=?',(p['id'],))]
    projects.append(p)
   ids={p['id'] for p in projects}
-  tasks=[json.loads(r['payload']) for r in self.c.execute('SELECT * FROM tasks ORDER BY rowid DESC') if r['project_id'] in ids]
+  order=getattr(self.c,'task_order_column','rowid')
+  tasks=[json.loads(r['payload']) for r in self.c.execute('SELECT * FROM tasks ORDER BY '+order+' DESC') if r['project_id'] in ids]
   today=datetime.now().astimezone().date().isoformat()
   reminders=[]
   for t in tasks:
@@ -149,7 +150,7 @@ class Workflow:
   if path=='leader-read':
    rows=leader_reports.select(self,d.get('keys'))
    for row in rows:
-    self.c.execute('INSERT OR REPLACE INTO leader_reads VALUES(?,?,?)',(self.user['id'],row['key'],self.s.now()))
+    self.c.execute('INSERT INTO leader_reads VALUES(?,?,?) ON CONFLICT(user_id,document_key) DO UPDATE SET read_at=excluded.read_at',(self.user['id'],row['key'],self.s.now()))
    return {'ok':True}
   if path=='report-followup':
    report=self.s.get_report(self.c,self.text(d,'reportId',100))
@@ -199,11 +200,11 @@ class Workflow:
    if not self.c.execute('SELECT 1 FROM users WHERE id=?',(uid,)).fetchone(): self.fail('账号不存在，请管理员先创建')
    if path=='add-member':
     # Joining a project must never overwrite an existing member's role.
-    self.c.execute('INSERT OR IGNORE INTO memberships VALUES(?,?,?)',(pid,uid,role))
+    self.c.execute('INSERT INTO memberships VALUES(?,?,?) ON CONFLICT DO NOTHING',(pid,uid,role))
     actual=self.c.execute('SELECT role FROM memberships WHERE project_id=? AND user_id=?',(pid,uid)).fetchone()['role']
     return {'ok':True,'userId':uid,'role':actual}
    if uid==self.user['id']: self.fail('请由管理员调整自己的角色')
-   self.c.execute('INSERT OR REPLACE INTO memberships VALUES(?,?,?)',(pid,uid,role))
+   self.c.execute('INSERT INTO memberships VALUES(?,?,?) ON CONFLICT(project_id,user_id) DO UPDATE SET role=excluded.role',(pid,uid,role))
    return {'ok':True}
   if path=='scenarios':
    if not is_admin(self.user): self.fail('只有管理员可发布场景配置',403)
@@ -223,7 +224,7 @@ class Workflow:
    expected=json.loads(old[0])['version'] if old else 0
    if d.get('baseVersion')!=expected: self.fail('场景已更新，请刷新后重试',409)
    s=copy.deepcopy(s);s['version']=expected+1
-   self.c.execute('INSERT OR REPLACE INTO scenarios VALUES(?,?)',(s['id'],dump(s)));return s
+   self.c.execute('INSERT INTO scenarios VALUES(?,?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload',(s['id'],dump(s)));return s
   if path in ['tasks','adhoc-tasks']:
    adhoc=path=='adhoc-tasks'
    pid=self.text(d,'projectId');self.allow(pid,['manager','inspector'] if adhoc else ['manager'])

@@ -1,5 +1,6 @@
 import json
 import os
+import re
 from pathlib import Path
 from dataclasses import dataclass, field
 
@@ -16,6 +17,7 @@ class Settings:
     a_to_b_key: str = field(default='', repr=False)
     b_to_a_key: str = field(default='', repr=False)
     a_org_id: str = ''
+    database_schema: str = 'public'
 
 
 def load_settings() -> Settings:
@@ -34,8 +36,11 @@ def load_settings() -> Settings:
     url = os.getenv("B_DATABASE_URL", local.get("database_url", ""))
     if not url.startswith("postgresql+psycopg://"):
         raise RuntimeError("Configure a dedicated PostgreSQL URL using tools/bootstrap.py.")
+    schema = os.getenv('B_DATABASE_SCHEMA', 'public')
+    if not re.fullmatch(r'[a-z][a-z0-9_]{0,62}', schema) or schema in {'a', 'pg_catalog', 'information_schema'}:
+        raise RuntimeError('Invalid B database schema')
     return Settings(url, env, auth, Path(os.getenv("B_STORAGE", local.get("storage", str(ROOT / ".local/storage")))).resolve(),
-                    a_base, a_to_b, b_to_a, org_id)
+                    a_base, a_to_b, b_to_a, org_id, schema)
 
 
 settings = load_settings()

@@ -65,6 +65,9 @@ async def lifespan(app):
     if settings.auth_mode != 'a':
         raise RuntimeError('Unified platform requires the shared platform identity.')
     server.init()
+    if server.pg_storage.enabled():
+        from backend.db import engine
+        server.pg_storage.verify_shared_database(engine)
     app.state.requests = anyio.CapacityLimiter(16)
     app.state.callbacks = anyio.CapacityLimiter(16)
     async with knowledge_app.router.lifespan_context(knowledge_app):
