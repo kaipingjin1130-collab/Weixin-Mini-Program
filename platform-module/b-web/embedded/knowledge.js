@@ -13,7 +13,7 @@ function fj() {
   if (ff) return En;
   ff = 1;
   var u = Symbol.for("react.transitional.element"), h = Symbol.for("react.fragment");
-  function N(o, T, U) {
+  function _(o, T, U) {
     var V = null;
     if (U !== void 0 && (V = "" + U), T.key !== void 0 && (V = "" + T.key), "key" in T) {
       U = {};
@@ -28,7 +28,7 @@ function fj() {
       props: U
     };
   }
-  return En.Fragment = h, En.jsx = N, En.jsxs = N, En;
+  return En.Fragment = h, En.jsx = _, En.jsxs = _, En;
 }
 var mf;
 function mj() {
@@ -57,7 +57,7 @@ function xj() {
         else break e;
       }
     }
-    function N(y) {
+    function _(y) {
       return y.length === 0 ? null : y[0];
     }
     function o(y) {
@@ -66,11 +66,11 @@ function xj() {
       if (le !== Q) {
         y[0] = le;
         e: for (var we = 0, m = y.length, L = m >>> 1; we < L; ) {
-          var P = 2 * (we + 1) - 1, te = y[P], re = P + 1, Z = y[re];
+          var P = 2 * (we + 1) - 1, te = y[P], ce = P + 1, Z = y[ce];
           if (0 > T(te, le))
-            re < m && 0 > T(Z, te) ? (y[we] = Z, y[re] = le, we = re) : (y[we] = te, y[P] = le, we = P);
-          else if (re < m && 0 > T(Z, le))
-            y[we] = Z, y[re] = le, we = re;
+            ce < m && 0 > T(Z, te) ? (y[we] = Z, y[ce] = le, we = ce) : (y[we] = te, y[P] = le, we = P);
+          else if (ce < m && 0 > T(Z, le))
+            y[we] = Z, y[ce] = le, we = ce;
           else break e;
         }
       }
@@ -93,20 +93,20 @@ function xj() {
     }
     var Y = [], v = [], D = 1, K = null, k = 3, se = !1, je = !1, ye = !1, _e = !1, Ce = typeof setTimeout == "function" ? setTimeout : null, xe = typeof clearTimeout == "function" ? clearTimeout : null, F = typeof setImmediate < "u" ? setImmediate : null;
     function he(y) {
-      for (var Q = N(v); Q !== null; ) {
+      for (var Q = _(v); Q !== null; ) {
         if (Q.callback === null) o(v);
         else if (Q.startTime <= y)
           o(v), Q.sortIndex = Q.expirationTime, h(Y, Q);
         else break;
-        Q = N(v);
+        Q = _(v);
       }
     }
     function ae(y) {
       if (ye = !1, he(y), !je)
-        if (N(Y) !== null)
+        if (_(Y) !== null)
           je = !0, H || (H = !0, pe());
         else {
-          var Q = N(v);
+          var Q = _(v);
           Q !== null && fe(ae, Q.startTime - y);
         }
     }
@@ -125,7 +125,7 @@ function xj() {
             var le = k;
             try {
               t: {
-                for (he(y), K = N(Y); K !== null && !(K.expirationTime > y && Ze()); ) {
+                for (he(y), K = _(Y); K !== null && !(K.expirationTime > y && Ze()); ) {
                   var we = K.callback;
                   if (typeof we == "function") {
                     K.callback = null, k = K.priorityLevel;
@@ -136,13 +136,13 @@ function xj() {
                       K.callback = m, he(y), Q = !0;
                       break t;
                     }
-                    K === N(Y) && o(Y), he(y);
+                    K === _(Y) && o(Y), he(y);
                   } else o(Y);
-                  K = N(Y);
+                  K = _(Y);
                 }
                 if (K !== null) Q = !0;
                 else {
-                  var L = N(v);
+                  var L = _(v);
                   L !== null && fe(
                     ae,
                     L.startTime - y
@@ -249,7 +249,7 @@ function xj() {
         startTime: le,
         expirationTime: m,
         sortIndex: -1
-      }, le > we ? (y.sortIndex = le, h(v, y), N(Y) === null && y === N(v) && (ye ? (xe(ve), ve = -1) : ye = !0, fe(ae, le - we))) : (y.sortIndex = m, h(Y, y), je || se || (je = !0, H || (H = !0, pe()))), y;
+      }, le > we ? (y.sortIndex = le, h(v, y), _(Y) === null && y === _(v) && (ye ? (xe(ve), ve = -1) : ye = !0, fe(ae, le - we))) : (y.sortIndex = m, h(Y, y), je || se || (je = !0, H || (H = !0, pe()))), y;
     }, u.unstable_shouldYield = Ze, u.unstable_wrapCallback = function(y) {
       var Q = k;
       return function() {
@@ -282,7 +282,7 @@ var vf;
 function vj() {
   if (vf) return ut;
   vf = 1;
-  var u = Symbol.for("react.transitional.element"), h = Symbol.for("react.portal"), N = Symbol.for("react.fragment"), o = Symbol.for("react.strict_mode"), T = Symbol.for("react.profiler"), U = Symbol.for("react.consumer"), V = Symbol.for("react.context"), A = Symbol.for("react.forward_ref"), Y = Symbol.for("react.suspense"), v = Symbol.for("react.memo"), D = Symbol.for("react.lazy"), K = Symbol.iterator;
+  var u = Symbol.for("react.transitional.element"), h = Symbol.for("react.portal"), _ = Symbol.for("react.fragment"), o = Symbol.for("react.strict_mode"), T = Symbol.for("react.profiler"), U = Symbol.for("react.consumer"), V = Symbol.for("react.context"), A = Symbol.for("react.forward_ref"), Y = Symbol.for("react.suspense"), v = Symbol.for("react.memo"), D = Symbol.for("react.lazy"), K = Symbol.iterator;
   function k(m) {
     return m === null || typeof m != "object" ? null : (m = K && m[K] || m["@@iterator"], typeof m == "function" ? m : null);
   }
@@ -318,7 +318,7 @@ function vj() {
   var F = xe.prototype = new Ce();
   F.constructor = xe, je(F, _e.prototype), F.isPureReactComponent = !0;
   var he = Array.isArray, ae = { H: null, A: null, T: null, S: null, V: null }, H = Object.prototype.hasOwnProperty;
-  function ve(m, L, P, te, re, Z) {
+  function ve(m, L, P, te, ce, Z) {
     return P = Z.ref, {
       $$typeof: u,
       type: m,
@@ -375,7 +375,7 @@ function vj() {
     }
     throw m;
   }
-  function fe(m, L, P, te, re) {
+  function fe(m, L, P, te, ce) {
     var Z = typeof m;
     (Z === "undefined" || Z === "boolean") && (m = null);
     var $ = !1;
@@ -399,20 +399,20 @@ function vj() {
                 L,
                 P,
                 te,
-                re
+                ce
               );
           }
       }
     if ($)
-      return re = re(m), $ = te === "" ? "." + pe(m, 0) : te, he(re) ? (P = "", $ != null && (P = $.replace(Xe, "$&/") + "/"), fe(re, L, P, "", function(Ee) {
+      return ce = ce(m), $ = te === "" ? "." + pe(m, 0) : te, he(ce) ? (P = "", $ != null && (P = $.replace(Xe, "$&/") + "/"), fe(ce, L, P, "", function(Ee) {
         return Ee;
-      })) : re != null && (Ge(re) && (re = Ae(
-        re,
-        P + (re.key == null || m && m.key === re.key ? "" : ("" + re.key).replace(
+      })) : ce != null && (Ge(ce) && (ce = Ae(
+        ce,
+        P + (ce.key == null || m && m.key === ce.key ? "" : ("" + ce.key).replace(
           Xe,
           "$&/"
         ) + "/") + $
-      )), L.push(re)), 1;
+      )), L.push(ce)), 1;
     $ = 0;
     var ze = te === "" ? "." : te + ":";
     if (he(m))
@@ -422,7 +422,7 @@ function vj() {
           L,
           P,
           Z,
-          re
+          ce
         );
     else if (ne = k(m), typeof ne == "function")
       for (m = ne.call(m), ne = 0; !(te = m.next()).done; )
@@ -431,7 +431,7 @@ function vj() {
           L,
           P,
           Z,
-          re
+          ce
         );
     else if (Z === "object") {
       if (typeof m.then == "function")
@@ -440,7 +440,7 @@ function vj() {
           L,
           P,
           te,
-          re
+          ce
         );
       throw L = String(m), Error(
         "Objects are not valid as a React child (found: " + (L === "[object Object]" ? "object with keys {" + Object.keys(m).join(", ") + "}" : L) + "). If you meant to render a collection of children, use an array instead."
@@ -450,9 +450,9 @@ function vj() {
   }
   function y(m, L, P) {
     if (m == null) return m;
-    var te = [], re = 0;
+    var te = [], ce = 0;
     return fe(m, te, "", "", function(Z) {
-      return L.call(P, Z, re++);
+      return L.call(P, Z, ce++);
     }), te;
   }
   function Q(m) {
@@ -516,7 +516,7 @@ function vj() {
         );
       return m;
     }
-  }, ut.Component = _e, ut.Fragment = N, ut.Profiler = T, ut.PureComponent = xe, ut.StrictMode = o, ut.Suspense = Y, ut.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = ae, ut.__COMPILER_RUNTIME = {
+  }, ut.Component = _e, ut.Fragment = _, ut.Profiler = T, ut.PureComponent = xe, ut.StrictMode = o, ut.Suspense = Y, ut.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = ae, ut.__COMPILER_RUNTIME = {
     __proto__: null,
     c: function(m) {
       return ae.H.useMemoCache(m);
@@ -530,9 +530,9 @@ function vj() {
       throw Error(
         "The argument must be a React element, but you passed " + m + "."
       );
-    var te = je({}, m.props), re = m.key, Z = void 0;
+    var te = je({}, m.props), ce = m.key, Z = void 0;
     if (L != null)
-      for ($ in L.ref !== void 0 && (Z = void 0), L.key !== void 0 && (re = "" + L.key), L)
+      for ($ in L.ref !== void 0 && (Z = void 0), L.key !== void 0 && (ce = "" + L.key), L)
         !H.call(L, $) || $ === "key" || $ === "__self" || $ === "__source" || $ === "ref" && L.ref === void 0 || (te[$] = L[$]);
     var $ = arguments.length - 2;
     if ($ === 1) te.children = P;
@@ -541,7 +541,7 @@ function vj() {
         ze[ne] = arguments[ne + 2];
       te.children = ze;
     }
-    return ve(m.type, re, void 0, void 0, Z, te);
+    return ve(m.type, ce, void 0, void 0, Z, te);
   }, ut.createContext = function(m) {
     return m = {
       $$typeof: V,
@@ -555,21 +555,21 @@ function vj() {
       _context: m
     }, m;
   }, ut.createElement = function(m, L, P) {
-    var te, re = {}, Z = null;
+    var te, ce = {}, Z = null;
     if (L != null)
       for (te in L.key !== void 0 && (Z = "" + L.key), L)
-        H.call(L, te) && te !== "key" && te !== "__self" && te !== "__source" && (re[te] = L[te]);
+        H.call(L, te) && te !== "key" && te !== "__self" && te !== "__source" && (ce[te] = L[te]);
     var $ = arguments.length - 2;
-    if ($ === 1) re.children = P;
+    if ($ === 1) ce.children = P;
     else if (1 < $) {
       for (var ze = Array($), ne = 0; ne < $; ne++)
         ze[ne] = arguments[ne + 2];
-      re.children = ze;
+      ce.children = ze;
     }
     if (m && m.defaultProps)
       for (te in $ = m.defaultProps, $)
-        re[te] === void 0 && (re[te] = $[te]);
-    return ve(m, Z, void 0, void 0, null, re);
+        ce[te] === void 0 && (ce[te] = $[te]);
+    return ve(m, Z, void 0, void 0, null, ce);
   }, ut.createRef = function() {
     return { current: null };
   }, ut.forwardRef = function(m) {
@@ -590,8 +590,8 @@ function vj() {
     var L = ae.T, P = {};
     ae.T = P;
     try {
-      var te = m(), re = ae.S;
-      re !== null && re(P, te), typeof te == "object" && te !== null && typeof te.then == "function" && te.then(we, le);
+      var te = m(), ce = ae.S;
+      ce !== null && ce(P, te), typeof te == "object" && te !== null && typeof te.then == "function" && te.then(we, le);
     } catch (Z) {
       le(Z);
     } finally {
@@ -673,21 +673,21 @@ function pj() {
     }
     return "Minified React error #" + Y + "; visit " + v + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
   }
-  function N() {
+  function _() {
   }
   var o = {
     d: {
-      f: N,
+      f: _,
       r: function() {
         throw Error(h(522));
       },
-      D: N,
-      C: N,
-      L: N,
-      m: N,
-      X: N,
-      S: N,
-      M: N
+      D: _,
+      C: _,
+      L: _,
+      m: _,
+      X: _,
+      S: _,
+      M: _
     },
     p: 0,
     findDOMNode: null
@@ -819,7 +819,7 @@ var yf;
 function bj() {
   if (yf) return On;
   yf = 1;
-  var u = jj(), h = Ou(), N = gj();
+  var u = jj(), h = Ou(), _ = gj();
   function o(e) {
     var t = "https://react.dev/errors/" + e;
     if (1 < arguments.length) {
@@ -967,7 +967,7 @@ function bj() {
       }
     return null;
   }
-  var fe = Array.isArray, y = h.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, Q = N.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, le = {
+  var fe = Array.isArray, y = h.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, Q = _.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, le = {
     pending: !1,
     data: null,
     method: null,
@@ -982,9 +982,9 @@ function bj() {
   function te(e, t) {
     m++, we[m] = e.current, e.current = t;
   }
-  var re = L(null), Z = L(null), $ = L(null), ze = L(null);
+  var ce = L(null), Z = L(null), $ = L(null), ze = L(null);
   function ne(e, t) {
-    switch (te($, t), te(Z, e), te(re, null), t.nodeType) {
+    switch (te($, t), te(Z, e), te(ce, null), t.nodeType) {
       case 9:
       case 11:
         e = (e = t.documentElement) && (e = e.namespaceURI) ? Lh(e) : 0;
@@ -1004,18 +1004,18 @@ function bj() {
               e = 0;
           }
     }
-    P(re), te(re, e);
+    P(ce), te(ce, e);
   }
   function Ee() {
-    P(re), P(Z), P($);
+    P(ce), P(Z), P($);
   }
   function ct(e) {
     e.memoizedState !== null && te(ze, e);
-    var t = re.current, l = Yh(t, e.type);
-    t !== l && (te(Z, e), te(re, l));
+    var t = ce.current, l = Yh(t, e.type);
+    t !== l && (te(Z, e), te(ce, l));
   }
   function Je(e) {
-    Z.current === e && (P(re), P(Z)), ze.current === e && (P(ze), Nn._currentValue = le);
+    Z.current === e && (P(ce), P(Z)), ze.current === e && (P(ze), Nn._currentValue = le);
   }
   var Pe = Object.prototype.hasOwnProperty, We = u.unstable_scheduleCallback, Ue = u.unstable_cancelCallback, Re = u.unstable_shouldYield, ke = u.unstable_requestPaint, De = u.unstable_now, st = u.unstable_getCurrentPriorityLevel, et = u.unstable_ImmediatePriority, ht = u.unstable_UserBlockingPriority, ie = u.unstable_NormalPriority, nt = u.unstable_LowPriority, He = u.unstable_IdlePriority, O = u.log, w = u.unstable_setDisableYieldValue, I = null, Se = null;
   function Me(e) {
@@ -1029,7 +1029,7 @@ function bj() {
   function oe(e) {
     return e >>>= 0, e === 0 ? 32 : 31 - (Fe(e) / B | 0) | 0;
   }
-  var ce = 256, Ye = 4194304;
+  var re = 256, Ye = 4194304;
   function b(e) {
     var t = e & 42;
     if (t !== 0) return t;
@@ -1137,8 +1137,8 @@ function bj() {
     }
   }
   function vt() {
-    var e = ce;
-    return ce <<= 1, (ce & 4194048) === 0 && (ce = 256), e;
+    var e = re;
+    return re <<= 1, (re & 4194048) === 0 && (re = 256), e;
   }
   function M() {
     var e = Ye;
@@ -1173,7 +1173,7 @@ function bj() {
     var a = 31 - lt(t);
     e.entangledLanes |= t, e.entanglements[a] = e.entanglements[a] | 1073741824 | l & 4194090;
   }
-  function _(e, t) {
+  function N(e, t) {
     var l = e.entangledLanes |= t;
     for (e = e.entanglements; l; ) {
       var a = 31 - lt(l), n = 1 << a;
@@ -2386,7 +2386,7 @@ Error generating stack: ` + l.message + `
       c = ej(
         e,
         l,
-        re.current
+        ce.current
       ) ? 26 : e === "html" || e === "head" || e === "body" ? 27 : 5;
     else
       e: switch (e) {
@@ -2864,7 +2864,7 @@ Error generating stack: ` + l.message + `
   function Ia(e, t, l) {
     if (t = t.updateQueue, t !== null && (t = t.shared, (l & 4194048) !== 0)) {
       var a = t.lanes;
-      a &= e.pendingLanes, l |= a, t.lanes = l, _(e, l);
+      a &= e.pendingLanes, l |= a, t.lanes = l, N(e, l);
     }
   }
   function Yc(e, t) {
@@ -3707,7 +3707,7 @@ Error generating stack: ` + l.message + `
   function pd(e, t, l) {
     if ((l & 4194048) !== 0) {
       var a = t.lanes;
-      a &= e.pendingLanes, l |= a, t.lanes = l, _(e, l);
+      a &= e.pendingLanes, l |= a, t.lanes = l, N(e, l);
     }
   }
   var hi = {
@@ -5479,7 +5479,7 @@ Error generating stack: ` + l.message + `
               throw Error(o(166));
             return Dt(t), null;
           }
-          e = re.current, Qa(t) ? _o(t) : (e = Vh(n, a, l), t.stateNode = e, Is(t));
+          e = ce.current, Qa(t) ? _o(t) : (e = Vh(n, a, l), t.stateNode = e, Is(t));
         }
         return Dt(t), null;
       case 5:
@@ -5491,7 +5491,7 @@ Error generating stack: ` + l.message + `
               throw Error(o(166));
             return Dt(t), null;
           }
-          if (e = re.current, Qa(t))
+          if (e = ce.current, Qa(t))
             _o(t);
           else {
             switch (n = Ri(
@@ -10225,17 +10225,17 @@ var _j = yj(), r = Ou();
 const fu = [["task_started", "任务开始", "task"], ["inspection_recorded", "检查记录", "task"], ["issue_created", "问题记录", "issue"], ["rectification_submitted", "整改提交", "issue"], ["review_rejected", "复核退回", "issue"], ["review_accepted", "复核通过", "issue"], ["task_completed", "任务结束", "task"]];
 function Nj({ api: u, projects: h }) {
   var $e;
-  const [N, o] = r.useState((($e = h[0]) == null ? void 0 : $e.id) || ""), [T, U] = r.useState([]), [V, A] = r.useState("general_inspection"), [Y, v] = r.useState("现场质量安全检查"), [D, K] = r.useState("general,通用施工检查"), [k, se] = r.useState(fu.map((X) => X[0])), [je, ye] = r.useState(!1), [_e, Ce] = r.useState(!1), [xe, F] = r.useState(""), [he, ae] = r.useState(""), [H, ve] = r.useState(0), Ae = h.find((X) => X.id === N), Ge = Ae != null && Ae.permissions ? Ae.permissions.includes("knowledge.process") : Ae == null ? void 0 : Ae.can_run, Ze = Ae != null && Ae.permissions ? Ae.permissions.includes("knowledge.review") : Ae == null ? void 0 : Ae.can_manage;
+  const [_, o] = r.useState((($e = h[0]) == null ? void 0 : $e.id) || ""), [T, U] = r.useState([]), [V, A] = r.useState("general_inspection"), [Y, v] = r.useState("现场质量安全检查"), [D, K] = r.useState("general,通用施工检查"), [k, se] = r.useState(fu.map((X) => X[0])), [je, ye] = r.useState(!1), [_e, Ce] = r.useState(!1), [xe, F] = r.useState(""), [he, ae] = r.useState(""), [H, ve] = r.useState(0), Ae = h.find((X) => X.id === _), Ge = Ae != null && Ae.permissions ? Ae.permissions.includes("knowledge.process") : Ae == null ? void 0 : Ae.can_run, Ze = Ae != null && Ae.permissions ? Ae.permissions.includes("knowledge.review") : Ae == null ? void 0 : Ae.can_manage;
   r.useEffect(() => {
     let X = !1;
-    return U([]), F(""), N && u(`/scenes?project_id=${encodeURIComponent(N)}`).then((fe) => {
+    return U([]), F(""), _ && u(`/scenes?project_id=${encodeURIComponent(_)}`).then((fe) => {
       X || U(fe.items);
     }).catch((fe) => {
       X || F(fe.message);
     }), () => {
       X = !0;
     };
-  }, [N, H]);
+  }, [_, H]);
   const Xe = async (X) => {
     Ce(!0), F(""), ae("");
     try {
@@ -10259,7 +10259,7 @@ function Nj({ api: u, projects: h }) {
       he && /* @__PURE__ */ s.jsx("p", { className: "feedback success", role: "status", children: he }),
       /* @__PURE__ */ s.jsxs("label", { children: [
         "项目",
-        /* @__PURE__ */ s.jsx("select", { "aria-label": "场景项目", value: N, onChange: (X) => o(X.target.value), children: h.map((X) => /* @__PURE__ */ s.jsx("option", { value: X.id, children: X.name }, X.id)) })
+        /* @__PURE__ */ s.jsx("select", { "aria-label": "场景项目", value: _, onChange: (X) => o(X.target.value), children: h.map((X) => /* @__PURE__ */ s.jsx("option", { value: X.id, children: X.name }, X.id)) })
       ] }),
       Ge && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
@@ -10287,7 +10287,7 @@ function Nj({ api: u, projects: h }) {
           /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: je, onChange: (X) => ye(X.target.checked) }),
           "有明确期限、终态及复核时间时比较记录中的期限"
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: _e || !N || !k.length, onClick: () => void Xe(async () => {
+        /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: _e || !_ || !k.length, onClick: () => void Xe(async () => {
           const X = T.filter((y) => y.code === V).sort((y, Q) => Q.version - y.version)[0], fe = D.split(`
 `).filter((y) => y.trim()).map((y) => {
             const [Q, le] = y.split(/[,，]/);
@@ -10295,7 +10295,7 @@ function Nj({ api: u, projects: h }) {
             const we = X == null ? void 0 : X.payload.categories.find((m) => m.code === Q.trim());
             return { code: Q.trim(), name: le.trim(), focus: (we == null ? void 0 : we.focus) || "", keywords: (we == null ? void 0 : we.keywords) || [] };
           });
-          await u("/scenes", { method: "POST", body: JSON.stringify({ project_id: N, code: V, expected_version: (X == null ? void 0 : X.version) || 0, payload: { name: Y, categories: fe, steps: fu.filter((y) => k.includes(y[0])).map((y) => ({ event_type: y[0], name: y[1], scope: y[2] })), compare_deadline: je } }) }), ae("新场景版本已保存，原成果保持原配置。");
+          await u("/scenes", { method: "POST", body: JSON.stringify({ project_id: _, code: V, expected_version: (X == null ? void 0 : X.version) || 0, payload: { name: Y, categories: fe, steps: fu.filter((y) => k.includes(y[0])).map((y) => ({ event_type: y[0], name: y[1], scope: y[2] })), compare_deadline: je } }) }), ae("新场景版本已保存，原成果保持原配置。");
         }), children: "保存新版本" })
       ] }),
       T.map((X) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
@@ -10320,8 +10320,8 @@ function Nj({ api: u, projects: h }) {
         }), children: "启用此版本" }),
         Ge && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: _e, onClick: () => void Xe(async () => {
           var y;
-          const fe = await u(`/knowledge/taxonomies?project_id=${encodeURIComponent(N)}`);
-          await u("/knowledge/taxonomies", { method: "POST", body: JSON.stringify({ project_id: N, expected_version: ((y = fe.items[0]) == null ? void 0 : y.version) || 0, categories: X.payload.categories }) }), ae("分类已保存为新的知识萃取分类版本。");
+          const fe = await u(`/knowledge/taxonomies?project_id=${encodeURIComponent(_)}`);
+          await u("/knowledge/taxonomies", { method: "POST", body: JSON.stringify({ project_id: _, expected_version: ((y = fe.items[0]) == null ? void 0 : y.version) || 0, categories: X.payload.categories }) }), ae("分类已保存为新的知识萃取分类版本。");
         }), children: "用于知识萃取分类" })
       ] }, X.id))
     ] })
@@ -10340,19 +10340,19 @@ async function Yt(u, h = {}) {
   if (!Ut) return fetch(u, h);
   if (!u.startsWith("/api/v1/") && !u.startsWith("/integration/v1/"))
     throw new Error("请求地址不属于平台接口。");
-  const N = new Headers(h.headers);
-  N.delete("Authorization");
+  const _ = new Headers(h.headers);
+  _.delete("Authorization");
   const o = window.QaxcProjectId;
-  Ra && o && N.set("X-Project-ID", o);
+  Ra && o && _.set("X-Project-ID", o);
   const T = (h.method || "GET").toUpperCase();
   if (!["GET", "HEAD", "OPTIONS"].includes(T)) {
     const V = await fetch("/quality/api/csrf-token", { credentials: "same-origin", cache: "no-store" });
     if (V.status === 401 && window.dispatchEvent(new Event("b-session-expired")), !V.ok) throw new Error(V.status === 401 ? "登录已失效，请返回平台重新登录。" : "无法取得安全校验，请稍后重试。");
     const A = await V.json(), Y = A.csrf_token ?? A.token;
     if (typeof Y != "string" || !Y) throw new Error("安全校验返回格式不正确。");
-    N.set("X-CSRF-Token", Y);
+    _.set("X-CSRF-Token", Y);
   }
-  const U = await fetch("/quality/b" + u, { ...h, headers: N, credentials: "same-origin" });
+  const U = await fetch("/quality/b" + u, { ...h, headers: _, credentials: "same-origin" });
   return U.status === 401 && window.dispatchEvent(new Event("b-session-expired")), U;
 }
 const Sf = { draft: "草稿", pending_review: "待审核", changes_requested: "已退回", approved: "已审核", published: "已发布", superseded: "已有修订版", withdrawn: "已撤回" }, wf = { created: "保存草稿", submit: "提交审核", approve: "审核通过", request_changes: "退回修改", publish: "发布", withdraw: "撤回", superseded: "被修订版替代" }, Su = () => ({ number: "", text: "", chapter: "", parent_number: null, page: null, locator: "", preconditions: [], exceptions: [], tables: [], notes: [], references: [] }), wj = (u) => ({
@@ -10371,12 +10371,12 @@ const Sf = { draft: "草稿", pending_review: "待审核", changes_requested: "�
 }), Oa = (u) => u.split(`
 `).map((h) => h.trim()).filter(Boolean);
 function xu(u, h) {
-  var N;
-  return u != null && u.permissions ? u.permissions.includes(h) : h === "knowledge.process" ? !!(u != null && u.can_run) : !!(u != null && u.can_manage) || !!((N = u == null ? void 0 : u.roles) != null && N.includes("reviewer"));
+  var _;
+  return u != null && u.permissions ? u.permissions.includes(h) : h === "knowledge.process" ? !!(u != null && u.can_run) : !!(u != null && u.can_manage) || !!((_ = u == null ? void 0 : u.roles) != null && _.includes("reviewer"));
 }
-function kj({ api: u, projects: h, identity: N }) {
+function kj({ api: u, projects: h, identity: _ }) {
   var ie, nt, He;
-  const [o, T] = r.useState(((ie = h[0]) == null ? void 0 : ie.id) || ""), [U, V] = r.useState([]), [A, Y] = r.useState(null), [v, D] = r.useState(null), [K, k] = r.useState(!1), [se, je] = r.useState(!1), [ye, _e] = r.useState(!1), [Ce, xe] = r.useState(""), [F, he] = r.useState(""), [ae, H] = r.useState(""), [ve, Ae] = r.useState(null), [Ge, Ze] = r.useState(0), [Xe, pe] = r.useState(""), [$e, X] = r.useState(!1), [fe, y] = r.useState(""), [Q, le] = r.useState("current_rectification"), [we, m] = r.useState(""), [L, P] = r.useState({ project_type: "", region: "", object_type: "", stage: "" }), [te, re] = r.useState(null), Z = r.useRef(crypto.randomUUID()), $ = r.useRef(0), ze = h.find((O) => O.id === o), ne = xu(ze, "knowledge.process"), Ee = xu(ze, "knowledge.review"), ct = xu(ze, "knowledge.publish"), Je = ne || Ee || ct;
+  const [o, T] = r.useState(((ie = h[0]) == null ? void 0 : ie.id) || ""), [U, V] = r.useState([]), [A, Y] = r.useState(null), [v, D] = r.useState(null), [K, k] = r.useState(!1), [se, je] = r.useState(!1), [ye, _e] = r.useState(!1), [Ce, xe] = r.useState(""), [F, he] = r.useState(""), [ae, H] = r.useState(""), [ve, Ae] = r.useState(null), [Ge, Ze] = r.useState(0), [Xe, pe] = r.useState(""), [$e, X] = r.useState(!1), [fe, y] = r.useState(""), [Q, le] = r.useState("current_rectification"), [we, m] = r.useState(""), [L, P] = r.useState({ project_type: "", region: "", object_type: "", stage: "" }), [te, ce] = r.useState(null), Z = r.useRef(crypto.randomUUID()), $ = r.useRef(0), ze = h.find((O) => O.id === o), ne = xu(ze, "knowledge.process"), Ee = xu(ze, "knowledge.review"), ct = xu(ze, "knowledge.publish"), Je = ne || Ee || ct;
   r.useEffect(() => {
     const O = (w) => {
       K && (w.preventDefault(), w.returnValue = "");
@@ -10421,7 +10421,7 @@ function kj({ api: u, projects: h, identity: N }) {
     const w = ++$.current;
     await Pe(async () => {
       const I = await u("/standards/" + O.id);
-      w === $.current && (Y(I), D(null), We(), re(null), pe(""), X(!1));
+      w === $.current && (Y(I), D(null), We(), ce(null), pe(""), X(!1));
     });
   }, st = () => {
     if (!A || !Ue()) return;
@@ -10438,7 +10438,7 @@ function kj({ api: u, projects: h, identity: N }) {
       maintainer: oe.maintainer,
       expected_version: w,
       reason: "修订说明待填写",
-      clauses: (B || []).map((ce) => Object.fromEntries(Object.keys(Su()).map((Ye) => [Ye, ce[Ye]])))
+      clauses: (B || []).map((re) => Object.fromEntries(Object.keys(Su()).map((Ye) => [Ye, re[Ye]])))
     }), y("沿用已绑定原件；原文变化时请重新上传"), k(!0), Z.current = crypto.randomUUID();
   }, et = (O) => void Pe(async () => {
     if (!A) return;
@@ -10446,7 +10446,7 @@ function kj({ api: u, projects: h, identity: N }) {
     Y({ ...A, ...w }), We(), Ze((I) => I + 1), he(wf[O] + "成功。"), pe(""), X(!1), A.source_available !== !1 && Y(await u("/standards/" + A.id));
   }), ht = () => void Pe(async () => {
     if (!A) return;
-    const O = await Yt(`/api/v1/standards/${A.id}/source`, { headers: { Authorization: `Bearer dev-${N}` } });
+    const O = await Yt(`/api/v1/standards/${A.id}/source`, { headers: { Authorization: `Bearer dev-${_}` } });
     if (!O.ok) {
       const Me = await O.json();
       throw new Error(Me.message || "原件不可用。");
@@ -10468,7 +10468,7 @@ function kj({ api: u, projects: h, identity: N }) {
       /* @__PURE__ */ s.jsxs("label", { children: [
         "项目",
         /* @__PURE__ */ s.jsx("select", { "aria-label": "规范项目", disabled: se, value: o, onChange: (O) => {
-          Ue() && ($.current++, T(O.target.value), Y(null), D(null), k(!1), H(""), re(null));
+          Ue() && ($.current++, T(O.target.value), Y(null), D(null), k(!1), H(""), ce(null));
         }, children: h.map((O) => /* @__PURE__ */ s.jsx("option", { value: O.id, children: O.name }, O.id)) })
       ] }),
       ne && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: se || !o, onClick: () => {
@@ -10694,7 +10694,7 @@ function kj({ api: u, projects: h, identity: N }) {
           /* @__PURE__ */ s.jsxs("label", { children: [
             "用途",
             /* @__PURE__ */ s.jsxs("select", { value: Q, onChange: (O) => {
-              le(O.target.value), re(null);
+              le(O.target.value), ce(null);
             }, children: [
               /* @__PURE__ */ s.jsx("option", { value: "current_rectification", children: "当前整改" }),
               /* @__PURE__ */ s.jsx("option", { value: "historical_review", children: "历史复盘" })
@@ -10703,17 +10703,17 @@ function kj({ api: u, projects: h, identity: N }) {
           Q === "historical_review" && /* @__PURE__ */ s.jsxs("label", { children: [
             "事件日期",
             /* @__PURE__ */ s.jsx("input", { type: "date", value: we, onChange: (O) => {
-              m(O.target.value), re(null);
+              m(O.target.value), ce(null);
             } })
           ] }),
           /* @__PURE__ */ s.jsx("div", { className: "form-grid", children: [["project_type", "项目类型"], ["region", "地域"], ["object_type", "作业对象"], ["stage", "作业阶段"]].map(([O, w]) => /* @__PURE__ */ s.jsxs("label", { children: [
             w,
             /* @__PURE__ */ s.jsx("input", { value: L[O], onChange: (I) => {
-              P({ ...L, [O]: I.target.value }), re(null);
+              P({ ...L, [O]: I.target.value }), ce(null);
             } })
           ] }, O)) }),
           /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: se, onClick: () => void Pe(async () => {
-            re(await u(`/standards/${A.id}/applicability`, { method: "POST", body: JSON.stringify({ purpose: Q, event_date: we || null, ...L }) }));
+            ce(await u(`/standards/${A.id}/applicability`, { method: "POST", body: JSON.stringify({ purpose: Q, event_date: we || null, ...L }) }));
           }), children: "核对条件" }),
           te && /* @__PURE__ */ s.jsxs("div", { role: "status", children: [
             /* @__PURE__ */ s.jsx("p", { children: { candidate: "日期与登记范围符合，仍需核对具体条文", needs_information: "条件不全，请补充", not_applicable: "存在不适用条件", unavailable: "版本不可用" }[te.status] }),
@@ -10845,13 +10845,13 @@ const Ua = { kind: "asset", id: "", quote: "", locator: "" }, $f = { record_key:
   rubric: "评分要点",
   historical_case_ids: "历史案例版本"
 }, Oj = { status: [["unverified", "待核实"], ["open", "未整改"], ["rectifying", "整改中"], ["closed", "复查闭环"]], relation: [["independent", "独立事件"], ["recurrence", "同对象再次发生"], ["possible_duplicate", "疑似重复（不自动合并）"]], mode: [["single", "单案例"], ["category", "类别汇编"], ["project", "项目汇编"]], type: [["single", "单选"], ["multiple", "多选"], ["judgment", "判断"], ["case", "案例分析"]], cognitive_level: [["recall", "识记"], ["sequence", "操作顺序"], ["scenario", "情境判断"], ["case", "案例分析"]], difficulty: [["easy", "容易"], ["medium", "中等"], ["hard", "困难"]] };
-function Ii({ value: u, onChange: h, catalog: N, name: o = "", path: T = "content", readonly: U = !1 }) {
+function Ii({ value: u, onChange: h, catalog: _, name: o = "", path: T = "content", readonly: U = !1 }) {
   var v;
   const V = za[o] || o;
   if (Array.isArray(u)) return /* @__PURE__ */ s.jsxs("fieldset", { className: "wf-group", children: [
     /* @__PURE__ */ s.jsx("legend", { children: V }),
     u.map((D, K) => /* @__PURE__ */ s.jsxs("div", { className: "wf-array", children: [
-      /* @__PURE__ */ s.jsx(Ii, { value: D, name: o.endsWith("_ids") ? o.slice(0, -1) : "", path: T + "." + K, catalog: N, readonly: U, onChange: (k) => h(u.map((se, je) => je === K ? k : se)) }),
+      /* @__PURE__ */ s.jsx(Ii, { value: D, name: o.endsWith("_ids") ? o.slice(0, -1) : "", path: T + "." + K, catalog: _, readonly: U, onChange: (k) => h(u.map((se, je) => je === K ? k : se)) }),
       !U && /* @__PURE__ */ s.jsx("button", { type: "button", className: "button ghost", "aria-label": "删除" + V + String(K + 1), onClick: () => h(u.filter((k, se) => K !== se)), children: "移除" })
     ] }, K)),
     !U && /* @__PURE__ */ s.jsxs("button", { type: "button", className: "button ghost", onClick: () => h([...u, structuredClone(Ej[o] ?? "")]), children: [
@@ -10859,14 +10859,14 @@ function Ii({ value: u, onChange: h, catalog: N, name: o = "", path: T = "conten
       V
     ] })
   ] });
-  if (u !== null && typeof u == "object") return /* @__PURE__ */ s.jsx("div", { className: "wf-fields", children: Object.entries(u).map(([D, K]) => D === "kind" && T === "content" ? null : /* @__PURE__ */ s.jsx(Ii, { name: D, value: K, path: T + "." + D, catalog: N, readonly: U, onChange: (k) => {
+  if (u !== null && typeof u == "object") return /* @__PURE__ */ s.jsx("div", { className: "wf-fields", children: Object.entries(u).map(([D, K]) => D === "kind" && T === "content" ? null : /* @__PURE__ */ s.jsx(Ii, { name: D, value: K, path: T + "." + D, catalog: _, readonly: U, onChange: (k) => {
     const se = { ...u, [D]: k };
     D === "type" && ["judgment", "case"].includes(String(k)) && (se.options = {}), D === "kind" && "id" in u && (se.id = ""), h(se);
   } }, D)) });
   let A = Oj[o];
   o === "kind" && (A = T.includes(".records.") ? [["inspection", "检查"], ["rectification", "整改"], ["reinspection", "复查"]] : [["asset", "原件"], ["record", "历史记录"], ["standard", "规范版本"], ["work", "知识成果"]]), o === "nature" && (A = T.includes("claims") ? [["fact", "原始事实"], ["source_conclusion", "资料已有结论"], ["analysis", "系统分析"], ["hypothesis", "待核实假设"]] : [["observed_hazard", "已发现隐患"], ["potential_source", "潜在风险源"]]);
   const Y = { taxonomy_id: "taxonomy", guide_id: "guide", related_event_id: "hazard", event_id: "hazard" };
-  return (o === "id" || o in Y || o === "historical_case_id") && (A = N.filter((D) => o in Y ? D.work_kind === Y[o] : o === "historical_case_id" ? ["hazard", "compilation"].includes(D.work_kind || "") : !0).map((D) => [D.id, D.label])), /* @__PURE__ */ s.jsxs("label", { className: "wf-field", htmlFor: T, children: [
+  return (o === "id" || o in Y || o === "historical_case_id") && (A = _.filter((D) => o in Y ? D.work_kind === Y[o] : o === "historical_case_id" ? ["hazard", "compilation"].includes(D.work_kind || "") : !0).map((D) => [D.id, D.label])), /* @__PURE__ */ s.jsxs("label", { className: "wf-field", htmlFor: T, children: [
     /* @__PURE__ */ s.jsx("span", { children: V || "内容" }),
     U ? /* @__PURE__ */ s.jsx("div", { className: "wf-value", children: ((v = A == null ? void 0 : A.find((D) => D[0] === String(u))) == null ? void 0 : v[1]) || String(u ?? "待填") }) : A ? /* @__PURE__ */ s.jsxs("select", { id: T, value: String(u ?? ""), onChange: (D) => h(D.target.value || null), children: [
       /* @__PURE__ */ s.jsx("option", { value: "", children: "请选择" }),
@@ -10875,9 +10875,9 @@ function Ii({ value: u, onChange: h, catalog: N, name: o = "", path: T = "conten
   ] });
 }
 const Cf = { draft: "草稿", pending_review: "待审核", approved: "审核通过", published: "已发布", changes_requested: "退回修改", superseded: "已有新版本", withdrawn: "已撤回" }, Ef = { submit: "提交审核", approve: "审核通过", request_changes: "退回修改", publish: "发布", withdraw: "撤回" };
-function Tj({ api: u, projects: h, identity: N }) {
+function Tj({ api: u, projects: h, identity: _ }) {
   var O;
-  const [o, T] = r.useState(((O = h[0]) == null ? void 0 : O.id) || ""), [U, V] = r.useState("hazard"), [A, Y] = r.useState([]), [v, D] = r.useState([]), [K, k] = r.useState(null), [se, je] = r.useState(null), [ye, _e] = r.useState(""), [Ce, xe] = r.useState(!1), [F, he] = r.useState(""), [ae, H] = r.useState(""), [ve, Ae] = r.useState(!1), [Ge, Ze] = r.useState(!1), [Xe, pe] = r.useState(0), [$e, X] = r.useState(null), [fe, y] = r.useState(""), [Q, le] = r.useState(null), [we, m] = r.useState(null), [L, P] = r.useState(null), [te, re] = r.useState(null), Z = r.useRef(crypto.randomUUID()), $ = r.useRef(0), ze = r.useRef(!1), ne = h.find((w) => w.id === o), Ee = (w) => {
+  const [o, T] = r.useState(((O = h[0]) == null ? void 0 : O.id) || ""), [U, V] = r.useState("hazard"), [A, Y] = r.useState([]), [v, D] = r.useState([]), [K, k] = r.useState(null), [se, je] = r.useState(null), [ye, _e] = r.useState(""), [Ce, xe] = r.useState(!1), [F, he] = r.useState(""), [ae, H] = r.useState(""), [ve, Ae] = r.useState(!1), [Ge, Ze] = r.useState(!1), [Xe, pe] = r.useState(0), [$e, X] = r.useState(null), [fe, y] = r.useState(""), [Q, le] = r.useState(null), [we, m] = r.useState(null), [L, P] = r.useState(null), [te, ce] = r.useState(null), Z = r.useRef(crypto.randomUUID()), $ = r.useRef(0), ze = r.useRef(!1), ne = h.find((w) => w.id === o), Ee = (w) => {
     var I, Se;
     return ne != null && ne.permissions ? ne.permissions.includes(w) : w.startsWith("training.") ? !!((I = ne == null ? void 0 : ne.roles) != null && I.some((Me) => ["admin", "teacher"].includes(Me))) : w === "knowledge.process" ? !!(ne != null && ne.can_run) : !!(ne != null && ne.can_manage) || !!((Se = ne == null ? void 0 : ne.roles) != null && Se.includes("reviewer"));
   }, ct = Ee(U === "question" ? "training.manage" : "knowledge.process"), Je = Ee(U === "question" ? "training.review" : "knowledge.review"), Pe = Ee(U === "question" ? "training.review" : "knowledge.publish"), We = ct || Je || Pe, Ue = () => {
@@ -10925,13 +10925,13 @@ function Tj({ api: u, projects: h, identity: N }) {
       Ae(!1);
     }
   }, De = () => {
-    $.current++, k(null), je(null), m(null), P(null), re(null), y(""), _e(""), xe(!1), Ue();
+    $.current++, k(null), je(null), m(null), P(null), ce(null), y(""), _e(""), xe(!1), Ue();
   }, st = async (w) => {
     if (!Re()) return;
     const I = ++$.current;
     await ke(async () => {
       const Se = await u("/workflows/" + w.id);
-      I === $.current && (k(Se), je(null), _e(""), xe(!1), P(null), re(null), Ue());
+      I === $.current && (k(Se), je(null), _e(""), xe(!1), P(null), ce(null), Ue());
     });
   }, et = (w) => {
     je((I) => I && { ...I, ...w }), ze.current = !0, Z.current = crypto.randomUUID();
@@ -10947,7 +10947,7 @@ function Tj({ api: u, projects: h, identity: N }) {
     m(I.items);
   }), He = () => ke(async () => {
     if (!K) return;
-    const w = await Yt("/api/v1/workflows/" + K.id + "/export", { headers: { Authorization: "Bearer dev-" + N } });
+    const w = await Yt("/api/v1/workflows/" + K.id + "/export", { headers: { Authorization: "Bearer dev-" + _ } });
     if (!w.ok) throw new Error("导出失败，请核对来源是否仍可用。");
     const I = URL.createObjectURL(await w.blob()), Se = document.createElement("a");
     Se.href = I, Se.download = K.title + ".docx", Se.click(), setTimeout(() => URL.revokeObjectURL(I), 1e3);
@@ -11063,7 +11063,7 @@ function Tj({ api: u, projects: h, identity: N }) {
         Ee("knowledge.process") && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => ke(async () => {
           P((await u(`/workflows/impacts?project_id=${encodeURIComponent(o)}&source_kind=work&source_id=${K.id}`)).items);
         }), children: "查看下游影响" }),
-        U === "guide" && K.state === "published" && Ee("training.manage") && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => ke(async () => re(await u("/workflows/" + K.id + "/blueprint"))), children: "考点覆盖" }),
+        U === "guide" && K.state === "published" && Ee("training.manage") && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => ke(async () => ce(await u("/workflows/" + K.id + "/blueprint"))), children: "考点覆盖" }),
         U === "question" && K.state === "published" && ct && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: ve, onClick: () => ke(async () => {
           await u("/workflows/" + K.id + "/training-bank", { method: "POST" }), H("已加入现有培训题库，可在培训页面编入学习包。");
         }), children: "加入培训题库" })
@@ -11115,7 +11115,7 @@ function Tj({ api: u, projects: h, identity: N }) {
   ] });
 }
 const Of = { queued: "等待处理", fetching: "正在取件", validating: "正在校验", processing: "正在处理", ready: "已完成", failed: "处理失败", withdrawn: "已撤回", not_created: "尚未生成" };
-function zj({ id: u, identity: h, projects: N, navigate: o }) {
+function zj({ id: u, identity: h, projects: _, navigate: o }) {
   const [T, U] = r.useState(null), [V, A] = r.useState(""), [Y, v] = r.useState(!1), [D, K] = r.useState(""), [k, se] = r.useState(0), je = `a-import-action:${h}:${u}`;
   async function ye(xe, F) {
     const he = await Yt("/integration/v1/a-imports/" + u + xe, F), ae = await he.json().catch(() => ({}));
@@ -11141,7 +11141,7 @@ function zj({ id: u, identity: h, projects: N, navigate: o }) {
   }, [u, k, h]);
   const _e = (xe) => {
     var F, he;
-    return !!T && !!((he = (F = N.find((ae) => ae.id === T.project_id)) == null ? void 0 : F.permissions) != null && he.includes(xe));
+    return !!T && !!((he = (F = _.find((ae) => ae.id === T.project_id)) == null ? void 0 : F.permissions) != null && he.includes(xe));
   };
   async function Ce(xe) {
     if (!(!T || Y)) {
@@ -11216,7 +11216,7 @@ function zj({ id: u, identity: h, projects: N, navigate: o }) {
   ] });
 }
 function Aj({ navigate: u }) {
-  const [h, N] = r.useState([]), [o, T] = r.useState(""), [U, V] = r.useState(!1);
+  const [h, _] = r.useState([]), [o, T] = r.useState(""), [U, V] = r.useState(!1);
   return r.useEffect(() => {
     let A = !1;
     return (async () => {
@@ -11224,7 +11224,7 @@ function Aj({ navigate: u }) {
         const [Y, v, D] = await Promise.all([Yt("/api/v1/health"), Yt("/api/v1/audit-events?limit=50"), fetch("/quality/api/work/state", { credentials: "same-origin" })]);
         if (!Y.ok || !v.ok || !D.ok) throw Error("无法读取运行记录，请确认登录及项目管理权限。");
         const [K, k, se] = await Promise.all([Y.json(), v.json(), D.json()]), je = window.QaxcProjectId, ye = se.tasks.filter((_e) => !je || _e.projectId === je).flatMap((_e) => (_e.events || []).map((Ce) => ({ id: Ce.id, action: _e.title + " · " + Ce.action, project_id: _e.projectId, created_at: Ce.uploadedAt, source: "现场作业" })));
-        A || (V(K.worker_online), N([...ye, ...k.items.map((_e) => ({ ..._e, source: "知识与学习" }))].sort((_e, Ce) => Date.parse(Ce.created_at) - Date.parse(_e.created_at)).slice(0, 100)));
+        A || (V(K.worker_online), _([...ye, ...k.items.map((_e) => ({ ..._e, source: "知识与学习" }))].sort((_e, Ce) => Date.parse(Ce.created_at) - Date.parse(_e.created_at)).slice(0, 100)));
       } catch (Y) {
         A || T(Y.message);
       }
@@ -11262,7 +11262,7 @@ function Aj({ navigate: u }) {
   ] });
 }
 function Rj({ deliveryId: u, navigate: h }) {
-  const [N, o] = r.useState(!1), [T, U] = r.useState("读取固定归档版本并校验证据后，生成待审核复盘。"), V = r.useRef(!0);
+  const [_, o] = r.useState(!1), [T, U] = r.useState("读取固定归档版本并校验证据后，生成待审核复盘。"), V = r.useRef(!0);
   r.useEffect(() => (V.current = !0, () => {
     V.current = !1;
   }), []);
@@ -11272,7 +11272,7 @@ function Rj({ deliveryId: u, navigate: h }) {
     return se;
   }
   async function Y() {
-    if (N) return;
+    if (_) return;
     o(!0);
     const v = "archive-review:" + u, D = sessionStorage.getItem(v) || crypto.randomUUID();
     sessionStorage.setItem(v, D);
@@ -11302,7 +11302,7 @@ function Rj({ deliveryId: u, navigate: h }) {
     /* @__PURE__ */ s.jsx("h2", { children: "归档成果复盘" }),
     /* @__PURE__ */ s.jsx("p", { role: "status", style: { margin: "20px 0" }, children: T }),
     /* @__PURE__ */ s.jsxs("div", { className: "heading-actions", children: [
-      /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: N, onClick: () => void Y(), children: "生成 / 打开复盘" }),
+      /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: _, onClick: () => void Y(), children: "生成 / 打开复盘" }),
       /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => h("/task-packages"), children: "成果处理清单" })
     ] })
   ] });
@@ -11315,11 +11315,11 @@ function Rj({ deliveryId: u, navigate: h }) {
  */
 const Uj = (u) => u.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(), Dj = (u) => u.replace(
   /^([A-Z])|[\s-_]+(\w)/g,
-  (h, N, o) => o ? o.toUpperCase() : N.toLowerCase()
+  (h, _, o) => o ? o.toUpperCase() : _.toLowerCase()
 ), Tf = (u) => {
   const h = Dj(u);
   return h.charAt(0).toUpperCase() + h.slice(1);
-}, Pf = (...u) => u.filter((h, N, o) => !!h && h.trim() !== "" && o.indexOf(h) === N).join(" ").trim(), Mj = (u) => {
+}, Pf = (...u) => u.filter((h, _, o) => !!h && h.trim() !== "" && o.indexOf(h) === _).join(" ").trim(), Mj = (u) => {
   for (const h in u)
     if (h.startsWith("aria-") || h === "role" || h === "title")
       return !0;
@@ -11351,7 +11351,7 @@ const Hj = r.forwardRef(
   ({
     color: u = "currentColor",
     size: h = 24,
-    strokeWidth: N = 2,
+    strokeWidth: _ = 2,
     absoluteStrokeWidth: o,
     className: T = "",
     children: U,
@@ -11365,7 +11365,7 @@ const Hj = r.forwardRef(
       width: h,
       height: h,
       stroke: u,
-      strokeWidth: o ? Number(N) * 24 / Number(h) : N,
+      strokeWidth: o ? Number(_) * 24 / Number(h) : _,
       className: Pf("lucide", T),
       ...!U && !Mj(A) && { "aria-hidden": "true" },
       ...A
@@ -11383,7 +11383,7 @@ const Hj = r.forwardRef(
  * See the LICENSE file in the root directory of this source tree.
  */
 const _t = (u, h) => {
-  const N = r.forwardRef(
+  const _ = r.forwardRef(
     ({ className: o, ...T }, U) => r.createElement(Hj, {
       ref: U,
       iconNode: h,
@@ -11395,7 +11395,7 @@ const _t = (u, h) => {
       ...T
     })
   );
-  return N.displayName = Tf(u), N;
+  return _.displayName = Tf(u), _;
 };
 /**
  * @license lucide-react v0.511.0 - ISC
@@ -11743,11 +11743,11 @@ const Sv = [
   ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
   ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
 ], Wi = _t("x", Sv), zs = { csv: "CSV数据", excel: "Excel表格", governance_export: "治理结果导出", detail: "明细", review: "复查", summary: "汇总", source_row: "原始行", site_photo: "现场照片", text_screenshot: "文字截图" }, Tn = { queued: "等待处理", running: "正在接入", failed: "接入中断", completed: "已完成", completed_with_errors: "完成 · 有异常", created: "新增", updated: "更新", skipped: "跳过", candidate: "待确认", confirmed: "已确认重复", rejected: "已排除", stale: "版本已变，需复核" }, Bf = (u) => u ? new Date(u).toLocaleString("zh-CN") : "尚未同步", Lf = (u) => {
-  const h = ["description", "隐患描述", "record_id", "来源记录ID", "report_id", "报告ID", "project_id", "项目ID", "record_kind", "记录类型", "inspection_date", "occurred_on", "检查日期", "images", "图片关系"], N = (o) => h.includes(o) ? h.indexOf(o) : 100;
-  return Object.entries(u).sort(([o], [T]) => N(o) - N(T));
+  const h = ["description", "隐患描述", "record_id", "来源记录ID", "report_id", "报告ID", "project_id", "项目ID", "record_kind", "记录类型", "inspection_date", "occurred_on", "检查日期", "images", "图片关系"], _ = (o) => h.includes(o) ? h.indexOf(o) : 100;
+  return Object.entries(u).sort(([o], [T]) => _(o) - _(T));
 }, pu = (u) => typeof u == "object" ? JSON.stringify(u, null, 2) : String(u ?? "—");
 function wv({ asset: u, identity: h }) {
-  const [N, o] = r.useState(""), [T, U] = r.useState("");
+  const [_, o] = r.useState(""), [T, U] = r.useState("");
   return r.useEffect(() => {
     let V = !1, A = "";
     return Yt(`/api/v1/assets/${u}/content`, { headers: { Authorization: `Bearer dev-${h}` } }).then(async (Y) => {
@@ -11760,11 +11760,11 @@ function wv({ asset: u, identity: h }) {
     }), () => {
       V = !0, A && URL.revokeObjectURL(A);
     };
-  }, [u, h]), T ? /* @__PURE__ */ s.jsx("p", { role: "alert", children: T }) : N ? /* @__PURE__ */ s.jsx("img", { className: "evidence-image", src: N, alt: "来源证据图片" }) : /* @__PURE__ */ s.jsx("p", { children: "正在读取图片…" });
+  }, [u, h]), T ? /* @__PURE__ */ s.jsx("p", { role: "alert", children: T }) : _ ? /* @__PURE__ */ s.jsx("img", { className: "evidence-image", src: _, alt: "来源证据图片" }) : /* @__PURE__ */ s.jsx("p", { children: "正在读取图片…" });
 }
-function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
+function kv({ api: u, path: h, navigate: _, projects: o, identity: T }) {
   var ot, Nt;
-  const [U, V] = r.useState([]), [A, Y] = r.useState([]), [v, D] = r.useState([]), [K, k] = r.useState([]), [se, je] = r.useState("reports"), ye = r.useRef(0), [_e, Ce] = r.useState(""), [xe, F] = r.useState([]), [he, ae] = r.useState(null), [H, ve] = r.useState(""), [Ae, Ge] = r.useState(!1), [Ze, Xe] = r.useState([]), [pe, $e] = r.useState({}), [X, fe] = r.useState(0), [y, Q] = r.useState(null), [le, we] = r.useState(null), [m, L] = r.useState(null), [P, te] = r.useState(new URLSearchParams(location.search).get("source") || ""), [re, Z] = r.useState(""), [$, ze] = r.useState(!1), [ne, Ee] = r.useState(""), [ct, Je] = r.useState(""), [Pe, We] = r.useState(!0), [Ue, Re] = r.useState(!1), [ke, De] = r.useState(0), [st, et] = r.useState({ project_id: "", source_id: "", record_kind: "", quality_status: "", from_date: "", to_date: "" }), [ht, ie] = r.useState(""), [nt, He] = r.useState(null), [O, w] = r.useState([]), [I, Se] = r.useState(""), [Me, lt] = r.useState(0), [Fe, B] = r.useState(!1), [oe, ce] = r.useState("csv"), [Ye, b] = r.useState(""), [ge, de] = r.useState(""), [Qe, vt] = r.useState(((ot = o.find((g) => g.can_run)) == null ? void 0 : ot.id) || (Ut ? "" : "demo-airport")), M = o.some((g) => g.can_run), j = h.startsWith("/records/"), ue = h.startsWith("/imports/") && h !== "/imports/new", be = U.find((g) => g.id === P), rt = A.filter((g) => g.kind === (be == null ? void 0 : be.kind) && g.project_id === (be == null ? void 0 : be.project_id));
+  const [U, V] = r.useState([]), [A, Y] = r.useState([]), [v, D] = r.useState([]), [K, k] = r.useState([]), [se, je] = r.useState("reports"), ye = r.useRef(0), [_e, Ce] = r.useState(""), [xe, F] = r.useState([]), [he, ae] = r.useState(null), [H, ve] = r.useState(""), [Ae, Ge] = r.useState(!1), [Ze, Xe] = r.useState([]), [pe, $e] = r.useState({}), [X, fe] = r.useState(0), [y, Q] = r.useState(null), [le, we] = r.useState(null), [m, L] = r.useState(null), [P, te] = r.useState(new URLSearchParams(location.search).get("source") || ""), [ce, Z] = r.useState(""), [$, ze] = r.useState(!1), [ne, Ee] = r.useState(""), [ct, Je] = r.useState(""), [Pe, We] = r.useState(!0), [Ue, Re] = r.useState(!1), [ke, De] = r.useState(0), [st, et] = r.useState({ project_id: "", source_id: "", record_kind: "", quality_status: "", from_date: "", to_date: "" }), [ht, ie] = r.useState(""), [nt, He] = r.useState(null), [O, w] = r.useState([]), [I, Se] = r.useState(""), [Me, lt] = r.useState(0), [Fe, B] = r.useState(!1), [oe, re] = r.useState("csv"), [Ye, b] = r.useState(""), [ge, de] = r.useState(""), [Qe, vt] = r.useState(((ot = o.find((g) => g.can_run)) == null ? void 0 : ot.id) || (Ut ? "" : "demo-airport")), M = o.some((g) => g.can_run), j = h.startsWith("/records/"), ue = h.startsWith("/imports/") && h !== "/imports/new", be = U.find((g) => g.id === P), rt = A.filter((g) => g.kind === (be == null ? void 0 : be.kind) && g.project_id === (be == null ? void 0 : be.project_id));
   r.useEffect(() => {
     ie(""), w([]), Se(""), lt(0), Ee(""), Je(""), L(null);
   }, [h]), r.useEffect(() => {
@@ -11822,7 +11822,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
   }, [h, y == null ? void 0 : y.status, Me, Fe]), r.useEffect(() => {
     ye.current++, Ce(""), F([]), ae(null), ve("");
   }, [st, se, h]);
-  const _ = async (g, Ne = !1) => {
+  const N = async (g, Ne = !1) => {
     const it = ++ye.current;
     if (!Ne && _e === g) {
       Ce(""), Ge(!1);
@@ -11896,9 +11896,9 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
-        /* @__PURE__ */ s.jsx("button", { className: h === "/sources" ? "selected" : "", onClick: () => N("/sources"), children: "来源管理" }),
-        /* @__PURE__ */ s.jsx("button", { className: h.startsWith("/imports") ? "selected" : "", onClick: () => N("/imports"), children: "历史项目" }),
-        /* @__PURE__ */ s.jsx("button", { className: h.startsWith("/records") ? "selected" : "", onClick: () => N("/records"), children: "风险数据" })
+        /* @__PURE__ */ s.jsx("button", { className: h === "/sources" ? "selected" : "", onClick: () => _("/sources"), children: "来源管理" }),
+        /* @__PURE__ */ s.jsx("button", { className: h.startsWith("/imports") ? "selected" : "", onClick: () => _("/imports"), children: "历史项目" }),
+        /* @__PURE__ */ s.jsx("button", { className: h.startsWith("/records") ? "selected" : "", onClick: () => _("/records"), children: "风险数据" })
       ] }),
       /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => De((g) => g + 1), disabled: Pe, children: [
         /* @__PURE__ */ s.jsx(Bs, { size: 15 }),
@@ -11934,7 +11934,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             /* @__PURE__ */ s.jsx("dd", { children: g.namespace })
           ] }),
           /* @__PURE__ */ s.jsxs("button", { className: "button secondary", disabled: !((it = o.find((bt) => bt.id === g.project_id)) != null && it.can_run), onClick: () => {
-            te(g.id), Z(""), N("/imports/new?source=" + g.id);
+            te(g.id), Z(""), _("/imports/new?source=" + g.id);
           }, children: [
             "开始接入",
             /* @__PURE__ */ s.jsx(Ol, { size: 16 })
@@ -11959,7 +11959,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "类型",
-            /* @__PURE__ */ s.jsx("select", { value: oe, onChange: (g) => ce(g.target.value), children: ["csv", "excel", "governance_export"].map((g) => /* @__PURE__ */ s.jsx("option", { value: g, children: zs[g] }, g)) })
+            /* @__PURE__ */ s.jsx("select", { value: oe, onChange: (g) => re(g.target.value), children: ["csv", "excel", "governance_export"].map((g) => /* @__PURE__ */ s.jsx("option", { value: g, children: zs[g] }, g)) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "项目",
@@ -11992,7 +11992,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "输入文件",
-              /* @__PURE__ */ s.jsxs("select", { "aria-label": "输入文件", value: re, onChange: (g) => {
+              /* @__PURE__ */ s.jsxs("select", { "aria-label": "输入文件", value: ce, onChange: (g) => {
                 Z(g.target.value), L(null);
               }, children: [
                 /* @__PURE__ */ s.jsx("option", { value: "", children: "请选择" }),
@@ -12030,8 +12030,8 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
               /* @__PURE__ */ s.jsx("p", { children: Object.values(be.mapping).join("、") })
             ] })
           ] }),
-          /* @__PURE__ */ s.jsxs("button", { className: "button secondary", disabled: Ue || !P || !re, onClick: () => void me(async () => {
-            L(await u("/imports/preview", { method: "POST", body: JSON.stringify({ source_id: P, input_asset_id: re }) }));
+          /* @__PURE__ */ s.jsxs("button", { className: "button secondary", disabled: Ue || !P || !ce, onClick: () => void me(async () => {
+            L(await u("/imports/preview", { method: "POST", body: JSON.stringify({ source_id: P, input_asset_id: ce }) }));
           }), children: [
             /* @__PURE__ */ s.jsx(vu, { size: 16 }),
             "预览字段与异常"
@@ -12093,8 +12093,8 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
           /* @__PURE__ */ s.jsxs("div", { className: "submit-bar", children: [
             /* @__PURE__ */ s.jsx("span", { children: "坏值保留；不符合项目范围的行会被拒绝。" }),
             /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Ue, onClick: () => void me(async () => {
-              const g = await u("/imports", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ source_id: P, input_asset_id: re, input_hash: m.input_hash, fail_after: !Ut && $ ? 2 : null }) });
-              N("/imports/" + g.id);
+              const g = await u("/imports", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ source_id: P, input_asset_id: ce, input_hash: m.input_hash, fail_after: !Ut && $ ? 2 : null }) });
+              _("/imports/" + g.id);
             }), children: [
               /* @__PURE__ */ s.jsx(em, { size: 16 }),
               Ue ? "正在提交…" : "提交接入"
@@ -12105,7 +12105,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
     ] }) : h === "/imports" ? /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
         /* @__PURE__ */ s.jsx("h2", { children: "历史项目" }),
-        /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: !M, onClick: () => N("/imports/new"), children: [
+        /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: !M, onClick: () => _("/imports/new"), children: [
           "新建历史项目",
           /* @__PURE__ */ s.jsx(Ol, { size: 15 })
         ] })
@@ -12127,7 +12127,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
           ] }),
           /* @__PURE__ */ s.jsx("td", { children: Tn[g.status] }),
           ["created", "updated", "skipped", "failed"].map((Ne) => /* @__PURE__ */ s.jsx("td", { children: g.counts[Ne] }, Ne)),
-          /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N("/imports/" + g.id), children: "查看历史项目" }) })
+          /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/imports/" + g.id), children: "查看历史项目" }) })
         ] }, g.id)) })
       ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
         /* @__PURE__ */ s.jsx("h2", { children: "还没有历史项目" }),
@@ -12135,7 +12135,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
       ] }),
       Ot
     ] }) : ue && y ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-      /* @__PURE__ */ s.jsxs("button", { className: "text-button back", onClick: () => N("/imports"), children: [
+      /* @__PURE__ */ s.jsxs("button", { className: "text-button back", onClick: () => _("/imports"), children: [
         /* @__PURE__ */ s.jsx(Af, { size: 15 }),
         "返回历史项目"
       ] }),
@@ -12201,7 +12201,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             /* @__PURE__ */ s.jsx("td", { children: g.row_number }),
             /* @__PURE__ */ s.jsx("td", { children: g.outcome === "failed" ? "失败" : Tn[g.outcome] }),
             /* @__PURE__ */ s.jsx("td", { children: g.issues.join("；") || "通过" }),
-            /* @__PURE__ */ s.jsx("td", { children: g.record_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N("/records/" + g.record_id), children: "查看证据" }) })
+            /* @__PURE__ */ s.jsx("td", { children: g.record_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/records/" + g.record_id), children: "查看证据" }) })
           ] }, g.row_number)) })
         ] }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
@@ -12273,7 +12273,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
           }, children: "逐条数据" })
         ] }),
         se === "reports" ? /* @__PURE__ */ s.jsx("div", { className: "reports-list", children: K.length ? K.map((g) => /* @__PURE__ */ s.jsxs("article", { children: [
-          /* @__PURE__ */ s.jsxs("button", { className: "report-toggle", "aria-expanded": _e === g.id, onClick: () => void _(g.id), children: [
+          /* @__PURE__ */ s.jsxs("button", { className: "report-toggle", "aria-expanded": _e === g.id, onClick: () => void N(g.id), children: [
             /* @__PURE__ */ s.jsx(vu, { size: 20 }),
             /* @__PURE__ */ s.jsxs("div", { children: [
               /* @__PURE__ */ s.jsx("strong", { children: g.title }),
@@ -12292,14 +12292,14 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
           _e === g.id && /* @__PURE__ */ s.jsxs("div", { className: "report-records", children: [
             H && /* @__PURE__ */ s.jsx("p", { role: "alert", children: H }),
             Ae ? /* @__PURE__ */ s.jsx("p", { children: "正在读取报告内风险数据…" }) : xe.map((Ne) => /* @__PURE__ */ s.jsxs("div", { className: "report-record", children: [
-              /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => N("/records/" + Ne.id), children: Ne.description || "缺少描述" }),
+              /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => _("/records/" + Ne.id), children: Ne.description || "缺少描述" }),
               /* @__PURE__ */ s.jsxs("span", { children: [
                 zs[Ne.record_kind],
                 " · v",
                 Ne.current_version
               ] })
             ] }, Ne.id)),
-            he && /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: Ae, onClick: () => void _(g.id, !0), children: "加载更多风险数据" })
+            he && /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: Ae, onClick: () => void N(g.id, !0), children: "加载更多风险数据" })
           ] })
         ] }, g.id)) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "没有符合条件的报告" }),
@@ -12316,7 +12316,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             var Ne;
             return /* @__PURE__ */ s.jsxs("tr", { children: [
               /* @__PURE__ */ s.jsxs("td", { children: [
-                /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => N("/records/" + g.id), children: g.description || "缺少描述" }),
+                /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => _("/records/" + g.id), children: g.description || "缺少描述" }),
                 /* @__PURE__ */ s.jsx("small", { children: (Ne = U.find((it) => it.id === g.source_id)) == null ? void 0 : Ne.name })
               ] }),
               /* @__PURE__ */ s.jsx("td", { children: zs[g.record_kind] }),
@@ -12336,7 +12336,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
       ] }),
       /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "概况统计覆盖当前身份的全部可访问项目；下方列表按所选条件筛选。所有记录保留来源身份，描述相同不会自动删除。" })
     ] }) : j && le ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-      /* @__PURE__ */ s.jsxs("button", { className: "text-button back", onClick: () => N("/records"), children: [
+      /* @__PURE__ */ s.jsxs("button", { className: "text-button back", onClick: () => _("/records"), children: [
         /* @__PURE__ */ s.jsx(Af, { size: 15 }),
         "返回风险数据"
       ] }),
@@ -12430,7 +12430,7 @@ function kv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
               /* @__PURE__ */ s.jsx("strong", { children: Tn[g.review_state] }),
               /* @__PURE__ */ s.jsx("small", { children: "比较方法：同项目同类型的描述匹配；决策绑定具体版本" })
             ] }),
-            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N("/records/" + g.other_record_id), children: "打开另一条记录" }),
+            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/records/" + g.other_record_id), children: "打开另一条记录" }),
             ((Ne = o.find((it) => it.id === le.project_id)) == null ? void 0 : Ne.roles.some((it) => ["admin", "reviewer"].includes(it))) && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
               /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Ue || g.review_state === "stale", onClick: () => void me(async () => {
                 await u(`/record-links/${g.id}/confirm`, { method: "POST", body: JSON.stringify({ row_version: g.row_version, decision: "confirmed" }) }), De((it) => it + 1);
@@ -12468,7 +12468,7 @@ const al = "/history-review", Mn = "/history-reader", tm = "historyReview.visibl
 function Ov() {
   try {
     const u = localStorage.getItem(tm), h = u ? JSON.parse(u) : null;
-    return Array.isArray(h) && h.length ? h.filter((N) => typeof N == "string") : ec;
+    return Array.isArray(h) && h.length ? h.filter((_) => typeof _ == "string") : ec;
   } catch {
     return ec;
   }
@@ -12477,10 +12477,10 @@ function Tv() {
   try {
     const u = localStorage.getItem(Fi), h = u ? JSON.parse(u) : null;
     if (h && typeof h == "object") {
-      const N = {};
+      const _ = {};
       for (const [o, T] of Object.entries(h))
-        typeof T == "number" && T >= 56 && T <= 1e3 && (N[o] = T);
-      return N;
+        typeof T == "number" && T >= 56 && T <= 1e3 && (_[o] = T);
+      return _;
     }
   } catch {
   }
@@ -12489,44 +12489,44 @@ function Tv() {
 function zv() {
   try {
     const u = localStorage.getItem(sm), h = u ? JSON.parse(u) : null;
-    if (Array.isArray(h) && h.length) return h.filter((N) => typeof N == "string");
+    if (Array.isArray(h) && h.length) return h.filter((_) => typeof _ == "string");
   } catch {
   }
   return am;
 }
 function Av(u, h) {
-  const N = u.filter((T) => h.includes(T) || bu.includes(T));
-  let o = N.findIndex((T) => bu.includes(T));
-  o < 0 && (o = N.length);
+  const _ = u.filter((T) => h.includes(T) || bu.includes(T));
+  let o = _.findIndex((T) => bu.includes(T));
+  o < 0 && (o = _.length);
   for (const T of h)
-    N.includes(T) || (N.splice(o, 0, T), o += 1);
+    _.includes(T) || (_.splice(o, 0, T), o += 1);
   for (const T of bu) {
-    if (N.includes(T)) continue;
-    const U = N.indexOf("_actions");
-    U >= 0 ? N.splice(U, 0, T) : N.push(T);
+    if (_.includes(T)) continue;
+    const U = _.indexOf("_actions");
+    U >= 0 ? _.splice(U, 0, T) : _.push(T);
   }
-  return N;
+  return _;
 }
 function Jt(u, h = 120) {
-  const N = (u || "").replace(/\s+/g, " ").trim();
-  return N.length > h ? N.slice(0, h) + "…" : N || "—";
+  const _ = (u || "").replace(/\s+/g, " ").trim();
+  return _.length > h ? _.slice(0, h) + "…" : _ || "—";
 }
 function Kl(u, h) {
-  var N;
-  return zu[h] || ((N = u.find((o) => o.key === h)) == null ? void 0 : N.label) || h;
+  var _;
+  return zu[h] || ((_ = u.find((o) => o.key === h)) == null ? void 0 : _.label) || h;
 }
 function Yf(u, h) {
-  return u ? Object.entries(u).map(([N, o]) => `${Kl(h, N)}：${Jt(o, 30)}`).join("；") : "—";
+  return u ? Object.entries(u).map(([_, o]) => `${Kl(h, _)}：${Jt(o, 30)}`).join("；") : "—";
 }
 function wu({ id: u }) {
-  const [h, N] = r.useState(""), [o, T] = r.useState("");
+  const [h, _] = r.useState(""), [o, T] = r.useState("");
   return r.useEffect(() => {
     let U = !1, V = "";
     return Yt("/api/v1" + Mn + "/images/" + encodeURIComponent(u)).then(async (A) => {
       if (!A.ok) throw Error("图片暂不可用");
       return A.blob();
     }).then((A) => {
-      V = URL.createObjectURL(A), U ? URL.revokeObjectURL(V) : N(V);
+      V = URL.createObjectURL(A), U ? URL.revokeObjectURL(V) : _(V);
     }).catch((A) => {
       U || T(A.message);
     }), () => {
@@ -12534,7 +12534,7 @@ function wu({ id: u }) {
     };
   }, [u]), o ? /* @__PURE__ */ s.jsx("p", { role: "alert", children: o }) : h ? /* @__PURE__ */ s.jsx("a", { href: h, target: "_blank", rel: "noreferrer", children: /* @__PURE__ */ s.jsx("img", { src: h, alt: "原报告关联图片，点击查看大图" }) }) : /* @__PURE__ */ s.jsx("p", { children: "读取图片…" });
 }
-function Gf({ api: u, findingId: h, large: N = !1 }) {
+function Gf({ api: u, findingId: h, large: _ = !1 }) {
   const [o, T] = r.useState(null), [U, V] = r.useState("");
   return r.useEffect(() => {
     let A = !1;
@@ -12545,7 +12545,7 @@ function Gf({ api: u, findingId: h, large: N = !1 }) {
     }), () => {
       A = !0;
     };
-  }, [u, h]), U ? /* @__PURE__ */ s.jsx("p", { role: "alert", children: U }) : o ? o.length ? /* @__PURE__ */ s.jsx("div", { className: N ? "history-images history-images-large" : "history-images", children: o.map((A, Y) => /* @__PURE__ */ s.jsxs("figure", { children: [
+  }, [u, h]), U ? /* @__PURE__ */ s.jsx("p", { role: "alert", children: U }) : o ? o.length ? /* @__PURE__ */ s.jsx("div", { className: _ ? "history-images history-images-large" : "history-images", children: o.map((A, Y) => /* @__PURE__ */ s.jsxs("figure", { children: [
     /* @__PURE__ */ s.jsx(wu, { id: A.id }),
     /* @__PURE__ */ s.jsxs("figcaption", { children: [
       Jt(A.relation, 24),
@@ -12555,7 +12555,7 @@ function Gf({ api: u, findingId: h, large: N = !1 }) {
   ] }, A.id + ":" + Y)) }) : /* @__PURE__ */ s.jsx("p", { className: "muted", children: "该条目没有已关联的照片（无照片不代表原报告没有照片）。" }) : /* @__PURE__ */ s.jsx("p", { className: "muted", children: "读取关联照片…" });
 }
 function Rv({ api: u }) {
-  const [h, N] = r.useState(null), [o, T] = r.useState([]), [U, V] = r.useState("findings"), [A, Y] = r.useState([]), [v, D] = r.useState([]), [K, k] = r.useState([]), [se, je] = r.useState([]), [ye, _e] = r.useState(Ov), [Ce, xe] = r.useState(zv), [F, he] = r.useState(Tv), [ae, H] = r.useState(""), ve = r.useRef(null), Ae = r.useRef(!1), [Ge, Ze] = r.useState(0), [Xe, pe] = r.useState(""), [$e, X] = r.useState(""), [fe, y] = r.useState(!1), [Q, le] = r.useState(""), [we, m] = r.useState(""), [L, P] = r.useState(""), [te, re] = r.useState(""), [Z, $] = r.useState(0), [ze, ne] = r.useState(!1), [Ee, ct] = r.useState(!1), [Je, Pe] = r.useState([]), [We, Ue] = r.useState(/* @__PURE__ */ new Set()), [Re, ke] = r.useState(!1), [De, st] = r.useState(null), [et, ht] = r.useState({}), [ie, nt] = r.useState(null), [He, O] = r.useState(""), [w, I] = r.useState(null), [Se, Me] = r.useState(""), [lt, Fe] = r.useState(""), [B, oe] = r.useState(!0), [ce, Ye] = r.useState(!1), [b, ge] = r.useState(0), de = (h == null ? void 0 : h.editable_fields) || (h == null ? void 0 : h.fields) || [], Qe = (h == null ? void 0 : h.fields) || de, vt = r.useMemo(() => Ce.filter((f) => ye.includes(f)), [Ce, ye]), M = de.length + zn.length, j = ye.filter((f) => de.some((G) => G.key === f) || zn.includes(f)).length, ue = (f) => F[f] || Cv[f] || 140, be = vt.reduce((f, G) => f + ue(G), 0), _ = Object.keys(F).length > 0 ? be : Math.max(be, Ge);
+  const [h, _] = r.useState(null), [o, T] = r.useState([]), [U, V] = r.useState("findings"), [A, Y] = r.useState([]), [v, D] = r.useState([]), [K, k] = r.useState([]), [se, je] = r.useState([]), [ye, _e] = r.useState(Ov), [Ce, xe] = r.useState(zv), [F, he] = r.useState(Tv), [ae, H] = r.useState(""), ve = r.useRef(null), Ae = r.useRef(!1), [Ge, Ze] = r.useState(0), [Xe, pe] = r.useState(""), [$e, X] = r.useState(""), [fe, y] = r.useState(!1), [Q, le] = r.useState(""), [we, m] = r.useState(""), [L, P] = r.useState(""), [te, ce] = r.useState(""), [Z, $] = r.useState(0), [ze, ne] = r.useState(!1), [Ee, ct] = r.useState(!1), [Je, Pe] = r.useState([]), [We, Ue] = r.useState(/* @__PURE__ */ new Set()), [Re, ke] = r.useState(!1), [De, st] = r.useState(null), [et, ht] = r.useState({}), [ie, nt] = r.useState(null), [He, O] = r.useState(""), [w, I] = r.useState(null), [Se, Me] = r.useState(""), [lt, Fe] = r.useState(""), [B, oe] = r.useState(!0), [re, Ye] = r.useState(!1), [b, ge] = r.useState(0), de = (h == null ? void 0 : h.editable_fields) || (h == null ? void 0 : h.fields) || [], Qe = (h == null ? void 0 : h.fields) || de, vt = r.useMemo(() => Ce.filter((f) => ye.includes(f)), [Ce, ye]), M = de.length + zn.length, j = ye.filter((f) => de.some((G) => G.key === f) || zn.includes(f)).length, ue = (f) => F[f] || Cv[f] || 140, be = vt.reduce((f, G) => f + ue(G), 0), N = Object.keys(F).length > 0 ? be : Math.max(be, Ge);
   r.useEffect(() => {
     const f = ve.current;
     if (!f || (Ze(f.clientWidth), typeof ResizeObserver > "u")) return;
@@ -12578,7 +12578,7 @@ function Rv({ api: u }) {
       u(al + "/projects?limit=800"),
       u(al + "/drafts?limit=100")
     ]).then(([G, Be, mt]) => {
-      f || (N(G), T(Be.items), k(mt.items), _e((zt) => {
+      f || (_(G), T(Be.items), k(mt.items), _e((zt) => {
         const Rs = /* @__PURE__ */ new Set([...G.editable_fields.map((ds) => ds.key), ...zn]), il = zt.filter((ds) => Rs.has(ds));
         return il.length ? il : ec.filter((ds) => Rs.has(ds));
       }), xe((zt) => Av(zt, G.editable_fields.map((Rs) => Rs.key))));
@@ -12828,16 +12828,13 @@ function Rv({ api: u }) {
         V(f), $(0);
       }, children: G }, f)) })
     ] }),
-    /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+    /* @__PURE__ */ s.jsxs("section", { className: "panel history-toolbar-panel", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "history-toolbar", children: [
         /* @__PURE__ */ s.jsxs("form", { className: "history-search", onSubmit: (f) => {
-          f.preventDefault(), re(L.trim()), $(0);
+          f.preventDefault(), ce(L.trim()), $(0);
         }, children: [
-          /* @__PURE__ */ s.jsx("label", { htmlFor: "history-query", children: "搜索" }),
-          /* @__PURE__ */ s.jsxs("div", { children: [
-            /* @__PURE__ */ s.jsx("input", { id: "history-query", value: L, onChange: (f) => P(f.target.value), maxLength: 100, placeholder: U === "reports" ? "报告名称或项目" : "问题描述、项目或报告" }),
-            /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: B, children: "搜索" })
-          ] })
+          /* @__PURE__ */ s.jsx("input", { id: "history-query", "aria-label": "搜索", value: L, onChange: (f) => P(f.target.value), maxLength: 100, placeholder: U === "reports" ? "报告名称或项目" : "问题描述、项目或报告" }),
+          /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: B, children: "搜索" })
         ] }),
         /* @__PURE__ */ s.jsxs("label", { className: "history-inline", children: [
           "项目筛选",
@@ -12864,13 +12861,7 @@ function Rv({ api: u }) {
           /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Ee, onChange: (f) => ct(f.target.checked) }),
           "只看待确认修改"
         ] }),
-        U === "findings" && /* @__PURE__ */ s.jsxs("button", { className: "button secondary", onClick: () => y((f) => !f), children: [
-          "显示字段（",
-          j,
-          "/",
-          M,
-          "）"
-        ] }),
+        U === "findings" && /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => y((f) => !f), children: h ? `显示字段（${j}/${M}）` : "显示字段" }),
         U === "findings" && /* @__PURE__ */ s.jsx("button", { className: Re ? "button primary" : "button secondary", onClick: it, children: Re ? "收起全部字段" : "展开全部字段" })
       ] }),
       fe && U === "findings" && /* @__PURE__ */ s.jsxs("div", { className: "history-fieldpicker", role: "group", "aria-label": "选择显示字段", children: [
@@ -12899,13 +12890,13 @@ function Rv({ api: u }) {
               "）"
             ] }),
             /* @__PURE__ */ s.jsxs("div", { children: [
-              /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: ce, onClick: () => Pe(Je.length === os.length ? [] : os), children: Je.length === os.length ? "全不选" : "全选" }),
-              /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: ce || !Je.length, onClick: () => void Oe(Je), children: [
+              /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: re, onClick: () => Pe(Je.length === os.length ? [] : os), children: Je.length === os.length ? "全不选" : "全选" }),
+              /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: re || !Je.length, onClick: () => void Oe(Je), children: [
                 "批量确认所选（",
                 Je.length,
                 "）"
               ] }),
-              /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: ce || !Je.length, onClick: () => void Te(Je), children: "放弃所选" })
+              /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: re || !Je.length, onClick: () => void Te(Je), children: "放弃所选" })
             ] })
           ] }),
           /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
@@ -12925,7 +12916,7 @@ function Rv({ api: u }) {
             ] }, f.id)) })
           ] }) })
         ] }),
-        /* @__PURE__ */ s.jsx("div", { ref: ve, className: "table-wrap history-table-wrap" + (ae ? " history-resizing" : ""), "aria-busy": B, children: /* @__PURE__ */ s.jsxs("table", { className: "history-table", style: { width: _, minWidth: _ }, children: [
+        /* @__PURE__ */ s.jsx("div", { ref: ve, className: "table-wrap history-table-wrap" + (ae ? " history-resizing" : ""), "aria-busy": B, children: /* @__PURE__ */ s.jsxs("table", { className: "history-table", style: { width: N, minWidth: N }, children: [
           /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsx("tr", { children: vt.map((f) => /* @__PURE__ */ s.jsx(
             "th",
             {
@@ -13090,7 +13081,7 @@ function Rv({ api: u }) {
         /* @__PURE__ */ s.jsx("textarea", { rows: f === "problem_description" ? 3 : 2, value: et[f] || "", onChange: (G) => ht({ ...et, [f]: G.target.value }) })
       ] }, f)) }),
       /* @__PURE__ */ s.jsxs("div", { className: "history-actions", children: [
-        /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: ce, onClick: () => void x(), children: "保存草稿" }),
+        /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: re, onClick: () => void x(), children: "保存草稿" }),
         /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => st(null), children: "取消" })
       ] }),
       ie && /* @__PURE__ */ s.jsxs("details", { className: "history-detail", children: [
@@ -13192,7 +13183,7 @@ function Rv({ api: u }) {
   ] });
 }
 function Mt(u, h) {
-  return u ? u.permissions != null ? u.permissions.includes(h) : ["knowledge.process", "retrospective.generate", "retrospective.edit", "imports.create", "imports.retry"].includes(h) ? !!u.can_run : ["knowledge.review", "knowledge.publish", "retrospective.review", "imports.withdraw"].includes(h) ? u.roles.some((N) => ["admin", "reviewer"].includes(N)) : h === "training.manage" ? u.roles.some((N) => ["admin", "teacher"].includes(N)) : h === "training.review" ? u.roles.some((N) => ["admin", "teacher", "reviewer"].includes(N)) : !0 : !1;
+  return u ? u.permissions != null ? u.permissions.includes(h) : ["knowledge.process", "retrospective.generate", "retrospective.edit", "imports.create", "imports.retry"].includes(h) ? !!u.can_run : ["knowledge.review", "knowledge.publish", "retrospective.review", "imports.withdraw"].includes(h) ? u.roles.some((_) => ["admin", "reviewer"].includes(_)) : h === "training.manage" ? u.roles.some((_) => ["admin", "teacher"].includes(_)) : h === "training.review" ? u.roles.some((_) => ["admin", "teacher", "reviewer"].includes(_)) : !0 : !1;
 }
 const nl = { draft: "草稿", pending_review: "待审核", changes_requested: "已退回", approved: "已审核", open: "待核查", resolved: "已处理", ignored: "暂不处理", submitted: "提交审核", edited: "人工修订", created: "新增", skipped: "复用已有", failed: "失败" }, Xf = { INVALID_DATE: "日期异常", INVALID_IMAGES: "图片字段异常", FALLBACK_ID: "来源身份待核查", MISSING_DESCRIPTION: "缺少描述", UNVERIFIED_STANDARD: "依据待核验" }, Qf = { case_card: "案例卡", checkpoint_card: "检查要点卡", retrospective_revision: "过程复盘", question_revision: "培训题目" };
 function yu(u, h) {
@@ -13202,9 +13193,9 @@ function yu(u, h) {
 `), h.suggestions.join(`
 `)], ["引用证据", u.facts.flatMap((o) => o.evidence_ids).join("、"), h.facts.flatMap((o) => o.evidence_ids).join("、")], ["标准依据", JSON.stringify(u.standards), JSON.stringify(h.standards)], ["施工要点", JSON.stringify(u.construction_points || []), JSON.stringify(h.construction_points || [])]].filter(([, o, T]) => o !== T);
 }
-function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
+function Uv({ api: u, path: h, navigate: _, projects: o, identity: T }) {
   var M;
-  const [U, V] = r.useState(!0), [A, Y] = r.useState(!1), [v, D] = r.useState(""), [K, k] = r.useState(""), [se, je] = r.useState(0), [ye, _e] = r.useState([]), [Ce, xe] = r.useState([]), [F, he] = r.useState([]), [ae, H] = r.useState("knowledge_revision"), [ve, Ae] = r.useState(""), [Ge, Ze] = r.useState(""), [Xe, pe] = r.useState(""), [$e, X] = r.useState(null), [fe, y] = r.useState([]), [Q, le] = r.useState(null), [we, m] = r.useState("resolved"), [L, P] = r.useState(""), [te, re] = r.useState(""), [Z, $] = r.useState(((M = o.find((j) => Mt(j, "knowledge.process"))) == null ? void 0 : M.id) || ""), [ze, ne] = r.useState([]), [Ee, ct] = r.useState([]), [Je, Pe] = r.useState("case_card"), [We, Ue] = r.useState("normal"), [Re, ke] = r.useState(null), [De, st] = r.useState(sessionStorage.getItem("b03-last-job-" + T) || ""), [et, ht] = r.useState(null), [ie, nt] = r.useState(null), [He, O] = r.useState(null), [w, I] = r.useState(""), [Se, Me] = r.useState(!1), lt = /^\/knowledge\/[^/]+\/edit$/.test(h), Fe = o.some((j) => Mt(j, "knowledge.process")), B = o.some((j) => Mt(j, "knowledge.review")), oe = h.startsWith("/quality"), ce = h === "/reviews";
+  const [U, V] = r.useState(!0), [A, Y] = r.useState(!1), [v, D] = r.useState(""), [K, k] = r.useState(""), [se, je] = r.useState(0), [ye, _e] = r.useState([]), [Ce, xe] = r.useState([]), [F, he] = r.useState([]), [ae, H] = r.useState("knowledge_revision"), [ve, Ae] = r.useState(""), [Ge, Ze] = r.useState(""), [Xe, pe] = r.useState(""), [$e, X] = r.useState(null), [fe, y] = r.useState([]), [Q, le] = r.useState(null), [we, m] = r.useState("resolved"), [L, P] = r.useState(""), [te, ce] = r.useState(""), [Z, $] = r.useState(((M = o.find((j) => Mt(j, "knowledge.process"))) == null ? void 0 : M.id) || ""), [ze, ne] = r.useState([]), [Ee, ct] = r.useState([]), [Je, Pe] = r.useState("case_card"), [We, Ue] = r.useState("normal"), [Re, ke] = r.useState(null), [De, st] = r.useState(sessionStorage.getItem("b03-last-job-" + T) || ""), [et, ht] = r.useState(null), [ie, nt] = r.useState(null), [He, O] = r.useState(null), [w, I] = r.useState(""), [Se, Me] = r.useState(!1), lt = /^\/knowledge\/[^/]+\/edit$/.test(h), Fe = o.some((j) => Mt(j, "knowledge.process")), B = o.some((j) => Mt(j, "knowledge.review")), oe = h.startsWith("/quality"), re = h === "/reviews";
   r.useEffect(() => {
     pe(""), y([]), Ze(""), Ae(""), D(""), k(""), Me(!1), I("");
   }, [h]), r.useEffect(() => {
@@ -13220,7 +13211,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
           const be = await u(h.replace("/edit", ""));
           if (j) return;
           nt(be), O(structuredClone(be.content));
-        } else if (ce) {
+        } else if (re) {
           const be = await u(`/reviews?object_type=${ae}&state=${Ge || "pending_review"}${Xe ? "&cursor=" + encodeURIComponent(Xe) : ""}`);
           if (j) return;
           _e(be.items), X(be.next_cursor);
@@ -13244,11 +13235,11 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
   }, [h, Ge, ve, Xe, se, Z, ae]), r.useEffect(() => {
     ct([]), ke(null);
   }, [Z, Je, We]), r.useEffect(() => {
-    if (!De || oe || lt || ce || !Fe) return;
+    if (!De || oe || lt || re || !Fe) return;
     let j = !1;
     const ue = () => {
       u("/knowledge/generation-jobs/" + De).then((rt) => {
-        j || (ht(rt), rt.status === "succeeded" && je((_) => _ + 1));
+        j || (ht(rt), rt.status === "succeeded" && je((N) => N + 1));
       }).catch((rt) => {
         j || D(rt.message);
       });
@@ -13304,10 +13295,10 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
-        /* @__PURE__ */ s.jsx("button", { onClick: () => N("/extraction"), children: "施工要点萃取" }),
-        /* @__PURE__ */ s.jsx("button", { className: oe ? "selected" : "", onClick: () => N("/quality"), children: "质量核查" }),
-        /* @__PURE__ */ s.jsx("button", { className: !oe && !ce ? "selected" : "", onClick: () => N("/knowledge/drafts"), children: "知识候选" }),
-        /* @__PURE__ */ s.jsx("button", { className: ce ? "selected" : "", onClick: () => N("/reviews"), children: "审核待办" })
+        /* @__PURE__ */ s.jsx("button", { onClick: () => _("/extraction"), children: "施工要点萃取" }),
+        /* @__PURE__ */ s.jsx("button", { className: oe ? "selected" : "", onClick: () => _("/quality"), children: "质量核查" }),
+        /* @__PURE__ */ s.jsx("button", { className: !oe && !re ? "selected" : "", onClick: () => _("/knowledge/drafts"), children: "知识候选" }),
+        /* @__PURE__ */ s.jsx("button", { className: re ? "selected" : "", onClick: () => _("/reviews"), children: "审核待办" })
       ] }),
       /* @__PURE__ */ s.jsxs("button", { className: "button ghost", disabled: U, onClick: () => je((j) => j + 1), children: [
         /* @__PURE__ */ s.jsx(Bs, { size: 15 }),
@@ -13343,7 +13334,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             var ue, be;
             return /* @__PURE__ */ s.jsxs("tr", { children: [
               /* @__PURE__ */ s.jsxs("td", { children: [
-                /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => N("/records/" + j.record_id), children: j.description || "缺少描述" }),
+                /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => _("/records/" + j.record_id), children: j.description || "缺少描述" }),
                 /* @__PURE__ */ s.jsx("small", { children: Xf[j.rule_code] || j.rule_code })
               ] }),
               /* @__PURE__ */ s.jsxs("td", { children: [
@@ -13355,7 +13346,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
               ] }),
               /* @__PURE__ */ s.jsx("td", { children: nl[j.status] }),
               /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: !((be = o.find((rt) => rt.id === j.project_id)) != null && be.can_run), onClick: () => {
-                le(j), P(""), re("");
+                le(j), P(""), ce("");
               }, children: "核查处理" }) })
             ] }, j.id);
           }) })
@@ -13376,7 +13367,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             ie.model_ref
           ] })
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => N("/knowledge/drafts"), children: "返回候选列表" })
+        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => _("/knowledge/drafts"), children: "返回候选列表" })
       ] }),
       ie.source.version !== ie.source.current_version && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", children: [
         "来源已从v",
@@ -13389,7 +13380,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
         /* @__PURE__ */ s.jsxs("section", { className: "panel source-proof", children: [
           /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
             /* @__PURE__ */ s.jsx("h2", { children: "来源与证据" }),
-            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N((ie.source.kind === "retrospective" ? "/retrospectives/" : "/records/") + ie.source.record_id), children: ie.source.kind === "retrospective" ? "打开来源复盘" : "打开风险数据" })
+            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _((ie.source.kind === "retrospective" ? "/retrospectives/" : "/records/") + ie.source.record_id), children: ie.source.kind === "retrospective" ? "打开来源复盘" : "打开风险数据" })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
             /* @__PURE__ */ s.jsxs("span", { className: "role-tag", children: [
@@ -13414,7 +13405,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
                   j.effective_fields.description || "查看生效字段"
                 ] }),
                 /* @__PURE__ */ s.jsx("p", { children: JSON.stringify(j.effective_fields, null, 2) }),
-                /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N("/records/" + j.record_id), children: "打开风险记录" })
+                /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/records/" + j.record_id), children: "打开风险记录" })
               ] }, j.record_version_id))
             ] }),
             /* @__PURE__ */ s.jsx("h3", { children: "项目 / 日期" }),
@@ -13452,7 +13443,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             /* @__PURE__ */ s.jsx("h3", { children: "来源事实 / 人工补充" }),
             He.facts.map((j, ue) => /* @__PURE__ */ s.jsxs("label", { children: [
               j.source_kind === "human_annotation" ? "人工补充，需核查" : "来源生效值",
-              /* @__PURE__ */ s.jsx("textarea", { disabled: !de, value: j.text, onChange: (be) => O({ ...He, facts: He.facts.map((rt, _) => _ === ue ? { ...rt, text: be.target.value, source_kind: "human_annotation" } : rt) }) }),
+              /* @__PURE__ */ s.jsx("textarea", { disabled: !de, value: j.text, onChange: (be) => O({ ...He, facts: He.facts.map((rt, N) => N === ue ? { ...rt, text: be.target.value, source_kind: "human_annotation" } : rt) }) }),
               /* @__PURE__ */ s.jsxs("small", { children: [
                 "引用：",
                 j.evidence_ids.join("、")
@@ -13475,22 +13466,22 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
                   /* @__PURE__ */ s.jsxs("label", { children: [
                     "施工要点",
                     /* @__PURE__ */ s.jsx("textarea", { disabled: !de, value: j.content, onChange: (rt) => {
-                      var _;
-                      return O({ ...He, construction_points: (_ = He.construction_points) == null ? void 0 : _.map((me, Ve) => Ve === ue ? { ...me, content: rt.target.value } : me) });
+                      var N;
+                      return O({ ...He, construction_points: (N = He.construction_points) == null ? void 0 : N.map((me, Ve) => Ve === ue ? { ...me, content: rt.target.value } : me) });
                     } })
                   ] }),
                   /* @__PURE__ */ s.jsxs("label", { children: [
                     "检查方法",
                     /* @__PURE__ */ s.jsx("textarea", { disabled: !de, value: j.inspection_method, onChange: (rt) => {
-                      var _;
-                      return O({ ...He, construction_points: (_ = He.construction_points) == null ? void 0 : _.map((me, Ve) => Ve === ue ? { ...me, inspection_method: rt.target.value } : me) });
+                      var N;
+                      return O({ ...He, construction_points: (N = He.construction_points) == null ? void 0 : N.map((me, Ve) => Ve === ue ? { ...me, inspection_method: rt.target.value } : me) });
                     } })
                   ] }),
                   /* @__PURE__ */ s.jsxs("label", { children: [
                     "常见问题",
                     /* @__PURE__ */ s.jsx("textarea", { disabled: !de, value: j.common_mistakes, onChange: (rt) => {
-                      var _;
-                      return O({ ...He, construction_points: (_ = He.construction_points) == null ? void 0 : _.map((me, Ve) => Ve === ue ? { ...me, common_mistakes: rt.target.value } : me) });
+                      var N;
+                      return O({ ...He, construction_points: (N = He.construction_points) == null ? void 0 : N.map((me, Ve) => Ve === ue ? { ...me, common_mistakes: rt.target.value } : me) });
                     } })
                   ] }),
                   /* @__PURE__ */ s.jsx("p", { children: j.claim_kind === "source_summary" ? "来源归纳，待核查" : "新增建议，不代表已执行或有效标准" }),
@@ -13498,10 +13489,10 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
                     "证据：",
                     j.evidence_ids.join("、")
                   ] }),
-                  (be = j.source_quotes) == null ? void 0 : be.map((rt, _) => /* @__PURE__ */ s.jsxs("details", { children: [
+                  (be = j.source_quotes) == null ? void 0 : be.map((rt, N) => /* @__PURE__ */ s.jsxs("details", { children: [
                     /* @__PURE__ */ s.jsx("summary", { children: "核对原文摘录" }),
                     /* @__PURE__ */ s.jsx("p", { children: rt.text })
-                  ] }, _))
+                  ] }, N))
                 ] }, ue);
               })
             ] }),
@@ -13523,7 +13514,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
               ] }),
               /* @__PURE__ */ s.jsx("span", { children: j.verification_status === "pending_verification" ? "待核验 · 不能作为有效标准" : "不采用" }),
               /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-                /* @__PURE__ */ s.jsx("input", { type: "checkbox", disabled: !de, checked: j.verification_status === "not_used", onChange: (be) => O({ ...He, standards: He.standards.map((rt, _) => _ === ue ? { ...rt, verification_status: be.target.checked ? "not_used" : "pending_verification" } : rt) }) }),
+                /* @__PURE__ */ s.jsx("input", { type: "checkbox", disabled: !de, checked: j.verification_status === "not_used", onChange: (be) => O({ ...He, standards: He.standards.map((rt, N) => N === ue ? { ...rt, verification_status: be.target.checked ? "not_used" : "pending_verification" } : rt) }) }),
                 "明确不采用该依据"
               ] })
             ] }, ue)) : /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "没有已核验标准，不自动补造标准名称或条款。" }),
@@ -13587,7 +13578,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
               ie.revisions[ue + 1].version,
               "的修改："
             ] }),
-            yu(ie.revisions[ue + 1].content, j.content).map(([be, rt, _]) => /* @__PURE__ */ s.jsxs("div", { children: [
+            yu(ie.revisions[ue + 1].content, j.content).map(([be, rt, N]) => /* @__PURE__ */ s.jsxs("div", { children: [
               /* @__PURE__ */ s.jsx("strong", { children: be }),
               /* @__PURE__ */ s.jsxs("p", { className: "diff-before", children: [
                 "原：",
@@ -13595,7 +13586,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
               ] }),
               /* @__PURE__ */ s.jsxs("p", { className: "diff-after", children: [
                 "新：",
-                _
+                N
               ] })
             ] }, be))
           ] })
@@ -13616,7 +13607,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
         ] }, ue))
       ] })
     ] }) : /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-      !ce && Fe && /* @__PURE__ */ s.jsxs("section", { className: "panel generation-panel", children: [
+      !re && Fe && /* @__PURE__ */ s.jsxs("section", { className: "panel generation-panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "从风险数据生成知识候选" }),
           /* @__PURE__ */ s.jsx("span", { children: "先选择明确范围，核对后提交；每次最多20条同项目来源" })
@@ -13705,7 +13696,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             et.items.map((j, ue) => /* @__PURE__ */ s.jsxs("p", { children: [
               j.error || nl[j.outcome],
               " ",
-              j.item_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N("/knowledge/" + j.item_id + "/edit"), children: "打开知识卡" })
+              j.item_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/knowledge/" + j.item_id + "/edit"), children: "打开知识卡" })
             ] }, ue)),
             et.status === "failed" && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: A, onClick: () => void Ye(async () => {
               await u("/jobs/" + et.job_id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: et.row_version }) }), ht(null);
@@ -13715,8 +13706,8 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
       ] }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
-          /* @__PURE__ */ s.jsx("h2", { children: ce ? "审核待办" : "知识候选列表" }),
-          ce && /* @__PURE__ */ s.jsxs("select", { "aria-label": "审核对象类型", value: ae, onChange: (j) => {
+          /* @__PURE__ */ s.jsx("h2", { children: re ? "审核待办" : "知识候选列表" }),
+          re && /* @__PURE__ */ s.jsxs("select", { "aria-label": "审核对象类型", value: ae, onChange: (j) => {
             H(j.target.value), pe(""), y([]);
           }, children: [
             /* @__PURE__ */ s.jsx("option", { value: "knowledge_revision", children: "知识候选" }),
@@ -13726,11 +13717,11 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
           /* @__PURE__ */ s.jsxs("select", { "aria-label": "知识状态", value: Ge, onChange: (j) => {
             Ze(j.target.value), pe(""), y([]);
           }, children: [
-            !ce && /* @__PURE__ */ s.jsx("option", { value: "", children: "全部状态" }),
-            (ce ? ["pending_review", "changes_requested", "approved"] : ["draft", "pending_review", "changes_requested", "approved"]).map((j) => /* @__PURE__ */ s.jsx("option", { value: j, children: nl[j] }, j))
+            !re && /* @__PURE__ */ s.jsx("option", { value: "", children: "全部状态" }),
+            (re ? ["pending_review", "changes_requested", "approved"] : ["draft", "pending_review", "changes_requested", "approved"]).map((j) => /* @__PURE__ */ s.jsx("option", { value: j, children: nl[j] }, j))
           ] })
         ] }),
-        ce && !B ? /* @__PURE__ */ s.jsx("div", { className: "empty", children: /* @__PURE__ */ s.jsx("h2", { children: "当前身份没有审核权限" }) }) : ye.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
+        re && !B ? /* @__PURE__ */ s.jsx("div", { className: "empty", children: /* @__PURE__ */ s.jsx("h2", { children: "当前身份没有审核权限" }) }) : ye.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
           /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsxs("tr", { children: [
             /* @__PURE__ */ s.jsx("th", { children: "知识卡" }),
             /* @__PURE__ */ s.jsx("th", { children: "类型" }),
@@ -13746,10 +13737,10 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
               "v",
               j.version
             ] }),
-            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N(j.object_type === "question_revision" ? "/training/questions/" + j.id : j.object_type === "retrospective_revision" ? "/retrospectives/" + j.id + "/review" : "/knowledge/" + j.id + "/edit"), children: ce ? "打开审核" : "核查与编辑" }) })
+            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _(j.object_type === "question_revision" ? "/training/questions/" + j.id : j.object_type === "retrospective_revision" ? "/retrospectives/" + j.id + "/review" : "/knowledge/" + j.id + "/edit"), children: re ? "打开审核" : "核查与编辑" }) })
           ] }, j.id)) })
         ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
-          /* @__PURE__ */ s.jsx("h2", { children: ce ? "暂无对应审核待办" : "还没有知识候选" }),
+          /* @__PURE__ */ s.jsx("h2", { children: re ? "暂无对应审核待办" : "还没有知识候选" }),
           /* @__PURE__ */ s.jsx("p", { children: "先从明确来源范围生成，再核查并提交审核。" })
         ] }),
         ge
@@ -13771,7 +13762,7 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
       ] }),
       /* @__PURE__ */ s.jsxs("label", { children: [
         "人工补充（可选，独立保存）",
-        /* @__PURE__ */ s.jsx("textarea", { value: te, onChange: (j) => re(j.target.value) })
+        /* @__PURE__ */ s.jsx("textarea", { value: te, onChange: (j) => ce(j.target.value) })
       ] }),
       /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "只保存核查说明，不覆盖原始字段或旧治理生效值。" }),
       /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: A || !L.trim(), onClick: () => void Ye(async () => {
@@ -13781,9 +13772,9 @@ function Uv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
   ] });
 }
 const Zf = { queued: "等待构建", building: "索引构建中", ready: "待启用", active: "当前启用", inactive: "历史发布", failed: "构建失败", pending: "等待处理" }, Dv = (u) => ({ generic: "通用工程风险", lifting_supervision: "吊装监护", fire_inspection: "消防巡查", structural_inspection: "结构检查", mep_inspection: "机电检查" })[u] || "其他已配置场景", Mv = (u) => [u.section, typeof u.row == "number" ? `第${u.row}行` : null, u.cell ? `单元格 ${u.cell}` : null].filter(Boolean).join(" · ") || "已关联来源记录", _u = (u) => u === "case_card" ? "案例卡" : "检查要点卡";
-function qv({ identity: u, path: h, projects: N, navigate: o }) {
-  var oe, ce, Ye, b, ge, de, Qe, vt;
-  const [T, U] = r.useState(((oe = N[0]) == null ? void 0 : oe.id) || ""), [V, A] = r.useState("generic"), [Y, v] = r.useState(""), [D, K] = r.useState([]), [k, se] = r.useState({}), [je, ye] = r.useState([]), [_e, Ce] = r.useState([]), [xe, F] = r.useState("mock-hash-64"), [he, ae] = r.useState([]), [H, ve] = r.useState(null), [Ae, Ge] = r.useState(""), [Ze, Xe] = r.useState("extractive"), [pe, $e] = r.useState(null), [X, fe] = r.useState(null), [y, Q] = r.useState(null);
+function qv({ identity: u, path: h, projects: _, navigate: o }) {
+  var oe, re, Ye, b, ge, de, Qe, vt;
+  const [T, U] = r.useState(((oe = _[0]) == null ? void 0 : oe.id) || ""), [V, A] = r.useState("generic"), [Y, v] = r.useState(""), [D, K] = r.useState([]), [k, se] = r.useState({}), [je, ye] = r.useState([]), [_e, Ce] = r.useState([]), [xe, F] = r.useState("mock-hash-64"), [he, ae] = r.useState([]), [H, ve] = r.useState(null), [Ae, Ge] = r.useState(""), [Ze, Xe] = r.useState("extractive"), [pe, $e] = r.useState(null), [X, fe] = r.useState(null), [y, Q] = r.useState(null);
   r.useEffect(() => () => {
     y && URL.revokeObjectURL(y);
   }, [y]), r.useEffect(() => {
@@ -13793,9 +13784,9 @@ function qv({ identity: u, path: h, projects: N, navigate: o }) {
   r.useEffect(() => {
     we(null);
   }, [h]);
-  const [m, L] = r.useState(""), [P, te] = r.useState("useful"), [re, Z] = r.useState(""), [$, ze] = r.useState(!1), [ne, Ee] = r.useState(!0), [ct, Je] = r.useState(""), [Pe, We] = r.useState(""), [Ue, Re] = r.useState(0), [ke, De] = r.useState(""), [st, et] = r.useState(null), [ht, ie] = r.useState([]), nt = r.useRef("");
+  const [m, L] = r.useState(""), [P, te] = r.useState("useful"), [ce, Z] = r.useState(""), [$, ze] = r.useState(!1), [ne, Ee] = r.useState(!0), [ct, Je] = r.useState(""), [Pe, We] = r.useState(""), [Ue, Re] = r.useState(0), [ke, De] = r.useState(""), [st, et] = r.useState(null), [ht, ie] = r.useState([]), nt = r.useRef("");
   nt.current = [u, h, T, V, Y, Ae, Ze, le].join("|");
-  const He = h === "/releases", O = h === "/search", w = h === "/knowledge/library", I = Mt(N.find((M) => M.id === T), "knowledge.publish"), Se = !He && !O && !w ? h.split("/")[2] : null;
+  const He = h === "/releases", O = h === "/search", w = h === "/knowledge/library", I = Mt(_.find((M) => M.id === T), "knowledge.publish"), Se = !He && !O && !w ? h.split("/")[2] : null;
   async function Me(M, j = {}) {
     const ue = await Yt("/api/v1" + M, { ...j, headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${u}`, ...j.headers } }), be = await ue.json();
     if (!ue.ok) throw new Error(be.message || "请求失败，请重试。");
@@ -13847,9 +13838,9 @@ function qv({ identity: u, path: h, projects: N, navigate: o }) {
     Q(null), fe(null);
     const rt = await Me("/published/evidence/" + M + "?revision_id=" + j + (ue ? "&historical=true" : ""));
     if (be === nt.current && (fe(rt), rt.has_image)) {
-      const _ = await Yt("/api/v1/published/evidence/" + M + "/content?revision_id=" + j + (ue ? "&historical=true" : ""), { headers: { Authorization: `Bearer dev-${u}` } });
-      if (!_.ok) throw new Error("证据图片已不可用，请刷新后重试。");
-      const me = await _.blob();
+      const N = await Yt("/api/v1/published/evidence/" + M + "/content?revision_id=" + j + (ue ? "&historical=true" : ""), { headers: { Authorization: `Bearer dev-${u}` } });
+      if (!N.ok) throw new Error("证据图片已不可用，请刷新后重试。");
+      const me = await N.blob();
       be === nt.current && Q(URL.createObjectURL(me));
     }
   }), B = /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
@@ -13875,7 +13866,7 @@ function qv({ identity: u, path: h, projects: N, navigate: o }) {
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
         /* @__PURE__ */ s.jsx("button", { className: w || Se ? "selected" : "", onClick: () => o("/knowledge/library"), children: "已发布知识" }),
         /* @__PURE__ */ s.jsx("button", { className: O ? "selected" : "", onClick: () => o("/search"), children: "知识检索" }),
-        N.some((M) => Mt(M, "knowledge.publish")) && /* @__PURE__ */ s.jsx("button", { className: He ? "selected" : "", onClick: () => o("/releases"), children: "发布管理" })
+        _.some((M) => Mt(M, "knowledge.publish")) && /* @__PURE__ */ s.jsx("button", { className: He ? "selected" : "", onClick: () => o("/releases"), children: "发布管理" })
       ] }),
       /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => {
         fe(null), $e(null), Re((M) => M + 1);
@@ -13895,7 +13886,7 @@ function qv({ identity: u, path: h, projects: N, navigate: o }) {
     !Se && /* @__PURE__ */ s.jsxs("div", { className: "retrieval-filters", children: [
       /* @__PURE__ */ s.jsxs("label", { children: [
         "项目范围",
-        /* @__PURE__ */ s.jsx("select", { "aria-label": "发布检索项目", value: T, onChange: (M) => U(M.target.value), children: N.map((M) => /* @__PURE__ */ s.jsx("option", { value: M.id, children: M.name }, M.id)) })
+        /* @__PURE__ */ s.jsx("select", { "aria-label": "发布检索项目", value: T, onChange: (M) => U(M.target.value), children: _.map((M) => /* @__PURE__ */ s.jsx("option", { value: M.id, children: M.name }, M.id)) })
       ] }),
       !He && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         /* @__PURE__ */ s.jsxs("label", { children: [
@@ -14088,7 +14079,7 @@ function qv({ identity: u, path: h, projects: N, navigate: o }) {
         ] }, M.revision_id)),
         /* @__PURE__ */ s.jsxs("form", { className: "search-feedback", onSubmit: (M) => {
           M.preventDefault(), lt(async () => {
-            await Me("/search/" + pe.query_id + "/feedback", { method: "POST", body: JSON.stringify({ rating: P, comment: re }) }), We("检索反馈已保存。");
+            await Me("/search/" + pe.query_id + "/feedback", { method: "POST", body: JSON.stringify({ rating: P, comment: ce }) }), We("检索反馈已保存。");
           });
         }, children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
@@ -14101,7 +14092,7 @@ function qv({ identity: u, path: h, projects: N, navigate: o }) {
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "补充说明（选填）",
-            /* @__PURE__ */ s.jsx("input", { value: re, maxLength: 1e3, onChange: (M) => Z(M.target.value) })
+            /* @__PURE__ */ s.jsx("input", { value: ce, maxLength: 1e3, onChange: (M) => Z(M.target.value) })
           ] }),
           /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: $, children: "保存反馈" })
         ] })
@@ -14118,7 +14109,7 @@ function qv({ identity: u, path: h, projects: N, navigate: o }) {
       /* @__PURE__ */ s.jsx("h2", { children: H.title }),
       /* @__PURE__ */ s.jsxs("p", { children: [
         "适用范围：",
-        ((ce = N.find((M) => M.id === H.project_id)) == null ? void 0 : ce.name) || H.project_id,
+        ((re = _.find((M) => M.id === H.project_id)) == null ? void 0 : re.name) || H.project_id,
         " · ",
         Dv(H.scene_code),
         "；需结合具体作业条件核对。"
@@ -14177,7 +14168,7 @@ function qv({ identity: u, path: h, projects: N, navigate: o }) {
         ] }, M.id)),
         /* @__PURE__ */ s.jsx("p", { children: H.history_note })
       ] }),
-      Mt(N.find((M) => M.id === H.project_id), "knowledge.publish") && /* @__PURE__ */ s.jsxs("div", { className: "withdraw-form", children: [
+      Mt(_.find((M) => M.id === H.project_id), "knowledge.publish") && /* @__PURE__ */ s.jsxs("div", { className: "withdraw-form", children: [
         /* @__PURE__ */ s.jsxs("label", { children: [
           "撤回原因",
           /* @__PURE__ */ s.jsx("input", { value: m, maxLength: 2e3, onChange: (M) => L(M.target.value) })
@@ -14211,11 +14202,11 @@ function qv({ identity: u, path: h, projects: N, navigate: o }) {
 const An = { received: "已接收", validating: "校验中", processing: "处理中", ready: "处理完成", failed: "处理失败", withdrawn: "已撤回", verified: "校验通过", pending: "待校验", unavailable: "当前不可用" }, nm = { task_started: "任务开始", inspection_recorded: "现场检查记录", issue_created: "提出问题", rectification_submitted: "提交整改", review_rejected: "复核退回", review_accepted: "复核通过", task_completed: "任务完成" }, ku = { task: "任务资料", participants: "参与人员", events: "过程事件", issues: "问题与整改", attachments: "证据附件", event_times: "实际时间", data_completeness: "资料完整性", scene_code: "作业场景", extensions: "扩展资料" }, Hv = { historical_summary: "可供历史资料复盘", partial_timeline: "只能还原部分过程", complete_timeline: "具备完整时间线输入条件" }, Cu = { site_photo: "现场照片", text_screenshot: "文字截图", source_document: "原始文档", video: "视频", other: "其他资料", unknown: "类型未确认" }, Eu = (u) => ({ supervisor: "监护人员", contractor: "整改责任方", inspector: "检查人员", reviewer: "复核人员" })[u] || u, Dn = (u) => u ? new Date(u).toLocaleString("zh-CN") : "实际时间未提供", Bv = (u) => JSON.stringify(u, null, 2), Lv = { due_at: "整改期限", status: "状态", issue_id: "问题编号", description: "问题描述", evidence_refs: "证据编号", rectification: "整改说明", review_conclusion: "复核结论", responsible_actor_id: "责任方", event_type: "事件类型", occurred_at: "实际时间", actor_id: "人员编号", actor_role: "人员角色", payload: "补充信息", note: "说明", related_object_id: "对应对象", event_id: "事件编号", name: "任务名称", started_at: "开始时间", completed_at: "结束时间", attachment_id: "附件编号", mime_type: "文件类型", size: "文件字节数", evidence_type: "证据类型", sha256: "内容校验值" };
 function Aa(u, h = "") {
   if (u == null) return "未提供";
-  if (Array.isArray(u)) return u.every((N) => typeof N != "object") ? u.join("、") : u.map((N, o) => `第${o + 1}条
-${Aa(N)}`).join(`
+  if (Array.isArray(u)) return u.every((_) => typeof _ != "object") ? u.join("、") : u.map((_, o) => `第${o + 1}条
+${Aa(_)}`).join(`
 
 `);
-  if (typeof u == "object") return Object.entries(u).map(([N, o]) => `${Lv[N] || ku[N] || N}：${Aa(o, N)}`).join(`
+  if (typeof u == "object") return Object.entries(u).map(([_, o]) => `${Lv[_] || ku[_] || _}：${Aa(o, _)}`).join(`
 `);
   if (typeof u == "string") {
     if (["due_at", "occurred_at", "started_at", "completed_at"].includes(h)) return Dn(u);
@@ -14230,11 +14221,11 @@ const Yv = (u) => {
   const h = u.note;
   return typeof h == "string" ? h : Object.keys(u).length ? Bv(u) : "未补充说明";
 };
-function Gv({ identity: u, path: h, projects: N, navigate: o }) {
-  var He, O, w, I, Se, Me, lt, Fe, B, oe, ce, Ye;
-  const T = h === "/task-packages/import", U = !T && h !== "/task-packages" ? h.split("/")[2] : null, [V, A] = r.useState(((He = N[0]) == null ? void 0 : He.id) || ""), [Y, v] = r.useState(""), [D, K] = r.useState([]), [k, se] = r.useState(null), [je, ye] = r.useState(""), [_e, Ce] = r.useState(null), [xe, F] = r.useState([]), [he, ae] = r.useState([]), [H, ve] = r.useState([]), [Ae, Ge] = r.useState("complete"), [Ze, Xe] = r.useState(() => sessionStorage.getItem("b05-demo-task:" + u) || "demo-task-" + crypto.randomUUID().slice(0, 8)), [pe, $e] = r.useState(""), [X, fe] = r.useState(null), [y, Q] = r.useState(""), [le, we] = r.useState(""), [m, L] = r.useState(!0), [P, te] = r.useState(!1), [re, Z] = r.useState(0), [$, ze] = r.useState(""), [ne, Ee] = r.useState(null), ct = r.useRef(null), Je = r.useRef(null), Pe = r.useRef("");
+function Gv({ identity: u, path: h, projects: _, navigate: o }) {
+  var He, O, w, I, Se, Me, lt, Fe, B, oe, re, Ye;
+  const T = h === "/task-packages/import", U = !T && h !== "/task-packages" ? h.split("/")[2] : null, [V, A] = r.useState(((He = _[0]) == null ? void 0 : He.id) || ""), [Y, v] = r.useState(""), [D, K] = r.useState([]), [k, se] = r.useState(null), [je, ye] = r.useState(""), [_e, Ce] = r.useState(null), [xe, F] = r.useState([]), [he, ae] = r.useState([]), [H, ve] = r.useState([]), [Ae, Ge] = r.useState("complete"), [Ze, Xe] = r.useState(() => sessionStorage.getItem("b05-demo-task:" + u) || "demo-task-" + crypto.randomUUID().slice(0, 8)), [pe, $e] = r.useState(""), [X, fe] = r.useState(null), [y, Q] = r.useState(""), [le, we] = r.useState(""), [m, L] = r.useState(!0), [P, te] = r.useState(!1), [ce, Z] = r.useState(0), [$, ze] = r.useState(""), [ne, Ee] = r.useState(null), ct = r.useRef(null), Je = r.useRef(null), Pe = r.useRef("");
   Pe.current = [u, h, V, Ae, Ze, pe].join("|");
-  const We = N.some((b) => b.permissions != null), Ue = !We && Mt(N.find((b) => b.id === V), "imports.create"), Re = k && !We && Mt(N.find((b) => b.id === k.project_id), "imports.withdraw"), ke = k && !We && Mt(N.find((b) => b.id === k.project_id), "imports.create");
+  const We = _.some((b) => b.permissions != null), Ue = !We && Mt(_.find((b) => b.id === V), "imports.create"), Re = k && !We && Mt(_.find((b) => b.id === k.project_id), "imports.withdraw"), ke = k && !We && Mt(_.find((b) => b.id === k.project_id), "imports.create");
   async function De(b, ge = {}) {
     const de = await Yt("/api/v1/task-packages" + b, {
       ...ge,
@@ -14285,7 +14276,7 @@ function Gv({ identity: u, path: h, projects: N, navigate: o }) {
     })(), () => {
       b = !0;
     };
-  }, [h, V, Y, je, re]), r.useEffect(() => {
+  }, [h, V, Y, je, ce]), r.useEffect(() => {
     if (Ut || !T || !Ue) return;
     let b = !1;
     fe(null), $e("");
@@ -14342,7 +14333,7 @@ function Gv({ identity: u, path: h, projects: N, navigate: o }) {
       }, children: "下一页" })
     ] })
   ] });
-  return N.length ? We && T ? /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+  return _.length ? We && T ? /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
     /* @__PURE__ */ s.jsx("h2", { children: "A 成果接入" }),
     /* @__PURE__ */ s.jsx("p", { children: "请在 A 的成果归档中选择指定版本并点击“接入知识中心”。已有资料可继续查看。" }),
     /* @__PURE__ */ s.jsx("a", { href: "/quality/#archives", children: "打开成果归档" })
@@ -14357,7 +14348,7 @@ function Gv({ identity: u, path: h, projects: N, navigate: o }) {
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
         /* @__PURE__ */ s.jsx("button", { className: T ? "" : "selected", onClick: () => o("/task-packages"), children: "任务包清单" }),
-        !We && N.some((b) => Mt(b, "imports.create")) && /* @__PURE__ */ s.jsx("button", { className: T ? "selected" : "", onClick: () => o("/task-packages/import"), children: "接入归档成果" })
+        !We && _.some((b) => Mt(b, "imports.create")) && /* @__PURE__ */ s.jsx("button", { className: T ? "selected" : "", onClick: () => o("/task-packages/import"), children: "接入归档成果" })
       ] }),
       /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => {
         Ee(null), Z((b) => b + 1);
@@ -14378,7 +14369,7 @@ function Gv({ identity: u, path: h, projects: N, navigate: o }) {
     !U && /* @__PURE__ */ s.jsxs("div", { className: "package-filters", children: [
       /* @__PURE__ */ s.jsxs("label", { children: [
         "项目范围",
-        /* @__PURE__ */ s.jsx("select", { "aria-label": "任务包项目", value: V, onChange: (b) => A(b.target.value), children: N.map((b) => /* @__PURE__ */ s.jsx("option", { value: b.id, children: b.name }, b.id)) })
+        /* @__PURE__ */ s.jsx("select", { "aria-label": "任务包项目", value: V, onChange: (b) => A(b.target.value), children: _.map((b) => /* @__PURE__ */ s.jsx("option", { value: b.id, children: b.name }, b.id)) })
       ] }),
       !T && /* @__PURE__ */ s.jsxs("label", { children: [
         "接入状态",
@@ -14462,7 +14453,7 @@ function Gv({ identity: u, path: h, projects: N, navigate: o }) {
         ] }),
         /* @__PURE__ */ s.jsxs("p", { children: [
           "归属项目：",
-          ((O = N.find((b) => b.id === X.project_id)) == null ? void 0 : O.name) || X.project_id
+          ((O = _.find((b) => b.id === X.project_id)) == null ? void 0 : O.name) || X.project_id
         ] }),
         /* @__PURE__ */ s.jsx("div", { children: Object.entries(X.counts).map(([b, ge]) => /* @__PURE__ */ s.jsxs("span", { children: [
           ku[b],
@@ -14479,7 +14470,7 @@ function Gv({ identity: u, path: h, projects: N, navigate: o }) {
           /* @__PURE__ */ s.jsxs("div", { children: [
             /* @__PURE__ */ s.jsx("h2", { children: k.name }),
             /* @__PURE__ */ s.jsxs("p", { children: [
-              ((w = N.find((b) => b.id === k.project_id)) == null ? void 0 : w.name) || k.project_id,
+              ((w = _.find((b) => b.id === k.project_id)) == null ? void 0 : w.name) || k.project_id,
               " · 第",
               k.package_version,
               "版 · ",
@@ -14641,7 +14632,7 @@ function Gv({ identity: u, path: h, projects: N, navigate: o }) {
             An[b.state],
             b.is_current ? " · 当前使用" : ""
           ] }, b.id)) }),
-          (ce = k.diff) != null && ce.previous_version ? /* @__PURE__ */ s.jsxs("p", { children: [
+          (re = k.diff) != null && re.previous_version ? /* @__PURE__ */ s.jsxs("p", { children: [
             "与上一可查看版本（第",
             k.diff.previous_version,
             "版）比较："
@@ -14759,8 +14750,8 @@ function Gv({ identity: u, path: h, projects: N, navigate: o }) {
     /* @__PURE__ */ s.jsx("p", { children: "请刷新以重新加载授权范围，或核对当前身份权限。" })
   ] });
 }
-async function im(u, h, N, o) {
-  const T = await u(h, { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify(N) });
+async function im(u, h, _, o) {
+  const T = await u(h, { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify(_) });
   o();
   const U = Date.now() + 1200 * 1e3;
   for (; Date.now() < U; ) {
@@ -14772,24 +14763,24 @@ async function im(u, h, N, o) {
   throw new Error("任务仍在后台处理，请从任务工作台查看进度；无需重复提交。");
 }
 const Rn = { draft: "草稿", pending_review: "待审核", approved: "已批准", changes_requested: "已退回", submitted: "提交审核", edited: "人工修订" }, Xv = { fact: "事实记录", inference: "记录对照 / 推断", suggestion: "改进建议" }, Qv = { task_started: "任务开始", inspection_recorded: "检查记录", issue_created: "提出问题", rectification_submitted: "整改提交", review_rejected: "复核退回", review_accepted: "复核通过", task_completed: "任务结束" }, Ki = (u) => u ? new Date(u).toLocaleString("zh-CN", { hour12: !1 }) : "实际时间未知";
-function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
+function Zv({ api: u, path: h, navigate: _, projects: o, identity: T }) {
   var Fe;
-  const U = h.split("/")[2], V = h.endsWith("/review"), [A, Y] = r.useState([]), [v, D] = r.useState(null), [K, k] = r.useState(null), [se, je] = r.useState(!1), [ye, _e] = r.useState(!0), [Ce, xe] = r.useState(""), [F, he] = r.useState(""), [ae, H] = r.useState(0), [ve, Ae] = r.useState("llm"), [Ge, Ze] = r.useState("task_process"), [Xe, pe] = r.useState(((Fe = o.find((B) => Mt(B, "retrospective.generate"))) == null ? void 0 : Fe.id) || ""), [$e, X] = r.useState([]), [fe, y] = r.useState(""), [Q, le] = r.useState([]), [we, m] = r.useState([]), [L, P] = r.useState(""), [te, re] = r.useState(!1), [Z, $] = r.useState(""), [ze, ne] = r.useState(""), [Ee, ct] = r.useState(""), [Je, Pe] = r.useState(null), [We, Ue] = r.useState([]), [Re, ke] = r.useState(null), [De, st] = r.useState(""), [et, ht] = r.useState(""), ie = o.some((B) => Mt(B, "retrospective.generate")), nt = !!(v != null && v.is_current) && !!Mt(o.find((B) => B.id === v.project_id), "retrospective.edit"), He = !!(v != null && v.is_current) && !!Mt(o.find((B) => B.id === v.project_id), "retrospective.review");
+  const U = h.split("/")[2], V = h.endsWith("/review"), [A, Y] = r.useState([]), [v, D] = r.useState(null), [K, k] = r.useState(null), [se, je] = r.useState(!1), [ye, _e] = r.useState(!0), [Ce, xe] = r.useState(""), [F, he] = r.useState(""), [ae, H] = r.useState(0), [ve, Ae] = r.useState("llm"), [Ge, Ze] = r.useState("task_process"), [Xe, pe] = r.useState(((Fe = o.find((B) => Mt(B, "retrospective.generate"))) == null ? void 0 : Fe.id) || ""), [$e, X] = r.useState([]), [fe, y] = r.useState(""), [Q, le] = r.useState([]), [we, m] = r.useState([]), [L, P] = r.useState(""), [te, ce] = r.useState(!1), [Z, $] = r.useState(""), [ze, ne] = r.useState(""), [Ee, ct] = r.useState(""), [Je, Pe] = r.useState(null), [We, Ue] = r.useState([]), [Re, ke] = r.useState(null), [De, st] = r.useState(""), [et, ht] = r.useState(""), ie = o.some((B) => Mt(B, "retrospective.generate")), nt = !!(v != null && v.is_current) && !!Mt(o.find((B) => B.id === v.project_id), "retrospective.edit"), He = !!(v != null && v.is_current) && !!Mt(o.find((B) => B.id === v.project_id), "retrospective.review");
   r.useEffect(() => {
-    $(""), P(""), re(!1), xe(""), he(""), ct(""), Ue([]), ke(null);
+    $(""), P(""), ce(!1), xe(""), he(""), ct(""), Ue([]), ke(null);
   }, [h]), r.useEffect(() => {
     let B = !1;
     return _e(!0), D(null), xe(""), (async () => {
       try {
         if (U) {
-          const ce = await u(`/retrospectives/${U}${Z ? "?revision_id=" + Z : ""}`);
-          B || (D(ce), k({ summary: ce.summary, findings: structuredClone(ce.findings), suggestions: structuredClone(ce.suggestions) }), re(!1));
+          const re = await u(`/retrospectives/${U}${Z ? "?revision_id=" + Z : ""}`);
+          B || (D(re), k({ summary: re.summary, findings: structuredClone(re.findings), suggestions: structuredClone(re.suggestions) }), ce(!1));
         } else {
-          const ce = await u(`/retrospectives?limit=20${ze ? "&state=" + ze : ""}${Ee ? "&cursor=" + encodeURIComponent(Ee) : ""}`);
-          B || (Y(ce.items), Pe(ce.next_cursor));
+          const re = await u(`/retrospectives?limit=20${ze ? "&state=" + ze : ""}${Ee ? "&cursor=" + encodeURIComponent(Ee) : ""}`);
+          B || (Y(re.items), Pe(re.next_cursor));
         }
-      } catch (ce) {
-        B || xe(ce.message);
+      } catch (re) {
+        B || xe(re.message);
       } finally {
         B || _e(!1);
       }
@@ -14800,12 +14791,12 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
     if (U || !Xe || !ie) return;
     let B = !1;
     return m([]), X([]), le([]), y(""), (async () => {
-      var ce;
+      var re;
       try {
         const [Ye, b] = await Promise.all([u(`/task-packages?project_id=${Xe}&state=ready&limit=100`), u(`/knowledge/source-options?project_id=${Xe}&limit=100`)]);
         if (B) return;
         const ge = Ye.items.filter((de) => de.is_current);
-        X(ge), y(((ce = ge[0]) == null ? void 0 : ce.id) || ""), le(b.items);
+        X(ge), y(((re = ge[0]) == null ? void 0 : re.id) || ""), le(b.items);
       } catch (Ye) {
         B || xe(Ye.message);
       }
@@ -14818,15 +14809,15 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
       return;
     }
     let B = !1, oe = "";
-    return Yt("/api/v1/assets/" + Re.asset_id + "/content", { headers: { Authorization: "Bearer dev-" + T } }).then(async (ce) => {
-      if (!ce.ok) {
-        const b = await ce.json();
+    return Yt("/api/v1/assets/" + Re.asset_id + "/content", { headers: { Authorization: "Bearer dev-" + T } }).then(async (re) => {
+      if (!re.ok) {
+        const b = await re.json();
         throw new Error(b.message);
       }
-      const Ye = await ce.blob();
+      const Ye = await re.blob();
       !B && /^(image\/|text\/plain)/.test(Ye.type) && (oe = URL.createObjectURL(Ye), st(oe), ht(Ye.type));
-    }).catch((ce) => {
-      B || xe(ce.message);
+    }).catch((re) => {
+      B || xe(re.message);
     }), () => {
       B = !0, oe && URL.revokeObjectURL(oe), st("");
     };
@@ -14842,37 +14833,37 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
     }
   }, w = () => ({ revision_id: v.revision_id, row_version: v.row_version, reason: L, evidence_checked: te }), I = !!v && !!K && JSON.stringify(K) === JSON.stringify({ summary: v.summary, findings: v.findings, suggestions: v.suggestions }), Se = (B) => void O(async () => {
     const oe = B === "submit" ? `/retrospectives/${U}/submit-review` : `/reviews/${v.revision_id}/${B}`;
-    await u(oe, { method: "POST", body: JSON.stringify(w()) }), he("已保存本版本的审核状态与意见。"), H((ce) => ce + 1);
-  }), Me = (B, oe) => B.map((ce, Ye) => /* @__PURE__ */ s.jsxs("article", { className: "retro-finding " + ce.claim_kind, children: [
+    await u(oe, { method: "POST", body: JSON.stringify(w()) }), he("已保存本版本的审核状态与意见。"), H((re) => re + 1);
+  }), Me = (B, oe) => B.map((re, Ye) => /* @__PURE__ */ s.jsxs("article", { className: "retro-finding " + re.claim_kind, children: [
     /* @__PURE__ */ s.jsxs("div", { className: "retro-finding-title", children: [
-      /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: Xv[ce.claim_kind] }),
-      ce.record_status && /* @__PURE__ */ s.jsx("strong", { children: ce.record_status }),
-      /* @__PURE__ */ s.jsx("small", { children: ce.review_state === "confirmed" ? "已逐项确认" : "待确认" })
+      /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: Xv[re.claim_kind] }),
+      re.record_status && /* @__PURE__ */ s.jsx("strong", { children: re.record_status }),
+      /* @__PURE__ */ s.jsx("small", { children: re.review_state === "confirmed" ? "已逐项确认" : "待确认" })
     ] }),
     V && nt ? /* @__PURE__ */ s.jsxs("label", { children: [
       "条目内容",
-      /* @__PURE__ */ s.jsx("textarea", { "aria-label": "修改" + ce.id, value: ce.text, onChange: (b) => k((ge) => ge && { ...ge, [oe]: ge[oe].map((de, Qe) => Qe === Ye ? { ...de, text: b.target.value, review_state: "unconfirmed" } : de) }) })
-    ] }) : /* @__PURE__ */ s.jsx("p", { children: ce.text }),
-    /* @__PURE__ */ s.jsx("div", { className: "retro-evidence-links", children: ce.evidence_refs.map((b, ge) => /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => ke(v.evidence.find((de) => de.id === b) || null), children: [
+      /* @__PURE__ */ s.jsx("textarea", { "aria-label": "修改" + re.id, value: re.text, onChange: (b) => k((ge) => ge && { ...ge, [oe]: ge[oe].map((de, Qe) => Qe === Ye ? { ...de, text: b.target.value, review_state: "unconfirmed" } : de) }) })
+    ] }) : /* @__PURE__ */ s.jsx("p", { children: re.text }),
+    /* @__PURE__ */ s.jsx("div", { className: "retro-evidence-links", children: re.evidence_refs.map((b, ge) => /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => ke(v.evidence.find((de) => de.id === b) || null), children: [
       "查看证据 ",
       ge + 1
     ] }, b)) }),
     V && nt && /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-      /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: ce.review_state === "confirmed", onChange: (b) => k((ge) => ge && { ...ge, [oe]: ge[oe].map((de, Qe) => Qe === Ye ? { ...de, review_state: b.target.checked ? "confirmed" : "unconfirmed" } : de) }) }),
+      /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: re.review_state === "confirmed", onChange: (b) => k((ge) => ge && { ...ge, [oe]: ge[oe].map((de, Qe) => Qe === Ye ? { ...de, review_state: b.target.checked ? "confirmed" : "unconfirmed" } : de) }) }),
       "已核对此条内容与来源"
     ] })
-  ] }, ce.id)), lt = (B) => B.map((oe) => /* @__PURE__ */ s.jsxs("li", { children: [
+  ] }, re.id)), lt = (B) => B.map((oe) => /* @__PURE__ */ s.jsxs("li", { children: [
     /* @__PURE__ */ s.jsx("time", { children: Ki(oe.occurred_at) }),
     /* @__PURE__ */ s.jsx("strong", { children: Qv[oe.event_type] || "未知事件类型：" + oe.event_type }),
     /* @__PURE__ */ s.jsx("p", { children: typeof oe.payload.note == "string" ? oe.payload.note : Object.keys(oe.payload).length ? JSON.stringify(oe.payload) : "未补充说明" }),
-    /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => ke(v.evidence.find((ce) => ce.reference === "event:" + oe.event_id) || null), children: "打开事件记录" }),
-    oe.evidence_refs.map((ce) => /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => {
-      const Ye = v.evidence.find((b) => b.reference === "attachment:" + ce);
+    /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => ke(v.evidence.find((re) => re.reference === "event:" + oe.event_id) || null), children: "打开事件记录" }),
+    oe.evidence_refs.map((re) => /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => {
+      const Ye = v.evidence.find((b) => b.reference === "attachment:" + re);
       Ye ? ke(Ye) : xe("该事件的附件未通过校验或暂不可用。");
     }, children: [
       "附件 ",
-      ce
-    ] }, ce))
+      re
+    ] }, re))
   ] }, oe.event_id));
   return /* @__PURE__ */ s.jsxs("div", { className: "knowledge-module retro-module", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-banner", children: [
@@ -14892,7 +14883,7 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
       F
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
-      /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => N("/retrospectives"), children: "复盘清单" }),
+      /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => _("/retrospectives"), children: "复盘清单" }),
       /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => H((B) => B + 1), disabled: se, children: [
         /* @__PURE__ */ s.jsx(Bs, { size: 15 }),
         "刷新"
@@ -14920,7 +14911,7 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             " · ",
             Rn[B.state]
           ] }, B.id)) }),
-          /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => N(`/retrospectives/${U}${V ? "" : "/review"}`), children: V ? "查看实际过程" : "核查与审核" })
+          /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => _(`/retrospectives/${U}${V ? "" : "/review"}`), children: V ? "查看实际过程" : "核查与审核" })
         ] })
       ] }),
       !v.is_current && /* @__PURE__ */ s.jsx("div", { className: "feedback error", children: "正在查看历史版本；内容和原审核结论保留，只能对当前版本操作。" }),
@@ -14938,7 +14929,7 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             v.sources.task_package_id ? "固定任务包 v" + v.sources.package_version : "固定历史版本 " + v.sources.record_version_ids.length + "条",
             " · 未发现相关记录表示资料缺口，不代表现场未执行。"
           ] }),
-          v.sources.task_package_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N("/task-packages/" + v.sources.task_package_id), children: "打开来源任务包" })
+          v.sources.task_package_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/task-packages/" + v.sources.task_package_id), children: "打开来源任务包" })
         ] })
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "retro-columns", children: [
@@ -15002,7 +14993,7 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
           ] }),
           He && v.state === "pending_review" && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
             /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-              /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: te, onChange: (B) => re(B.target.checked) }),
+              /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: te, onChange: (B) => ce(B.target.checked) }),
               "已逐条核对事实、推断、建议与来源证据"
             ] }),
             /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
@@ -15019,7 +15010,7 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
       ] }),
       v.draft_ids.length > 0 && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsx("h2", { children: "本版本的经验草稿" }) }),
-        /* @__PURE__ */ s.jsx("div", { className: "proof-body", children: v.draft_ids.map((B) => /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => N("/knowledge/" + B + "/edit"), children: "打开经验候选" }, B)) })
+        /* @__PURE__ */ s.jsx("div", { className: "proof-body", children: v.draft_ids.map((B) => /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => _("/knowledge/" + B + "/edit"), children: "打开经验候选" }, B)) })
       ] }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel revision-panel", children: [
         /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsx("h2", { children: "审核轨迹与来源指纹" }) }),
@@ -15077,7 +15068,7 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
             ] }, B.id)) }),
             !$e.length && /* @__PURE__ */ s.jsx("p", { children: "暂无可用成果，请先到成果接入页面接入已归档版本。" })
           ] }) : /* @__PURE__ */ s.jsx("div", { className: "source-options", children: Q.map((B) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: we.includes(B.record_version_id), onChange: (oe) => m(oe.target.checked ? [...we, B.record_version_id] : we.filter((ce) => ce !== B.record_version_id)) }),
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: we.includes(B.record_version_id), onChange: (oe) => m(oe.target.checked ? [...we, B.record_version_id] : we.filter((re) => re !== B.record_version_id)) }),
             /* @__PURE__ */ s.jsxs("span", { children: [
               B.description || "未填写描述",
               " · 来源v",
@@ -15091,9 +15082,9 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
           /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
             /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: se || (Ge === "task_process" ? !fe : !we.length || we.length > 20), onClick: () => void O(async () => {
               const B = await im(u, "/retrospective-generation-jobs", { mode: Ge, generation_mode: ve, task_package_id: Ge === "task_process" ? fe : null, record_version_ids: Ge === "historical_case" ? we : [], template_version: "process-review-v1" }, () => he("已提交后台复盘，关闭页面不影响任务；可在任务工作台查看进度。"));
-              N("/retrospectives/" + B.id);
+              _("/retrospectives/" + B.id);
             }), children: "生成复盘草稿" }),
-            /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => N("/task-packages"), children: "查看归档成果" })
+            /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => _("/task-packages"), children: "查看归档成果" })
           ] })
         ] })
       ] }),
@@ -15127,8 +15118,8 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
               Rn[B.state]
             ] }),
             /* @__PURE__ */ s.jsxs("td", { children: [
-              /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N("/retrospectives/" + B.id), children: "查看复盘" }),
-              /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N("/retrospectives/" + B.id + "/review"), children: "核查与审核" })
+              /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/retrospectives/" + B.id), children: "查看复盘" }),
+              /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/retrospectives/" + B.id + "/review"), children: "核查与审核" })
             ] })
           ] }, B.id)) })
         ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
@@ -15166,9 +15157,9 @@ function Zv({ api: u, path: h, navigate: N, projects: o, identity: T }) {
   ] });
 }
 const As = { draft: "草稿", pending_review: "待审核", changes_requested: "已退回", approved: "已审核", published: "已发布", in_progress: "作答中", submitted: "已提交", not_submitted: "未提交", pending_scoring: "待评分", awaiting_review: "待教员复核", confirmed: "评分已确认", edited: "人工修订" }, Ta = { single_choice: "单选题", multiple_choice: "多选题", case_answer: "案例问答" }, Vf = { selected: [], text: "", row_version: 0 };
-function Vv({ api: u, path: h, navigate: N, projects: o }) {
+function Vv({ api: u, path: h, navigate: _, projects: o }) {
   var Ne, it, bt;
-  const T = h.startsWith("/learn"), U = /^\/training\/results\/[^/]+$/.test(h), V = h.startsWith("/learn/attempts/") || U ? h.split("/")[3] : "", A = /^\/training\/questions\/[^/]+$/.test(h), Y = A ? h.split("/")[3] : "", v = h === "/training/questions", D = h === "/training/packages", K = h === "/training/results", k = o.some((x) => Mt(x, "training.manage")), se = o.some((x) => Mt(x, "training.review")), [je, ye] = r.useState("llm"), [_e, Ce] = r.useState(""), [xe, F] = r.useState(((Ne = o.find((x) => Mt(x, "training.manage"))) == null ? void 0 : Ne.id) || ((it = o[0]) == null ? void 0 : it.id) || ""), [he, ae] = r.useState([]), [H, ve] = r.useState([]), [Ae, Ge] = r.useState([]), [Ze, Xe] = r.useState([]), [pe, $e] = r.useState(null), [X, fe] = r.useState(null), [y, Q] = r.useState(""), [le, we] = r.useState(!1), [m, L] = r.useState([]), [P, te] = r.useState(["single_choice", "case_answer"]), [re, Z] = r.useState([]), [$, ze] = r.useState("新人风险识别与复盘练习"), [ne, Ee] = r.useState("learning-" + Date.now()), [ct, Je] = r.useState(1), [Pe, We] = r.useState(null), [Ue, Re] = r.useState({}), [ke, De] = r.useState(null), [st, et] = r.useState("rules"), [ht, ie] = r.useState("useful"), [nt, He] = r.useState(""), [O, w] = r.useState({}), [I, Se] = r.useState({}), [Me, lt] = r.useState(""), [Fe, B] = r.useState(""), [oe, ce] = r.useState(null), [Ye, b] = r.useState([]), [ge, de] = r.useState(!0), [Qe, vt] = r.useState(!1), [M, j] = r.useState(""), [ue, be] = r.useState(""), [rt, _] = r.useState(0);
+  const T = h.startsWith("/learn"), U = /^\/training\/results\/[^/]+$/.test(h), V = h.startsWith("/learn/attempts/") || U ? h.split("/")[3] : "", A = /^\/training\/questions\/[^/]+$/.test(h), Y = A ? h.split("/")[3] : "", v = h === "/training/questions", D = h === "/training/packages", K = h === "/training/results", k = o.some((x) => Mt(x, "training.manage")), se = o.some((x) => Mt(x, "training.review")), [je, ye] = r.useState("llm"), [_e, Ce] = r.useState(""), [xe, F] = r.useState(((Ne = o.find((x) => Mt(x, "training.manage"))) == null ? void 0 : Ne.id) || ((it = o[0]) == null ? void 0 : it.id) || ""), [he, ae] = r.useState([]), [H, ve] = r.useState([]), [Ae, Ge] = r.useState([]), [Ze, Xe] = r.useState([]), [pe, $e] = r.useState(null), [X, fe] = r.useState(null), [y, Q] = r.useState(""), [le, we] = r.useState(!1), [m, L] = r.useState([]), [P, te] = r.useState(["single_choice", "case_answer"]), [ce, Z] = r.useState([]), [$, ze] = r.useState("新人风险识别与复盘练习"), [ne, Ee] = r.useState("learning-" + Date.now()), [ct, Je] = r.useState(1), [Pe, We] = r.useState(null), [Ue, Re] = r.useState({}), [ke, De] = r.useState(null), [st, et] = r.useState("rules"), [ht, ie] = r.useState("useful"), [nt, He] = r.useState(""), [O, w] = r.useState({}), [I, Se] = r.useState({}), [Me, lt] = r.useState(""), [Fe, B] = r.useState(""), [oe, re] = r.useState(null), [Ye, b] = r.useState([]), [ge, de] = r.useState(!0), [Qe, vt] = r.useState(!1), [M, j] = r.useState(""), [ue, be] = r.useState(""), [rt, N] = r.useState(0);
   r.useEffect(() => {
     B(""), b([]), Q(""), we(!1), be(""), j(""), Z([]);
   }, [h]), r.useEffect(() => {
@@ -15195,13 +15186,13 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
           x || (ve(Te.items), Xe(at.items));
         } else if (K) {
           const Te = await u(`/training/results?limit=20${Fe ? "&cursor=" + Fe : ""}`);
-          x || (Xe(Te.items), ce(Te.next_cursor));
+          x || (Xe(Te.items), re(Te.next_cursor));
         } else if (D) {
           const [Te, at] = await Promise.all([u(`/training/packages?limit=20${Fe ? "&cursor=" + Fe : ""}`), u("/training/questions?state=approved&limit=100")]);
-          x || (ve(Te.items), ae(at.items), ce(Te.next_cursor));
+          x || (ve(Te.items), ae(at.items), re(Te.next_cursor));
         } else {
           const [Te, at] = await Promise.all([u(`/training/questions?limit=20${Me ? "&state=" + Me : ""}${Fe ? "&cursor=" + Fe : ""}`), u("/knowledge/library?limit=100&project_id=" + xe)]);
-          x || (ae(Te.items), Ge(at.items), ce(Te.next_cursor));
+          x || (ae(Te.items), Ge(at.items), re(Te.next_cursor));
         }
       } catch (Te) {
         x || j(Te.message);
@@ -15213,7 +15204,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
     };
   }, [h, xe, Me, Fe, rt]), r.useEffect(() => {
     if (!(ke != null && ke.grading_job) || !["queued", "running", "retrying"].includes(ke.grading_job.status)) return;
-    const x = window.setTimeout(() => _((Oe) => Oe + 1), 1800);
+    const x = window.setTimeout(() => N((Oe) => Oe + 1), 1800);
     return () => clearTimeout(x);
   }, [(bt = ke == null ? void 0 : ke.grading_job) == null ? void 0 : bt.status, rt]);
   const me = async (x) => {
@@ -15226,7 +15217,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
       vt(!1);
     }
   }, Ve = !!pe && !!X && JSON.stringify(X) === JSON.stringify(pe.content), Ot = () => ({ revision_id: pe.revision_id, row_version: pe.row_version, reason: y, evidence_checked: le }), qt = (x) => void me(async () => {
-    await u(x === "submit" ? `/training/questions/${Y}/submit-review` : `/reviews/${pe.revision_id}/${x}`, { method: "POST", body: JSON.stringify(Ot()) }), be("题目审核状态已保存到统一审核记录。"), _((Oe) => Oe + 1);
+    await u(x === "submit" ? `/training/questions/${Y}/submit-review` : `/reviews/${pe.revision_id}/${x}`, { method: "POST", body: JSON.stringify(Ot()) }), be("题目审核状态已保存到统一审核记录。"), N((Oe) => Oe + 1);
   }), Gt = async (x) => {
     const Oe = Ue[x.revision_id] || Vf, Te = await u(`/training/attempts/${V}/answers/${x.question_id}`, { method: "PUT", body: JSON.stringify(Oe) });
     return Re((at) => ({ ...at, [x.revision_id]: { ...Oe, row_version: Te.row_version } })), Te;
@@ -15242,7 +15233,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
     ] })
   ] }), Nt = (x, Oe, Te) => Te ? [...x, Oe] : x.filter((at) => at !== Oe), g = (x) => void me(async () => {
     const Oe = await u("/training/attempts", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ package_version_id: x.id, grading_mode: st }) });
-    N("/learn/attempts/" + Oe.id);
+    _("/learn/attempts/" + Oe.id);
   });
   return /* @__PURE__ */ s.jsxs("div", { className: "knowledge-module training-module", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-banner", children: [
@@ -15263,15 +15254,15 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
         !T && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-          /* @__PURE__ */ s.jsx("button", { className: v || A ? "selected" : "", onClick: () => N("/training/questions"), children: "题库与审核" }),
+          /* @__PURE__ */ s.jsx("button", { className: v || A ? "selected" : "", onClick: () => _("/training/questions"), children: "题库与审核" }),
           k && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-            /* @__PURE__ */ s.jsx("button", { className: D ? "selected" : "", onClick: () => N("/training/packages"), children: "学习包" }),
-            /* @__PURE__ */ s.jsx("button", { className: K || U ? "selected" : "", onClick: () => N("/training/results"), children: "学习结果" })
+            /* @__PURE__ */ s.jsx("button", { className: D ? "selected" : "", onClick: () => _("/training/packages"), children: "学习包" }),
+            /* @__PURE__ */ s.jsx("button", { className: K || U ? "selected" : "", onClick: () => _("/training/results"), children: "学习结果" })
           ] })
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: T ? "selected" : "", onClick: () => N("/learn"), children: "我的学习" })
+        /* @__PURE__ */ s.jsx("button", { className: T ? "selected" : "", onClick: () => _("/learn"), children: "我的学习" })
       ] }),
-      /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => _((x) => x + 1), children: [
+      /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => N((x) => x + 1), children: [
         /* @__PURE__ */ s.jsx(Bs, { size: 15 }),
         "刷新"
       ] })
@@ -15304,7 +15295,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
             ] }),
             ke.grading_job.error && /* @__PURE__ */ s.jsx("p", { children: ke.grading_job.error }),
             U && k && ke.grading_job.status === "failed" && ke.content_available && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Qe, onClick: () => void me(async () => {
-              await u("/jobs/" + ke.grading_job.id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: ke.grading_job.row_version }) }), _((x) => x + 1);
+              await u("/jobs/" + ke.grading_job.id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: ke.grading_job.row_version }) }), N((x) => x + 1);
             }), children: "按当前模型配置重试未完成评分" })
           ] }),
           ke.restriction_note && /* @__PURE__ */ s.jsx("p", { className: "warning-text", children: ke.restriction_note }),
@@ -15364,7 +15355,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
                   /* @__PURE__ */ s.jsx("textarea", { value: I[x.id] || "", onChange: (mt) => Se({ ...I, [x.id]: mt.target.value }) })
                 ] }),
                 /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Qe || !(I[x.id] || "").trim() || (O[x.id] ?? String(x.confirmed_score ?? x.suggested_score ?? "")) === "", onClick: () => void me(async () => {
-                  await u("/training/answers/" + x.id + "/review-score", { method: "POST", body: JSON.stringify({ row_version: x.row_version, score: Number(O[x.id] ?? x.confirmed_score ?? x.suggested_score), reason: I[x.id] }) }), be("人工确认分已保存，原建议分和复核轨迹保留。"), _((mt) => mt + 1);
+                  await u("/training/answers/" + x.id + "/review-score", { method: "POST", body: JSON.stringify({ row_version: x.row_version, score: Number(O[x.id] ?? x.confirmed_score ?? x.suggested_score), reason: I[x.id] }) }), be("人工确认分已保存，原建议分和复核轨迹保留。"), N((mt) => mt + 1);
                 }), children: "保存人工确认分" })
               ] })
             ] }, x.id);
@@ -15434,7 +15425,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
       }),
       /* @__PURE__ */ s.jsx("div", { className: "proof-body", children: /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Qe, onClick: () => void me(async () => {
         for (const x of Pe.questions) await Gt(x);
-        await u(`/training/attempts/${V}/submit`, { method: "POST" }), _((x) => x + 1), be("作答已提交，评分结果如下。");
+        await u(`/training/attempts/${V}/submit`, { method: "POST" }), N((x) => x + 1), be("作答已提交，评分结果如下。");
       }), children: "保存全部并提交" }) })
     ] }) : A && pe && X ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
@@ -15494,7 +15485,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
             k && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Qe || Ve || !y.trim(), onClick: () => void me(async () => {
-              await u(`/training/questions/${Y}/draft`, { method: "PATCH", body: JSON.stringify({ ...Ot(), content: X }) }), be("新题目版本已保存，不改变旧学习包与成绩。"), _((x) => x + 1);
+              await u(`/training/questions/${Y}/draft`, { method: "PATCH", body: JSON.stringify({ ...Ot(), content: X }) }), be("新题目版本已保存，不改变旧学习包与成绩。"), N((x) => x + 1);
             }), children: "保存新版本" }),
             k && ["draft", "changes_requested"].includes(pe.state) && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Qe || !Ve || !y.trim(), onClick: () => qt("submit"), children: "提交题目审核" })
           ] }),
@@ -15557,7 +15548,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsx("h2", { children: "我的学习记录" }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-          Ze.map((x) => /* @__PURE__ */ s.jsx("p", { children: /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => N("/learn/attempts/" + x.id), children: [
+          Ze.map((x) => /* @__PURE__ */ s.jsx("p", { children: /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => _("/learn/attempts/" + x.id), children: [
             As[x.state],
             " · ",
             As[x.result_state],
@@ -15590,7 +15581,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
               " · ",
               As[x.result_state]
             ] }),
-            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: x.state !== "submitted", onClick: () => N("/training/results/" + x.id), children: "查看结果与复核" }) })
+            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: x.state !== "submitted", onClick: () => _("/training/results/" + x.id), children: "查看结果与复核" }) })
           ] }, x.id);
         }) })
       ] }) }),
@@ -15627,7 +15618,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
             ] })
           ] }),
           /* @__PURE__ */ s.jsx("div", { className: "source-options", children: he.filter((x) => x.project_id === xe).map((x) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: re.includes(x.revision_id), onChange: (Oe) => Z((Te) => Nt(Te, x.revision_id, Oe.target.checked)) }),
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: ce.includes(x.revision_id), onChange: (Oe) => Z((Te) => Nt(Te, x.revision_id, Oe.target.checked)) }),
             /* @__PURE__ */ s.jsxs("span", { children: [
               Ta[x.type],
               " · ",
@@ -15636,11 +15627,11 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
               x.version
             ] })
           ] }, x.revision_id)) }),
-          /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Qe || !re.length || re.length > 30 || !$.trim(), onClick: () => void me(async () => {
-            await u("/training/packages", { method: "POST", body: JSON.stringify({ title: $, package_key: ne, version: ct, project_id: xe, question_revision_ids: re, role_scope: ["learner", "admin", "teacher"], audience_subjects: _e.split(/[,，\n]/).map((x) => x.trim()).filter(Boolean) }) }), be("学习包草稿已建立，发布后学员可使用。"), _((x) => x + 1);
+          /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Qe || !ce.length || ce.length > 30 || !$.trim(), onClick: () => void me(async () => {
+            await u("/training/packages", { method: "POST", body: JSON.stringify({ title: $, package_key: ne, version: ct, project_id: xe, question_revision_ids: ce, role_scope: ["learner", "admin", "teacher"], audience_subjects: _e.split(/[,，\n]/).map((x) => x.trim()).filter(Boolean) }) }), be("学习包草稿已建立，发布后学员可使用。"), N((x) => x + 1);
           }), children: [
             "创建学习包草稿（",
-            re.length,
+            ce.length,
             "题）"
           ] })
         ] })
@@ -15661,7 +15652,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
             x.package_key
           ] }),
           x.state === "draft" && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Qe, onClick: () => void me(async () => {
-            await u(`/training/packages/${x.id}/publish`, { method: "POST", body: JSON.stringify({ row_version: x.row_version, reason: "发布已审核题目的固定版本学习包" }) }), be("学习包已发布。"), _((Oe) => Oe + 1);
+            await u(`/training/packages/${x.id}/publish`, { method: "POST", body: JSON.stringify({ row_version: x.row_version, reason: "发布已审核题目的固定版本学习包" }) }), be("学习包已发布。"), N((Oe) => Oe + 1);
           }), children: "发布此学习包版本" })
         ] }, x.id)) }),
         ot
@@ -15705,7 +15696,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
           ] }),
           /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Qe || !m.length || m.length > 10 || !P.length, onClick: () => void me(async () => {
             const x = await im(u, "/training/generation-jobs", { knowledge_revision_ids: m, types: P, generation_mode: je }, () => be("已提交后台生成，关闭页面不影响任务；可在任务工作台查看进度。"));
-            be("已生成或复用" + x.items.length + "道候选题，仍需核查答案与来源后提交审核。"), _((Oe) => Oe + 1);
+            be("已生成或复用" + x.items.length + "道候选题，仍需核查答案与来源后提交审核。"), N((Oe) => Oe + 1);
           }), children: "生成题目候选" }),
           /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "多选演示题需至少两条审核事实。模型输出仍需核对，不将自动生成等同于质量验收通过。" })
         ] })
@@ -15737,7 +15728,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
               As[x.state],
               x.published && /* @__PURE__ */ s.jsx("small", { children: "已用于发布学习包" })
             ] }),
-            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N("/training/questions/" + x.id), children: "核查与审核" }) })
+            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/training/questions/" + x.id), children: "核查与审核" }) })
           ] }, x.id)) })
         ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "暂无当前范围题目" }),
@@ -15750,7 +15741,7 @@ function Vv({ api: u, path: h, navigate: N, projects: o }) {
 }
 function Jv({ api: u }) {
   var Ce, xe;
-  const [h, N] = r.useState(null), [o, T] = r.useState([]), [U, V] = r.useState("openai"), [A, Y] = r.useState(""), [v, D] = r.useState(!1), [K, k] = r.useState(""), [se, je] = r.useState("");
+  const [h, _] = r.useState(null), [o, T] = r.useState([]), [U, V] = r.useState("openai"), [A, Y] = r.useState(""), [v, D] = r.useState(!1), [K, k] = r.useState(""), [se, je] = r.useState("");
   r.useEffect(() => {
     let F = !1;
     return Promise.all([u("/models/settings"), u("/models/presets")]).then(([he, ae]) => {
@@ -15759,9 +15750,9 @@ function Jv({ api: u }) {
       const H = ae.items.find((ve) => ve.base_url === he.base_url);
       if (!he.model && !he.api_key_configured) {
         const ve = ae.items[0];
-        V(ve.id), N({ ...he, base_url: ve.base_url, model: ve.default_model });
+        V(ve.id), _({ ...he, base_url: ve.base_url, model: ve.default_model });
       } else
-        V((H == null ? void 0 : H.id) || "custom"), N(he);
+        V((H == null ? void 0 : H.id) || "custom"), _(he);
     }).catch((he) => {
       F || k(he.message);
     }), () => {
@@ -15770,13 +15761,13 @@ function Jv({ api: u }) {
   }, []);
   const ye = (F) => {
     const he = o.find((ae) => ae.id === F);
-    V(F), Y(""), je(""), k(""), h && N({ ...h, base_url: (he == null ? void 0 : he.base_url) || "", model: (he == null ? void 0 : he.default_model) || "", api_key_configured: !1 });
+    V(F), Y(""), je(""), k(""), h && _({ ...h, base_url: (he == null ? void 0 : he.base_url) || "", model: (he == null ? void 0 : he.default_model) || "", api_key_configured: !1 });
   }, _e = async () => {
     if (h) {
       D(!0), k(""), je("");
       try {
         const { api_key_configured: F, ...he } = h, ae = await u("/models/settings", { method: "PUT", body: JSON.stringify({ ...he, enabled: !0, ...A ? { api_key: A } : {} }) });
-        if (N(ae), Y(""), je("配置已保存，正在测试连接…"), (await u("/models/test", { method: "POST" })).status !== "ok") throw new Error("配置已保存，但模型未返回预期结果，请重新测试。");
+        if (_(ae), Y(""), je("配置已保存，正在测试连接…"), (await u("/models/test", { method: "POST" })).status !== "ok") throw new Error("配置已保存，但模型未返回预期结果，请重新测试。");
         je("连接测试通过，可以开始知识萃取和案例评分。");
       } catch (F) {
         je(""), k(F.message);
@@ -15804,15 +15795,15 @@ function Jv({ api: u }) {
         U === "custom" ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "服务地址",
-            /* @__PURE__ */ s.jsx("input", { "aria-label": "模型服务地址", disabled: v, value: h.base_url, onChange: (F) => N({ ...h, base_url: F.target.value, api_key_configured: !1 }) })
+            /* @__PURE__ */ s.jsx("input", { "aria-label": "模型服务地址", disabled: v, value: h.base_url, onChange: (F) => _({ ...h, base_url: F.target.value, api_key_configured: !1 }) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "模型名称",
-            /* @__PURE__ */ s.jsx("input", { "aria-label": "模型名称", disabled: v, value: h.model, onChange: (F) => N({ ...h, model: F.target.value }) })
+            /* @__PURE__ */ s.jsx("input", { "aria-label": "模型名称", disabled: v, value: h.model, onChange: (F) => _({ ...h, model: F.target.value }) })
           ] })
         ] }) : /* @__PURE__ */ s.jsxs("label", { children: [
           "模型",
-          /* @__PURE__ */ s.jsxs("select", { "aria-label": "模型名称", disabled: v, value: h.model, onChange: (F) => N({ ...h, model: F.target.value }), children: [
+          /* @__PURE__ */ s.jsxs("select", { "aria-label": "模型名称", disabled: v, value: h.model, onChange: (F) => _({ ...h, model: F.target.value }), children: [
             !((Ce = o.find((F) => F.id === U)) != null && Ce.models.some((F) => F.id === h.model)) && /* @__PURE__ */ s.jsxs("option", { value: h.model, children: [
               h.model,
               "（已保存）"
@@ -15829,11 +15820,11 @@ function Jv({ api: u }) {
           /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "请求超时（秒）",
-              /* @__PURE__ */ s.jsx("input", { "aria-label": "模型超时", type: "number", min: 5, max: 180, value: h.timeout_seconds, onChange: (F) => N({ ...h, timeout_seconds: Number(F.target.value) }) })
+              /* @__PURE__ */ s.jsx("input", { "aria-label": "模型超时", type: "number", min: 5, max: 180, value: h.timeout_seconds, onChange: (F) => _({ ...h, timeout_seconds: Number(F.target.value) }) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "最大输出 token",
-              /* @__PURE__ */ s.jsx("input", { "aria-label": "模型输出限制", type: "number", min: 256, max: 16e3, value: h.max_tokens, onChange: (F) => N({ ...h, max_tokens: Number(F.target.value) }) })
+              /* @__PURE__ */ s.jsx("input", { "aria-label": "模型输出限制", type: "number", min: 256, max: 16e3, value: h.max_tokens, onChange: (F) => _({ ...h, max_tokens: Number(F.target.value) }) })
             ] })
           ] }),
           /* @__PURE__ */ s.jsxs("p", { className: "small-note", children: [
@@ -15847,7 +15838,7 @@ function Jv({ api: u }) {
             D(!0), k("");
             const { api_key_configured: F, ...he } = h;
             u("/models/settings", { method: "PUT", body: JSON.stringify({ ...he, enabled: !1 }) }).then((ae) => {
-              N(ae), je("云端调用已停用。");
+              _(ae), je("云端调用已停用。");
             }).catch((ae) => k(ae.message)).finally(() => D(!1));
           }, children: "停用云端调用" })
         ] }),
@@ -15857,8 +15848,8 @@ function Jv({ api: u }) {
   ] });
 }
 const Kv = [{ code: "general", name: "通用施工检查", focus: "从历史记录归纳施工准备、现场实施、验收复核要点；后续替换为正式分类。", keywords: [] }];
-function $v({ api: u, path: h, navigate: N, projects: o, identity: T, canManageModels: U }) {
-  var P, te, re;
+function $v({ api: u, path: h, navigate: _, projects: o, identity: T, canManageModels: U }) {
+  var P, te, ce;
   const V = h === "/settings/models", A = U, Y = o.some((Z) => Z.can_run), [v, D] = r.useState(((P = o.find((Z) => Z.can_run)) == null ? void 0 : P.id) || ""), [K, k] = r.useState([]), [se, je] = r.useState([]), [ye, _e] = r.useState(null), [Ce, xe] = r.useState(Kv), [F, he] = r.useState("llm"), [ae, H] = r.useState(sessionStorage.getItem("b07-extraction-" + T) || ""), [ve, Ae] = r.useState(null), [Ge, Ze] = r.useState(!1), [Xe, pe] = r.useState(!0), [$e, X] = r.useState(""), [fe, y] = r.useState(""), [Q, le] = r.useState(0), we = async (Z) => {
     Ze(!0), X(""), y("");
     try {
@@ -15921,10 +15912,10 @@ function $v({ api: u, path: h, navigate: N, projects: o, identity: T, canManageM
     fe && /* @__PURE__ */ s.jsx("div", { className: "feedback success", role: "status", children: fe }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
-        /* @__PURE__ */ s.jsx("button", { className: V ? "" : "selected", onClick: () => N("/extraction"), children: "施工要点萃取" }),
-        A && /* @__PURE__ */ s.jsx("button", { className: V ? "selected" : "", onClick: () => N("/settings/models"), children: "云端模型配置" }),
-        /* @__PURE__ */ s.jsx("button", { onClick: () => N("/settings/scenes"), children: "场景配置" }),
-        /* @__PURE__ */ s.jsx("button", { onClick: () => N("/knowledge/drafts"), children: "知识候选与审核" })
+        /* @__PURE__ */ s.jsx("button", { className: V ? "" : "selected", onClick: () => _("/extraction"), children: "施工要点萃取" }),
+        A && /* @__PURE__ */ s.jsx("button", { className: V ? "selected" : "", onClick: () => _("/settings/models"), children: "云端模型配置" }),
+        /* @__PURE__ */ s.jsx("button", { onClick: () => _("/settings/scenes"), children: "场景配置" }),
+        /* @__PURE__ */ s.jsx("button", { onClick: () => _("/knowledge/drafts"), children: "知识候选与审核" })
       ] }),
       /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => le((Z) => Z + 1), children: [
         /* @__PURE__ */ s.jsx(Bs, { size: 15 }),
@@ -16037,11 +16028,11 @@ function $v({ api: u, path: h, navigate: N, projects: o, identity: T, canManageM
             JSON.stringify(ve.result.model.usage)
           ] }),
           (te = ve.result.items) == null ? void 0 : te.map((Z) => /* @__PURE__ */ s.jsxs("p", { children: [
-            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => N("/knowledge/" + Z.item_id + "/edit"), children: "打开施工要点候选" }),
+            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/knowledge/" + Z.item_id + "/edit"), children: "打开施工要点候选" }),
             " · ",
             Z.outcome === "reused" ? "复用已有人工版本" : "新增草稿"
           ] }, Z.item_id)),
-          (re = ve.result.missing_information) == null ? void 0 : re.map((Z, $) => /* @__PURE__ */ s.jsxs("p", { children: [
+          (ce = ve.result.missing_information) == null ? void 0 : ce.map((Z, $) => /* @__PURE__ */ s.jsxs("p", { children: [
             "资料缺口：",
             Z
           ] }, $)),
@@ -16056,9 +16047,9 @@ function $v({ api: u, path: h, navigate: N, projects: o, identity: T, canManageM
 const Nu = { queued: "等待处理", running: "正在处理", retrying: "自动重试中", succeeded: "已完成", failed: "处理失败" }, Jf = { admin: "管理员", processor: "资料加工", reviewer: "内容审核", teacher: "培训教员", learner: "学习成员", a_service: "模拟A服务" }, Kf = { demo_check: "演示检查", source_import: "历史数据接入", knowledge_generation: "模板知识候选", knowledge_extraction: "施工要点萃取", release_build: "发布索引构建", task_package_import: "任务包处理", a_import: "A 成果接入", a_retrospective: "A 成果复盘", training_generation: "培训题目生成", retrospective_generation: "案例复盘生成", training_grading: "培训案例评分" }, $i = (u) => new Date(u).toLocaleString("zh-CN", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }), Wv = [["admin", "本地管理员"], ["processor", "资料加工员"], ["learner", "新成员"], ["teacher", "培训教员"], ["outsider", "其他项目成员"]];
 function Fv({ embedded: u = !1 }) {
   var rt;
-  const [h, N] = r.useState(localStorage.getItem("b01-identity") || "admin"), [o, T] = r.useState(Vi()), [U, V] = r.useState(!1), A = o === "/platform/services", Y = o.startsWith("/archive-review/"), v = /^\/imports\/ai_[a-f0-9]{32}$/.test(o), [D, K] = r.useState(["/sources", "/imports", "/records"].some((_) => Vi().startsWith(_))), k = ["/search", "/releases", "/knowledge/library"].includes(o) || /^\/knowledge\/[^/]+$/.test(o) && o !== "/knowledge/drafts", se = !k && ["/quality", "/knowledge", "/reviews"].some((_) => o.startsWith(_)), je = o.startsWith("/training") || o.startsWith("/learn"), ye = o.startsWith("/workflows"), _e = o.startsWith("/standards"), Ce = ye || _e || o.startsWith("/extraction") || o === "/settings/models" || o === "/settings/scenes", xe = o.startsWith("/retrospectives"), F = o.startsWith("/task-packages"), he = o === "/records", ae = !v && ["/sources", "/imports", "/records"].some((_) => o.startsWith(_)), [H, ve] = r.useState(null), [Ae, Ge] = r.useState([]), [Ze, Xe] = r.useState({}), [pe, $e] = r.useState(!1), [X, fe] = r.useState(""), [y, Q] = r.useState(""), [le, we] = r.useState(!0), [m, L] = r.useState(!1), [P, te] = r.useState(0), [re, Z] = r.useState(""), [$, ze] = r.useState(""), [ne, Ee] = r.useState(""), [ct, Je] = r.useState(null), [Pe, We] = r.useState([]), [Ue, Re] = r.useState(null), [ke, De] = r.useState(!1), [st, et] = r.useState("demo-airport"), [ht, ie] = r.useState("success"), [nt, He] = r.useState(null), [O, w] = r.useState(""), [I, Se] = r.useState("processor"), [Me, lt] = r.useState("demo-airport"), [Fe, B] = r.useState([]);
-  async function oe(_, me = {}) {
-    const Ve = await Yt("/api/v1" + _, {
+  const [h, _] = r.useState(localStorage.getItem("b01-identity") || "admin"), [o, T] = r.useState(Vi()), [U, V] = r.useState(!1), A = o === "/platform/services", Y = o.startsWith("/archive-review/"), v = /^\/imports\/ai_[a-f0-9]{32}$/.test(o), [D, K] = r.useState(["/sources", "/imports", "/records"].some((N) => Vi().startsWith(N))), k = ["/search", "/releases", "/knowledge/library"].includes(o) || /^\/knowledge\/[^/]+$/.test(o) && o !== "/knowledge/drafts", se = !k && ["/quality", "/knowledge", "/reviews"].some((N) => o.startsWith(N)), je = o.startsWith("/training") || o.startsWith("/learn"), ye = o.startsWith("/workflows"), _e = o.startsWith("/standards"), Ce = ye || _e || o.startsWith("/extraction") || o === "/settings/models" || o === "/settings/scenes", xe = o.startsWith("/retrospectives"), F = o.startsWith("/task-packages"), he = o === "/records", ae = !v && ["/sources", "/imports", "/records"].some((N) => o.startsWith(N)), [H, ve] = r.useState(null), [Ae, Ge] = r.useState([]), [Ze, Xe] = r.useState({}), [pe, $e] = r.useState(!1), [X, fe] = r.useState(""), [y, Q] = r.useState(""), [le, we] = r.useState(!0), [m, L] = r.useState(!1), [P, te] = r.useState(0), [ce, Z] = r.useState(""), [$, ze] = r.useState(""), [ne, Ee] = r.useState(""), [ct, Je] = r.useState(null), [Pe, We] = r.useState([]), [Ue, Re] = r.useState(null), [ke, De] = r.useState(!1), [st, et] = r.useState("demo-airport"), [ht, ie] = r.useState("success"), [nt, He] = r.useState(null), [O, w] = r.useState(""), [I, Se] = r.useState("processor"), [Me, lt] = r.useState("demo-airport"), [Fe, B] = r.useState([]);
+  async function oe(N, me = {}) {
+    const Ve = await Yt("/api/v1" + N, {
       ...me,
       headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${h}`, ...me.headers }
     });
@@ -16068,81 +16059,81 @@ function Fv({ embedded: u = !1 }) {
     }
     return Ve.json();
   }
-  const ce = (_) => {
+  const re = (N) => {
     var Ve, Ot;
     const me = window;
-    u && ((Ve = me.QaxcHasPendingEdits) != null && Ve.call(me)) && !confirm("当前页面有编辑操作，请确认已保存后再离开。继续？") || ((Ot = me.QaxcClearPendingEdits) == null || Ot.call(me), Sj(_), T(Vi()), fe(""), Re(null), Ee(""), We([]));
+    u && ((Ve = me.QaxcHasPendingEdits) != null && Ve.call(me)) && !confirm("当前页面有编辑操作，请确认已保存后再离开。继续？") || ((Ot = me.QaxcClearPendingEdits) == null || Ot.call(me), Sj(N), T(Vi()), fe(""), Re(null), Ee(""), We([]));
   };
   r.useEffect(() => {
-    const _ = () => T(Vi());
-    return window.addEventListener("popstate", _), window.addEventListener("hashchange", _), () => {
-      window.removeEventListener("popstate", _), window.removeEventListener("hashchange", _);
+    const N = () => T(Vi());
+    return window.addEventListener("popstate", N), window.addEventListener("hashchange", N), () => {
+      window.removeEventListener("popstate", N), window.removeEventListener("hashchange", N);
     };
   }, []), r.useEffect(() => {
-    const _ = () => V(!0);
-    return window.addEventListener("b-session-expired", _), () => window.removeEventListener("b-session-expired", _);
+    const N = () => V(!0);
+    return window.addEventListener("b-session-expired", N), () => window.removeEventListener("b-session-expired", N);
   }, []), r.useEffect(() => {
-    let _ = !1;
+    let N = !1;
     we(!0), fe(""), ve(null), He(null), Ge([]), B([]);
     async function me() {
       try {
         const Ve = await oe("/me");
-        if (_) return;
+        if (N) return;
         const Ot = window.QaxcProjectNames || {};
         u && (Ve.projects = Ve.projects.map((ot) => ({ ...ot, name: Ot[ot.id] || ot.name })));
         const qt = window.QaxcProjectId;
         u && qt && (Ve.projects = Ve.projects.filter((ot) => ot.id === qt)), ve(Ve);
         const Gt = await oe("/health");
-        if (_ || ($e(Gt.worker_online), v || A || Y || ae || se || k || F || xe || je || Ce)) return;
+        if (N || ($e(Gt.worker_online), v || A || Y || ae || se || k || F || xe || je || Ce)) return;
         if (o === "/settings/access") {
           if (!Ve.projects.some((g) => g.can_manage)) return;
           const [ot, Nt] = await Promise.all([oe("/access"), oe("/audit-events?limit=10")]);
-          if (_) return;
+          if (N) return;
           He(ot), B(Nt.items), w((g) => {
             var Ne;
             return ot.users.some((it) => it.id === g) ? g : ((Ne = ot.users[0]) == null ? void 0 : Ne.id) || "";
           });
         } else {
           const [ot, Nt] = await Promise.all([
-            oe(`/jobs?limit=12${$ ? `&kind=${$}` : ""}${re ? `&status=${re}` : ""}${ne ? `&cursor=${encodeURIComponent(ne)}` : ""}`),
+            oe(`/jobs?limit=12${$ ? `&kind=${$}` : ""}${ce ? `&status=${ce}` : ""}${ne ? `&cursor=${encodeURIComponent(ne)}` : ""}`),
             oe("/dashboard")
           ]);
-          if (_) return;
+          if (N) return;
           Ge(ot.items), Je(ot.next_cursor), Xe(Nt.counts);
         }
       } catch (Ve) {
-        _ || fe(Ve.message);
+        N || fe(Ve.message);
       } finally {
-        _ || we(!1);
+        N || we(!1);
       }
     }
     return me(), () => {
-      _ = !0;
+      N = !0;
     };
-  }, [h, o, re, $, ne, P]), r.useEffect(() => {
+  }, [h, o, ce, $, ne, P]), r.useEffect(() => {
     if (!H || v || A || Y || o === "/settings/access" || ae || se || k || F || xe || je || Ce) return;
-    let _ = !1;
+    let N = !1;
     const me = window.setInterval(async () => {
       try {
         const [Ve, Ot, qt] = await Promise.all([
-          oe(`/jobs?limit=12${$ ? `&kind=${$}` : ""}${re ? `&status=${re}` : ""}${ne ? `&cursor=${encodeURIComponent(ne)}` : ""}`),
+          oe(`/jobs?limit=12${$ ? `&kind=${$}` : ""}${ce ? `&status=${ce}` : ""}${ne ? `&cursor=${encodeURIComponent(ne)}` : ""}`),
           oe("/dashboard"),
           oe("/health")
         ]);
-        if (_) return;
+        if (N) return;
         Ge(Ve.items), Je(Ve.next_cursor), Xe(Ot.counts), $e(qt.worker_online), Re((Gt) => Gt ? Ve.items.find((ot) => ot.id === Gt.id) || Gt : null), fe("");
       } catch (Ve) {
-        _ || (fe(Ve.message), $e(!1));
+        N || (fe(Ve.message), $e(!1));
       }
     }, 2e3);
     return () => {
-      _ = !0, clearInterval(me);
+      N = !0, clearInterval(me);
     };
-  }, [h, o, re, $, ne, H == null ? void 0 : H.id]);
-  const Ye = async (_) => {
+  }, [h, o, ce, $, ne, H == null ? void 0 : H.id]);
+  const Ye = async (N) => {
     L(!0), fe(""), Q("");
     try {
-      await _(), te((me) => me + 1);
+      await N(), te((me) => me + 1);
     } catch (me) {
       fe(me.message);
     } finally {
@@ -16153,23 +16144,23 @@ function Fv({ embedded: u = !1 }) {
       method: "POST",
       headers: { "Idempotency-Key": crypto.randomUUID() },
       body: JSON.stringify({ title: "演示资料完整性检查", project_id: st, scenario: ht, duration_seconds: 6 })
-    }), De(!1), Q("任务已保存，处理服务会自动执行。"), ce("/jobs");
-  }), ge = (_) => Ye(async () => {
-    await oe(`/jobs/${_.id}/retry`, {
+    }), De(!1), Q("任务已保存，处理服务会自动执行。"), re("/jobs");
+  }), ge = (N) => Ye(async () => {
+    await oe(`/jobs/${N.id}/retry`, {
       method: "POST",
       headers: { "Idempotency-Key": crypto.randomUUID() },
-      body: JSON.stringify({ row_version: _.row_version })
+      body: JSON.stringify({ row_version: N.row_version })
     }), Q("已提交重试，原任务和来源保持不变。");
-  }), de = (_) => Ye(async () => {
-    const me = await Yt(`/api/v1/assets/${_.result_ref}/content`, { headers: { Authorization: `Bearer dev-${h}` } });
+  }), de = (N) => Ye(async () => {
+    const me = await Yt(`/api/v1/assets/${N.result_ref}/content`, { headers: { Authorization: `Bearer dev-${h}` } });
     if (!me.ok) {
       const qt = await me.json();
       throw new Error(qt.message);
     }
     const Ve = document.createElement("a"), Ot = URL.createObjectURL(await me.blob());
-    Ve.href = Ot, Ve.download = `演示检查结果-${_.id.slice(0, 8)}.txt`, Ve.click(), URL.revokeObjectURL(Ot), Q("演示结果已下载。");
-  }), Qe = !Ut && (H == null ? void 0 : H.projects.some((_) => _.can_run)), vt = (_) => {
-    const me = H == null ? void 0 : H.projects.find((Ot) => Ot.id === _.project_id);
+    Ve.href = Ot, Ve.download = `演示检查结果-${N.id.slice(0, 8)}.txt`, Ve.click(), URL.revokeObjectURL(Ot), Q("演示结果已下载。");
+  }), Qe = !Ut && (H == null ? void 0 : H.projects.some((N) => N.can_run)), vt = (N) => {
+    const me = H == null ? void 0 : H.projects.find((Ot) => Ot.id === N.project_id);
     if ((me == null ? void 0 : me.permissions) == null) return !!(me != null && me.can_run);
     const Ve = {
       source_import: "knowledge.process",
@@ -16180,8 +16171,8 @@ function Fv({ embedded: u = !1 }) {
       retrospective_generation: "retrospective.generate",
       training_grading: "training.manage"
     };
-    return !!Ve[_.kind] && me.permissions.includes(Ve[_.kind]);
-  }, M = H == null ? void 0 : H.projects.some((_) => _.can_manage), j = Object.fromEntries(((H == null ? void 0 : H.projects) || []).map((_) => [_.id, _.name])), ue = v ? "A 成果接入" : A ? "平台服务" : Y ? "归档成果复盘" : je ? o.startsWith("/learn") ? "我的学习" : "培训与学习记录" : Ce ? ye ? "隐患分析与知识成果" : _e ? "规范原文与版本" : o === "/settings/models" ? "云端模型配置" : o === "/settings/scenes" ? "场景与流程配置" : "施工要点知识萃取" : xe ? "过程复盘与经验" : F ? "归档成果与证据" : k ? o === "/releases" ? "知识发布管理" : o === "/search" ? "知识检索" : "已发布知识库" : se ? "知识加工与审核" : ae ? he ? "风险数据" : o.startsWith("/sources") ? "历史数据来源" : o.startsWith("/imports") ? "历史项目" : "风险数据" : o === "/settings/access" ? "成员与权限" : o === "/jobs" ? "处理任务" : "我的工作台", be = (Ze.queued || 0) + (Ze.running || 0) + (Ze.retrying || 0);
+    return !!Ve[N.kind] && me.permissions.includes(Ve[N.kind]);
+  }, M = H == null ? void 0 : H.projects.some((N) => N.can_manage), j = Object.fromEntries(((H == null ? void 0 : H.projects) || []).map((N) => [N.id, N.name])), ue = v ? "A 成果接入" : A ? "平台服务" : Y ? "归档成果复盘" : je ? o.startsWith("/learn") ? "我的学习" : "培训与学习记录" : Ce ? ye ? "隐患分析与知识成果" : _e ? "规范原文与版本" : o === "/settings/models" ? "云端模型配置" : o === "/settings/scenes" ? "场景与流程配置" : "施工要点知识萃取" : xe ? "过程复盘与经验" : F ? "归档成果与证据" : k ? o === "/releases" ? "知识发布管理" : o === "/search" ? "知识检索" : "已发布知识库" : se ? "知识加工与审核" : ae ? he ? "风险数据" : o.startsWith("/sources") ? "历史数据来源" : o.startsWith("/imports") ? "历史项目" : "风险数据" : o === "/settings/access" ? "成员与权限" : o === "/jobs" ? "处理任务" : "我的工作台", be = (Ze.queued || 0) + (Ze.running || 0) + (Ze.retrying || 0);
   return /* @__PURE__ */ s.jsxs("div", { className: "app-shell", children: [
     !u && /* @__PURE__ */ s.jsxs("aside", { className: "sidebar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "brand", children: [
@@ -16199,46 +16190,46 @@ function Fv({ embedded: u = !1 }) {
           /* @__PURE__ */ s.jsx(Df, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "返回小察工作台" })
         ] }),
-        [["/workbench", Df, "我的工作台"], ["/jobs", Fj, "处理任务"]].map(([_, me, Ve]) => {
+        [["/workbench", Df, "我的工作台"], ["/jobs", Fj, "处理任务"]].map(([N, me, Ve]) => {
           const Ot = me;
-          return /* @__PURE__ */ s.jsxs("button", { "aria-label": String(Ve), className: o === _ || _ === "/workbench" && o === "/" ? "nav-item active" : "nav-item", onClick: () => ce(String(_)), children: [
+          return /* @__PURE__ */ s.jsxs("button", { "aria-label": String(Ve), className: o === N || N === "/workbench" && o === "/" ? "nav-item active" : "nav-item", onClick: () => re(String(N)), children: [
             /* @__PURE__ */ s.jsx(Ot, { size: 19 }),
             /* @__PURE__ */ s.jsx("span", { children: String(Ve) }),
             /* @__PURE__ */ s.jsx(ll, { size: 15 })
-          ] }, String(_));
+          ] }, String(N));
         }),
-        /* @__PURE__ */ s.jsxs("button", { className: `nav-item governance-toggle ${ae ? "active-group" : ""}`, "aria-label": "历史数据治理", "aria-expanded": D, "aria-controls": "governance-menu", onClick: () => K((_) => !_), children: [
+        /* @__PURE__ */ s.jsxs("button", { className: `nav-item governance-toggle ${ae ? "active-group" : ""}`, "aria-label": "历史数据治理", "aria-expanded": D, "aria-controls": "governance-menu", onClick: () => K((N) => !N), children: [
           /* @__PURE__ */ s.jsx(Ji, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "历史数据治理" }),
           /* @__PURE__ */ s.jsx(ll, { className: D ? "expanded" : "", size: 15 })
         ] }),
-        D && /* @__PURE__ */ s.jsx("div", { id: "governance-menu", className: "subnav", children: [["/sources", "数据来源"], ["/imports", "历史项目"], ["/records", "风险数据"]].map(([_, me]) => /* @__PURE__ */ s.jsx("button", { "aria-label": me, className: o.startsWith(_) ? "active" : "", onClick: () => ce(_), children: me }, _)) }),
-        /* @__PURE__ */ s.jsxs("button", { className: se || Ce ? "nav-item active" : "nav-item", onClick: () => ce("/extraction"), "aria-label": "知识加工与审核", children: [
+        D && /* @__PURE__ */ s.jsx("div", { id: "governance-menu", className: "subnav", children: [["/sources", "数据来源"], ["/imports", "历史项目"], ["/records", "风险数据"]].map(([N, me]) => /* @__PURE__ */ s.jsx("button", { "aria-label": me, className: o.startsWith(N) ? "active" : "", onClick: () => re(N), children: me }, N)) }),
+        /* @__PURE__ */ s.jsxs("button", { className: se || Ce ? "nav-item active" : "nav-item", onClick: () => re("/extraction"), "aria-label": "知识加工与审核", children: [
           /* @__PURE__ */ s.jsx(Un, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "知识加工与审核" }),
           /* @__PURE__ */ s.jsx(ll, { size: 15 })
         ] }),
-        /* @__PURE__ */ s.jsxs("button", { className: k ? "nav-item active" : "nav-item", onClick: () => ce("/knowledge/library"), "aria-label": "知识库与检索", children: [
+        /* @__PURE__ */ s.jsxs("button", { className: k ? "nav-item active" : "nav-item", onClick: () => re("/knowledge/library"), "aria-label": "知识库与检索", children: [
           /* @__PURE__ */ s.jsx(Un, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "知识库与检索" }),
           /* @__PURE__ */ s.jsx(ll, { size: 15 })
         ] }),
-        /* @__PURE__ */ s.jsxs("button", { className: F ? "nav-item active" : "nav-item", onClick: () => ce("/task-packages"), "aria-label": "A任务包接入", children: [
+        /* @__PURE__ */ s.jsxs("button", { className: F ? "nav-item active" : "nav-item", onClick: () => re("/task-packages"), "aria-label": "A任务包接入", children: [
           /* @__PURE__ */ s.jsx(Un, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "A任务包接入" }),
           /* @__PURE__ */ s.jsx(ll, { size: 15 })
         ] }),
-        /* @__PURE__ */ s.jsxs("button", { className: xe ? "nav-item active" : "nav-item", onClick: () => ce("/retrospectives"), "aria-label": "过程复盘与经验", children: [
+        /* @__PURE__ */ s.jsxs("button", { className: xe ? "nav-item active" : "nav-item", onClick: () => re("/retrospectives"), "aria-label": "过程复盘与经验", children: [
           /* @__PURE__ */ s.jsx(zf, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "过程复盘与经验" }),
           /* @__PURE__ */ s.jsx(ll, { size: 15 })
         ] }),
-        /* @__PURE__ */ s.jsxs("button", { className: je ? "nav-item active" : "nav-item", onClick: () => ce(H != null && H.projects.some((_) => _.roles.some((me) => ["admin", "teacher", "reviewer"].includes(me))) ? "/training/questions" : "/learn"), "aria-label": "培训与学习", children: [
+        /* @__PURE__ */ s.jsxs("button", { className: je ? "nav-item active" : "nav-item", onClick: () => re(H != null && H.projects.some((N) => N.roles.some((me) => ["admin", "teacher", "reviewer"].includes(me))) ? "/training/questions" : "/learn"), "aria-label": "培训与学习", children: [
           /* @__PURE__ */ s.jsx(Pi, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "培训与学习" }),
           /* @__PURE__ */ s.jsx(ll, { size: 15 })
         ] }),
-        !Ut && /* @__PURE__ */ s.jsxs("button", { className: o === "/settings/access" ? "nav-item active" : "nav-item", onClick: () => ce("/settings/access"), "aria-label": "成员与权限", children: [
+        !Ut && /* @__PURE__ */ s.jsxs("button", { className: o === "/settings/access" ? "nav-item active" : "nav-item", onClick: () => re("/settings/access"), "aria-label": "成员与权限", children: [
           /* @__PURE__ */ s.jsx(Nv, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "成员与权限" }),
           /* @__PURE__ */ s.jsx(ll, { size: 15 })
@@ -16268,28 +16259,27 @@ function Fv({ embedded: u = !1 }) {
         ] }),
         Ut ? /* @__PURE__ */ s.jsx("a", { href: "/quality/", children: "返回平台" }) : /* @__PURE__ */ s.jsxs("div", { className: "identity", children: [
           /* @__PURE__ */ s.jsx("span", { className: "demo-tag", children: "模拟身份" }),
-          /* @__PURE__ */ s.jsx("select", { "aria-label": "切换模拟身份", value: h, onChange: (_) => {
-            localStorage.setItem("b01-identity", _.target.value), N(_.target.value), Re(null), Ee(""), We([]), Q("");
-          }, children: Wv.map(([_, me]) => /* @__PURE__ */ s.jsx("option", { value: _, children: me }, _)) })
+          /* @__PURE__ */ s.jsx("select", { "aria-label": "切换模拟身份", value: h, onChange: (N) => {
+            localStorage.setItem("b01-identity", N.target.value), _(N.target.value), Re(null), Ee(""), We([]), Q("");
+          }, children: Wv.map(([N, me]) => /* @__PURE__ */ s.jsx("option", { value: N, children: me }, N)) })
         ] })
       ] }),
       /* @__PURE__ */ s.jsxs("main", { children: [
-        u && !v && !k && !A && !ae && /* @__PURE__ */ s.jsx("nav", { "aria-label": "业务功能", className: "heading-actions", style: { flexWrap: "wrap", marginBottom: 20 }, children: (ae ? [["/sources", "数据来源"], ["/imports", "历史项目"], ["/records", "风险数据"]] : je ? [["/learn", "我的学习"], ["/training/questions", "题库与学习包"]] : se || Ce ? [["/workflows", "隐患与指导书"], ["/standards", "规范原文"], ["/extraction", "知识萃取"], ["/quality", "质量核查"], ["/knowledge/drafts", "知识草稿"], ["/reviews", "内容审核"], ["/settings/models", "模型设置"], ["/settings/scenes", "场景配置"]] : k ? [["/knowledge/library", "已发布知识"], ["/search", "检索"], ["/releases", "发布管理"]] : F ? [["/task-packages", "成果清单"], ["/task-packages/import", "接入成果"]] : [["/retrospectives", "复盘清单"]]).map(([_, me]) => /* @__PURE__ */ s.jsx("button", { className: o === _ ? "button primary" : "button ghost", onClick: () => ce(_), children: me }, _)) }),
-        /* @__PURE__ */ s.jsxs("div", { className: "page-heading", children: [
+        u && !v && !k && !A && !ae && /* @__PURE__ */ s.jsx("nav", { "aria-label": "业务功能", className: "heading-actions", style: { flexWrap: "wrap", marginBottom: 20 }, children: (ae ? [["/sources", "数据来源"], ["/imports", "历史项目"], ["/records", "风险数据"]] : je ? [["/learn", "我的学习"], ["/training/questions", "题库与学习包"]] : se || Ce ? [["/workflows", "隐患与指导书"], ["/standards", "规范原文"], ["/extraction", "知识萃取"], ["/quality", "质量核查"], ["/knowledge/drafts", "知识草稿"], ["/reviews", "内容审核"], ["/settings/models", "模型设置"], ["/settings/scenes", "场景配置"]] : k ? [["/knowledge/library", "已发布知识"], ["/search", "检索"], ["/releases", "发布管理"]] : F ? [["/task-packages", "成果清单"], ["/task-packages/import", "接入成果"]] : [["/retrospectives", "复盘清单"]]).map(([N, me]) => /* @__PURE__ */ s.jsx("button", { className: o === N ? "button primary" : "button ghost", onClick: () => re(N), children: me }, N)) }),
+        !(u && ae) && /* @__PURE__ */ s.jsxs("div", { className: "page-heading", children: [
           /* @__PURE__ */ s.jsxs("div", { children: [
             /* @__PURE__ */ s.jsx("div", { className: "eyebrow", children: "工作空间" }),
             /* @__PURE__ */ s.jsx("h1", { children: ue }),
             /* @__PURE__ */ s.jsx("p", { children: v ? "指定版本接入、证据校验与过程复盘。" : je ? "固定审核来源、题目与学习包版本，保留作答、建议评分和教员复核。" : ye ? "按固定来源版本登记事件、分析分类、编制汇编和指导书，经审核发布后进入培训。" : _e ? "保存规范原文与适用版本，核对来源后审核发布。" : Ce ? "按类别合并历史记录，调用云端模型提炼可追溯的施工要点。" : xe ? "复用已有过程记录与证据，核查实际流程，形成可审核的经验草稿。" : F ? "接收作业快照，核对事件、证据和版本，减少重复准备资料。" : k ? "固定审核版本发布，以项目权限检索知识并打开来源。" : se ? "复用来源证据生成候选，核查质量问题后逐版本审核。" : ae ? he ? "查看原报告当前解析版本、字段证据和关联图片。" : "一次接入模拟资料，保留原文、治理生效值与来源证据。" : o === "/settings/access" ? "按项目分配角色，保留每次授权与撤销的记录。" : "查看处理进度、定位失败任务，保留每一次执行结果。" })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "heading-actions", children: [
-            u && ae && /* @__PURE__ */ s.jsx("nav", { "aria-label": "风险数据视图", className: "toprow-tabs", children: [["/sources", "数据来源"], ["/imports", "历史项目"], ["/records", "风险数据"]].map(([_, me]) => /* @__PURE__ */ s.jsx("button", { className: o === _ ? "button primary" : "button ghost", onClick: () => ce(_), children: me }, _)) }),
-            !u && /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => te((_) => _ + 1), disabled: le, children: [
+            !u && /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => te((N) => N + 1), disabled: le, children: [
               /* @__PURE__ */ s.jsx(Bs, { size: 16 }),
               "刷新"
             ] }),
             !Ut && !ae && !se && !k && !F && !xe && !je && !Ce && o !== "/settings/access" && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: !Qe || m, onClick: () => {
-              var _;
-              et(((_ = H == null ? void 0 : H.projects.find((me) => me.can_run)) == null ? void 0 : _.id) || "demo-airport"), De(!0);
+              var N;
+              et(((N = H == null ? void 0 : H.projects.find((me) => me.can_run)) == null ? void 0 : N.id) || "demo-airport"), De(!0);
             }, children: [
               /* @__PURE__ */ s.jsx(qf, { size: 16 }),
               "运行演示检查"
@@ -16310,17 +16300,17 @@ function Fv({ embedded: u = !1 }) {
         X && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
           /* @__PURE__ */ s.jsx(Tl, { size: 18 }),
           X,
-          /* @__PURE__ */ s.jsx("button", { onClick: () => te((_) => _ + 1), children: "重新加载" })
+          /* @__PURE__ */ s.jsx("button", { onClick: () => te((N) => N + 1), children: "重新加载" })
         ] }),
         y && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
           /* @__PURE__ */ s.jsx(zl, { size: 18 }),
           y,
           /* @__PURE__ */ s.jsx("button", { "aria-label": "关闭提示", onClick: () => Q(""), children: /* @__PURE__ */ s.jsx(Wi, { size: 16 }) })
         ] }),
-        U ? null : v ? H ? /* @__PURE__ */ s.jsx(zj, { id: o.split("/").pop(), identity: H.id, projects: H.projects, navigate: ce }) : /* @__PURE__ */ s.jsx("p", { children: X || "正在读取身份…" }) : le ? /* @__PURE__ */ s.jsxs("div", { className: "loading", children: [
+        U ? null : v ? H ? /* @__PURE__ */ s.jsx(zj, { id: o.split("/").pop(), identity: H.id, projects: H.projects, navigate: re }) : /* @__PURE__ */ s.jsx("p", { children: X || "正在读取身份…" }) : le ? /* @__PURE__ */ s.jsxs("div", { className: "loading", children: [
           /* @__PURE__ */ s.jsx(Mf, { className: "spin", size: 24 }),
           /* @__PURE__ */ s.jsx("span", { children: "正在读取工作区…" })
-        ] }) : X ? null : A ? /* @__PURE__ */ s.jsx(Aj, { navigate: ce }, P) : Y ? /* @__PURE__ */ s.jsx(Rj, { deliveryId: decodeURIComponent(o.split("/")[2]), navigate: ce }, o) : je ? /* @__PURE__ */ s.jsx(Vv, { api: oe, path: o, navigate: ce, projects: (H == null ? void 0 : H.projects) || [] }, h) : ye ? /* @__PURE__ */ s.jsx(Tj, { api: oe, projects: (H == null ? void 0 : H.projects) || [], identity: h }, h + ":" + (H == null ? void 0 : H.projects.map((_) => _.id).join(","))) : _e ? /* @__PURE__ */ s.jsx(kj, { api: oe, projects: (H == null ? void 0 : H.projects) || [], identity: h }, h + ":" + (H == null ? void 0 : H.projects.map((_) => _.id).join(","))) : o === "/settings/scenes" ? /* @__PURE__ */ s.jsx("div", { className: "knowledge-module training-module", children: /* @__PURE__ */ s.jsx(Nj, { api: oe, projects: (H == null ? void 0 : H.projects) || [] }) }) : Ce ? /* @__PURE__ */ s.jsx($v, { api: oe, identity: h, path: o, navigate: ce, projects: (H == null ? void 0 : H.projects) || [], canManageModels: !!(H != null && H.can_manage_models) }, h) : xe ? /* @__PURE__ */ s.jsx(Zv, { api: oe, identity: h, path: o, navigate: ce, projects: (H == null ? void 0 : H.projects) || [] }, h) : F ? /* @__PURE__ */ s.jsx(Gv, { identity: h, path: o, navigate: ce, projects: (H == null ? void 0 : H.projects) || [] }, h) : k ? /* @__PURE__ */ s.jsx(qv, { identity: h, path: o, navigate: ce, projects: (H == null ? void 0 : H.projects) || [] }, h) : se ? /* @__PURE__ */ s.jsx(Uv, { api: oe, path: o, navigate: ce, projects: (H == null ? void 0 : H.projects) || [], identity: h }, h) : he ? /* @__PURE__ */ s.jsx(Rv, { api: oe }, h) : ae ? /* @__PURE__ */ s.jsx(kv, { api: oe, path: o, navigate: ce, projects: (H == null ? void 0 : H.projects) || [], identity: h }, h) : o === "/settings/access" ? M ? nt && /* @__PURE__ */ s.jsxs("div", { className: "access-layout", children: [
+        ] }) : X ? null : A ? /* @__PURE__ */ s.jsx(Aj, { navigate: re }, P) : Y ? /* @__PURE__ */ s.jsx(Rj, { deliveryId: decodeURIComponent(o.split("/")[2]), navigate: re }, o) : je ? /* @__PURE__ */ s.jsx(Vv, { api: oe, path: o, navigate: re, projects: (H == null ? void 0 : H.projects) || [] }, h) : ye ? /* @__PURE__ */ s.jsx(Tj, { api: oe, projects: (H == null ? void 0 : H.projects) || [], identity: h }, h + ":" + (H == null ? void 0 : H.projects.map((N) => N.id).join(","))) : _e ? /* @__PURE__ */ s.jsx(kj, { api: oe, projects: (H == null ? void 0 : H.projects) || [], identity: h }, h + ":" + (H == null ? void 0 : H.projects.map((N) => N.id).join(","))) : o === "/settings/scenes" ? /* @__PURE__ */ s.jsx("div", { className: "knowledge-module training-module", children: /* @__PURE__ */ s.jsx(Nj, { api: oe, projects: (H == null ? void 0 : H.projects) || [] }) }) : Ce ? /* @__PURE__ */ s.jsx($v, { api: oe, identity: h, path: o, navigate: re, projects: (H == null ? void 0 : H.projects) || [], canManageModels: !!(H != null && H.can_manage_models) }, h) : xe ? /* @__PURE__ */ s.jsx(Zv, { api: oe, identity: h, path: o, navigate: re, projects: (H == null ? void 0 : H.projects) || [] }, h) : F ? /* @__PURE__ */ s.jsx(Gv, { identity: h, path: o, navigate: re, projects: (H == null ? void 0 : H.projects) || [] }, h) : k ? /* @__PURE__ */ s.jsx(qv, { identity: h, path: o, navigate: re, projects: (H == null ? void 0 : H.projects) || [] }, h) : se ? /* @__PURE__ */ s.jsx(Uv, { api: oe, path: o, navigate: re, projects: (H == null ? void 0 : H.projects) || [], identity: h }, h) : he ? /* @__PURE__ */ s.jsx(Rv, { api: oe }, h) : ae ? /* @__PURE__ */ s.jsx(kv, { api: oe, path: o, navigate: re, projects: (H == null ? void 0 : H.projects) || [], identity: h }, h) : o === "/settings/access" ? M ? nt && /* @__PURE__ */ s.jsxs("div", { className: "access-layout", children: [
           /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
             /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
               /* @__PURE__ */ s.jsx("h2", { children: "项目角色" }),
@@ -16336,26 +16326,26 @@ function Fv({ embedded: u = !1 }) {
                 /* @__PURE__ */ s.jsx("th", { children: "角色" }),
                 /* @__PURE__ */ s.jsx("th", { children: "操作" })
               ] }) }),
-              /* @__PURE__ */ s.jsx("tbody", { children: nt.bindings.map((_) => {
+              /* @__PURE__ */ s.jsx("tbody", { children: nt.bindings.map((N) => {
                 var me;
                 return /* @__PURE__ */ s.jsxs("tr", { children: [
-                  /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("strong", { children: (me = nt.users.find((Ve) => Ve.id === _.user_id)) == null ? void 0 : me.name }) }),
-                  /* @__PURE__ */ s.jsx("td", { children: j[_.project_id] }),
-                  /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: Jf[_.role] }) }),
-                  /* @__PURE__ */ s.jsx("td", { children: _.role === "admin" ? /* @__PURE__ */ s.jsx("span", { className: "muted", children: "初始化管理" }) : /* @__PURE__ */ s.jsx(
+                  /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("strong", { children: (me = nt.users.find((Ve) => Ve.id === N.user_id)) == null ? void 0 : me.name }) }),
+                  /* @__PURE__ */ s.jsx("td", { children: j[N.project_id] }),
+                  /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: Jf[N.role] }) }),
+                  /* @__PURE__ */ s.jsx("td", { children: N.role === "admin" ? /* @__PURE__ */ s.jsx("span", { className: "muted", children: "初始化管理" }) : /* @__PURE__ */ s.jsx(
                     "button",
                     {
                       className: "text-button danger",
                       disabled: m,
                       onClick: () => {
                         confirm("撤销后，该成员在此项目的对应能力将立即失效。继续？") && Ye(async () => {
-                          await oe(`/role-bindings/${_.id}`, { method: "DELETE", body: JSON.stringify({ row_version: _.row_version }) }), Q("角色已撤销。");
+                          await oe(`/role-bindings/${N.id}`, { method: "DELETE", body: JSON.stringify({ row_version: N.row_version }) }), Q("角色已撤销。");
                         });
                       },
                       children: "撤销"
                     }
                   ) })
-                ] }, _.id);
+                ] }, N.id);
               }) })
             ] }) }),
             /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
@@ -16367,15 +16357,15 @@ function Fv({ embedded: u = !1 }) {
             /* @__PURE__ */ s.jsx("h2", { children: "添加项目角色" }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "成员",
-              /* @__PURE__ */ s.jsx("select", { value: O, onChange: (_) => w(_.target.value), children: nt.users.map((_) => /* @__PURE__ */ s.jsx("option", { value: _.id, children: _.name }, _.id)) })
+              /* @__PURE__ */ s.jsx("select", { value: O, onChange: (N) => w(N.target.value), children: nt.users.map((N) => /* @__PURE__ */ s.jsx("option", { value: N.id, children: N.name }, N.id)) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "项目",
-              /* @__PURE__ */ s.jsx("select", { value: Me, onChange: (_) => lt(_.target.value), children: nt.projects.map((_) => /* @__PURE__ */ s.jsx("option", { value: _.id, children: _.name }, _.id)) })
+              /* @__PURE__ */ s.jsx("select", { value: Me, onChange: (N) => lt(N.target.value), children: nt.projects.map((N) => /* @__PURE__ */ s.jsx("option", { value: N.id, children: N.name }, N.id)) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "角色",
-              /* @__PURE__ */ s.jsx("select", { value: I, onChange: (_) => Se(_.target.value), children: Object.entries(Jf).filter(([_]) => _ !== "admin" && _ !== "a_service").map(([_, me]) => /* @__PURE__ */ s.jsx("option", { value: _, children: me }, _)) })
+              /* @__PURE__ */ s.jsx("select", { value: I, onChange: (N) => Se(N.target.value), children: Object.entries(Jf).filter(([N]) => N !== "admin" && N !== "a_service").map(([N, me]) => /* @__PURE__ */ s.jsx("option", { value: N, children: me }, N)) })
             ] }),
             /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: m || !O, onClick: () => void Ye(async () => {
               await oe("/role-bindings", { method: "POST", body: JSON.stringify({ user_id: O, project_id: Me, role: I }) }), Q("角色已添加。");
@@ -16390,12 +16380,12 @@ function Fv({ embedded: u = !1 }) {
               /* @__PURE__ */ s.jsx("h2", { children: "最近操作" }),
               /* @__PURE__ */ s.jsx("span", { children: "按当前管理范围展示" })
             ] }),
-            Fe.length ? Fe.map((_) => /* @__PURE__ */ s.jsxs("div", { className: "audit-row", children: [
+            Fe.length ? Fe.map((N) => /* @__PURE__ */ s.jsxs("div", { className: "audit-row", children: [
               /* @__PURE__ */ s.jsx("span", { className: "audit-point" }),
-              /* @__PURE__ */ s.jsx("strong", { children: { job_created: "创建演示任务", job_retried: "重试任务", role_granted: "添加角色", role_revoked: "撤销角色" }[_.action] || _.action }),
-              /* @__PURE__ */ s.jsx("span", { children: j[_.project_id] }),
-              /* @__PURE__ */ s.jsx("time", { children: $i(_.created_at) })
-            ] }, _.id)) : /* @__PURE__ */ s.jsx("p", { className: "empty-inline", children: "暂无操作记录。" })
+              /* @__PURE__ */ s.jsx("strong", { children: { job_created: "创建演示任务", job_retried: "重试任务", role_granted: "添加角色", role_revoked: "撤销角色" }[N.action] || N.action }),
+              /* @__PURE__ */ s.jsx("span", { children: j[N.project_id] }),
+              /* @__PURE__ */ s.jsx("time", { children: $i(N.created_at) })
+            ] }, N.id)) : /* @__PURE__ */ s.jsx("p", { className: "empty-inline", children: "暂无操作记录。" })
           ] })
         ] }) : /* @__PURE__ */ s.jsxs("section", { className: "panel empty", children: [
           /* @__PURE__ */ s.jsx(Ji, { size: 38 }),
@@ -16433,17 +16423,17 @@ function Fv({ embedded: u = !1 }) {
                 /* @__PURE__ */ s.jsx("h2", { children: o === "/jobs" ? "任务列表" : "最近处理任务" }),
                 /* @__PURE__ */ s.jsx("span", { children: "仅展示当前身份可访问的项目" })
               ] }),
-              /* @__PURE__ */ s.jsxs("select", { "aria-label": "任务类型筛选", value: $, onChange: (_) => {
-                ze(_.target.value), Ee(""), We([]);
+              /* @__PURE__ */ s.jsxs("select", { "aria-label": "任务类型筛选", value: $, onChange: (N) => {
+                ze(N.target.value), Ee(""), We([]);
               }, children: [
                 /* @__PURE__ */ s.jsx("option", { value: "", children: "全部类型" }),
-                Object.entries(Kf).map(([_, me]) => /* @__PURE__ */ s.jsx("option", { value: _, children: me }, _))
+                Object.entries(Kf).map(([N, me]) => /* @__PURE__ */ s.jsx("option", { value: N, children: me }, N))
               ] }),
-              /* @__PURE__ */ s.jsxs("select", { "aria-label": "任务状态筛选", value: re, onChange: (_) => {
-                Z(_.target.value), Ee(""), We([]);
+              /* @__PURE__ */ s.jsxs("select", { "aria-label": "任务状态筛选", value: ce, onChange: (N) => {
+                Z(N.target.value), Ee(""), We([]);
               }, children: [
                 /* @__PURE__ */ s.jsx("option", { value: "", children: "全部状态" }),
-                Object.entries(Nu).map(([_, me]) => /* @__PURE__ */ s.jsx("option", { value: _, children: me }, _))
+                Object.entries(Nu).map(([N, me]) => /* @__PURE__ */ s.jsx("option", { value: N, children: me }, N))
               ] })
             ] }),
             Ae.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
@@ -16454,39 +16444,39 @@ function Fv({ embedded: u = !1 }) {
                 /* @__PURE__ */ s.jsx("th", { children: "提交时间" }),
                 /* @__PURE__ */ s.jsx("th", { children: "操作" })
               ] }) }),
-              /* @__PURE__ */ s.jsx("tbody", { children: Ae.map((_) => /* @__PURE__ */ s.jsxs("tr", { children: [
+              /* @__PURE__ */ s.jsx("tbody", { children: Ae.map((N) => /* @__PURE__ */ s.jsxs("tr", { children: [
                 /* @__PURE__ */ s.jsxs("td", { children: [
-                  /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => Re(_), children: _.title }),
+                  /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => Re(N), children: N.title }),
                   /* @__PURE__ */ s.jsxs("small", { children: [
-                    j[_.project_id] || _.project_id,
+                    j[N.project_id] || N.project_id,
                     /* @__PURE__ */ s.jsx("span", { className: "subtle-separator", children: "·" }),
-                    Kf[_.kind] || _.kind
+                    Kf[N.kind] || N.kind
                   ] })
                 ] }),
-                /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsxs("span", { className: `status ${_.status}`, children: [
+                /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsxs("span", { className: `status ${N.status}`, children: [
                   /* @__PURE__ */ s.jsx("i", {}),
-                  Nu[_.status]
+                  Nu[N.status]
                 ] }) }),
                 /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsxs("div", { className: "progress-cell", children: [
-                  /* @__PURE__ */ s.jsx("div", { className: "progress-track", children: /* @__PURE__ */ s.jsx("span", { style: { width: `${_.progress}%` } }) }),
+                  /* @__PURE__ */ s.jsx("div", { className: "progress-track", children: /* @__PURE__ */ s.jsx("span", { style: { width: `${N.progress}%` } }) }),
                   /* @__PURE__ */ s.jsxs("span", { children: [
-                    _.progress,
+                    N.progress,
                     "%"
                   ] })
                 ] }) }),
-                /* @__PURE__ */ s.jsx("td", { className: "muted nowrap", children: $i(_.created_at) }),
+                /* @__PURE__ */ s.jsx("td", { className: "muted nowrap", children: $i(N.created_at) }),
                 /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsxs("div", { className: "row-actions", children: [
-                  _.kind === "source_import" && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => ce("/imports"), children: "历史项目" }),
-                  /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => Re(_), children: "详情" }),
-                  _.status === "failed" && vt(_) && /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: m, onClick: () => void ge(_), children: "重试任务" }),
-                  _.result_ref && /* @__PURE__ */ s.jsx("button", { className: "icon-button", "aria-label": "下载任务结果", disabled: m, onClick: () => void de(_), children: /* @__PURE__ */ s.jsx(Rf, { size: 17 }) })
+                  N.kind === "source_import" && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => re("/imports"), children: "历史项目" }),
+                  /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => Re(N), children: "详情" }),
+                  N.status === "failed" && vt(N) && /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: m, onClick: () => void ge(N), children: "重试任务" }),
+                  N.result_ref && /* @__PURE__ */ s.jsx("button", { className: "icon-button", "aria-label": "下载任务结果", disabled: m, onClick: () => void de(N), children: /* @__PURE__ */ s.jsx(Rf, { size: 17 }) })
                 ] }) })
-              ] }, _.id)) })
+              ] }, N.id)) })
             ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
               /* @__PURE__ */ s.jsx(Un, { size: 42 }),
-              /* @__PURE__ */ s.jsx("h2", { children: re ? "没有符合条件的任务" : "还没有处理任务" }),
-              /* @__PURE__ */ s.jsx("p", { children: re ? "切换筛选条件查看其他任务。" : Qe ? "运行一次演示检查，验证提交、执行和结果保存的完整过程。" : "当前身份可查看项目任务，请等待加工人员提交。" }),
-              Qe && !re && /* @__PURE__ */ s.jsxs("button", { className: "button secondary", onClick: () => De(!0), children: [
+              /* @__PURE__ */ s.jsx("h2", { children: ce ? "没有符合条件的任务" : "还没有处理任务" }),
+              /* @__PURE__ */ s.jsx("p", { children: ce ? "切换筛选条件查看其他任务。" : Qe ? "运行一次演示检查，验证提交、执行和结果保存的完整过程。" : "当前身份可查看项目任务，请等待加工人员提交。" }),
+              Qe && !ce && /* @__PURE__ */ s.jsxs("button", { className: "button secondary", onClick: () => De(!0), children: [
                 "开始一次演示",
                 /* @__PURE__ */ s.jsx(Ol, { size: 16 })
               ] })
@@ -16513,7 +16503,7 @@ function Fv({ embedded: u = !1 }) {
               /* @__PURE__ */ s.jsx("h3", { children: "从真实记录开始，逐步形成可用知识" }),
               /* @__PURE__ */ s.jsx("p", { children: "现在可以配置模拟来源、预览字段和异常，再增量接入并核查证据。" })
             ] }),
-            /* @__PURE__ */ s.jsxs("button", { className: "button secondary", onClick: () => ce("/sources"), children: [
+            /* @__PURE__ */ s.jsxs("button", { className: "button secondary", onClick: () => re("/sources"), children: [
               "打开数据接入",
               /* @__PURE__ */ s.jsx(Ol, { size: 16 })
             ] })
@@ -16533,11 +16523,11 @@ function Fv({ embedded: u = !1 }) {
       /* @__PURE__ */ s.jsx("p", { children: "创建真实的后台任务，生成一份演示结果文件。不会读取原始工程资料。" }),
       /* @__PURE__ */ s.jsxs("label", { children: [
         "所属项目",
-        /* @__PURE__ */ s.jsx("select", { value: st, onChange: (_) => et(_.target.value), children: H == null ? void 0 : H.projects.filter((_) => _.can_run).map((_) => /* @__PURE__ */ s.jsx("option", { value: _.id, children: _.name }, _.id)) })
+        /* @__PURE__ */ s.jsx("select", { value: st, onChange: (N) => et(N.target.value), children: H == null ? void 0 : H.projects.filter((N) => N.can_run).map((N) => /* @__PURE__ */ s.jsx("option", { value: N.id, children: N.name }, N.id)) })
       ] }),
       /* @__PURE__ */ s.jsxs("label", { children: [
         "验证场景",
-        /* @__PURE__ */ s.jsxs("select", { value: ht, onChange: (_) => ie(_.target.value), children: [
+        /* @__PURE__ */ s.jsxs("select", { value: ht, onChange: (N) => ie(N.target.value), children: [
           /* @__PURE__ */ s.jsx("option", { value: "success", children: "正常完成" }),
           /* @__PURE__ */ s.jsx("option", { value: "fail_once", children: "临时失败后自动重试" }),
           /* @__PURE__ */ s.jsx("option", { value: "manual_failure", children: "失败后手动重试" })
@@ -16583,7 +16573,7 @@ function Fv({ embedded: u = !1 }) {
         /* @__PURE__ */ s.jsx(Rf, { size: 16 }),
         "下载演示结果"
       ] }),
-      (rt = Ue.result_links) == null ? void 0 : rt.map((_) => /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => ce(_.path), children: _.label }, _.path)),
+      (rt = Ue.result_links) == null ? void 0 : rt.map((N) => /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => re(N.path), children: N.label }, N.path)),
       Ue.status === "failed" && vt(Ue) && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: m, onClick: () => void ge(Ue), children: [
         /* @__PURE__ */ s.jsx(Bs, { size: 16 }),
         "重试任务"

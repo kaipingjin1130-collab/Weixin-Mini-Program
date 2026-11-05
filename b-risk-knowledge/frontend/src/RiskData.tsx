@@ -425,14 +425,11 @@ export function RiskData({ api }: { api: Api }) {
         </nav>
       </section>
 
-      <section className="panel">
+      <section className="panel history-toolbar-panel">
         <div className="history-toolbar">
           <form className="history-search" onSubmit={(e) => { e.preventDefault(); setQuery(input.trim()); setOffset(0); }}>
-            <label htmlFor="history-query">搜索</label>
-            <div>
-              <input id="history-query" value={input} onChange={(e) => setInput(e.target.value)} maxLength={100} placeholder={tab === 'reports' ? '报告名称或项目' : '问题描述、项目或报告'} />
-              <button className="button primary" disabled={loading}>搜索</button>
-            </div>
+            <input id="history-query" aria-label="搜索" value={input} onChange={(e) => setInput(e.target.value)} maxLength={100} placeholder={tab === 'reports' ? '报告名称或项目' : '问题描述、项目或报告'} />
+            <button className="button primary" disabled={loading}>搜索</button>
           </form>
           <label className="history-inline">项目筛选
             <select value={project} onChange={(e) => { setProject(e.target.value); setOffset(0); }}>
@@ -442,7 +439,7 @@ export function RiskData({ api }: { api: Api }) {
           </label>
           {documentFilter && <button className="button ghost" onClick={() => { setDocumentFilter(''); setOffset(0); }}>清除报告筛选</button>}
           {tab === 'findings' && <label className="history-inline"><input type="checkbox" checked={pendingOnly} onChange={(e) => setPendingOnly(e.target.checked)} />只看待确认修改</label>}
-          {tab === 'findings' && <button className="button secondary" onClick={() => setShowFields((x) => !x)}>显示字段（{shownOptionCount}/{visibleOptionCount}）</button>}
+          {tab === 'findings' && <button className="button secondary" onClick={() => setShowFields((x) => !x)}>{summary ? `显示字段（${shownOptionCount}/${visibleOptionCount}）` : '显示字段'}</button>}
           {tab === 'findings' && <button className={expandAll ? 'button primary' : 'button secondary'} onClick={toggleExpandAll}>{expandAll ? '收起全部字段' : '展开全部字段'}</button>}
         </div>
         {showFields && tab === 'findings' && <div className="history-fieldpicker" role="group" aria-label="选择显示字段">

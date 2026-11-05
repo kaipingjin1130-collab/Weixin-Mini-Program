@@ -13,3 +13,16 @@
 .history-th{display:inline-flex;align-items:center;gap:4px;max-width:100%;min-width:0}.history-th-label{overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.history-col-hide{border:none;background:transparent;color:#94a3b8;font-size:15px;line-height:1;cursor:pointer;padding:0 2px;border-radius:4px}.history-col-hide:hover{color:#dc2626;background:#fee2e2}.history-col-hide:focus-visible{outline:2px solid #2563eb;outline-offset:2px}.history-fieldsep{width:100%;font-size:12px;color:#94a3b8;padding:2px 0 0}
 .history-table-wrap{max-height:64vh;overflow:auto}.history-table thead th{position:sticky;top:0;z-index:2;background:#f8fafc;border-bottom:1px solid #e2e8f0}.history-col-head{position:relative}.history-col-resize{position:absolute;top:0;right:0;bottom:0;width:7px;cursor:col-resize;background:transparent;z-index:3;touch-action:none}.history-col-resize:hover,.history-col-resize:active{background:#93c5fd}.history-actions{display:flex;gap:4px;align-items:center}.history-actions .icon-button{padding:6px;min-width:0;line-height:1}.history-actions .icon-button svg{display:block}.toprow-tabs{display:flex;gap:8px;flex-wrap:wrap;margin-right:8px;align-items:center}
 .history-resizing,.history-resizing *{cursor:col-resize!important;user-select:none!important}.history-resizing .history-col-resize{background:#93c5fd}
+.risk-data .history-toolbar-panel{padding:14px 20px}
+.risk-data .history-toolbar{gap:12px;align-items:center}
+.risk-data .history-toolbar .history-search{display:flex;gap:8px;margin:0;flex:1 1 320px;align-items:center}
+.risk-data .history-toolbar .history-search input{flex:1;min-width:0;padding:10px 12px;border:1px solid #cbd5e1;border-radius:8px;background:#fff;color:#172e28;font:inherit}
+.risk-data .history-toolbar .button{padding:9px 13px}
+.risk-data .history-toolbar .history-inline{font-size:13px}
+.risk-data .history-toolbar .history-inline select{padding:9px 10px}
+.risk-data .history-drag-tip{margin:6px 0 0;font-size:12px;color:#94a3b8}
+.risk-data .history-toolbar-panel{padding:12px 18px}
+.risk-data .history-toolbar{gap:10px;flex-wrap:wrap}
+.risk-data .history-toolbar .history-search input{padding:9px 12px}
+.risk-data .history-toolbar .button{padding:8px 12px}
+.risk-data .history-drag-tip{margin:4px 0 0;font-size:11px}
