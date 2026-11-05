@@ -1,6 +1,6 @@
 import { Fragment, useEffect, useMemo, useRef, useState, type PointerEvent as ReactPointerEvent } from 'react';
 import { ChevronDown, ChevronUp, Image as ImageIcon, Pencil } from 'lucide-react';
-import { apiFetch } from './platform';
+import { apiFetch, inPlatform } from './platform';
 import './risk-data.css';
 
 type Api = <T>(url: string, options?: RequestInit) => Promise<T>;
@@ -389,6 +389,10 @@ export function RiskData({ api }: { api: Api }) {
       setDetail(d);
     } catch (e) { setDetailError((e as Error).message); }
   }
+  function openReport(documentId: string) {
+    const base = inPlatform ? '/quality/b' : '';
+    window.open(base + '/api/v1' + READER + '/documents/' + encodeURIComponent(documentId) + '/view', '_blank', 'noopener');
+  }
   async function download(source?: { document_id: string; original_name: string }) {
     if (!detail) return;
     try {
@@ -507,17 +511,19 @@ export function RiskData({ api }: { api: Api }) {
                         if (key === '_photos') return <td key={key} className="history-cell history-cell-nowrap">
                           {item.image_count ? <button className="button ghost" onClick={() => setPhotoItem(item)}>查看 {item.image_count} 张</button> : <span className="muted">—</span>}
                         </td>;
-                        if (key === '_source') return <td key={key} className="history-cell history-cell-nowrap" title={item.original_name || ''}>{text(item.original_name, 22)}</td>;
+                        if (key === '_source') return <td key={key} className="history-cell history-cell-nowrap" title={item.original_name || ''}>
+                          <button type="button" className="history-link" onClick={(e) => { e.stopPropagation(); openReport(item.document_id); }}>{text(item.original_name, 26)}</button>
+                        </td>;
                         if (key === '_status') return <td key={key} className="history-cell history-cell-nowrap">{item.draft_id ? <span className="history-badge">待确认</span> : text(item.review_state, 14)}</td>;
                         const value = (item as unknown as Record<string, string | null>)[key];
                         const isDesc = key === 'problem_description';
                         const isShort = ['project_name', 'engineering_project_name', 'inspection_date', 'inspection_location', 'source_category', 'source_grade', 'hazard_category'].includes(key);
-                        return <td key={key} title={value || ''} className={isDesc ? 'history-cell history-cell-clamp' : isShort ? 'history-cell history-cell-nowrap' : 'history-cell'}>{isDesc ? (value || '—') : text(value, 80)}</td>;
+                        return <td key={key} title={value || ''} className={isDesc ? 'history-cell history-cell-wrap' : isShort ? 'history-cell history-cell-nowrap' : 'history-cell'}>{isDesc ? (value || '—') : text(value, 80)}</td>;
                       })}
                     </tr>
                     {isExpanded && <tr className="history-expanded"><td colSpan={columns.length}>
                       <dl className="history-fields history-fields-all">{fields.map((f) => <div key={f.key}><dt>{f.label}</dt><dd>{(item as unknown as Record<string, string | null>)[f.key] || '—'}</dd></div>)}</dl>
-                      <p className="muted">来源报告：{text(item.original_name, 100)}｜状态：{text(item.review_state, 20)}{item.draft_id ? '｜有待确认修改' : ''}</p>
+                      <p className="muted">来源报告：<button type="button" className="history-link" onClick={(e) => { e.stopPropagation(); openReport(item.document_id); }}>{text(item.original_name, 100)}</button>｜状态：{text(item.review_state, 20)}{item.draft_id ? '｜有待确认修改' : ''}</p>
                       <div className="history-expanded-photos"><h4>关联照片（{item.image_count ?? 0}）</h4><PhotoStrip api={api} findingId={item.id} /></div>
                     </td></tr>}
                   </Fragment>;
@@ -540,7 +546,7 @@ export function RiskData({ api }: { api: Api }) {
               <td>{text(r.original_name, 60)}</td><td>{text(r.project_name, 30)}</td><td>{text(r.inspection_date, 20)}</td><td>{r.findings}</td>
               <td className="history-actions">
                 <button className="button secondary" onClick={() => { setDocumentFilter(r.document_id); setTab('findings'); setOffset(0); }}>查看问题</button>
-                <button className="button ghost" onClick={() => { void apiFetch('/api/v1' + READER + '/documents/' + encodeURIComponent(r.document_id) + '/original').then(async (resp) => { if (!resp.ok) throw Error('原件暂不可用'); const url = URL.createObjectURL(await resp.blob()); const a = document.createElement('a'); a.href = url; a.download = r.original_name; a.click(); setTimeout(() => URL.revokeObjectURL(url), 1000); }).catch((e) => setError(e.message)); }}>原件</button>
+                <button className="button ghost" onClick={() => openReport(r.document_id)}>浏览报告</button>
               </td>
             </tr>)}
             {!shownReports.length && !loading && !error && <tr><td colSpan={5}>没有匹配的历史报告。</td></tr>}

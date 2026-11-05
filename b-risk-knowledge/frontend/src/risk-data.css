@@ -26,3 +26,6 @@
 .risk-data .history-toolbar .history-search input{padding:9px 12px}
 .risk-data .history-toolbar .button{padding:8px 12px}
 .risk-data .history-drag-tip{margin:4px 0 0;font-size:11px}
+.history-cell-wrap{white-space:pre-wrap;overflow-wrap:anywhere;word-break:break-word;line-height:1.55;max-height:none}
+.history-link{display:block;max-width:100%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;background:none;border:0;padding:0;color:#176b53;font:inherit;text-align:left;cursor:pointer;text-decoration:underline;text-underline-offset:3px}
+.history-link:hover{color:#0f4f3d}
