@@ -36,12 +36,12 @@
 合同样例为模拟数据。仓库不包含原始报告、业务数据集、Python环境或临时下载文件。文档中的本机资料路径是来源参考，其他机器须配置自己的路径。
 
 校验方法及锁定依赖见合同目录README。对已有成果修改前，先阅读开发总索引和对应任务包，不覆盖历史人工修改。
-# 风险数据只读接入
+# 风险数据（历史报告可编辑核验）
 
-本机入口：`http://127.0.0.1:18771/quality/#/b/records`，或“知识管理 → 风险数据”。支持搜索、分页、14个业务字段、原文证据、关联图片和原件下载。只取每份报告最新解析版本；条目数不等于去重隐患数，未核验数据不作为人工确认成果。
+本机入口：`http://127.0.0.1:18771/quality/#/b/records`，或“知识管理 → 风险数据”。支持“历史报告 / 问题条目 / 修改日志”三个视图：按项目与关键词筛选、勾选显示字段、编辑14个业务字段、草稿批量确认后覆盖解析成果库、修改日志可追溯。详见 [历史报告核验说明](platform-module/HISTORY-REVIEW.md)。
 
-现有系统仍连接 `fusion`；独立读取 `risk_history_20261102_v4` 和 `.local/history-storage`。读取端仅允许本机融合测试管理员，使用独立 `ab_history_reader` 数据库账号，仅授予8张相关表的 SELECT，默认只读事务，查询限时5秒、锁等待限时0.5秒，连接池最多2个连接。不运行解析库迁移、初始化或后台任务。页面手动刷新数据，不后台轮询。工作台项目筛选不映射到此管理员全库核对入口。
+读取：现有系统仍连接 `fusion`；独立读取 `risk_history_20261102_v4` 和 `.local/history-storage`。读取端仅允许本机融合测试管理员，使用独立 `ab_history_reader` 数据库账号，仅授予8张相关表的 SELECT，默认只读事务，查询限时5秒、锁等待限时0.5秒，连接池最多2个连接。不运行解析库迁移、初始化或后台任务。
 
-本机连接及身份白名单在 `b-risk-knowledge/.local/history-reader.json`，包含本地凭据，不提交或上传。初始化脚本为 `platform-module/tools/setup_history_reader.py`，沿用现有项目 Python 依赖运行；配置存在时不重置凭据。新增环境需先独立配置只读来源，不能将网页主库改为解析库。
+写入：人工修改先保存为待确认草稿（`history_review_drafts`），批量确认后覆盖解析成果库 `history_findings` 对应行，并写 `history_review_logs`（保存/确认/放弃/冲突均记录前后值与操作人）。问题描述不能为空；草稿保存后值被他人改动的条目会转冲突、不覆盖；不新建/删除隐患行，不迁移旧确认。写入连接在 `b-risk-knowledge/.local/history-review.json`（本地凭据，不提交）；服务器用 `platform-module/tools/setup_history_editor.py` 生成最小权限 `ab_history_editor` 角色与复核表。
 
-验证：`b-risk-knowledge/tests/test_history_reader.py` 的6项只读集成检查通过（无配置时跳过）；前端 TypeScript 与两种入口构建通过。真实平台 HTTP 验证管理员200、普通成员403、未登录401、同源写请求405；浏览器验证搜索命中/空结果、分页、14字段、证据和图片加载，桌面及390px移动视口已查看。独立“解析成果”页面及入口已移除，查看功能统一归入“风险数据”。
+验证：`b-risk-knowledge/tests/test_history_reader.py` 的6项只读集成检查通过；`b-risk-knowledge/tests/test_history_review.py` 的5项（列表/筛选/草稿/批量确认/冲突与日志）通过。前端 TypeScript 与两种入口构建通过；`platform-module/build_frontend.py` 已重新产出 `platform-module/b-web` 与 embedded 资源，内嵌包包含“历史报告/批量确认”功能。

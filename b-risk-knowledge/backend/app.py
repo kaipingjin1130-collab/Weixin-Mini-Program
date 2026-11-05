@@ -87,7 +87,13 @@ async def unexpected_error(request, exc):
 def job_dto(run):
     fields = ["id", "kind", "title", "project_id", "status", "attempts", "progress",
               "result_ref", "error", "row_version", "created_at", "updated_at"]
-    return {**{k: getattr(run, k) for k in fields}, "is_demo": run.kind == "demo_check"}
+    links=[]
+    result=run.payload.get('result',{}) if run.status=='succeeded' else {}
+    if run.kind=='retrospective_generation' and result.get('id'):
+        links=[{'label':'查看复盘草稿','path':'/retrospectives/'+result['id']}]
+    elif run.kind=='training_generation':
+        links=[{'label':'查看题目候选 '+str(n+1),'path':'/training/questions/'+x['id']} for n,x in enumerate(result.get('items',[]))]
+    return {**{k: getattr(run, k) for k in fields}, "is_demo": run.kind == "demo_check",'result_links':links}
 
 
 
@@ -103,8 +109,10 @@ def health():
 
 @app.get("/api/v1/me")
 def me(actor: Actor = Depends(current_actor)):
+    from .model_access import can_manage_models
     projects = sorted(actor.grants) if actor.permissions is not None else actor.projects()
     return {"id": actor.id, "name": actor.name, "subject": actor.subject, "mode": settings.auth_mode,
+            "can_manage_models": can_manage_models(actor),
             "projects": [{"id": p, "name": getattr(actor, 'project_names', {}).get(p, PROJECTS.get(p, p)), "roles": sorted(actor.roles.get(p, [])),
                           "permissions": sorted(actor.permissions.get(p, set())) if actor.permissions is not None else None,
                           "can_run": actor.can("knowledge.process", p), "can_manage": actor.can("manage", p)}
@@ -176,6 +184,10 @@ def asset_content(asset_id: str, actor: Actor = Depends(current_actor)):
         authorize(actor, ('imports.read' if is_package else 'knowledge.process') if enabled() else 'read', asset.project_id)
         from .modules.task_packages.service import guard_asset
         guard_asset(db, asset_id, actor)
+        from .modules.ingestion.package_projection import guard_snapshot_asset
+        guard_snapshot_asset(db, asset_id, actor)
+        from .modules.standards.service import guard_asset as guard_standard_asset
+        guard_standard_asset(db, asset, actor)
         if asset.mime_type in {'text/csv', 'application/json', 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'}:
             if not (enabled() and is_package):
                 authorize(actor, 'knowledge.process', asset.project_id)
@@ -266,11 +278,19 @@ app.include_router(platform_upload_router)
 from .platform_archives import router as platform_archives_router
 app.include_router(platform_archives_router)
 app.include_router(ingestion_router)
+from .modules.scenes.api import router as scenes_router
+app.include_router(scenes_router)
+from .modules.standards.api import router as standards_router
+app.include_router(standards_router)
+from .modules.workflows.api import router as workflows_router
+app.include_router(workflows_router)
 from .modules.retrieval.api import router as retrieval_router, integration_router
 app.include_router(retrieval_router)
 app.include_router(integration_router)
 from .modules.extraction.api import router as extraction_router
 app.include_router(extraction_router)
+from .modules.extraction.generation_jobs import router as generation_jobs_router
+app.include_router(generation_jobs_router)
 from .modules.knowledge.api import router as knowledge_router
 app.include_router(knowledge_router)
 from .modules.task_packages.api import router as package_router, integration_router as package_integration_router
@@ -282,3 +302,11 @@ from .modules.training.api import router as training_router
 app.include_router(training_router)
 from .integrations.a.imports import router as a_import_router
 app.include_router(a_import_router)
+from .modules.history_reports.api import router as history_reports_router
+app.include_router(history_reports_router)
+from .modules.history_reports.media_api import router as history_media_router
+app.include_router(history_media_router)
+from .history_reader import router as history_reader_router
+app.include_router(history_reader_router)
+from .history_review import router as history_review_router
+app.include_router(history_review_router)
