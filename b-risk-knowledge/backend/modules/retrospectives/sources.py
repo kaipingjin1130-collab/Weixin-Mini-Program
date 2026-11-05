@@ -36,7 +36,8 @@ def context(db, revision_id, actor, current=False, action='knowledge.read'):
         descriptors.append(SimpleNamespace(id=e.id, evidence_type=e.kind, relation_confidence='anchored',
             asset_id=e.asset_id, locator=e.locator, text=e.text, document_id=None, reference=e.reference))
     source = SimpleNamespace(id=revision.id, retrospective_revision_id=revision.id, record_id=parent.id,
-        version=revision.version, effective_fields={'description': revision.summary}, raw_fields={}, provenance=revision.sources)
+        version=revision.version, effective_fields={'description': revision.summary}, raw_fields={}, provenance=revision.sources,
+        source_version_ids=revision.sources.get('record_version_ids', []))
     row = SimpleNamespace(id=parent.id, project_id=parent.project_id, current_version=parent.current_revision)
     return source, row, descriptors
 

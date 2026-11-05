@@ -74,7 +74,7 @@ def create_release(data, actor, key, request_id):
         ident = new_id()
         adapter = get_embedding(data.embedding_model)
         config = {'model': adapter.model, 'model_version': adapter.model_version, 'dimension': adapter.dimension,
-                  'chunk_strategy': STRATEGY, 'tokenizer': TOKENIZER, 'is_mock': True}
+                  'chunk_strategy': STRATEGY, 'tokenizer': TOKENIZER, 'is_mock': adapter.model.startswith('mock-')}
         run = ProcessingRun(kind='release_build', object_id=ident, project_id=data.project_id, actor_id=actor.id,
                             title=f'发布索引构建 · {len(data.revision_ids)}张卡片', idempotency_key=key,
                             input_hash=digest, payload={**data.model_dump(), 'release_id': ident})
@@ -182,4 +182,4 @@ def public_query(actor, project=None, scene=None, card_type=None, include_histor
 def card_dto(item, revision, release):
     return {'id': item.id, 'revision_id': revision.id, 'version': revision.version, 'title': revision.content['title'],
             'type': item.type, 'project_id': item.project_id, 'scene_code': item.scene_code, 'object_type': item.object_type,
-            'scope': item.scope, 'release_id': release.id, 'state': 'published', 'is_mock': True, 'origin_type': 'retrospective' if item.retrospective_revision_id else 'historical'}
+            'scope': item.scope, 'release_id': release.id, 'state': 'published', 'is_mock': revision.content.get('is_mock',True), 'origin_type': 'retrospective' if item.retrospective_revision_id else 'historical'}

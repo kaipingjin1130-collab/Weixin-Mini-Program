@@ -1,0 +1,7 @@
+# Isolated from the platform environment. Versions checked 2026-10-30.
+deepseek-harness-sdk==0.2.1rc2
+deepseek-harness-runtime-bin==0.2.1rc2
+haystack-ai==3.4.1
+mcp==2.3.0
+docling==2.145.0
+docetl==0.3.0

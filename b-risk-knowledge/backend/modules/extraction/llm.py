@@ -17,6 +17,25 @@ from .schemas import ModelSettings
 TRANSPORT=None  # Test-only injectable transport; never exposed by an API.
 
 
+def local_model_proxy():
+    """Reuse an enabled loopback Windows proxy for local development only."""
+    if TRANSPORT is not None or os.name != 'nt' or settings.environment != 'development':
+        return None
+    from urllib.request import getproxies_registry
+    candidate = getproxies_registry().get('https')
+    if not candidate:
+        return None
+    try:
+        parsed = urlsplit(candidate)
+        if (parsed.scheme == 'http' and parsed.hostname in {'127.0.0.1', '::1', 'localhost'}
+                and parsed.port and not parsed.username and not parsed.password
+                and not parsed.query and not parsed.fragment and parsed.path in {'', '/'}):
+            return candidate
+    except ValueError:
+        pass
+    return None
+
+
 def config_path():
     if settings.auth_mode == 'a':
         return settings.storage.parent / 'model.json'
@@ -81,9 +100,19 @@ def structured(schema,system,payload,expected=None):
     config=require_config(expected)
     body={'model':config.model,'messages':[{'role':'system','content':system+'\n只返回JSON，严格遵守以下Schema：\n'+json.dumps(schema.model_json_schema(),ensure_ascii=False)},
         {'role':'user','content':json.dumps(payload,ensure_ascii=False)}],'response_format':{'type':'json_object'},'temperature':0.2,'max_tokens':config.max_tokens,'stream':False}
+    from .presets import provider_id
+    provider = provider_id(config.base_url)
+    if provider == 'openai':
+        body['max_completion_tokens'] = body.pop('max_tokens')
+        body.pop('temperature')
+        body['store'] = False
+    elif provider == 'deepseek' and config.model in {'deepseek-flash', 'deepseek-v4-pro'}:
+        body['thinking'] = {'type': 'disabled'}
     try:
-        with httpx.Client(timeout=httpx.Timeout(config.timeout_seconds,connect=10),follow_redirects=False,trust_env=False,transport=TRANSPORT) as client:
+        with httpx.Client(timeout=httpx.Timeout(config.timeout_seconds,connect=10),follow_redirects=False,trust_env=False,transport=TRANSPORT,proxy=local_model_proxy()) as client:
             with client.stream('POST',config.base_url+'/chat/completions',headers={'Authorization':'Bearer '+config.api_key.get_secret_value()},json=body) as response:
+                if response.status_code in {401,403}:raise Problem(502,'MODEL_AUTH_FAILED','模型服务认证失败，请核对该服务的 API Key 和模型使用权限。')
+                if response.status_code == 429:raise Problem(429,'MODEL_RATE_OR_QUOTA_LIMIT','模型额度不足或请求过于频繁，请检查服务账户后重试。')
                 if response.status_code!=200:raise Problem(502,'MODEL_HTTP_ERROR','模型服务拒绝或暂未完成请求，请核对服务地址、模型、额度与密钥。')
                 raw=bytearray()
                 for chunk in response.iter_bytes():
@@ -97,8 +126,14 @@ def structured(schema,system,payload,expected=None):
         usage=response.get('usage') or {}
         return value,{'model_ref':config.model,'provider':'chat-completions-compatible','usage':{k:usage[k] for k in ['prompt_tokens','completion_tokens','total_tokens'] if isinstance(usage.get(k),int)}}
     except Problem:raise
-    except (httpx.HTTPError,ValueError,KeyError,IndexError,TypeError,ValidationError):
-        raise Problem(502,'MODEL_OUTPUT_INVALID','模型请求失败或输出不符合结构，未保存为有效知识；请缩小范围或核对兼容接口。')
+    except httpx.ConnectTimeout:
+        raise Problem(504,'MODEL_CONNECT_TIMEOUT','无法连接模型服务，请检查网络和本机代理是否可用；尚未取得模型输出。')
+    except httpx.TimeoutException:
+        raise Problem(504,'MODEL_RESPONSE_TIMEOUT','等待模型响应超时，请稍后重试或在高级设置中增加超时时间；本次未保存有效结果。')
+    except httpx.HTTPError:
+        raise Problem(502,'MODEL_NETWORK_ERROR','模型网络连接失败，请检查网络、代理及服务地址；本次未保存有效结果。')
+    except (ValueError,KeyError,IndexError,TypeError,ValidationError):
+        raise Problem(502,'MODEL_OUTPUT_INVALID','模型已响应，但输出不符合所需结构，未保存为有效知识；请缩小范围或核对兼容接口。')
 
 
 class Grade(Strict):

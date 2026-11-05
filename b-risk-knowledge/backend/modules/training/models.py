@@ -46,6 +46,7 @@ class LearningPackage(Base):
     title: Mapped[str] = mapped_column(String(200))
     project_id: Mapped[str] = mapped_column(String(128), index=True)
     role_scope: Mapped[list] = mapped_column(JSONB)
+    audience_subjects: Mapped[list] = mapped_column(JSONB, default=list)
     state: Mapped[str] = mapped_column(String(32), default='draft')
     row_version: Mapped[int] = mapped_column(Integer, default=1)
     created_at: Mapped[datetime] = mapped_column(DateTime(timezone=True), default=utcnow, index=True)

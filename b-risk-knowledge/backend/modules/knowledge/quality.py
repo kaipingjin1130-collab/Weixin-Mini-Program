@@ -16,6 +16,8 @@ def ensure_issues(db, version):
                 break
         if rule == 'MISSING_DESCRIPTION':
             severity = 'error'
+        if '治理候选尚未人工核实' in message:
+            rule, field, severity = 'GOVERNANCE_REVIEW_REQUIRED', 'source', 'error'
         db.execute(insert(QualityIssue).values(id=new_id(), record_version_id=version.id, rule_code=rule, field=field,
                    severity=severity, message=message, status='open', row_version=1, created_at=utcnow())
                    .on_conflict_do_nothing(index_elements=['record_version_id', 'rule_code']))

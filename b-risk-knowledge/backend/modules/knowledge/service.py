@@ -14,6 +14,8 @@ def source_context(db, version_id, actor, action='knowledge.read', current=False
         raise Problem(404, 'SOURCE_VERSION_NOT_FOUND', '来源版本不存在。')
     row = db.get(SourceRecord, version.record_id)
     authorize(actor, action, row.project_id)
+    from ..ingestion.package_projection import guard_projected
+    guard_projected(db, version, actor, action)
     if current and row.current_version != version.version:
         raise Problem(409, 'SOURCE_VERSION_CHANGED', '来源已更新，请使用当前版本重新生成。')
     asset = db.get(FileAsset, version.provenance.get('input_asset_id'))

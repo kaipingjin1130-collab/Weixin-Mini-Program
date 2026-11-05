@@ -19,3 +19,6 @@ tools_finish_copy.py
 *.tar.gz
 checks-passed.txt
 *.env
+**/pip-*/
+pytest-cache-files-*/
+pytest-of-*/

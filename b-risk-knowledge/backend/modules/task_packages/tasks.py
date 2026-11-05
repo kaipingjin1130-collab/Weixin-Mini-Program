@@ -92,6 +92,8 @@ def process_package(run_id: str):
             stream = db.get(TaskStream, package.stream_id)
             if package.package_version > stream.current_ready_version:
                 stream.current_ready_version, stream.current_package_id = package.package_version, ident
+            from ..ingestion.package_projection import project_package
+            project_package(db, package)
             run.status, run.progress, run.error = 'succeeded', 100, None
             run.row_version += 1
             run.updated_at = utcnow()

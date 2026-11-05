@@ -10,7 +10,8 @@ def instant(value):
     return datetime.fromisoformat(value.replace('Z', '+00:00')) if value else None
 
 
-def build_task(snapshot):
+def build_task(snapshot, template=None):
+    template = template or TEMPLATE
     events = snapshot['events']
     known, unknown = [], []
     for pos, event in enumerate(events):
@@ -22,7 +23,7 @@ def build_task(snapshot):
     ends = [e for e in known if e['event_type'] == 'task_completed' and e['related_object_id'] == snapshot['task_id']]
     if len(starts) == len(ends) == 1 and instant(ends[0]['occurred_at']) >= instant(starts[0]['occurred_at']):
         intervals.append({'name': '开始至结束的记录时间差', 'seconds': (instant(ends[0]['occurred_at'])-instant(starts[0]['occurred_at'])).total_seconds(), 'event_refs': [starts[0]['event_id'], ends[0]['event_id']]})
-    for step in TEMPLATE['steps']:
+    for step in template['steps']:
         matches = [e for e in events if e['event_type'] == step['event_type'] and
                    (e['related_object_id'] == snapshot['task_id'] if step['scope'] == 'task' else e['related_object_id'] in {i['issue_id'] for i in snapshot['issues']})]
         na = step['scope'] == 'issue' and not snapshot['issues'] and snapshot.get('data_completeness', {}).get('issues') == 'complete'
@@ -37,7 +38,7 @@ def build_task(snapshot):
         findings.append({'id': 'review-rejections', 'type': 'recorded_rework', 'claim_kind': 'fact',
             'text': f'发现{len(rejected)}条复核退回记录。来源摘录：'+'；'.join(str(e.get('payload', {}).get('note') or '未提供退回说明')[:500] for e in rejected[:5]),
             'event_refs': [e['event_id'] for e in rejected[:100]], 'evidence_refs': ['event:'+e['event_id'] for e in rejected[:100]], 'review_state': 'unconfirmed'})
-    rule = TEMPLATE['deadline_rule']
+    rule = template['deadline_rule']
     applicable = snapshot['scene_code'] in rule['applicable_scenes']
     for issue in snapshot['issues']:
         related = [e for e in events if e['related_object_id'] == issue['issue_id'] and e['event_type'] in {'review_accepted', 'review_rejected', 'rectification_submitted'}]

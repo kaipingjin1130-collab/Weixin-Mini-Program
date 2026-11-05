@@ -16,6 +16,16 @@ from .schemas import Content, LearnerQuestion
 def sources(db, revision, actor, action='training.learn'):
     output=[]
     for ident in revision.source_versions:
+        if ident.startswith('work:'):
+            from ..workflows.models import WorkRevision
+            from ..workflows.service import guard, check_scope
+            work = db.get(WorkRevision, ident[5:])
+            if not work or work.kind != 'question' or work.state != 'published':
+                raise Problem(410,'GUIDE_QUESTION_UNAVAILABLE','指导书题目来源已停用或更新。')
+            check_scope(work,actor,action)
+            guard(db,work,actor)
+            # No question body or answer is returned to learner-facing serializers.
+            continue
         output.append(public_revision(db, ident, actor, allow_history=True, action=action))
     return output
 
@@ -34,7 +44,7 @@ def validate(content, kind):
     ids=[o.id for o in content.options]
     if kind in {'single_choice','multiple_choice'}:
         selected=content.answer.get('selected',[])
-        if len(ids)<2 or len(set(ids))!=len(ids) or not isinstance(selected,list) or not selected or not all(isinstance(v,str) for v in selected) or not set(selected)<=set(ids) or len(set(selected))!=len(selected) or (kind=='single_choice' and len(selected)!=1) or content.rubric:
+        if len(ids)<2 or len(set(ids))!=len(ids) or len({o.text.strip() for o in content.options})!=len(ids) or not isinstance(selected,list) or not selected or not all(isinstance(v,str) for v in selected) or not set(selected)<=set(ids) or len(set(selected))!=len(selected) or (kind=='single_choice' and len(selected)!=1) or (kind=='multiple_choice' and len(selected)<2) or content.rubric:
             raise Problem(422,'INVALID_QUESTION','客观题须有不重复选项和合法答案；单选题仅一个正确选项。')
     elif content.options or not content.rubric or sum(r.points for r in content.rubric)!=100:
         raise Problem(422,'INVALID_RUBRIC','案例问答不设选项，评分要点分值之和必须为100。')
@@ -45,7 +55,7 @@ def dto(parent,revision,db=None):
         LearningPackageItem.question_revision_id==revision.id,LearningPackage.state=='published').limit(1))) if db is not None else False
     return {'id':parent.id,'type':parent.type,'title':revision.stem[:200],'stem':revision.stem,'project_id':parent.project_id,
         'scene_code':parent.scene_code,'revision_id':revision.id,'version':revision.version,'row_version':parent.row_version,
-        'state':revision.state,'source_versions':revision.source_versions,'model_ref':revision.model_ref,'is_mock':True,
+        'state':revision.state,'source_versions':revision.source_versions,'model_ref':revision.model_ref,'is_mock':revision.model_ref=='local-question-template-v1',
         'object_type':'question_revision','published':published}
 
 
@@ -59,12 +69,18 @@ def generate(data,actor,request_id):
             authorize(actor,'training.manage',item.project_id)
             prepared.append((item,revision))
         result=[]
+        model_fingerprint = None
+        if data.generation_mode == 'llm':
+            from ..extraction.llm import require_config, metadata
+            model_fingerprint = fingerprint(metadata(require_config()))
         for item,source in prepared:
             facts=source.content['facts']
             for kind in data.types:
-                if kind=='multiple_choice' and len(facts)<2:
+                if data.generation_mode=='mock' and kind=='multiple_choice' and len(facts)<2:
                     raise Problem(422,'INSUFFICIENT_QUESTION_EVIDENCE','多选演示题至少需要两条审核事实，请选择复盘经验等更完整来源。')
                 key=fingerprint({'source':source.id,'kind':kind,'template':'local-question-v1'})
+                if data.generation_mode == 'llm':
+                    key=fingerprint({'source':source.id,'kind':kind,'prompt':'grounded-question-v1','model':model_fingerprint})
                 db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:k,0))'),{'k':'question:'+key})
                 prior=db.scalar(select(TrainingQuestion).where(TrainingQuestion.generation_key==key))
                 if prior:
@@ -82,15 +98,20 @@ def generate(data,actor,request_id):
                 stem=('依据已审核来源，选择记录中实际记载的一项。' if kind=='single_choice' else '依据已审核来源，选出记录中记载的所有要点。' if kind=='multiple_choice' else '概括此案例记录中的风险或检查要点；只根据材料回答，不推断未记录的处置。')+'\n案例：'+source.content['title']
                 content=Content(stem=stem,options=[] if kind=='case_answer' else options,
                     answer={'selected':[o['id'] for o in options[:len(selected)]]} if kind!='case_answer' else {'text':'；'.join(f['text'] for f in facts[:2])},rubric=rubric)
+                model_ref = 'local-question-template-v1'
+                if data.generation_mode == 'llm':
+                    from ..extraction.generation import training_question
+                    content,meta = training_question(kind,source.content,model_fingerprint)
+                    model_ref = meta['model_ref']
                 validate(content,kind)
                 parent=TrainingQuestion(generation_key=key,project_id=item.project_id,type=kind,scene_code=item.scene_code,scope={'project_id':item.project_id})
                 db.add(parent);db.flush()
                 revision=QuestionRevision(question_id=parent.id,version=1,stem=content.stem,options=[o.model_dump() for o in content.options],
-                    answer=content.answer,rubric=[r.model_dump() for r in content.rubric],source_versions=[source.id],model_ref='local-question-template-v1')
+                    answer=content.answer,rubric=[r.model_dump() for r in content.rubric],source_versions=[source.id],model_ref=model_ref)
                 db.add(revision);db.flush()
                 audit(db,actor,'training_question_generated','question',parent.id,item.project_id,request_id,1)
                 result.append({**dto(parent,revision),'replayed':False})
-        return {'items':result,'generation_mode':'mock_template','note':'题目来自本地演示模板，仍需教员逐题核对后审核。'}
+        return {'items':result,'generation_mode':'llm' if data.generation_mode == 'llm' else 'mock_template','note':'题目候选须由教员逐题核对答案、解析和证据后审核。'}
 
 
 def edit(ident,data,actor,request_id):
@@ -144,7 +165,8 @@ def create_package(data,actor,request_id):
         existing=db.scalars(select(LearningPackage).where(LearningPackage.package_key==data.package_key)).all()
         if any(p.project_id!=data.project_id for p in existing):raise Problem(403,'PACKAGE_SCOPE_CHANGED','学习包组不能跨项目。')
         if any(p.version==data.version for p in existing):raise Problem(409,'PACKAGE_VERSION_EXISTS','该学习包版本已存在。')
-        package=LearningPackage(title=data.title,package_key=data.package_key,version=data.version,project_id=data.project_id,role_scope=data.role_scope)
+        if any(not s.strip() or len(s)>128 for s in data.audience_subjects):raise Problem(422,'INVALID_AUDIENCE','学习人员账号标识不合法。')
+        package=LearningPackage(title=data.title,package_key=data.package_key,version=data.version,project_id=data.project_id,role_scope=data.role_scope,audience_subjects=sorted(set(data.audience_subjects)))
         db.add(package);db.flush()
         for n,ident in enumerate(data.question_revision_ids):
             rev=db.get(QuestionRevision,ident)
@@ -156,7 +178,7 @@ def create_package(data,actor,request_id):
 
 
 def package_dto(package,count):
-    return {k:getattr(package,k) for k in ['id','package_key','version','title','project_id','role_scope','state','row_version']}|{'question_count':count,'is_mock':True}
+    return {k:getattr(package,k) for k in ['id','package_key','version','title','project_id','role_scope','audience_subjects','state','row_version']}|{'question_count':count,'is_mock':True}
 
 
 def publish(ident,data,actor,request_id):
@@ -172,6 +194,7 @@ def publish(ident,data,actor,request_id):
 
 
 def learner_scope(package,actor):
+    if package.audience_subjects and actor.subject not in package.audience_subjects:raise Problem(403,'AUDIENCE_DENIED','当前账号不在此学习包指定人员范围内。')
     authorize(actor,'training.learn',package.project_id)
     if actor.permissions is None and not set(package.role_scope)&actor.roles.get(package.project_id,set()):raise Problem(403,'ROLE_SCOPE_DENIED','当前项目角色不在学习包适用范围内。')
     if package.state!='published':raise Problem(409,'PACKAGE_NOT_PUBLISHED','学习包尚未发布。')

@@ -66,7 +66,7 @@ def record_dto(row, version):
             'external_record_id': row.external_record_id, 'record_kind': version.effective_fields['record_kind'],
             'current_version': row.current_version, 'quality_status': 'needs_review' if version.issues else 'valid',
             'occurred_on': version.effective_fields.get('occurred_on'), 'description': version.effective_fields.get('description'),
-            'created_at': row.created_at, 'is_mock': settings.auth_mode != 'a'}
+            'created_at': row.created_at, 'is_mock': version.provenance.get('is_mock', True)}
 
 
 @router.get('/input-files')
@@ -197,6 +197,12 @@ def records(actor: Actor = Depends(current_actor), project_id: str | None = None
         output = []
         for row in rows:
             version = db.scalar(select(SourceRecordVersion).where(SourceRecordVersion.record_id == row.id, SourceRecordVersion.version == row.current_version))
+            from .package_projection import guard_projected
+            try:
+                guard_projected(db, version, actor)
+            except Problem as exc:
+                if exc.status in {403,404,409,410}:continue
+                raise
             output.append(record_dto(row, version))
         return {'items': output, 'next_cursor': next_cursor, 'totals_by_kind': totals,
                 'detail_groups_after_confirmed_links': totals.get('detail', 0) - merges,
@@ -245,6 +251,8 @@ def evidence_dto(db, evidence, actor):
     version = db.get(SourceRecordVersion, evidence.record_version_id)
     row = db.get(SourceRecord, version.record_id)
     authorize(actor, 'knowledge.read', row.project_id)
+    from .package_projection import guard_projected
+    guard_projected(db, version, actor)
     origin = db.get(FileAsset, version.provenance.get('input_asset_id'))
     if not origin or origin.availability != 'available' or origin.project_id != row.project_id:
         raise Problem(410, 'SOURCE_WITHDRAWN', '来源已撤回或不可用。')
@@ -253,7 +261,8 @@ def evidence_dto(db, evidence, actor):
     return {'id': evidence.id, 'record_version_id': version.id, 'type': evidence.evidence_type,
             'locator': evidence.locator, 'relation_confidence': evidence.relation_confidence,
             'availability': 'available' if allowed else 'unavailable', 'asset_id': asset.id if allowed else None,
-            'is_mock': settings.auth_mode != 'a', 'note': '模拟资料，图片为标注示意图；缺失附件不生成伪预览。'}
+            'is_mock': version.provenance.get('is_mock',True),
+            'note': '模拟资料，图片为标注示意图。' if version.provenance.get('is_mock',True) else '来源固定版本；缺失附件不生成预览。'}
 
 
 @router.get('/records/{ident}')

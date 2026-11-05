@@ -7,6 +7,7 @@ from ...db import Session
 from ...models import ProcessingRun
 from ...api_common import key_header
 from ...audit import record as audit
+from ...model_access import require_model_admin
 from .models import TaxonomyRevision,ExtractionRun
 from .schemas import ModelSettings,Taxonomy,Generate
 from . import llm
@@ -16,7 +17,7 @@ router=APIRouter(prefix='/api/v1',tags=['知识萃取与云端模型'])
 
 
 def administrator(actor):
-    if not actor.projects('manage'):raise Problem(403,'FORBIDDEN','模型连接配置仅限管理员。')
+    require_model_admin(actor)
 
 
 @router.get('/models/settings')
@@ -24,10 +25,17 @@ def settings(actor:Actor=Depends(current_actor)):
     administrator(actor);return llm.public_settings()
 
 
+@router.get('/models/presets')
+def presets(actor:Actor=Depends(current_actor)):
+    administrator(actor)
+    from .presets import PRESETS
+    return {'items': PRESETS, 'verified_at': '2026-10-29'}
+
+
 @router.put('/models/settings')
 def save(data:ModelSettings,request:Request,actor:Actor=Depends(current_actor)):
     administrator(actor);result=llm.save(data)
-    with Session.begin() as db:audit(db,actor,'model_settings_updated','model_config','local',actor.projects('manage')[0],request.state.request_id)
+    with Session.begin() as db:audit(db,actor,'model_settings_updated','model_config','local',sorted(actor.grants)[0],request.state.request_id)
     return result
 
 

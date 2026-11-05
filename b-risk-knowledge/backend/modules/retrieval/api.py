@@ -176,7 +176,8 @@ def public_evidence(ident: str, revision_id: str, historical: bool = False, acto
             source = db.get(SourceRecordVersion, evidence.record_version_id)
         return {**citation, 'description': evidence.text if item.retrospective_revision_id else source.effective_fields.get('description'), 'source_version': source.version,
                 'type': evidence.evidence_type, 'has_image': bool(asset and asset.mime_type.startswith('image/')),
-                'is_mock': True, 'note': '模拟证据示意图，非真实现场照片。' if asset and asset.mime_type.startswith('image/') else '结构化来源行；当前未提供原报告附件。'}
+                'is_mock': revision.content.get('is_mock',True),
+                'note': ('模拟证据示意图，非真实现场照片。' if revision.content.get('is_mock',True) else '来源关联图片，请结合原记录核对。') if asset and asset.mime_type.startswith('image/') else '结构化来源行；当前未提供原报告附件。'}
 
 
 @router.get('/published/evidence/{ident}/content')
@@ -204,7 +205,10 @@ def public_evidence_content(ident: str, revision_id: str, historical: bool = Fal
 @router.post('/search')
 def internal_search(data: SearchInput, actor: Actor = Depends(current_actor)):
     response, results, elapsed = search(data, actor)
-    return {**response, 'results': results, 'latency_ms': elapsed, 'answer_method': 'extractive', 'is_mock': True}
+    with Session() as db:
+        release=db.get(KnowledgeRelease,response['knowledge_release_id']) if response['knowledge_release_id'] else None
+        simulated=bool(release and release.index_config.get('is_mock',True))
+    return {**response, 'results': results, 'latency_ms': elapsed, 'answer_method': 'extractive', 'is_mock': simulated}
 
 
 @router.post('/search/{ident}/feedback')

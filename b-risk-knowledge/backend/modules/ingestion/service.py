@@ -136,7 +136,10 @@ def apply_row(db, source, batch, n, raw, governed, locator):
         db.add(EvidenceItem(document_id=doc.id, record_version_id=version.id, locator=locator,
                             evidence_type='source_row', asset_id=batch.input_asset_id, relation_confidence='anchored'))
         for image in effective['images']:
-            asset = db.get(FileAsset, fixture_id(image.get('ref', '')))
+            ref = image.get('ref', '')
+            asset = db.get(FileAsset, str(ref))
+            if not asset and source.config.get('is_mock'):
+                asset = db.get(FileAsset, fixture_id(ref))
             image_id = asset.id if asset and asset.project_id == source.project_id and asset.mime_type.startswith('image/') else None
             db.add(EvidenceItem(document_id=doc.id, record_version_id=version.id,
                                 locator={**locator, 'ref': image.get('ref'), 'row_anchor': image.get('row_anchor')},

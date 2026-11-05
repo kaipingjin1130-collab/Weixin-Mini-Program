@@ -33,7 +33,7 @@ def dto(parent, revision):
     return {'id': parent.id, 'title': parent.title, 'project_id': parent.project_id, 'mode': parent.mode,
         'revision_id': revision.id, 'version': revision.version, 'row_version': parent.row_version, 'state': revision.state,
         'sources': revision.sources, 'template_version': revision.template_version, 'model_ref': revision.model_ref,
-        'input_fingerprint': revision.input_fingerprint, 'created_at': parent.created_at, 'is_mock': True, 'object_type': 'retrospective_revision'}
+        'input_fingerprint': revision.input_fingerprint, 'created_at': parent.created_at, 'is_mock': revision.sources.get('is_mock',True), 'object_type': 'retrospective_revision'}
 
 
 def source_edges(db, revision):
@@ -57,8 +57,11 @@ def generate(data, actor, request_id):
             if v1_enabled() and package.producer == 'a':
                 key = 'a-delivery:'+package.id+':'+data.template_version
             sources = {'task_package_id': package.id, 'package_version': package.package_version, 'content_hash': package.content_hash,
-                'capabilities': caps, 'scene_code': package.scene_code, 'record_version_ids': []}
-            summary, timeline, findings, suggestions = build_task(snapshot)
+                'capabilities': caps, 'scene_code': package.scene_code, 'record_version_ids': [],'is_mock':package.is_demo}
+            from ..scenes.api import active_template
+            scene = active_template(db, project, package.scene_code)
+            if scene:sources['scene_snapshot'] = scene
+            summary, timeline, findings, suggestions = build_task(snapshot, scene)
             evidence_specs.append(('task:snapshot', 'task_snapshot', {'section': '固定任务快照'}, '任务名称：'+title, None))
             for e in snapshot['events']:
                 evidence_specs.append(('event:'+e['event_id'], 'process_event', {'event_id': e['event_id']},
@@ -71,7 +74,8 @@ def generate(data, actor, request_id):
             if len({r.project_id for _, r, _ in rows}) != 1:
                 raise Problem(422, 'MIXED_PROJECTS', '历史复盘只接受同一项目的固定来源版本。')
             project, title = rows[0][1].project_id, '历史案例复盘'
-            sources = {'record_version_ids': sorted(data.record_version_ids), 'task_package_id': None, 'scene_code': 'generic'}
+            sources = {'record_version_ids': sorted(data.record_version_ids), 'task_package_id': None, 'scene_code': 'generic',
+                'is_mock':any(v.provenance.get('is_mock',True) for v,_,_ in rows)}
             key = 'history:'+fingerprint(sources)+':'+data.template_version
             summary = f'基于{len(rows)}条固定历史记录的案例摘要。未发现完整过程记录，不生成过程时长或整改超期结论。'
             timeline = {'known': [], 'unknown_time': [], 'intervals': [], 'deadlines': []}
@@ -89,6 +93,12 @@ def generate(data, actor, request_id):
                     'text': str(version.effective_fields.get('description') or '来源未填写描述')[:4000], 'event_refs': [], 'evidence_refs': refs[:10], 'review_state': 'unconfirmed'})
             suggestions = [{'id': 'historical-suggestion', 'type': 'mock_suggestion', 'claim_kind': 'suggestion', 'text': '建议将本组历史问题用于新人识别风险的案例练习；原始描述不能证明整改与复核已经发生。', 'event_refs': [], 'evidence_refs': [], 'review_state': 'unconfirmed'}]
         authorize(actor, 'retrospective.generate', project)
+        model_fingerprint = None
+        if data.generation_mode == 'llm':
+            from ..extraction.llm import require_config, metadata
+            model_fingerprint = fingerprint(metadata(require_config()))
+            key += ':llm'
+            sources = {**sources, 'generation_mode':'llm', 'model_config_fingerprint':model_fingerprint}
         digest = fingerprint({'sources': {k: v for k, v in sources.items() if k != 'capabilities'}, 'template': TEMPLATE})
         db.execute(text('SELECT pg_advisory_xact_lock(hashtextextended(:k,0))'), {'k': 'retro:'+key})
         parent = db.scalar(select(Retrospective).where(Retrospective.source_key == key).with_for_update())
@@ -119,11 +129,26 @@ def generate(data, actor, request_id):
         for f in findings:
             f['evidence_refs'] = [mapping[e] for e in f['evidence_refs']]
         revision.findings = findings
+        if data.generation_mode == 'llm':
+            from ..extraction.generation import retrospective_suggestions
+            texts = {mapping[ref]:value for ref,kind,locator,value,asset in evidence_specs if kind != 'task_attachment'}
+            generated,meta = retrospective_suggestions(texts, findings, model_fingerprint)
+            revision.suggestions = [{'id':'llm-suggestion-'+str(n),'type':'grounded_suggestion','text':s.text,
+                'claim_kind':'suggestion','event_refs':[],'evidence_refs':list(dict.fromkeys(q.source_id for q in s.quotes)),
+                'review_state':'unconfirmed'} for n,s in enumerate(generated)]
+            revision.model_ref = meta['model_ref']
+            revision.sources = {**sources,'generation':{**meta,'prompt_version':'grounded-retrospective-v1'}}
+            validate(db,revision,findings,revision.suggestions)
         audit(db, actor, 'retrospective_generated', 'retrospective', parent.id, project, request_id, revision.version)
         return {**dto(parent, revision), 'replayed': False}
 
 
 def validate(db, revision, findings, suggestions, approving=False):
+    if approving:
+        from ..knowledge.models import QualityIssue
+        blocked=db.scalar(select(QualityIssue.id).where(QualityIssue.record_version_id.in_(revision.sources.get('record_version_ids',[])),
+            QualityIssue.severity=='error',QualityIssue.status=='open').limit(1))
+        if blocked:raise Problem(422,'BLOCKING_QUALITY_ISSUE','复盘来源仍有未核实的阻断问题，请先完成来源核查。')
     allowed = {e.id: e for e in db.scalars(select(RetrospectiveEvidence).where(RetrospectiveEvidence.revision_id == revision.id))}
     event_ids = {e.locator['event_id'] for e in allowed.values() if e.kind == 'process_event'}
     all_items = findings+suggestions
@@ -212,7 +237,8 @@ def convert(ident, data, actor, request_id):
             return {'draft_ids': [prior.item_id], 'replayed': True, 'state': 'drafts_created'}
         facts = [{'text': f['text'], 'evidence_ids': f['evidence_refs'][:10], 'source_kind': 'human_annotation'} for f in revision.findings if f['claim_kind'] == 'fact'][:30]
         card = Card(title=('经验 · '+parent.title)[:200], type=data.type, facts=facts,
-            suggestions=[f['text'] for f in revision.suggestions][:30]+[f['text'] for f in revision.findings if f['claim_kind'] != 'fact'][:max(0, 30-len(revision.suggestions))], standards=[], project_name=parent.project_id)
+            suggestions=[f['text'] for f in revision.suggestions][:30]+[f['text'] for f in revision.findings if f['claim_kind'] != 'fact'][:max(0, 30-len(revision.suggestions))], standards=[], project_name=parent.project_id,
+            is_mock=revision.sources.get('is_mock',True),generation_mode='human')
         item = KnowledgeItem(retrospective_revision_id=revision.id, project_id=parent.project_id, type=data.type, title=card.title,
             template_version=revision.template_version, scene_code=revision.sources['scene_code'], scope={'project_id': parent.project_id})
         db.add(item)

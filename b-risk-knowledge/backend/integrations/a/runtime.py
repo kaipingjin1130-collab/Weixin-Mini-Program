@@ -44,6 +44,8 @@ WORK_ACTIONS = {
     'knowledge_extraction': {'knowledge.process', 'knowledge.read'},
     'release_build': {'knowledge.publish', 'knowledge.read'},
     'training_grading': {'training.learn', 'knowledge.read'},
+    'training_generation': {'training.manage', 'knowledge.read'},
+    'retrospective_generation': {'retrospective.generate', 'retrospective.read'},
 }
 
 

@@ -6,7 +6,6 @@ from ...auth import Problem
 from ...models import ProcessingRun, UserLink, utcnow
 from ...modules.task_packages.models import TaskPackage
 from ...modules.task_packages.service import receive
-from ...modules.task_packages.tasks import process_package
 from .models import AImport
 from .runtime import service_actor, client
 
@@ -78,6 +77,7 @@ def import_job(run_id: str):
             fresh.receipt_id, fresh.source_metadata = package.id, meta
             advance(db, fresh, db.get(ProcessingRun, run_id), 'processing')
         # Existing idempotent processor commits verified files/events incrementally.
+        from ...modules.task_packages.tasks import process_package
         process_package(package.run_id)
         from .imports import source_check
         source_check(row)

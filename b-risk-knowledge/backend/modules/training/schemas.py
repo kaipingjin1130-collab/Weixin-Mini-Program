@@ -4,6 +4,7 @@ from ..knowledge.schemas import Strict, VersionAction
 
 
 class Generate(Strict):
+    generation_mode: Literal['mock', 'llm'] = 'mock'
     knowledge_revision_ids: list[str] = Field(min_length=1, max_length=10)
     types: list[Literal['single_choice', 'multiple_choice', 'case_answer']] = Field(min_length=1, max_length=3)
 
@@ -31,6 +32,7 @@ class Draft(VersionAction):
 
 
 class Package(Strict):
+    audience_subjects: list[str] = Field(default_factory=list,max_length=200)
     title: str = Field(min_length=1, max_length=200)
     package_key: str = Field(pattern=r'^[A-Za-z0-9_.:-]{1,128}$')
     version: int = Field(ge=1)

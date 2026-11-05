@@ -74,6 +74,8 @@ def normalize(raw, governed, mapping, project):
     fields = {key: raw.get(column) for key, column in mapping.items()}
     issues = []
     errors = []
+    if raw.get('governance_review_required'):
+        issues.append('治理候选尚未人工核实，审核前不得作为正式知识发布')
     if fields.get('project_id') != project:
         errors.append('项目范围不匹配，未接入')
     external = str(fields.get('record_id') or '').strip()

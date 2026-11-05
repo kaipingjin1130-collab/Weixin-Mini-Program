@@ -9,7 +9,7 @@ class Strict(BaseModel):
 class CreateRelease(Strict):
     project_id: str = Field(min_length=1, max_length=128)
     revision_ids: list[str] = Field(min_length=1, max_length=100)
-    embedding_model: Literal['mock-hash-64', 'mock-hash-96'] = 'mock-hash-64'
+    embedding_model: Literal['mock-hash-64', 'mock-hash-96', 'openai-text-embedding-3-small'] = 'mock-hash-64'
     mock_scenario: Literal['normal', 'index_failure'] = 'normal'
 
     @field_validator('revision_ids')

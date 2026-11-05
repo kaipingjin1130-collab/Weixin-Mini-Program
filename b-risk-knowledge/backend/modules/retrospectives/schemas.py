@@ -4,6 +4,7 @@ from ..knowledge.schemas import Strict, VersionAction
 
 
 class Create(Strict):
+    generation_mode: Literal['mock', 'llm'] = 'mock'
     mode: Literal['task_process', 'historical_case']
     task_package_id: str | None = Field(default=None, max_length=36)
     record_version_ids: list[str] = Field(default_factory=list, max_length=20)

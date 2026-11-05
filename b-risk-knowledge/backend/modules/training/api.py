@@ -72,7 +72,10 @@ def packages(actor:Actor=Depends(current_actor),learner:bool=False,limit:int=Que
         for package in rows:
             try:
                 if learner:s.learner_scope(package,actor)
-                count=len(s.package_rows(db,package,actor,action='training.learn' if learner else 'training.manage'));output.append(s.package_dto(package,count))
+                count=len(s.package_rows(db,package,actor,action='training.learn' if learner else 'training.manage'))
+                value=s.package_dto(package,count)
+                if learner:value.pop('audience_subjects',None)
+                output.append(value)
             except Problem as exc:
                 if exc.status not in {403,409,410}:raise
         return {'items':output,'next_cursor':after}

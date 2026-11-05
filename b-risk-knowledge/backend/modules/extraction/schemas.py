@@ -22,7 +22,7 @@ class Category(Strict):
 class Taxonomy(Strict):
     project_id:str=Field(max_length=128)
     expected_version:int=Field(ge=0)
-    categories:list[Category]=Field(min_length=1,max_length=30)
+    categories:list[Category]=Field(min_length=1,max_length=100)
 
 
 class Generate(Strict):

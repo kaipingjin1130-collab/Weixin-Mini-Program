@@ -59,7 +59,8 @@ def extract(run_id:str):
             if len({c.category_code for c in output.cards})!=len(output.cards):raise Problem(422,'DUPLICATE_CATEGORY_CARD','模型须按类别合并，不接受同类别重复卡。')
             for card in output.cards:
                 if card.category_code not in allowed or not card.construction_points:raise Problem(422,'INVALID_EXTRACTION_CATEGORY','模型须使用已配置类别并输出施工要点。')
-                card.category_name=allowed[card.category_code];card.generation_mode=data.mode;card.is_mock=True
+                card.category_name=allowed[card.category_code];card.generation_mode=data.mode
+                card.is_mock=any(version.provenance.get('is_mock', True) for version,_,_ in rows)
                 for fact in card.facts:check_quotes(fact,evidence,required=True)
                 for point in card.construction_points:check_quotes(point,evidence,required=point.claim_kind=='source_summary')
             result=[]

@@ -9,6 +9,11 @@ from backend.modules.retrospectives import models as retrospective_models
 from backend.modules.training import models as training_models
 from backend.modules.extraction import models as extraction_models
 from backend.integrations.a import models as a_integration_models
+from backend.modules.scenes import models as scene_models
+from backend.modules.standards import models as standard_models
+from backend.modules.workflows import models as workflow_models
+from backend.modules.history_reports import models as history_models
+from backend.modules.history_reports import media_models as history_media_models
 
 with engine.connect() as connection:
     context.configure(connection=connection, target_metadata=Base.metadata, compare_type=True)

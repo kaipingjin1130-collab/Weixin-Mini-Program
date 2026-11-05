@@ -60,7 +60,46 @@ class MockEmbedding:
 
 
 def get_embedding(model):
+    if model == 'openai-text-embedding-3-small':
+        return OpenAIEmbedding()
     return MockEmbedding(model)
+
+
+class OpenAIEmbedding:
+    model = 'openai-text-embedding-3-small'
+    model_version = 'text-embedding-3-small-1536-v1'
+    dimension = 1536
+
+    def embed(self, value):
+        import httpx
+        import json
+        from ..extraction import llm
+        config = llm.require_config()
+        if config.base_url.rstrip('/') != 'https://api.openai.com/v1':
+            raise Problem(409, 'EMBEDDING_PROVIDER_REQUIRED', '此语义索引需要启用 OpenAI 模型配置和对应 API Key。')
+        if not value.strip() or len(value) > 12000:
+            raise Problem(422, 'EMBEDDING_INPUT_LIMIT', '向量文本为空或超过12000字符，请缩小知识条目。')
+        try:
+            with httpx.Client(timeout=config.timeout_seconds, transport=llm.TRANSPORT, trust_env=False, follow_redirects=False, proxy=llm.local_model_proxy()) as client:
+                with client.stream('POST', 'https://api.openai.com/v1/embeddings',
+                    headers={'Authorization':'Bearer '+config.api_key.get_secret_value()},
+                    json={'model':'text-embedding-3-small','input':value,'dimensions':self.dimension,'encoding_format':'float'}) as response:
+                    if response.status_code != 200:
+                        raise Problem(502, 'EMBEDDING_HTTP_ERROR', '语义向量请求失败，请检查 OpenAI 权限和额度；不会退回模拟向量。')
+                    raw = bytearray()
+                    for chunk in response.iter_bytes():
+                        raw.extend(chunk)
+                        if len(raw) > 256000:raise ValueError('response too large')
+            result = json.loads(raw)
+            vector = result['data'][0]['embedding']
+            if len(result['data']) != 1 or result['data'][0]['index'] != 0 or len(vector) != self.dimension:
+                raise ValueError('shape mismatch')
+            if any(type(v) not in (int,float) or not math.isfinite(v) for v in vector) or not any(vector):
+                raise ValueError('invalid vector')
+            return vector
+        except Problem:raise
+        except (httpx.HTTPError,ValueError,KeyError,IndexError,TypeError):
+            raise Problem(502, 'EMBEDDING_INVALID', '语义向量返回格式或维度不正确，未写入索引。')
 
 
 def extract_answer(results):

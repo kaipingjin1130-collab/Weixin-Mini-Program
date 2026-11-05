@@ -11,10 +11,13 @@ from .db import Session
 JOB_READ = {'a_import': 'imports.read', 'task_package_import': 'imports.read',
             'a_retrospective': 'retrospective.read', 'source_import': 'knowledge.process',
             'knowledge_generation': 'knowledge.process', 'knowledge_extraction': 'knowledge.process',
-            'release_build': 'knowledge.publish', 'training_grading': 'training.manage'}
+            'release_build': 'knowledge.publish', 'training_grading': 'training.manage',
+            'training_generation':'training.manage','retrospective_generation':'retrospective.generate'}
 
 
 def job_action(run, retry=False):
+    if run.kind in {'training_generation','retrospective_generation'}:
+        return JOB_READ[run.kind]
     from .integrations.a.runtime import enabled
     if not enabled():
         return ('training_manage' if run.kind == 'training_grading' else 'audit' if run.kind == 'release_build'
@@ -57,6 +60,9 @@ def enqueue(db, run_id):
     elif run.kind == 'knowledge_extraction':
         from .modules.extraction.tasks import extract
         task = extract
+    elif run.kind in {'training_generation','retrospective_generation'}:
+        from .modules.extraction.generation_jobs import generate
+        task = generate
     elif run.kind == 'training_grading':
         from .modules.training.tasks import grade_attempt
         task = grade_attempt

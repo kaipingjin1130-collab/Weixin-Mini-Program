@@ -60,6 +60,10 @@ def search(data, actor, output_types=None, *, raw_object=None, exclude_retrospec
             if not embedding:
                 raise Problem(503, 'INDEX_UNAVAILABLE', '当前发布索引不可用，请联系管理员。')
             adapter = get_embedding(embedding.model)
+            if not embedding.model.startswith('mock-'):
+                warnings = [{'code':'extractive_answer','path':'','message':'使用真实语义向量，答案摘录已审核知识并保留证据引用。'}]
+            if adapter.dimension != embedding.dimension or adapter.model_version != embedding.model_version:
+                raise Problem(409, 'EMBEDDING_VERSION_CHANGED', '向量配置与发布版本不一致，请重建新发布。')
             query_vector = adapter.embed(data.question)
             allowed = public_query(actor, data.project_id, data.scene_code, data.card_type)
             if exclude_retrospectives:
