@@ -199,7 +199,10 @@ def findings(q: str = Query('', max_length=100), project: str = Query('', max_le
         f.inspection_date, f.inspection_location, f.problem_description, f.source_category, f.hazard_category,
         f.source_grade, f.basis_or_clause, f.rectification_requirement, f.rectification_advice,
         f.rectification_deadline, f.reported_response, f.reinspection_conclusion, f.review_state,
-        f.consolidation_id, dr.id AS draft_id
+        f.consolidation_id, dr.id AS draft_id,
+        (SELECT count(*) FROM history_image_links l
+            JOIN history_image_occurrences o ON o.id = l.occurrence_id
+            WHERE l.finding_id = f.id) AS image_count
         FROM history_current_consolidated_findings f
         LEFT JOIN history_documents d ON d.id = f.document_id
         LEFT JOIN history_review_drafts dr ON dr.finding_id = f.id AND dr.status='pending'

@@ -19,7 +19,7 @@ type Finding = {
   rectification_requirement: string | null; rectification_advice: string | null;
   rectification_deadline: string | null; reported_response: string | null;
   reinspection_conclusion: string | null; review_state: string; consolidation_id: string | null;
-  draft_id?: string | null;
+  draft_id?: string | null; image_count?: number | null;
 };
 type ReportRow = { document_id: string; original_name: string; findings: number; project_name: string | null; inspection_date: string | null };
 type Draft = {
@@ -38,21 +38,29 @@ type Detail = {
 
 const REVIEW = '/history-review';
 const READER = '/history-reader';
-const STORE_KEY = 'historyReview.visibleFields';
+const STORE_KEY = 'historyReview.visibleColumnsV2';
 const ORDER_KEY = 'historyReview.columnOrder';
 const DEFAULT_FIELDS = ['engineering_project_name', 'inspection_date', 'problem_description', 'source_category', 'rectification_requirement', 'reported_response'];
+const OPTIONAL_SPECIALS = ['_photos', '_source', '_status', '_actions'];
 const EDIT_ORDER = ['project_name', 'engineering_project_name', 'inspection_date', 'inspection_location', 'problem_description', 'source_category', 'source_grade', 'hazard_category', 'basis_or_clause', 'rectification_requirement', 'rectification_advice', 'rectification_deadline', 'reported_response', 'reinspection_conclusion'];
-const SPECIAL_COLUMNS: Record<string, string> = { _actions: '操作', _source: '来源报告', _status: '状态' };
+const SPECIAL_COLUMNS: Record<string, string> = { _actions: '操作', _photos: '照片', _source: '来源报告', _status: '状态' };
 const SPECIALS = Object.keys(SPECIAL_COLUMNS);
-const DEFAULT_ORDER = [...DEFAULT_FIELDS, '_source', '_status', '_actions'];
+const DEFAULT_ORDER = [...DEFAULT_FIELDS, '_photos', '_source', '_status', '_actions'];
+const DEFAULT_VISIBLE = [...DEFAULT_FIELDS, '_photos', '_source', '_actions'];
+const COLUMN_WIDTH: Record<string, number> = {
+  problem_description: 340, project_name: 170, engineering_project_name: 170, inspection_location: 140,
+  basis_or_clause: 170, rectification_requirement: 190, rectification_advice: 190, rectification_deadline: 110,
+  reported_response: 190, reinspection_conclusion: 140, inspection_date: 104, source_category: 120,
+  hazard_category: 110, source_grade: 90, _photos: 104, _source: 160, _status: 92, _actions: 176,
+};
 const ACTION_LABEL: Record<string, string> = { save_draft: '保存草稿', confirm: '批量确认', discard: '放弃修改', conflict: '值冲突' };
 
 function loadFields(): string[] {
   try {
     const raw = localStorage.getItem(STORE_KEY);
     const parsed = raw ? JSON.parse(raw) : null;
-    return Array.isArray(parsed) && parsed.length ? parsed.filter((x) => typeof x === 'string') : DEFAULT_FIELDS;
-  } catch { return DEFAULT_FIELDS; }
+    return Array.isArray(parsed) && parsed.length ? parsed.filter((x) => typeof x === 'string') : DEFAULT_VISIBLE;
+  } catch { return DEFAULT_VISIBLE; }
 }
 function loadOrder(): string[] {
   try {
@@ -69,7 +77,11 @@ function keepOrder(order: string[], fieldKeys: string[]): string[] {
   for (const key of fieldKeys) {
     if (!out.includes(key)) { out.splice(insertAt, 0, key); insertAt += 1; }
   }
-  for (const special of SPECIALS) if (!out.includes(special)) out.push(special);
+  for (const special of SPECIALS) {
+    if (out.includes(special)) continue;
+    const actionsAt = out.indexOf('_actions');
+    if (actionsAt >= 0) out.splice(actionsAt, 0, special); else out.push(special);
+  }
   return out;
 }
 function text(value: string | null | undefined, max = 120) {
@@ -94,6 +106,25 @@ function Picture({ id }: { id: string }) {
     return () => { stale = true; if (objectUrl) URL.revokeObjectURL(objectUrl); };
   }, [id]);
   return error ? <p role="alert">{error}</p> : src ? <a href={src} target="_blank" rel="noreferrer"><img src={src} alt="原报告关联图片，点击查看大图" /></a> : <p>读取图片…</p>;
+}
+
+function PhotoStrip({ api, findingId, large = false }: { api: Api; findingId: string; large?: boolean }) {
+  const [images, setImages] = useState<Detail['images'] | null>(null);
+  const [error, setError] = useState('');
+  useEffect(() => {
+    let stale = false;
+    setImages(null); setError('');
+    api<Detail>(READER + '/findings/' + encodeURIComponent(findingId))
+      .then((d) => { if (!stale) setImages(d.images); })
+      .catch((e) => { if (!stale) { setError((e as Error).message); setImages([]); } });
+    return () => { stale = true; };
+  }, [api, findingId]);
+  if (error) return <p role="alert">{error}</p>;
+  if (!images) return <p className="muted">读取关联照片…</p>;
+  if (!images.length) return <p className="muted">该条目没有已关联的照片（无照片不代表原报告没有照片）。</p>;
+  return <div className={large ? 'history-images history-images-large' : 'history-images'}>{images.map((im, i) => (
+    <figure key={im.id + ':' + i}><Picture id={im.id} /><figcaption>{text(im.relation, 24)}｜{JSON.stringify(im.locator)}</figcaption></figure>
+  ))}</div>;
 }
 
 export function RiskData({ api }: { api: Api }) {
@@ -121,21 +152,24 @@ export function RiskData({ api }: { api: Api }) {
   const [editValues, setEditValues] = useState<Record<string, string>>({});
   const [detail, setDetail] = useState<Detail | null>(null);
   const [detailError, setDetailError] = useState('');
+  const [photoItem, setPhotoItem] = useState<Finding | null>(null);
   const [message, setMessage] = useState(''); const [error, setError] = useState('');
   const [loading, setLoading] = useState(true); const [busy, setBusy] = useState(false);
   const [refresh, setRefresh] = useState(0);
   const fields = summary?.editable_fields || summary?.fields || [];
   const detailFields = summary?.fields || fields;
-  const columns = useMemo(() => order.filter((k) => SPECIALS.includes(k) || visible.includes(k)), [order, visible]);
+  const columns = useMemo(() => order.filter((k) => visible.includes(k)), [order, visible]);
+  const visibleOptionCount = fields.length + OPTIONAL_SPECIALS.length;
+  const shownOptionCount = visible.filter((k) => fields.some((f) => f.key === k) || OPTIONAL_SPECIALS.includes(k)).length;
 
   useEffect(() => {
-    if (!detail || editing) return;
+    if ((!detail || editing) && !photoItem) return;
     const previous = document.body.style.overflow;
     document.body.style.overflow = 'hidden';
-    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') setDetail(null); };
+    const onKey = (event: KeyboardEvent) => { if (event.key === 'Escape') { setDetail(null); setPhotoItem(null); } };
     window.addEventListener('keydown', onKey);
     return () => { document.body.style.overflow = previous; window.removeEventListener('keydown', onKey); };
-  }, [detail, editing]);
+  }, [detail, editing, photoItem]);
   useEffect(() => {
     let stale = false; setLoading(true); setError('');
     Promise.all([
@@ -146,9 +180,9 @@ export function RiskData({ api }: { api: Api }) {
       if (stale) return;
       setSummary(s); setProjects(p.items); setDrafts(d.items);
       setVisible((current) => {
-        const known = new Set(s.editable_fields.map((f) => f.key));
+        const known = new Set([...s.editable_fields.map((f) => f.key), ...OPTIONAL_SPECIALS]);
         const next = current.filter((k) => known.has(k));
-        return next.length ? next : DEFAULT_FIELDS.filter((k) => known.has(k));
+        return next.length ? next : DEFAULT_VISIBLE.filter((k) => known.has(k));
       });
       setOrder((current) => keepOrder(current, s.editable_fields.map((f) => f.key)));
     }).catch((e) => { if (!stale) setError(e.message); }).finally(() => { if (!stale) setLoading(false); });
@@ -192,6 +226,13 @@ export function RiskData({ api }: { api: Api }) {
   function saveColumns(next: string[]) {
     setVisible(next);
     try { localStorage.setItem(STORE_KEY, JSON.stringify(next)); } catch { /* 忽略本地存储异常 */ }
+  }
+  function hideColumn(key: string) {
+    saveColumns(visible.filter((k) => k !== key));
+  }
+  function toggleColumn(key: string, checked: boolean) {
+    const next = checked ? [...visible, key] : visible.filter((k) => k !== key);
+    saveColumns(next);
   }
   function saveOrder(next: string[]) {
     setOrder(next);
@@ -314,15 +355,17 @@ export function RiskData({ api }: { api: Api }) {
           </label>
           {documentFilter && <button className="button ghost" onClick={() => { setDocumentFilter(''); setOffset(0); }}>清除报告筛选</button>}
           {tab === 'findings' && <label className="history-inline"><input type="checkbox" checked={pendingOnly} onChange={(e) => setPendingOnly(e.target.checked)} />只看待确认修改</label>}
-          {tab === 'findings' && <button className="button secondary" onClick={() => setShowFields((x) => !x)}>显示字段（{visible.length}/{fields.length}）</button>}
+          {tab === 'findings' && <button className="button secondary" onClick={() => setShowFields((x) => !x)}>显示字段（{shownOptionCount}/{visibleOptionCount}）</button>}
           {tab === 'findings' && <button className={expandAll ? 'button primary' : 'button secondary'} onClick={toggleExpandAll}>{expandAll ? '收起全部字段' : '展开全部字段'}</button>}
         </div>
         {showFields && tab === 'findings' && <div className="history-fieldpicker" role="group" aria-label="选择显示字段">
-          {fields.map((f) => <label key={f.key}><input type="checkbox" checked={visible.includes(f.key)} onChange={(e) => saveColumns(e.target.checked ? [...visible, f.key] : visible.filter((k) => k !== f.key))} />{f.label}</label>)}
-          <button className="button ghost" onClick={() => saveColumns(DEFAULT_FIELDS.filter((k) => fields.some((f) => f.key === k)))}>恢复默认</button>
+          {fields.map((f) => <label key={f.key}><input type="checkbox" checked={visible.includes(f.key)} onChange={(e) => toggleColumn(f.key, e.target.checked)} />{f.label}</label>)}
+          <span className="history-fieldsep">其他列</span>
+          {OPTIONAL_SPECIALS.map((key) => <label key={key}><input type="checkbox" checked={visible.includes(key)} onChange={(e) => toggleColumn(key, e.target.checked)} />{SPECIAL_COLUMNS[key]}</label>)}
+          <button className="button ghost" onClick={() => saveColumns(DEFAULT_VISIBLE.filter((k) => fields.some((f) => f.key === k) || OPTIONAL_SPECIALS.includes(k)))}>恢复默认</button>
           <button className="button ghost" onClick={() => saveOrder(DEFAULT_ORDER)}>恢复列顺序</button>
         </div>}
-        {tab === 'findings' && <p className="muted history-drag-tip">提示：拖动表头可调整列顺序（列为“操作”默认在最后）；点击任意行可展开该条的全部字段。</p>}
+        {tab === 'findings' && <p className="muted history-drag-tip">提示：拖动表头调整列顺序；点击表头右侧 × 可隐藏该列（全部列均可隐藏，在“显示字段”中恢复）；点击任意行展开该条全部字段与关联照片。</p>}
       </section>
 
       <section className="panel">
@@ -347,9 +390,10 @@ export function RiskData({ api }: { api: Api }) {
             </tbody></table></div>
           </div>}
           <div className="table-wrap" aria-busy={loading}>
-            <table>
+            <table className="history-table">
               <thead><tr>
                 {columns.map((key) => <th key={key} draggable
+                  style={{ width: COLUMN_WIDTH[key], minWidth: COLUMN_WIDTH[key] }}
                   className={'history-col-head' + (dragKey === key ? ' history-col-dragging' : '') + (dragOverKey === key ? ' history-col-dragover' : '')}
                   title="拖动调整列顺序"
                   onDragStart={(e) => { setDragKey(key); e.dataTransfer.effectAllowed = 'move'; e.dataTransfer.setData('text/plain', key); }}
@@ -357,7 +401,11 @@ export function RiskData({ api }: { api: Api }) {
                   onDragLeave={() => setDragOverKey('')}
                   onDrop={(e) => { e.preventDefault(); moveColumn(dragKey || e.dataTransfer.getData('text/plain'), key); setDragKey(''); setDragOverKey(''); }}
                   onDragEnd={() => { setDragKey(''); setDragOverKey(''); }}
-                >{fieldLabel(fields, key)}<span className="history-drag-mark" aria-hidden="true">⋮⋮</span></th>)}
+                ><span className="history-th">
+                  <span className="history-th-label">{fieldLabel(fields, key)}</span>
+                  <button type="button" className="history-col-hide" title="点击隐藏该列（可在“显示字段”中恢复）" aria-label={`隐藏${fieldLabel(fields, key)}列`} draggable={false} onMouseDown={(e) => e.stopPropagation()} onDragStart={(e) => e.preventDefault()} onClick={(e) => { e.stopPropagation(); hideColumn(key); }}>×</button>
+                  <span className="history-drag-mark" aria-hidden="true">⋮⋮</span>
+                </span></th>)}
               </tr></thead>
               <tbody>
                 {items.map((item) => {
@@ -370,14 +418,21 @@ export function RiskData({ api }: { api: Api }) {
                           <button className="button ghost" onClick={() => void openDetail(item)}>证据</button>
                           <button className="button ghost" onClick={() => toggleExpand(item.id)}>{isExpanded ? '收起' : '展开'}</button>
                         </td>;
-                        if (key === '_source') return <td key={key}>{text(item.original_name, 24)}</td>;
-                        if (key === '_status') return <td key={key}>{item.draft_id ? <span className="history-badge">待确认</span> : text(item.review_state, 14)}</td>;
-                        return <td key={key} className={key === 'problem_description' ? 'history-description' : ''}>{text((item as unknown as Record<string, string | null>)[key], key === 'problem_description' ? 220 : 80)}</td>;
+                        if (key === '_photos') return <td key={key} className="history-cell history-cell-nowrap">
+                          {item.image_count ? <button className="button ghost" onClick={() => setPhotoItem(item)}>查看 {item.image_count} 张</button> : <span className="muted">—</span>}
+                        </td>;
+                        if (key === '_source') return <td key={key} className="history-cell history-cell-nowrap" title={item.original_name || ''}>{text(item.original_name, 22)}</td>;
+                        if (key === '_status') return <td key={key} className="history-cell history-cell-nowrap">{item.draft_id ? <span className="history-badge">待确认</span> : text(item.review_state, 14)}</td>;
+                        const value = (item as unknown as Record<string, string | null>)[key];
+                        const isDesc = key === 'problem_description';
+                        const isShort = ['project_name', 'engineering_project_name', 'inspection_date', 'inspection_location', 'source_category', 'source_grade', 'hazard_category'].includes(key);
+                        return <td key={key} title={value || ''} className={isDesc ? 'history-cell history-cell-clamp' : isShort ? 'history-cell history-cell-nowrap' : 'history-cell'}>{isDesc ? (value || '—') : text(value, 80)}</td>;
                       })}
                     </tr>
                     {isExpanded && <tr className="history-expanded"><td colSpan={columns.length}>
                       <dl className="history-fields history-fields-all">{fields.map((f) => <div key={f.key}><dt>{f.label}</dt><dd>{(item as unknown as Record<string, string | null>)[f.key] || '—'}</dd></div>)}</dl>
                       <p className="muted">来源报告：{text(item.original_name, 100)}｜状态：{text(item.review_state, 20)}{item.draft_id ? '｜有待确认修改' : ''}</p>
+                      <div className="history-expanded-photos"><h4>关联照片（{item.image_count ?? 0}）</h4><PhotoStrip api={api} findingId={item.id} /></div>
                     </td></tr>}
                   </Fragment>;
                 })}
@@ -392,7 +447,7 @@ export function RiskData({ api }: { api: Api }) {
           </div>
         </>}
 
-        {tab === 'reports' && <div className="table-wrap" aria-busy={loading}><table>
+        {tab === 'reports' && <div className="table-wrap" aria-busy={loading}><table className="history-table">
           <thead><tr><th>历史报告</th><th>项目</th><th>检查日期</th><th>问题条目</th><th>操作</th></tr></thead>
           <tbody>
             {shownReports.map((r) => <tr key={r.document_id}>
@@ -406,7 +461,7 @@ export function RiskData({ api }: { api: Api }) {
           </tbody>
         </table></div>}
 
-        {tab === 'logs' && <div className="table-wrap" aria-busy={loading}><table>
+        {tab === 'logs' && <div className="table-wrap" aria-busy={loading}><table className="history-table">
           <thead><tr><th>时间</th><th>操作</th><th>报告</th><th>修改内容</th><th>操作人</th></tr></thead>
           <tbody>
             {logs.map((l) => <tr key={l.id}>
@@ -457,6 +512,16 @@ export function RiskData({ api }: { api: Api }) {
             <h3>关联图片（{detail.images.length}）</h3><p className="muted">展示已建立关联的图片；无图片不代表原报告没有照片。</p>
             <div className="history-images">{detail.images.map((im, i) => <figure key={im.id + ':' + i}><Picture id={im.id} /><figcaption>{JSON.stringify(im.locator)}</figcaption></figure>)}</div>
           </div>
+        </section>
+      </div>}
+
+      {photoItem && <div className="history-modal-backdrop" role="dialog" aria-modal="true" aria-label="关联照片" onClick={() => setPhotoItem(null)}>
+        <section className="history-modal history-photo-modal" onClick={(e) => e.stopPropagation()}>
+          <div className="history-modal-head">
+            <div><h2>关联照片</h2><p className="muted">来源报告：<strong>{text(photoItem.original_name, 90)}</strong>｜问题：{text(photoItem.problem_description, 90)}</p></div>
+            <button className="button secondary" onClick={() => setPhotoItem(null)}>关闭</button>
+          </div>
+          <div className="history-modal-body"><PhotoStrip api={api} findingId={photoItem.id} large /></div>
         </section>
       </div>}
     </div>

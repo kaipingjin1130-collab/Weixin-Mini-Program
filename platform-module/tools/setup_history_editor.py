@@ -15,7 +15,8 @@ from sqlalchemy.engine import make_url
 ROOT = Path(__file__).resolve().parents[2]
 ROLE = 'ab_history_editor'
 TABLES_SELECT = ('history_documents', 'history_imports', 'history_findings',
-                 'history_current_consolidated_findings')
+                 'history_current_consolidated_findings', 'history_image_links',
+                 'history_image_occurrences')
 TABLES_WRITE = ('history_review_drafts', 'history_review_logs')
 
 DDL = '''

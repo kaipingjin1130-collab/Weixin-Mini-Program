@@ -8,33 +8,33 @@ var su = { exports: {} }, Nn = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var cf;
-function uj() {
-  if (cf) return Nn;
-  cf = 1;
+var df;
+function fj() {
+  if (df) return Nn;
+  df = 1;
   var u = Symbol.for("react.transitional.element"), h = Symbol.for("react.fragment");
-  function S(d, R, B) {
+  function _(d, A, M) {
     var V = null;
-    if (B !== void 0 && (V = "" + B), R.key !== void 0 && (V = "" + R.key), "key" in R) {
-      B = {};
-      for (var M in R)
-        M !== "key" && (B[M] = R[M]);
-    } else B = R;
-    return R = B.ref, {
+    if (M !== void 0 && (V = "" + M), A.key !== void 0 && (V = "" + A.key), "key" in A) {
+      M = {};
+      for (var z in A)
+        z !== "key" && (M[z] = A[z]);
+    } else M = A;
+    return A = M.ref, {
       $$typeof: u,
       type: d,
       key: V,
-      ref: R !== void 0 ? R : null,
-      props: B
+      ref: A !== void 0 ? A : null,
+      props: M
     };
   }
-  return Nn.Fragment = h, Nn.jsx = S, Nn.jsxs = S, Nn;
+  return Nn.Fragment = h, Nn.jsx = _, Nn.jsxs = _, Nn;
 }
-var rf;
-function dj() {
-  return rf || (rf = 1, su.exports = uj()), su.exports;
+var of;
+function mj() {
+  return of || (of = 1, su.exports = fj()), su.exports;
 }
-var s = dj(), lu = { exports: {} }, Sn = {}, au = { exports: {} }, nu = {};
+var s = mj(), lu = { exports: {} }, Sn = {}, au = { exports: {} }, nu = {};
 /**
  * @license React
  * scheduler.production.js
@@ -44,170 +44,170 @@ var s = dj(), lu = { exports: {} }, Sn = {}, au = { exports: {} }, nu = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var uf;
-function oj() {
-  return uf || (uf = 1, (function(u) {
-    function h(y, Y) {
-      var ee = y.length;
-      y.push(Y);
+var hf;
+function xj() {
+  return hf || (hf = 1, (function(u) {
+    function h(b, G) {
+      var ee = b.length;
+      b.push(G);
       e: for (; 0 < ee; ) {
-        var ke = ee - 1 >>> 1, m = y[ke];
-        if (0 < R(m, Y))
-          y[ke] = Y, y[ee] = m, ee = ke;
+        var Ee = ee - 1 >>> 1, f = b[Ee];
+        if (0 < A(f, G))
+          b[Ee] = G, b[ee] = f, ee = Ee;
         else break e;
       }
     }
-    function S(y) {
-      return y.length === 0 ? null : y[0];
+    function _(b) {
+      return b.length === 0 ? null : b[0];
     }
-    function d(y) {
-      if (y.length === 0) return null;
-      var Y = y[0], ee = y.pop();
-      if (ee !== Y) {
-        y[0] = ee;
-        e: for (var ke = 0, m = y.length, H = m >>> 1; ke < H; ) {
-          var te = 2 * (ke + 1) - 1, $ = y[te], ae = te + 1, Z = y[ae];
-          if (0 > R($, ee))
-            ae < m && 0 > R(Z, $) ? (y[ke] = Z, y[ae] = ee, ke = ae) : (y[ke] = $, y[te] = ee, ke = te);
-          else if (ae < m && 0 > R(Z, ee))
-            y[ke] = Z, y[ae] = ee, ke = ae;
+    function d(b) {
+      if (b.length === 0) return null;
+      var G = b[0], ee = b.pop();
+      if (ee !== G) {
+        b[0] = ee;
+        e: for (var Ee = 0, f = b.length, B = f >>> 1; Ee < B; ) {
+          var te = 2 * (Ee + 1) - 1, W = b[te], ae = te + 1, Z = b[ae];
+          if (0 > A(W, ee))
+            ae < f && 0 > A(Z, W) ? (b[Ee] = Z, b[ae] = ee, Ee = ae) : (b[Ee] = W, b[te] = ee, Ee = te);
+          else if (ae < f && 0 > A(Z, ee))
+            b[Ee] = Z, b[ae] = ee, Ee = ae;
           else break e;
         }
       }
-      return Y;
+      return G;
     }
-    function R(y, Y) {
-      var ee = y.sortIndex - Y.sortIndex;
-      return ee !== 0 ? ee : y.id - Y.id;
+    function A(b, G) {
+      var ee = b.sortIndex - G.sortIndex;
+      return ee !== 0 ? ee : b.id - G.id;
     }
     if (u.unstable_now = void 0, typeof performance == "object" && typeof performance.now == "function") {
-      var B = performance;
+      var M = performance;
       u.unstable_now = function() {
-        return B.now();
+        return M.now();
       };
     } else {
-      var V = Date, M = V.now();
+      var V = Date, z = V.now();
       u.unstable_now = function() {
-        return V.now() - M;
+        return V.now() - z;
       };
     }
-    var Q = [], p = [], U = 1, K = null, k = 3, le = !1, xe = !1, _e = !1, ye = !1, Ee = typeof setTimeout == "function" ? setTimeout : null, me = typeof clearTimeout == "function" ? clearTimeout : null, I = typeof setImmediate < "u" ? setImmediate : null;
-    function oe(y) {
-      for (var Y = S(p); Y !== null; ) {
-        if (Y.callback === null) d(p);
-        else if (Y.startTime <= y)
-          d(p), Y.sortIndex = Y.expirationTime, h(Q, Y);
+    var Y = [], v = [], U = 1, K = null, k = 3, le = !1, xe = !1, Ne = !1, Se = !1, Te = typeof setTimeout == "function" ? setTimeout : null, fe = typeof clearTimeout == "function" ? clearTimeout : null, I = typeof setImmediate < "u" ? setImmediate : null;
+    function de(b) {
+      for (var G = _(v); G !== null; ) {
+        if (G.callback === null) d(v);
+        else if (G.startTime <= b)
+          d(v), G.sortIndex = G.expirationTime, h(Y, G);
         else break;
-        Y = S(p);
+        G = _(v);
       }
     }
-    function ne(y) {
-      if (_e = !1, oe(y), !xe)
-        if (S(Q) !== null)
-          xe = !0, D || (D = !0, pe());
+    function ne(b) {
+      if (Ne = !1, de(b), !xe)
+        if (_(Y) !== null)
+          xe = !0, q || (q = !0, pe());
         else {
-          var Y = S(p);
-          Y !== null && de(ne, Y.startTime - y);
+          var G = _(v);
+          G !== null && ce(ne, G.startTime - b);
         }
     }
-    var D = !1, je = -1, Re = 5, Be = -1;
-    function Xe() {
-      return ye ? !0 : !(u.unstable_now() - Be < Re);
+    var q = !1, ve = -1, Me = 5, Ye = -1;
+    function Je() {
+      return Se ? !0 : !(u.unstable_now() - Ye < Me);
     }
-    function Ge() {
-      if (ye = !1, D) {
-        var y = u.unstable_now();
-        Be = y;
-        var Y = !0;
+    function Qe() {
+      if (Se = !1, q) {
+        var b = u.unstable_now();
+        Ye = b;
+        var G = !0;
         try {
           e: {
-            xe = !1, _e && (_e = !1, me(je), je = -1), le = !0;
+            xe = !1, Ne && (Ne = !1, fe(ve), ve = -1), le = !0;
             var ee = k;
             try {
               t: {
-                for (oe(y), K = S(Q); K !== null && !(K.expirationTime > y && Xe()); ) {
-                  var ke = K.callback;
-                  if (typeof ke == "function") {
+                for (de(b), K = _(Y); K !== null && !(K.expirationTime > b && Je()); ) {
+                  var Ee = K.callback;
+                  if (typeof Ee == "function") {
                     K.callback = null, k = K.priorityLevel;
-                    var m = ke(
-                      K.expirationTime <= y
+                    var f = Ee(
+                      K.expirationTime <= b
                     );
-                    if (y = u.unstable_now(), typeof m == "function") {
-                      K.callback = m, oe(y), Y = !0;
+                    if (b = u.unstable_now(), typeof f == "function") {
+                      K.callback = f, de(b), G = !0;
                       break t;
                     }
-                    K === S(Q) && d(Q), oe(y);
-                  } else d(Q);
-                  K = S(Q);
+                    K === _(Y) && d(Y), de(b);
+                  } else d(Y);
+                  K = _(Y);
                 }
-                if (K !== null) Y = !0;
+                if (K !== null) G = !0;
                 else {
-                  var H = S(p);
-                  H !== null && de(
+                  var B = _(v);
+                  B !== null && ce(
                     ne,
-                    H.startTime - y
-                  ), Y = !1;
+                    B.startTime - b
+                  ), G = !1;
                 }
               }
               break e;
             } finally {
               K = null, k = ee, le = !1;
             }
-            Y = void 0;
+            G = void 0;
           }
         } finally {
-          Y ? pe() : D = !1;
+          G ? pe() : q = !1;
         }
       }
     }
     var pe;
     if (typeof I == "function")
       pe = function() {
-        I(Ge);
+        I(Qe);
       };
     else if (typeof MessageChannel < "u") {
-      var Ke = new MessageChannel(), X = Ke.port2;
-      Ke.port1.onmessage = Ge, pe = function() {
-        X.postMessage(null);
+      var Fe = new MessageChannel(), Q = Fe.port2;
+      Fe.port1.onmessage = Qe, pe = function() {
+        Q.postMessage(null);
       };
     } else
       pe = function() {
-        Ee(Ge, 0);
+        Te(Qe, 0);
       };
-    function de(y, Y) {
-      je = Ee(function() {
-        y(u.unstable_now());
-      }, Y);
+    function ce(b, G) {
+      ve = Te(function() {
+        b(u.unstable_now());
+      }, G);
     }
-    u.unstable_IdlePriority = 5, u.unstable_ImmediatePriority = 1, u.unstable_LowPriority = 4, u.unstable_NormalPriority = 3, u.unstable_Profiling = null, u.unstable_UserBlockingPriority = 2, u.unstable_cancelCallback = function(y) {
-      y.callback = null;
-    }, u.unstable_forceFrameRate = function(y) {
-      0 > y || 125 < y ? console.error(
+    u.unstable_IdlePriority = 5, u.unstable_ImmediatePriority = 1, u.unstable_LowPriority = 4, u.unstable_NormalPriority = 3, u.unstable_Profiling = null, u.unstable_UserBlockingPriority = 2, u.unstable_cancelCallback = function(b) {
+      b.callback = null;
+    }, u.unstable_forceFrameRate = function(b) {
+      0 > b || 125 < b ? console.error(
         "forceFrameRate takes a positive int between 0 and 125, forcing frame rates higher than 125 fps is not supported"
-      ) : Re = 0 < y ? Math.floor(1e3 / y) : 5;
+      ) : Me = 0 < b ? Math.floor(1e3 / b) : 5;
     }, u.unstable_getCurrentPriorityLevel = function() {
       return k;
-    }, u.unstable_next = function(y) {
+    }, u.unstable_next = function(b) {
       switch (k) {
         case 1:
         case 2:
         case 3:
-          var Y = 3;
+          var G = 3;
           break;
         default:
-          Y = k;
+          G = k;
       }
       var ee = k;
-      k = Y;
+      k = G;
       try {
-        return y();
+        return b();
       } finally {
         k = ee;
       }
     }, u.unstable_requestPaint = function() {
-      ye = !0;
-    }, u.unstable_runWithPriority = function(y, Y) {
-      switch (y) {
+      Se = !0;
+    }, u.unstable_runWithPriority = function(b, G) {
+      switch (b) {
         case 1:
         case 2:
         case 3:
@@ -215,48 +215,48 @@ function oj() {
         case 5:
           break;
         default:
-          y = 3;
+          b = 3;
       }
       var ee = k;
-      k = y;
+      k = b;
       try {
-        return Y();
+        return G();
       } finally {
         k = ee;
       }
-    }, u.unstable_scheduleCallback = function(y, Y, ee) {
-      var ke = u.unstable_now();
-      switch (typeof ee == "object" && ee !== null ? (ee = ee.delay, ee = typeof ee == "number" && 0 < ee ? ke + ee : ke) : ee = ke, y) {
+    }, u.unstable_scheduleCallback = function(b, G, ee) {
+      var Ee = u.unstable_now();
+      switch (typeof ee == "object" && ee !== null ? (ee = ee.delay, ee = typeof ee == "number" && 0 < ee ? Ee + ee : Ee) : ee = Ee, b) {
         case 1:
-          var m = -1;
+          var f = -1;
           break;
         case 2:
-          m = 250;
+          f = 250;
           break;
         case 5:
-          m = 1073741823;
+          f = 1073741823;
           break;
         case 4:
-          m = 1e4;
+          f = 1e4;
           break;
         default:
-          m = 5e3;
+          f = 5e3;
       }
-      return m = ee + m, y = {
+      return f = ee + f, b = {
         id: U++,
-        callback: Y,
-        priorityLevel: y,
+        callback: G,
+        priorityLevel: b,
         startTime: ee,
-        expirationTime: m,
+        expirationTime: f,
         sortIndex: -1
-      }, ee > ke ? (y.sortIndex = ee, h(p, y), S(Q) === null && y === S(p) && (_e ? (me(je), je = -1) : _e = !0, de(ne, ee - ke))) : (y.sortIndex = m, h(Q, y), xe || le || (xe = !0, D || (D = !0, pe()))), y;
-    }, u.unstable_shouldYield = Xe, u.unstable_wrapCallback = function(y) {
-      var Y = k;
+      }, ee > Ee ? (b.sortIndex = ee, h(v, b), _(Y) === null && b === _(v) && (Ne ? (fe(ve), ve = -1) : Ne = !0, ce(ne, ee - Ee))) : (b.sortIndex = f, h(Y, b), xe || le || (xe = !0, q || (q = !0, pe()))), b;
+    }, u.unstable_shouldYield = Je, u.unstable_wrapCallback = function(b) {
+      var G = k;
       return function() {
         var ee = k;
-        k = Y;
+        k = G;
         try {
-          return y.apply(this, arguments);
+          return b.apply(this, arguments);
         } finally {
           k = ee;
         }
@@ -264,11 +264,11 @@ function oj() {
     };
   })(nu)), nu;
 }
-var df;
-function hj() {
-  return df || (df = 1, au.exports = oj()), au.exports;
+var ff;
+function jj() {
+  return ff || (ff = 1, au.exports = xj()), au.exports;
 }
-var iu = { exports: {} }, it = {};
+var iu = { exports: {} }, dt = {};
 /**
  * @license React
  * react.production.js
@@ -278,13 +278,13 @@ var iu = { exports: {} }, it = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var of;
-function fj() {
-  if (of) return it;
-  of = 1;
-  var u = Symbol.for("react.transitional.element"), h = Symbol.for("react.portal"), S = Symbol.for("react.fragment"), d = Symbol.for("react.strict_mode"), R = Symbol.for("react.profiler"), B = Symbol.for("react.consumer"), V = Symbol.for("react.context"), M = Symbol.for("react.forward_ref"), Q = Symbol.for("react.suspense"), p = Symbol.for("react.memo"), U = Symbol.for("react.lazy"), K = Symbol.iterator;
-  function k(m) {
-    return m === null || typeof m != "object" ? null : (m = K && m[K] || m["@@iterator"], typeof m == "function" ? m : null);
+var mf;
+function vj() {
+  if (mf) return dt;
+  mf = 1;
+  var u = Symbol.for("react.transitional.element"), h = Symbol.for("react.portal"), _ = Symbol.for("react.fragment"), d = Symbol.for("react.strict_mode"), A = Symbol.for("react.profiler"), M = Symbol.for("react.consumer"), V = Symbol.for("react.context"), z = Symbol.for("react.forward_ref"), Y = Symbol.for("react.suspense"), v = Symbol.for("react.memo"), U = Symbol.for("react.lazy"), K = Symbol.iterator;
+  function k(f) {
+    return f === null || typeof f != "object" ? null : (f = K && f[K] || f["@@iterator"], typeof f == "function" ? f : null);
   }
   var le = {
     isMounted: function() {
@@ -296,90 +296,90 @@ function fj() {
     },
     enqueueSetState: function() {
     }
-  }, xe = Object.assign, _e = {};
-  function ye(m, H, te) {
-    this.props = m, this.context = H, this.refs = _e, this.updater = te || le;
+  }, xe = Object.assign, Ne = {};
+  function Se(f, B, te) {
+    this.props = f, this.context = B, this.refs = Ne, this.updater = te || le;
   }
-  ye.prototype.isReactComponent = {}, ye.prototype.setState = function(m, H) {
-    if (typeof m != "object" && typeof m != "function" && m != null)
+  Se.prototype.isReactComponent = {}, Se.prototype.setState = function(f, B) {
+    if (typeof f != "object" && typeof f != "function" && f != null)
       throw Error(
         "takes an object of state variables to update or a function which returns an object of state variables."
       );
-    this.updater.enqueueSetState(this, m, H, "setState");
-  }, ye.prototype.forceUpdate = function(m) {
-    this.updater.enqueueForceUpdate(this, m, "forceUpdate");
+    this.updater.enqueueSetState(this, f, B, "setState");
+  }, Se.prototype.forceUpdate = function(f) {
+    this.updater.enqueueForceUpdate(this, f, "forceUpdate");
   };
-  function Ee() {
+  function Te() {
   }
-  Ee.prototype = ye.prototype;
-  function me(m, H, te) {
-    this.props = m, this.context = H, this.refs = _e, this.updater = te || le;
+  Te.prototype = Se.prototype;
+  function fe(f, B, te) {
+    this.props = f, this.context = B, this.refs = Ne, this.updater = te || le;
   }
-  var I = me.prototype = new Ee();
-  I.constructor = me, xe(I, ye.prototype), I.isPureReactComponent = !0;
-  var oe = Array.isArray, ne = { H: null, A: null, T: null, S: null, V: null }, D = Object.prototype.hasOwnProperty;
-  function je(m, H, te, $, ae, Z) {
+  var I = fe.prototype = new Te();
+  I.constructor = fe, xe(I, Se.prototype), I.isPureReactComponent = !0;
+  var de = Array.isArray, ne = { H: null, A: null, T: null, S: null, V: null }, q = Object.prototype.hasOwnProperty;
+  function ve(f, B, te, W, ae, Z) {
     return te = Z.ref, {
       $$typeof: u,
-      type: m,
-      key: H,
+      type: f,
+      key: B,
       ref: te !== void 0 ? te : null,
       props: Z
     };
   }
-  function Re(m, H) {
-    return je(
-      m.type,
-      H,
+  function Me(f, B) {
+    return ve(
+      f.type,
+      B,
       void 0,
       void 0,
       void 0,
-      m.props
+      f.props
     );
   }
-  function Be(m) {
-    return typeof m == "object" && m !== null && m.$$typeof === u;
+  function Ye(f) {
+    return typeof f == "object" && f !== null && f.$$typeof === u;
   }
-  function Xe(m) {
-    var H = { "=": "=0", ":": "=2" };
-    return "$" + m.replace(/[=:]/g, function(te) {
-      return H[te];
+  function Je(f) {
+    var B = { "=": "=0", ":": "=2" };
+    return "$" + f.replace(/[=:]/g, function(te) {
+      return B[te];
     });
   }
-  var Ge = /\/+/g;
-  function pe(m, H) {
-    return typeof m == "object" && m !== null && m.key != null ? Xe("" + m.key) : H.toString(36);
+  var Qe = /\/+/g;
+  function pe(f, B) {
+    return typeof f == "object" && f !== null && f.key != null ? Je("" + f.key) : B.toString(36);
   }
-  function Ke() {
+  function Fe() {
   }
-  function X(m) {
-    switch (m.status) {
+  function Q(f) {
+    switch (f.status) {
       case "fulfilled":
-        return m.value;
+        return f.value;
       case "rejected":
-        throw m.reason;
+        throw f.reason;
       default:
-        switch (typeof m.status == "string" ? m.then(Ke, Ke) : (m.status = "pending", m.then(
-          function(H) {
-            m.status === "pending" && (m.status = "fulfilled", m.value = H);
+        switch (typeof f.status == "string" ? f.then(Fe, Fe) : (f.status = "pending", f.then(
+          function(B) {
+            f.status === "pending" && (f.status = "fulfilled", f.value = B);
           },
-          function(H) {
-            m.status === "pending" && (m.status = "rejected", m.reason = H);
+          function(B) {
+            f.status === "pending" && (f.status = "rejected", f.reason = B);
           }
-        )), m.status) {
+        )), f.status) {
           case "fulfilled":
-            return m.value;
+            return f.value;
           case "rejected":
-            throw m.reason;
+            throw f.reason;
         }
     }
-    throw m;
+    throw f;
   }
-  function de(m, H, te, $, ae) {
-    var Z = typeof m;
-    (Z === "undefined" || Z === "boolean") && (m = null);
+  function ce(f, B, te, W, ae) {
+    var Z = typeof f;
+    (Z === "undefined" || Z === "boolean") && (f = null);
     var P = !1;
-    if (m === null) P = !0;
+    if (f === null) P = !0;
     else
       switch (Z) {
         case "bigint":
@@ -388,266 +388,266 @@ function fj() {
           P = !0;
           break;
         case "object":
-          switch (m.$$typeof) {
+          switch (f.$$typeof) {
             case u:
             case h:
               P = !0;
               break;
             case U:
-              return P = m._init, de(
-                P(m._payload),
-                H,
+              return P = f._init, ce(
+                P(f._payload),
+                B,
                 te,
-                $,
+                W,
                 ae
               );
           }
       }
     if (P)
-      return ae = ae(m), P = $ === "" ? "." + pe(m, 0) : $, oe(ae) ? (te = "", P != null && (te = P.replace(Ge, "$&/") + "/"), de(ae, H, te, "", function(Se) {
-        return Se;
-      })) : ae != null && (Be(ae) && (ae = Re(
+      return ae = ae(f), P = W === "" ? "." + pe(f, 0) : W, de(ae) ? (te = "", P != null && (te = P.replace(Qe, "$&/") + "/"), ce(ae, B, te, "", function(Ce) {
+        return Ce;
+      })) : ae != null && (Ye(ae) && (ae = Me(
         ae,
-        te + (ae.key == null || m && m.key === ae.key ? "" : ("" + ae.key).replace(
-          Ge,
+        te + (ae.key == null || f && f.key === ae.key ? "" : ("" + ae.key).replace(
+          Qe,
           "$&/"
         ) + "/") + P
-      )), H.push(ae)), 1;
+      )), B.push(ae)), 1;
     P = 0;
-    var Ce = $ === "" ? "." : $ + ":";
-    if (oe(m))
-      for (var ie = 0; ie < m.length; ie++)
-        $ = m[ie], Z = Ce + pe($, ie), P += de(
-          $,
-          H,
+    var Oe = W === "" ? "." : W + ":";
+    if (de(f))
+      for (var ie = 0; ie < f.length; ie++)
+        W = f[ie], Z = Oe + pe(W, ie), P += ce(
+          W,
+          B,
           te,
           Z,
           ae
         );
-    else if (ie = k(m), typeof ie == "function")
-      for (m = ie.call(m), ie = 0; !($ = m.next()).done; )
-        $ = $.value, Z = Ce + pe($, ie++), P += de(
-          $,
-          H,
+    else if (ie = k(f), typeof ie == "function")
+      for (f = ie.call(f), ie = 0; !(W = f.next()).done; )
+        W = W.value, Z = Oe + pe(W, ie++), P += ce(
+          W,
+          B,
           te,
           Z,
           ae
         );
     else if (Z === "object") {
-      if (typeof m.then == "function")
-        return de(
-          X(m),
-          H,
+      if (typeof f.then == "function")
+        return ce(
+          Q(f),
+          B,
           te,
-          $,
+          W,
           ae
         );
-      throw H = String(m), Error(
-        "Objects are not valid as a React child (found: " + (H === "[object Object]" ? "object with keys {" + Object.keys(m).join(", ") + "}" : H) + "). If you meant to render a collection of children, use an array instead."
+      throw B = String(f), Error(
+        "Objects are not valid as a React child (found: " + (B === "[object Object]" ? "object with keys {" + Object.keys(f).join(", ") + "}" : B) + "). If you meant to render a collection of children, use an array instead."
       );
     }
     return P;
   }
-  function y(m, H, te) {
-    if (m == null) return m;
-    var $ = [], ae = 0;
-    return de(m, $, "", "", function(Z) {
-      return H.call(te, Z, ae++);
-    }), $;
+  function b(f, B, te) {
+    if (f == null) return f;
+    var W = [], ae = 0;
+    return ce(f, W, "", "", function(Z) {
+      return B.call(te, Z, ae++);
+    }), W;
   }
-  function Y(m) {
-    if (m._status === -1) {
-      var H = m._result;
-      H = H(), H.then(
+  function G(f) {
+    if (f._status === -1) {
+      var B = f._result;
+      B = B(), B.then(
         function(te) {
-          (m._status === 0 || m._status === -1) && (m._status = 1, m._result = te);
+          (f._status === 0 || f._status === -1) && (f._status = 1, f._result = te);
         },
         function(te) {
-          (m._status === 0 || m._status === -1) && (m._status = 2, m._result = te);
+          (f._status === 0 || f._status === -1) && (f._status = 2, f._result = te);
         }
-      ), m._status === -1 && (m._status = 0, m._result = H);
+      ), f._status === -1 && (f._status = 0, f._result = B);
     }
-    if (m._status === 1) return m._result.default;
-    throw m._result;
+    if (f._status === 1) return f._result.default;
+    throw f._result;
   }
-  var ee = typeof reportError == "function" ? reportError : function(m) {
+  var ee = typeof reportError == "function" ? reportError : function(f) {
     if (typeof window == "object" && typeof window.ErrorEvent == "function") {
-      var H = new window.ErrorEvent("error", {
+      var B = new window.ErrorEvent("error", {
         bubbles: !0,
         cancelable: !0,
-        message: typeof m == "object" && m !== null && typeof m.message == "string" ? String(m.message) : String(m),
-        error: m
+        message: typeof f == "object" && f !== null && typeof f.message == "string" ? String(f.message) : String(f),
+        error: f
       });
-      if (!window.dispatchEvent(H)) return;
+      if (!window.dispatchEvent(B)) return;
     } else if (typeof process == "object" && typeof process.emit == "function") {
-      process.emit("uncaughtException", m);
+      process.emit("uncaughtException", f);
       return;
     }
-    console.error(m);
+    console.error(f);
   };
-  function ke() {
+  function Ee() {
   }
-  return it.Children = {
-    map: y,
-    forEach: function(m, H, te) {
-      y(
-        m,
+  return dt.Children = {
+    map: b,
+    forEach: function(f, B, te) {
+      b(
+        f,
         function() {
-          H.apply(this, arguments);
+          B.apply(this, arguments);
         },
         te
       );
     },
-    count: function(m) {
-      var H = 0;
-      return y(m, function() {
-        H++;
-      }), H;
+    count: function(f) {
+      var B = 0;
+      return b(f, function() {
+        B++;
+      }), B;
     },
-    toArray: function(m) {
-      return y(m, function(H) {
-        return H;
+    toArray: function(f) {
+      return b(f, function(B) {
+        return B;
       }) || [];
     },
-    only: function(m) {
-      if (!Be(m))
+    only: function(f) {
+      if (!Ye(f))
         throw Error(
           "React.Children.only expected to receive a single React element child."
         );
-      return m;
+      return f;
     }
-  }, it.Component = ye, it.Fragment = S, it.Profiler = R, it.PureComponent = me, it.StrictMode = d, it.Suspense = Q, it.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = ne, it.__COMPILER_RUNTIME = {
+  }, dt.Component = Se, dt.Fragment = _, dt.Profiler = A, dt.PureComponent = fe, dt.StrictMode = d, dt.Suspense = Y, dt.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = ne, dt.__COMPILER_RUNTIME = {
     __proto__: null,
-    c: function(m) {
-      return ne.H.useMemoCache(m);
+    c: function(f) {
+      return ne.H.useMemoCache(f);
     }
-  }, it.cache = function(m) {
+  }, dt.cache = function(f) {
     return function() {
-      return m.apply(null, arguments);
+      return f.apply(null, arguments);
     };
-  }, it.cloneElement = function(m, H, te) {
-    if (m == null)
+  }, dt.cloneElement = function(f, B, te) {
+    if (f == null)
       throw Error(
-        "The argument must be a React element, but you passed " + m + "."
+        "The argument must be a React element, but you passed " + f + "."
       );
-    var $ = xe({}, m.props), ae = m.key, Z = void 0;
-    if (H != null)
-      for (P in H.ref !== void 0 && (Z = void 0), H.key !== void 0 && (ae = "" + H.key), H)
-        !D.call(H, P) || P === "key" || P === "__self" || P === "__source" || P === "ref" && H.ref === void 0 || ($[P] = H[P]);
+    var W = xe({}, f.props), ae = f.key, Z = void 0;
+    if (B != null)
+      for (P in B.ref !== void 0 && (Z = void 0), B.key !== void 0 && (ae = "" + B.key), B)
+        !q.call(B, P) || P === "key" || P === "__self" || P === "__source" || P === "ref" && B.ref === void 0 || (W[P] = B[P]);
     var P = arguments.length - 2;
-    if (P === 1) $.children = te;
+    if (P === 1) W.children = te;
     else if (1 < P) {
-      for (var Ce = Array(P), ie = 0; ie < P; ie++)
-        Ce[ie] = arguments[ie + 2];
-      $.children = Ce;
+      for (var Oe = Array(P), ie = 0; ie < P; ie++)
+        Oe[ie] = arguments[ie + 2];
+      W.children = Oe;
     }
-    return je(m.type, ae, void 0, void 0, Z, $);
-  }, it.createContext = function(m) {
-    return m = {
+    return ve(f.type, ae, void 0, void 0, Z, W);
+  }, dt.createContext = function(f) {
+    return f = {
       $$typeof: V,
-      _currentValue: m,
-      _currentValue2: m,
+      _currentValue: f,
+      _currentValue2: f,
       _threadCount: 0,
       Provider: null,
       Consumer: null
-    }, m.Provider = m, m.Consumer = {
-      $$typeof: B,
-      _context: m
-    }, m;
-  }, it.createElement = function(m, H, te) {
-    var $, ae = {}, Z = null;
-    if (H != null)
-      for ($ in H.key !== void 0 && (Z = "" + H.key), H)
-        D.call(H, $) && $ !== "key" && $ !== "__self" && $ !== "__source" && (ae[$] = H[$]);
+    }, f.Provider = f, f.Consumer = {
+      $$typeof: M,
+      _context: f
+    }, f;
+  }, dt.createElement = function(f, B, te) {
+    var W, ae = {}, Z = null;
+    if (B != null)
+      for (W in B.key !== void 0 && (Z = "" + B.key), B)
+        q.call(B, W) && W !== "key" && W !== "__self" && W !== "__source" && (ae[W] = B[W]);
     var P = arguments.length - 2;
     if (P === 1) ae.children = te;
     else if (1 < P) {
-      for (var Ce = Array(P), ie = 0; ie < P; ie++)
-        Ce[ie] = arguments[ie + 2];
-      ae.children = Ce;
+      for (var Oe = Array(P), ie = 0; ie < P; ie++)
+        Oe[ie] = arguments[ie + 2];
+      ae.children = Oe;
     }
-    if (m && m.defaultProps)
-      for ($ in P = m.defaultProps, P)
-        ae[$] === void 0 && (ae[$] = P[$]);
-    return je(m, Z, void 0, void 0, null, ae);
-  }, it.createRef = function() {
+    if (f && f.defaultProps)
+      for (W in P = f.defaultProps, P)
+        ae[W] === void 0 && (ae[W] = P[W]);
+    return ve(f, Z, void 0, void 0, null, ae);
+  }, dt.createRef = function() {
     return { current: null };
-  }, it.forwardRef = function(m) {
-    return { $$typeof: M, render: m };
-  }, it.isValidElement = Be, it.lazy = function(m) {
+  }, dt.forwardRef = function(f) {
+    return { $$typeof: z, render: f };
+  }, dt.isValidElement = Ye, dt.lazy = function(f) {
     return {
       $$typeof: U,
-      _payload: { _status: -1, _result: m },
-      _init: Y
+      _payload: { _status: -1, _result: f },
+      _init: G
     };
-  }, it.memo = function(m, H) {
+  }, dt.memo = function(f, B) {
     return {
-      $$typeof: p,
-      type: m,
-      compare: H === void 0 ? null : H
+      $$typeof: v,
+      type: f,
+      compare: B === void 0 ? null : B
     };
-  }, it.startTransition = function(m) {
-    var H = ne.T, te = {};
+  }, dt.startTransition = function(f) {
+    var B = ne.T, te = {};
     ne.T = te;
     try {
-      var $ = m(), ae = ne.S;
-      ae !== null && ae(te, $), typeof $ == "object" && $ !== null && typeof $.then == "function" && $.then(ke, ee);
+      var W = f(), ae = ne.S;
+      ae !== null && ae(te, W), typeof W == "object" && W !== null && typeof W.then == "function" && W.then(Ee, ee);
     } catch (Z) {
       ee(Z);
     } finally {
-      ne.T = H;
+      ne.T = B;
     }
-  }, it.unstable_useCacheRefresh = function() {
+  }, dt.unstable_useCacheRefresh = function() {
     return ne.H.useCacheRefresh();
-  }, it.use = function(m) {
-    return ne.H.use(m);
-  }, it.useActionState = function(m, H, te) {
-    return ne.H.useActionState(m, H, te);
-  }, it.useCallback = function(m, H) {
-    return ne.H.useCallback(m, H);
-  }, it.useContext = function(m) {
-    return ne.H.useContext(m);
-  }, it.useDebugValue = function() {
-  }, it.useDeferredValue = function(m, H) {
-    return ne.H.useDeferredValue(m, H);
-  }, it.useEffect = function(m, H, te) {
-    var $ = ne.H;
+  }, dt.use = function(f) {
+    return ne.H.use(f);
+  }, dt.useActionState = function(f, B, te) {
+    return ne.H.useActionState(f, B, te);
+  }, dt.useCallback = function(f, B) {
+    return ne.H.useCallback(f, B);
+  }, dt.useContext = function(f) {
+    return ne.H.useContext(f);
+  }, dt.useDebugValue = function() {
+  }, dt.useDeferredValue = function(f, B) {
+    return ne.H.useDeferredValue(f, B);
+  }, dt.useEffect = function(f, B, te) {
+    var W = ne.H;
     if (typeof te == "function")
       throw Error(
         "useEffect CRUD overload is not enabled in this build of React."
       );
-    return $.useEffect(m, H);
-  }, it.useId = function() {
+    return W.useEffect(f, B);
+  }, dt.useId = function() {
     return ne.H.useId();
-  }, it.useImperativeHandle = function(m, H, te) {
-    return ne.H.useImperativeHandle(m, H, te);
-  }, it.useInsertionEffect = function(m, H) {
-    return ne.H.useInsertionEffect(m, H);
-  }, it.useLayoutEffect = function(m, H) {
-    return ne.H.useLayoutEffect(m, H);
-  }, it.useMemo = function(m, H) {
-    return ne.H.useMemo(m, H);
-  }, it.useOptimistic = function(m, H) {
-    return ne.H.useOptimistic(m, H);
-  }, it.useReducer = function(m, H, te) {
-    return ne.H.useReducer(m, H, te);
-  }, it.useRef = function(m) {
-    return ne.H.useRef(m);
-  }, it.useState = function(m) {
-    return ne.H.useState(m);
-  }, it.useSyncExternalStore = function(m, H, te) {
+  }, dt.useImperativeHandle = function(f, B, te) {
+    return ne.H.useImperativeHandle(f, B, te);
+  }, dt.useInsertionEffect = function(f, B) {
+    return ne.H.useInsertionEffect(f, B);
+  }, dt.useLayoutEffect = function(f, B) {
+    return ne.H.useLayoutEffect(f, B);
+  }, dt.useMemo = function(f, B) {
+    return ne.H.useMemo(f, B);
+  }, dt.useOptimistic = function(f, B) {
+    return ne.H.useOptimistic(f, B);
+  }, dt.useReducer = function(f, B, te) {
+    return ne.H.useReducer(f, B, te);
+  }, dt.useRef = function(f) {
+    return ne.H.useRef(f);
+  }, dt.useState = function(f) {
+    return ne.H.useState(f);
+  }, dt.useSyncExternalStore = function(f, B, te) {
     return ne.H.useSyncExternalStore(
-      m,
-      H,
+      f,
+      B,
       te
     );
-  }, it.useTransition = function() {
+  }, dt.useTransition = function() {
     return ne.H.useTransition();
-  }, it.version = "19.1.0", it;
+  }, dt.version = "19.1.0", dt;
 }
-var hf;
-function _u() {
-  return hf || (hf = 1, iu.exports = fj()), iu.exports;
+var xf;
+function Su() {
+  return xf || (xf = 1, iu.exports = vj()), iu.exports;
 }
 var cu = { exports: {} }, es = {};
 /**
@@ -659,143 +659,143 @@ var cu = { exports: {} }, es = {};
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var ff;
-function mj() {
-  if (ff) return es;
-  ff = 1;
-  var u = _u();
-  function h(Q) {
-    var p = "https://react.dev/errors/" + Q;
+var jf;
+function pj() {
+  if (jf) return es;
+  jf = 1;
+  var u = Su();
+  function h(Y) {
+    var v = "https://react.dev/errors/" + Y;
     if (1 < arguments.length) {
-      p += "?args[]=" + encodeURIComponent(arguments[1]);
+      v += "?args[]=" + encodeURIComponent(arguments[1]);
       for (var U = 2; U < arguments.length; U++)
-        p += "&args[]=" + encodeURIComponent(arguments[U]);
+        v += "&args[]=" + encodeURIComponent(arguments[U]);
     }
-    return "Minified React error #" + Q + "; visit " + p + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
+    return "Minified React error #" + Y + "; visit " + v + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
   }
-  function S() {
+  function _() {
   }
   var d = {
     d: {
-      f: S,
+      f: _,
       r: function() {
         throw Error(h(522));
       },
-      D: S,
-      C: S,
-      L: S,
-      m: S,
-      X: S,
-      S,
-      M: S
+      D: _,
+      C: _,
+      L: _,
+      m: _,
+      X: _,
+      S: _,
+      M: _
     },
     p: 0,
     findDOMNode: null
-  }, R = Symbol.for("react.portal");
-  function B(Q, p, U) {
+  }, A = Symbol.for("react.portal");
+  function M(Y, v, U) {
     var K = 3 < arguments.length && arguments[3] !== void 0 ? arguments[3] : null;
     return {
-      $$typeof: R,
+      $$typeof: A,
       key: K == null ? null : "" + K,
-      children: Q,
-      containerInfo: p,
+      children: Y,
+      containerInfo: v,
       implementation: U
     };
   }
   var V = u.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE;
-  function M(Q, p) {
-    if (Q === "font") return "";
-    if (typeof p == "string")
-      return p === "use-credentials" ? p : "";
+  function z(Y, v) {
+    if (Y === "font") return "";
+    if (typeof v == "string")
+      return v === "use-credentials" ? v : "";
   }
-  return es.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = d, es.createPortal = function(Q, p) {
+  return es.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE = d, es.createPortal = function(Y, v) {
     var U = 2 < arguments.length && arguments[2] !== void 0 ? arguments[2] : null;
-    if (!p || p.nodeType !== 1 && p.nodeType !== 9 && p.nodeType !== 11)
+    if (!v || v.nodeType !== 1 && v.nodeType !== 9 && v.nodeType !== 11)
       throw Error(h(299));
-    return B(Q, p, null, U);
-  }, es.flushSync = function(Q) {
-    var p = V.T, U = d.p;
+    return M(Y, v, null, U);
+  }, es.flushSync = function(Y) {
+    var v = V.T, U = d.p;
     try {
-      if (V.T = null, d.p = 2, Q) return Q();
+      if (V.T = null, d.p = 2, Y) return Y();
     } finally {
-      V.T = p, d.p = U, d.d.f();
+      V.T = v, d.p = U, d.d.f();
     }
-  }, es.preconnect = function(Q, p) {
-    typeof Q == "string" && (p ? (p = p.crossOrigin, p = typeof p == "string" ? p === "use-credentials" ? p : "" : void 0) : p = null, d.d.C(Q, p));
-  }, es.prefetchDNS = function(Q) {
-    typeof Q == "string" && d.d.D(Q);
-  }, es.preinit = function(Q, p) {
-    if (typeof Q == "string" && p && typeof p.as == "string") {
-      var U = p.as, K = M(U, p.crossOrigin), k = typeof p.integrity == "string" ? p.integrity : void 0, le = typeof p.fetchPriority == "string" ? p.fetchPriority : void 0;
+  }, es.preconnect = function(Y, v) {
+    typeof Y == "string" && (v ? (v = v.crossOrigin, v = typeof v == "string" ? v === "use-credentials" ? v : "" : void 0) : v = null, d.d.C(Y, v));
+  }, es.prefetchDNS = function(Y) {
+    typeof Y == "string" && d.d.D(Y);
+  }, es.preinit = function(Y, v) {
+    if (typeof Y == "string" && v && typeof v.as == "string") {
+      var U = v.as, K = z(U, v.crossOrigin), k = typeof v.integrity == "string" ? v.integrity : void 0, le = typeof v.fetchPriority == "string" ? v.fetchPriority : void 0;
       U === "style" ? d.d.S(
-        Q,
-        typeof p.precedence == "string" ? p.precedence : void 0,
+        Y,
+        typeof v.precedence == "string" ? v.precedence : void 0,
         {
           crossOrigin: K,
           integrity: k,
           fetchPriority: le
         }
-      ) : U === "script" && d.d.X(Q, {
+      ) : U === "script" && d.d.X(Y, {
         crossOrigin: K,
         integrity: k,
         fetchPriority: le,
-        nonce: typeof p.nonce == "string" ? p.nonce : void 0
+        nonce: typeof v.nonce == "string" ? v.nonce : void 0
       });
     }
-  }, es.preinitModule = function(Q, p) {
-    if (typeof Q == "string")
-      if (typeof p == "object" && p !== null) {
-        if (p.as == null || p.as === "script") {
-          var U = M(
-            p.as,
-            p.crossOrigin
+  }, es.preinitModule = function(Y, v) {
+    if (typeof Y == "string")
+      if (typeof v == "object" && v !== null) {
+        if (v.as == null || v.as === "script") {
+          var U = z(
+            v.as,
+            v.crossOrigin
           );
-          d.d.M(Q, {
+          d.d.M(Y, {
             crossOrigin: U,
-            integrity: typeof p.integrity == "string" ? p.integrity : void 0,
-            nonce: typeof p.nonce == "string" ? p.nonce : void 0
+            integrity: typeof v.integrity == "string" ? v.integrity : void 0,
+            nonce: typeof v.nonce == "string" ? v.nonce : void 0
           });
         }
-      } else p == null && d.d.M(Q);
-  }, es.preload = function(Q, p) {
-    if (typeof Q == "string" && typeof p == "object" && p !== null && typeof p.as == "string") {
-      var U = p.as, K = M(U, p.crossOrigin);
-      d.d.L(Q, U, {
+      } else v == null && d.d.M(Y);
+  }, es.preload = function(Y, v) {
+    if (typeof Y == "string" && typeof v == "object" && v !== null && typeof v.as == "string") {
+      var U = v.as, K = z(U, v.crossOrigin);
+      d.d.L(Y, U, {
         crossOrigin: K,
-        integrity: typeof p.integrity == "string" ? p.integrity : void 0,
-        nonce: typeof p.nonce == "string" ? p.nonce : void 0,
-        type: typeof p.type == "string" ? p.type : void 0,
-        fetchPriority: typeof p.fetchPriority == "string" ? p.fetchPriority : void 0,
-        referrerPolicy: typeof p.referrerPolicy == "string" ? p.referrerPolicy : void 0,
-        imageSrcSet: typeof p.imageSrcSet == "string" ? p.imageSrcSet : void 0,
-        imageSizes: typeof p.imageSizes == "string" ? p.imageSizes : void 0,
-        media: typeof p.media == "string" ? p.media : void 0
+        integrity: typeof v.integrity == "string" ? v.integrity : void 0,
+        nonce: typeof v.nonce == "string" ? v.nonce : void 0,
+        type: typeof v.type == "string" ? v.type : void 0,
+        fetchPriority: typeof v.fetchPriority == "string" ? v.fetchPriority : void 0,
+        referrerPolicy: typeof v.referrerPolicy == "string" ? v.referrerPolicy : void 0,
+        imageSrcSet: typeof v.imageSrcSet == "string" ? v.imageSrcSet : void 0,
+        imageSizes: typeof v.imageSizes == "string" ? v.imageSizes : void 0,
+        media: typeof v.media == "string" ? v.media : void 0
       });
     }
-  }, es.preloadModule = function(Q, p) {
-    if (typeof Q == "string")
-      if (p) {
-        var U = M(p.as, p.crossOrigin);
-        d.d.m(Q, {
-          as: typeof p.as == "string" && p.as !== "script" ? p.as : void 0,
+  }, es.preloadModule = function(Y, v) {
+    if (typeof Y == "string")
+      if (v) {
+        var U = z(v.as, v.crossOrigin);
+        d.d.m(Y, {
+          as: typeof v.as == "string" && v.as !== "script" ? v.as : void 0,
           crossOrigin: U,
-          integrity: typeof p.integrity == "string" ? p.integrity : void 0
+          integrity: typeof v.integrity == "string" ? v.integrity : void 0
         });
-      } else d.d.m(Q);
-  }, es.requestFormReset = function(Q) {
-    d.d.r(Q);
-  }, es.unstable_batchedUpdates = function(Q, p) {
-    return Q(p);
-  }, es.useFormState = function(Q, p, U) {
-    return V.H.useFormState(Q, p, U);
+      } else d.d.m(Y);
+  }, es.requestFormReset = function(Y) {
+    d.d.r(Y);
+  }, es.unstable_batchedUpdates = function(Y, v) {
+    return Y(v);
+  }, es.useFormState = function(Y, v, U) {
+    return V.H.useFormState(Y, v, U);
   }, es.useFormStatus = function() {
     return V.H.useHostTransitionStatus();
   }, es.version = "19.1.0", es;
 }
-var mf;
-function xj() {
-  if (mf) return cu.exports;
-  mf = 1;
+var vf;
+function gj() {
+  if (vf) return cu.exports;
+  vf = 1;
   function u() {
     if (!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ > "u" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE != "function"))
       try {
@@ -804,7 +804,7 @@ function xj() {
         console.error(h);
       }
   }
-  return u(), cu.exports = mj(), cu.exports;
+  return u(), cu.exports = pj(), cu.exports;
 }
 /**
  * @license React
@@ -815,11 +815,11 @@ function xj() {
  * This source code is licensed under the MIT license found in the
  * LICENSE file in the root directory of this source tree.
  */
-var xf;
-function jj() {
-  if (xf) return Sn;
-  xf = 1;
-  var u = hj(), h = _u(), S = xj();
+var pf;
+function bj() {
+  if (pf) return Sn;
+  pf = 1;
+  var u = jj(), h = Su(), _ = gj();
   function d(e) {
     var t = "https://react.dev/errors/" + e;
     if (1 < arguments.length) {
@@ -829,10 +829,10 @@ function jj() {
     }
     return "Minified React error #" + e + "; visit " + t + " for the full message or use the non-minified dev environment for full errors and additional helpful warnings.";
   }
-  function R(e) {
+  function A(e) {
     return !(!e || e.nodeType !== 1 && e.nodeType !== 9 && e.nodeType !== 11);
   }
-  function B(e) {
+  function M(e) {
     var t = e, l = e;
     if (e.alternate) for (; t.return; ) t = t.return;
     else {
@@ -850,14 +850,14 @@ function jj() {
     }
     return null;
   }
-  function M(e) {
-    if (B(e) !== e)
+  function z(e) {
+    if (M(e) !== e)
       throw Error(d(188));
   }
-  function Q(e) {
+  function Y(e) {
     var t = e.alternate;
     if (!t) {
-      if (t = B(e), t === null) throw Error(d(188));
+      if (t = M(e), t === null) throw Error(d(188));
       return t !== e ? null : e;
     }
     for (var l = e, a = t; ; ) {
@@ -873,8 +873,8 @@ function jj() {
       }
       if (n.child === i.child) {
         for (i = n.child; i; ) {
-          if (i === l) return M(n), e;
-          if (i === a) return M(n), t;
+          if (i === l) return z(n), e;
+          if (i === a) return z(n), t;
           i = i.sibling;
         }
         throw Error(d(188));
@@ -912,37 +912,37 @@ function jj() {
     if (l.tag !== 3) throw Error(d(188));
     return l.stateNode.current === l ? e : t;
   }
-  function p(e) {
+  function v(e) {
     var t = e.tag;
     if (t === 5 || t === 26 || t === 27 || t === 6) return e;
     for (e = e.child; e !== null; ) {
-      if (t = p(e), t !== null) return t;
+      if (t = v(e), t !== null) return t;
       e = e.sibling;
     }
     return null;
   }
-  var U = Object.assign, K = Symbol.for("react.element"), k = Symbol.for("react.transitional.element"), le = Symbol.for("react.portal"), xe = Symbol.for("react.fragment"), _e = Symbol.for("react.strict_mode"), ye = Symbol.for("react.profiler"), Ee = Symbol.for("react.provider"), me = Symbol.for("react.consumer"), I = Symbol.for("react.context"), oe = Symbol.for("react.forward_ref"), ne = Symbol.for("react.suspense"), D = Symbol.for("react.suspense_list"), je = Symbol.for("react.memo"), Re = Symbol.for("react.lazy"), Be = Symbol.for("react.activity"), Xe = Symbol.for("react.memo_cache_sentinel"), Ge = Symbol.iterator;
+  var U = Object.assign, K = Symbol.for("react.element"), k = Symbol.for("react.transitional.element"), le = Symbol.for("react.portal"), xe = Symbol.for("react.fragment"), Ne = Symbol.for("react.strict_mode"), Se = Symbol.for("react.profiler"), Te = Symbol.for("react.provider"), fe = Symbol.for("react.consumer"), I = Symbol.for("react.context"), de = Symbol.for("react.forward_ref"), ne = Symbol.for("react.suspense"), q = Symbol.for("react.suspense_list"), ve = Symbol.for("react.memo"), Me = Symbol.for("react.lazy"), Ye = Symbol.for("react.activity"), Je = Symbol.for("react.memo_cache_sentinel"), Qe = Symbol.iterator;
   function pe(e) {
-    return e === null || typeof e != "object" ? null : (e = Ge && e[Ge] || e["@@iterator"], typeof e == "function" ? e : null);
+    return e === null || typeof e != "object" ? null : (e = Qe && e[Qe] || e["@@iterator"], typeof e == "function" ? e : null);
   }
-  var Ke = Symbol.for("react.client.reference");
-  function X(e) {
+  var Fe = Symbol.for("react.client.reference");
+  function Q(e) {
     if (e == null) return null;
     if (typeof e == "function")
-      return e.$$typeof === Ke ? null : e.displayName || e.name || null;
+      return e.$$typeof === Fe ? null : e.displayName || e.name || null;
     if (typeof e == "string") return e;
     switch (e) {
       case xe:
         return "Fragment";
-      case ye:
+      case Se:
         return "Profiler";
-      case _e:
+      case Ne:
         return "StrictMode";
       case ne:
         return "Suspense";
-      case D:
+      case q:
         return "SuspenseList";
-      case Be:
+      case Ye:
         return "Activity";
     }
     if (typeof e == "object")
@@ -951,47 +951,47 @@ function jj() {
           return "Portal";
         case I:
           return (e.displayName || "Context") + ".Provider";
-        case me:
+        case fe:
           return (e._context.displayName || "Context") + ".Consumer";
-        case oe:
+        case de:
           var t = e.render;
           return e = e.displayName, e || (e = t.displayName || t.name || "", e = e !== "" ? "ForwardRef(" + e + ")" : "ForwardRef"), e;
-        case je:
-          return t = e.displayName || null, t !== null ? t : X(e.type) || "Memo";
-        case Re:
+        case ve:
+          return t = e.displayName || null, t !== null ? t : Q(e.type) || "Memo";
+        case Me:
           t = e._payload, e = e._init;
           try {
-            return X(e(t));
+            return Q(e(t));
           } catch {
           }
       }
     return null;
   }
-  var de = Array.isArray, y = h.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, Y = S.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ee = {
+  var ce = Array.isArray, b = h.__CLIENT_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, G = _.__DOM_INTERNALS_DO_NOT_USE_OR_WARN_USERS_THEY_CANNOT_UPGRADE, ee = {
     pending: !1,
     data: null,
     method: null,
     action: null
-  }, ke = [], m = -1;
-  function H(e) {
+  }, Ee = [], f = -1;
+  function B(e) {
     return { current: e };
   }
   function te(e) {
-    0 > m || (e.current = ke[m], ke[m] = null, m--);
+    0 > f || (e.current = Ee[f], Ee[f] = null, f--);
   }
-  function $(e, t) {
-    m++, ke[m] = e.current, e.current = t;
+  function W(e, t) {
+    f++, Ee[f] = e.current, e.current = t;
   }
-  var ae = H(null), Z = H(null), P = H(null), Ce = H(null);
+  var ae = B(null), Z = B(null), P = B(null), Oe = B(null);
   function ie(e, t) {
-    switch ($(P, t), $(Z, e), $(ae, null), t.nodeType) {
+    switch (W(P, t), W(Z, e), W(ae, null), t.nodeType) {
       case 9:
       case 11:
-        e = (e = t.documentElement) && (e = e.namespaceURI) ? Uh(e) : 0;
+        e = (e = t.documentElement) && (e = e.namespaceURI) ? qh(e) : 0;
         break;
       default:
         if (e = t.tagName, t = t.namespaceURI)
-          t = Uh(t), e = Dh(t, e);
+          t = qh(t), e = Hh(t, e);
         else
           switch (e) {
             case "svg":
@@ -1004,33 +1004,33 @@ function jj() {
               e = 0;
           }
     }
-    te(ae), $(ae, e);
+    te(ae), W(ae, e);
   }
-  function Se() {
+  function Ce() {
     te(ae), te(Z), te(P);
   }
-  function st(e) {
-    e.memoizedState !== null && $(Ce, e);
-    var t = ae.current, l = Dh(t, e.type);
-    t !== l && ($(Z, e), $(ae, l));
-  }
   function lt(e) {
-    Z.current === e && (te(ae), te(Z)), Ce.current === e && (te(Ce), pn._currentValue = ee);
+    e.memoizedState !== null && W(Oe, e);
+    var t = ae.current, l = Hh(t, e.type);
+    t !== l && (W(Z, e), W(ae, l));
   }
-  var Pe = Object.prototype.hasOwnProperty, Oe = u.unstable_scheduleCallback, Te = u.unstable_cancelCallback, De = u.unstable_shouldYield, Ne = u.unstable_requestPaint, Le = u.unstable_now, We = u.unstable_getCurrentPriorityLevel, Fe = u.unstable_ImmediatePriority, Ze = u.unstable_UserBlockingPriority, he = u.unstable_NormalPriority, et = u.unstable_LowPriority, Ue = u.unstable_IdlePriority, E = u.log, w = u.unstable_setDisableYieldValue, W = null, ve = null;
-  function He(e) {
-    if (typeof E == "function" && w(e), ve && typeof ve.setStrictMode == "function")
+  function at(e) {
+    Z.current === e && (te(ae), te(Z)), Oe.current === e && (te(Oe), pn._currentValue = ee);
+  }
+  var et = Object.prototype.hasOwnProperty, Ae = u.unstable_scheduleCallback, Re = u.unstable_cancelCallback, qe = u.unstable_shouldYield, ke = u.unstable_requestPaint, Be = u.unstable_now, tt = u.unstable_getCurrentPriorityLevel, st = u.unstable_ImmediatePriority, rt = u.unstable_UserBlockingPriority, je = u.unstable_NormalPriority, Ke = u.unstable_LowPriority, ze = u.unstable_IdlePriority, E = u.log, w = u.unstable_setDisableYieldValue, $ = null, we = null;
+  function Le(e) {
+    if (typeof E == "function" && w(e), we && typeof we.setStrictMode == "function")
       try {
-        ve.setStrictMode(W, e);
+        we.setStrictMode($, e);
       } catch {
       }
   }
-  var tt = Math.clz32 ? Math.clz32 : fe, dt = Math.log, L = Math.LN2;
-  function fe(e) {
-    return e >>>= 0, e === 0 ? 32 : 31 - (dt(e) / L | 0) | 0;
+  var Xe = Math.clz32 ? Math.clz32 : he, ft = Math.log, L = Math.LN2;
+  function he(e) {
+    return e >>>= 0, e === 0 ? 32 : 31 - (ft(e) / L | 0) | 0;
   }
-  var re = 256, Ve = 4194304;
-  function _(e) {
+  var re = 256, $e = 4194304;
+  function y(e) {
     var t = e & 42;
     if (t !== 0) return t;
     switch (e & -e) {
@@ -1084,18 +1084,18 @@ function jj() {
         return e;
     }
   }
-  function be(e, t, l) {
+  function ye(e, t, l) {
     var a = e.pendingLanes;
     if (a === 0) return 0;
     var n = 0, i = e.suspendedLanes, c = e.pingedLanes;
     e = e.warmLanes;
     var o = a & 134217727;
-    return o !== 0 ? (a = o & ~i, a !== 0 ? n = _(a) : (c &= o, c !== 0 ? n = _(c) : l || (l = o & ~e, l !== 0 && (n = _(l))))) : (o = a & ~i, o !== 0 ? n = _(o) : c !== 0 ? n = _(c) : l || (l = a & ~e, l !== 0 && (n = _(l)))), n === 0 ? 0 : t !== 0 && t !== n && (t & i) === 0 && (i = n & -n, l = t & -t, i >= l || i === 32 && (l & 4194048) !== 0) ? t : n;
+    return o !== 0 ? (a = o & ~i, a !== 0 ? n = y(a) : (c &= o, c !== 0 ? n = y(c) : l || (l = o & ~e, l !== 0 && (n = y(l))))) : (o = a & ~i, o !== 0 ? n = y(o) : c !== 0 ? n = y(c) : l || (l = a & ~e, l !== 0 && (n = y(l)))), n === 0 ? 0 : t !== 0 && t !== n && (t & i) === 0 && (i = n & -n, l = t & -t, i >= l || i === 32 && (l & 4194048) !== 0) ? t : n;
   }
   function ge(e, t) {
     return (e.pendingLanes & ~(e.suspendedLanes & ~e.pingedLanes) & t) === 0;
   }
-  function Qe(e, t) {
+  function Ze(e, t) {
     switch (e) {
       case 1:
       case 2:
@@ -1136,51 +1136,51 @@ function jj() {
         return -1;
     }
   }
-  function xt() {
+  function pt() {
     var e = re;
     return re <<= 1, (re & 4194048) === 0 && (re = 256), e;
   }
-  function z() {
-    var e = Ve;
-    return Ve <<= 1, (Ve & 62914560) === 0 && (Ve = 4194304), e;
+  function D() {
+    var e = $e;
+    return $e <<= 1, ($e & 62914560) === 0 && ($e = 4194304), e;
   }
-  function v(e) {
+  function x(e) {
     for (var t = [], l = 0; 31 > l; l++) t.push(e);
     return t;
   }
   function ue(e, t) {
     e.pendingLanes |= t, t !== 268435456 && (e.suspendedLanes = 0, e.pingedLanes = 0, e.warmLanes = 0);
   }
-  function f(e, t, l, a, n, i) {
+  function be(e, t, l, a, n, i) {
     var c = e.pendingLanes;
     e.pendingLanes = l, e.suspendedLanes = 0, e.pingedLanes = 0, e.warmLanes = 0, e.expiredLanes &= l, e.entangledLanes &= l, e.errorRecoveryDisabledLanes &= l, e.shellSuspendCounter = 0;
-    var o = e.entanglements, g = e.expirationTimes, T = e.hiddenUpdates;
+    var o = e.entanglements, p = e.expirationTimes, T = e.hiddenUpdates;
     for (l = c & ~l; 0 < l; ) {
-      var J = 31 - tt(l), se = 1 << J;
-      o[J] = 0, g[J] = -1;
-      var A = T[J];
-      if (A !== null)
-        for (T[J] = null, J = 0; J < A.length; J++) {
-          var q = A[J];
-          q !== null && (q.lane &= -536870913);
+      var J = 31 - Xe(l), se = 1 << J;
+      o[J] = 0, p[J] = -1;
+      var R = T[J];
+      if (R !== null)
+        for (T[J] = null, J = 0; J < R.length; J++) {
+          var H = R[J];
+          H !== null && (H.lane &= -536870913);
         }
       l &= ~se;
     }
-    a !== 0 && G(e, a, 0), i !== 0 && n === 0 && e.tag !== 0 && (e.suspendedLanes |= i & ~(c & ~t));
+    a !== 0 && ut(e, a, 0), i !== 0 && n === 0 && e.tag !== 0 && (e.suspendedLanes |= i & ~(c & ~t));
   }
-  function G(e, t, l) {
+  function ut(e, t, l) {
     e.pendingLanes |= t, e.suspendedLanes &= ~t;
-    var a = 31 - tt(t);
+    var a = 31 - Xe(t);
     e.entangledLanes |= t, e.entanglements[a] = e.entanglements[a] | 1073741824 | l & 4194090;
   }
-  function x(e, t) {
+  function N(e, t) {
     var l = e.entangledLanes |= t;
     for (e = e.entanglements; l; ) {
-      var a = 31 - tt(l), n = 1 << a;
+      var a = 31 - Xe(l), n = 1 << a;
       n & t | e[a] & t && (e[a] |= t), l &= ~n;
     }
   }
-  function ce(e) {
+  function oe(e) {
     switch (e) {
       case 2:
         e = 1;
@@ -1219,34 +1219,34 @@ function jj() {
     }
     return e;
   }
-  function qe(e) {
+  function Ve(e) {
     return e &= -e, 2 < e ? 8 < e ? (e & 134217727) !== 0 ? 32 : 268435456 : 8 : 2;
   }
-  function vt() {
-    var e = Y.p;
-    return e !== 0 ? e : (e = window.event, e === void 0 ? 32 : ef(e.type));
+  function Nt() {
+    var e = G.p;
+    return e !== 0 ? e : (e = window.event, e === void 0 ? 32 : lf(e.type));
   }
-  function Rt(e, t) {
-    var l = Y.p;
+  function g(e, t) {
+    var l = G.p;
     try {
-      return Y.p = e, t();
+      return G.p = e, t();
     } finally {
-      Y.p = l;
+      G.p = l;
     }
   }
-  var Et = Math.random().toString(36).slice(2), rt = "__reactFiber$" + Et, St = "__reactProps$" + Et, b = "__reactContainer$" + Et, we = "__reactEvents$" + Et, nt = "__reactListeners$" + Et, pt = "__reactHandles$" + Et, j = "__reactResources$" + Et, ze = "__reactMarker$" + Et;
-  function Ae(e) {
-    delete e[rt], delete e[St], delete e[we], delete e[nt], delete e[pt];
+  var X = Math.random().toString(36).slice(2), me = "__reactFiber$" + X, nt = "__reactProps$" + X, j = "__reactContainer$" + X, _e = "__reactEvents$" + X, it = "__reactListeners$" + X, jt = "__reactHandles$" + X, m = "__reactResources$" + X, Ue = "__reactMarker$" + X;
+  function De(e) {
+    delete e[me], delete e[nt], delete e[_e], delete e[it], delete e[jt];
   }
-  function at(e) {
-    var t = e[rt];
+  function ct(e) {
+    var t = e[me];
     if (t) return t;
     for (var l = e.parentNode; l; ) {
-      if (t = l[b] || l[rt]) {
+      if (t = l[j] || l[me]) {
         if (l = t.alternate, t.child !== null || l !== null && l.child !== null)
-          for (e = Bh(e); e !== null; ) {
-            if (l = e[rt]) return l;
-            e = Bh(e);
+          for (e = Gh(e); e !== null; ) {
+            if (l = e[me]) return l;
+            e = Gh(e);
           }
         return t;
       }
@@ -1254,8 +1254,8 @@ function jj() {
     }
     return null;
   }
-  function Xt(e) {
-    if (e = e[rt] || e[b]) {
+  function Zt(e) {
+    if (e = e[me] || e[j]) {
       var t = e.tag;
       if (t === 5 || t === 6 || t === 13 || t === 26 || t === 27 || t === 3)
         return e;
@@ -1268,11 +1268,11 @@ function jj() {
     throw Error(d(33));
   }
   function Us(e) {
-    var t = e[j];
-    return t || (t = e[j] = { hoistableStyles: /* @__PURE__ */ new Map(), hoistableScripts: /* @__PURE__ */ new Map() }), t;
+    var t = e[m];
+    return t || (t = e[m] = { hoistableStyles: /* @__PURE__ */ new Map(), hoistableScripts: /* @__PURE__ */ new Map() }), t;
   }
   function qt(e) {
-    e[ze] = !0;
+    e[Ue] = !0;
   }
   var Ea = /* @__PURE__ */ new Set(), Oa = {};
   function It(e, t) {
@@ -1282,14 +1282,14 @@ function jj() {
     for (Oa[e] = t, e = 0; e < t.length; e++)
       Ea.add(t[e]);
   }
-  var tm = RegExp(
+  var nm = RegExp(
     "^[:A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD][:A-Z_a-z\\u00C0-\\u00D6\\u00D8-\\u00F6\\u00F8-\\u02FF\\u0370-\\u037D\\u037F-\\u1FFF\\u200C-\\u200D\\u2070-\\u218F\\u2C00-\\u2FEF\\u3001-\\uD7FF\\uF900-\\uFDCF\\uFDF0-\\uFFFD\\-.0-9\\u00B7\\u0300-\\u036F\\u203F-\\u2040]*$"
-  ), Su = {}, wu = {};
-  function sm(e) {
-    return Pe.call(wu, e) ? !0 : Pe.call(Su, e) ? !1 : tm.test(e) ? wu[e] = !0 : (Su[e] = !0, !1);
+  ), Cu = {}, Eu = {};
+  function im(e) {
+    return et.call(Eu, e) ? !0 : et.call(Cu, e) ? !1 : nm.test(e) ? Eu[e] = !0 : (Cu[e] = !0, !1);
   }
-  function zn(e, t, l) {
-    if (sm(t))
+  function An(e, t, l) {
+    if (im(t))
       if (l === null) e.removeAttribute(t);
       else {
         switch (typeof l) {
@@ -1308,7 +1308,7 @@ function jj() {
         e.setAttribute(t, "" + l);
       }
   }
-  function An(e, t, l) {
+  function Rn(e, t, l) {
     if (l === null) e.removeAttribute(t);
     else {
       switch (typeof l) {
@@ -1336,18 +1336,18 @@ function jj() {
       e.setAttributeNS(t, l, "" + a);
     }
   }
-  var Wi, ku;
-  function Yl(e) {
+  var Wi, Ou;
+  function Gl(e) {
     if (Wi === void 0)
       try {
         throw Error();
       } catch (l) {
         var t = l.stack.trim().match(/\n( *(at )?)/);
-        Wi = t && t[1] || "", ku = -1 < l.stack.indexOf(`
+        Wi = t && t[1] || "", Ou = -1 < l.stack.indexOf(`
     at`) ? " (<anonymous>)" : -1 < l.stack.indexOf("@") ? "@unknown:0:0" : "";
       }
     return `
-` + Wi + e + ku;
+` + Wi + e + Ou;
   }
   var Fi = !1;
   function Ii(e, t) {
@@ -1370,30 +1370,30 @@ function jj() {
               }), typeof Reflect == "object" && Reflect.construct) {
                 try {
                   Reflect.construct(se, []);
-                } catch (q) {
-                  var A = q;
+                } catch (H) {
+                  var R = H;
                 }
                 Reflect.construct(e, [], se);
               } else {
                 try {
                   se.call();
-                } catch (q) {
-                  A = q;
+                } catch (H) {
+                  R = H;
                 }
                 e.call(se.prototype);
               }
             } else {
               try {
                 throw Error();
-              } catch (q) {
-                A = q;
+              } catch (H) {
+                R = H;
               }
               (se = e()) && typeof se.catch == "function" && se.catch(function() {
               });
             }
-          } catch (q) {
-            if (q && A && typeof q.stack == "string")
-              return [q.stack, A.stack];
+          } catch (H) {
+            if (H && R && typeof H.stack == "string")
+              return [H.stack, R.stack];
           }
           return [null, null];
         }
@@ -1410,25 +1410,25 @@ function jj() {
       );
       var i = a.DetermineComponentFrameRoot(), c = i[0], o = i[1];
       if (c && o) {
-        var g = c.split(`
+        var p = c.split(`
 `), T = o.split(`
 `);
-        for (n = a = 0; a < g.length && !g[a].includes("DetermineComponentFrameRoot"); )
+        for (n = a = 0; a < p.length && !p[a].includes("DetermineComponentFrameRoot"); )
           a++;
         for (; n < T.length && !T[n].includes(
           "DetermineComponentFrameRoot"
         ); )
           n++;
-        if (a === g.length || n === T.length)
-          for (a = g.length - 1, n = T.length - 1; 1 <= a && 0 <= n && g[a] !== T[n]; )
+        if (a === p.length || n === T.length)
+          for (a = p.length - 1, n = T.length - 1; 1 <= a && 0 <= n && p[a] !== T[n]; )
             n--;
         for (; 1 <= a && 0 <= n; a--, n--)
-          if (g[a] !== T[n]) {
+          if (p[a] !== T[n]) {
             if (a !== 1 || n !== 1)
               do
-                if (a--, n--, 0 > n || g[a] !== T[n]) {
+                if (a--, n--, 0 > n || p[a] !== T[n]) {
                   var J = `
-` + g[a].replace(" at new ", " at ");
+` + p[a].replace(" at new ", " at ");
                   return e.displayName && J.includes("<anonymous>") && (J = J.replace("<anonymous>", e.displayName)), J;
                 }
               while (1 <= a && 0 <= n);
@@ -1438,20 +1438,20 @@ function jj() {
     } finally {
       Fi = !1, Error.prepareStackTrace = l;
     }
-    return (l = e ? e.displayName || e.name : "") ? Yl(l) : "";
+    return (l = e ? e.displayName || e.name : "") ? Gl(l) : "";
   }
-  function lm(e) {
+  function cm(e) {
     switch (e.tag) {
       case 26:
       case 27:
       case 5:
-        return Yl(e.type);
+        return Gl(e.type);
       case 16:
-        return Yl("Lazy");
+        return Gl("Lazy");
       case 13:
-        return Yl("Suspense");
+        return Gl("Suspense");
       case 19:
-        return Yl("SuspenseList");
+        return Gl("SuspenseList");
       case 0:
       case 15:
         return Ii(e.type, !1);
@@ -1460,16 +1460,16 @@ function jj() {
       case 1:
         return Ii(e.type, !0);
       case 31:
-        return Yl("Activity");
+        return Gl("Activity");
       default:
         return "";
     }
   }
-  function Cu(e) {
+  function Tu(e) {
     try {
       var t = "";
       do
-        t += lm(e), e = e.return;
+        t += cm(e), e = e.return;
       while (e);
       return t;
     } catch (l) {
@@ -1492,12 +1492,12 @@ Error generating stack: ` + l.message + `
         return "";
     }
   }
-  function Eu(e) {
+  function zu(e) {
     var t = e.type;
     return (e = e.nodeName) && e.toLowerCase() === "input" && (t === "checkbox" || t === "radio");
   }
-  function am(e) {
-    var t = Eu(e) ? "checked" : "value", l = Object.getOwnPropertyDescriptor(
+  function rm(e) {
+    var t = zu(e) ? "checked" : "value", l = Object.getOwnPropertyDescriptor(
       e.constructor.prototype,
       t
     ), a = "" + e[t];
@@ -1526,17 +1526,17 @@ Error generating stack: ` + l.message + `
       };
     }
   }
-  function Rn(e) {
-    e._valueTracker || (e._valueTracker = am(e));
+  function Un(e) {
+    e._valueTracker || (e._valueTracker = rm(e));
   }
-  function Ou(e) {
+  function Au(e) {
     if (!e) return !1;
     var t = e._valueTracker;
     if (!t) return !0;
     var l = t.getValue(), a = "";
-    return e && (a = Eu(e) ? e.checked ? "true" : "false" : e.value), e = a, e !== l ? (t.setValue(e), !0) : !1;
+    return e && (a = zu(e) ? e.checked ? "true" : "false" : e.value), e = a, e !== l ? (t.setValue(e), !0) : !1;
   }
-  function Un(e) {
+  function Dn(e) {
     if (e = e || (typeof document < "u" ? document : void 0), typeof e > "u") return null;
     try {
       return e.activeElement || e.body;
@@ -1544,10 +1544,10 @@ Error generating stack: ` + l.message + `
       return e.body;
     }
   }
-  var nm = /[\n"\\]/g;
+  var um = /[\n"\\]/g;
   function ms(e) {
     return e.replace(
-      nm,
+      um,
       function(t) {
         return "\\" + t.charCodeAt(0).toString(16) + " ";
       }
@@ -1556,7 +1556,7 @@ Error generating stack: ` + l.message + `
   function Pi(e, t, l, a, n, i, c, o) {
     e.name = "", c != null && typeof c != "function" && typeof c != "symbol" && typeof c != "boolean" ? e.type = c : e.removeAttribute("type"), t != null ? c === "number" ? (t === 0 && e.value === "" || e.value != t) && (e.value = "" + fs(t)) : e.value !== "" + fs(t) && (e.value = "" + fs(t)) : c !== "submit" && c !== "reset" || e.removeAttribute("value"), t != null ? ec(e, c, fs(t)) : l != null ? ec(e, c, fs(l)) : a != null && e.removeAttribute("value"), n == null && i != null && (e.defaultChecked = !!i), n != null && (e.checked = n && typeof n != "function" && typeof n != "symbol"), o != null && typeof o != "function" && typeof o != "symbol" && typeof o != "boolean" ? e.name = "" + fs(o) : e.removeAttribute("name");
   }
-  function Tu(e, t, l, a, n, i, c, o) {
+  function Ru(e, t, l, a, n, i, c, o) {
     if (i != null && typeof i != "function" && typeof i != "symbol" && typeof i != "boolean" && (e.type = i), t != null || l != null) {
       if (!(i !== "submit" && i !== "reset" || t != null))
         return;
@@ -1565,9 +1565,9 @@ Error generating stack: ` + l.message + `
     a = a ?? n, a = typeof a != "function" && typeof a != "symbol" && !!a, e.checked = o ? e.checked : !!a, e.defaultChecked = !!a, c != null && typeof c != "function" && typeof c != "symbol" && typeof c != "boolean" && (e.name = c);
   }
   function ec(e, t, l) {
-    t === "number" && Un(e.ownerDocument) === e || e.defaultValue === "" + l || (e.defaultValue = "" + l);
+    t === "number" && Dn(e.ownerDocument) === e || e.defaultValue === "" + l || (e.defaultValue = "" + l);
   }
-  function Gl(e, t, l, a) {
+  function Ql(e, t, l, a) {
     if (e = e.options, t) {
       t = {};
       for (var n = 0; n < l.length; n++)
@@ -1585,18 +1585,18 @@ Error generating stack: ` + l.message + `
       t !== null && (t.selected = !0);
     }
   }
-  function zu(e, t, l) {
+  function Uu(e, t, l) {
     if (t != null && (t = "" + fs(t), t !== e.value && (e.value = t), l == null)) {
       e.defaultValue !== t && (e.defaultValue = t);
       return;
     }
     e.defaultValue = l != null ? "" + fs(l) : "";
   }
-  function Au(e, t, l, a) {
+  function Du(e, t, l, a) {
     if (t == null) {
       if (a != null) {
         if (l != null) throw Error(d(92));
-        if (de(a)) {
+        if (ce(a)) {
           if (1 < a.length) throw Error(d(93));
           a = a[0];
         }
@@ -1606,7 +1606,7 @@ Error generating stack: ` + l.message + `
     }
     l = fs(t), e.defaultValue = l, a = e.textContent, a === l && a !== "" && a !== null && (e.value = a);
   }
-  function Ql(e, t) {
+  function Xl(e, t) {
     if (t) {
       var l = e.firstChild;
       if (l && l === e.lastChild && l.nodeType === 3) {
@@ -1616,26 +1616,26 @@ Error generating stack: ` + l.message + `
     }
     e.textContent = t;
   }
-  var im = new Set(
+  var dm = new Set(
     "animationIterationCount aspectRatio borderImageOutset borderImageSlice borderImageWidth boxFlex boxFlexGroup boxOrdinalGroup columnCount columns flex flexGrow flexPositive flexShrink flexNegative flexOrder gridArea gridRow gridRowEnd gridRowSpan gridRowStart gridColumn gridColumnEnd gridColumnSpan gridColumnStart fontWeight lineClamp lineHeight opacity order orphans scale tabSize widows zIndex zoom fillOpacity floodOpacity stopOpacity strokeDasharray strokeDashoffset strokeMiterlimit strokeOpacity strokeWidth MozAnimationIterationCount MozBoxFlex MozBoxFlexGroup MozLineClamp msAnimationIterationCount msFlex msZoom msFlexGrow msFlexNegative msFlexOrder msFlexPositive msFlexShrink msGridColumn msGridColumnSpan msGridRow msGridRowSpan WebkitAnimationIterationCount WebkitBoxFlex WebKitBoxFlexGroup WebkitBoxOrdinalGroup WebkitColumnCount WebkitColumns WebkitFlex WebkitFlexGrow WebkitFlexPositive WebkitFlexShrink WebkitLineClamp".split(
       " "
     )
   );
-  function Ru(e, t, l) {
+  function Mu(e, t, l) {
     var a = t.indexOf("--") === 0;
-    l == null || typeof l == "boolean" || l === "" ? a ? e.setProperty(t, "") : t === "float" ? e.cssFloat = "" : e[t] = "" : a ? e.setProperty(t, l) : typeof l != "number" || l === 0 || im.has(t) ? t === "float" ? e.cssFloat = l : e[t] = ("" + l).trim() : e[t] = l + "px";
+    l == null || typeof l == "boolean" || l === "" ? a ? e.setProperty(t, "") : t === "float" ? e.cssFloat = "" : e[t] = "" : a ? e.setProperty(t, l) : typeof l != "number" || l === 0 || dm.has(t) ? t === "float" ? e.cssFloat = l : e[t] = ("" + l).trim() : e[t] = l + "px";
   }
-  function Uu(e, t, l) {
+  function qu(e, t, l) {
     if (t != null && typeof t != "object")
       throw Error(d(62));
     if (e = e.style, l != null) {
       for (var a in l)
         !l.hasOwnProperty(a) || t != null && t.hasOwnProperty(a) || (a.indexOf("--") === 0 ? e.setProperty(a, "") : a === "float" ? e.cssFloat = "" : e[a] = "");
       for (var n in t)
-        a = t[n], t.hasOwnProperty(n) && l[n] !== a && Ru(e, n, a);
+        a = t[n], t.hasOwnProperty(n) && l[n] !== a && Mu(e, n, a);
     } else
       for (var i in t)
-        t.hasOwnProperty(i) && Ru(e, i, t[i]);
+        t.hasOwnProperty(i) && Mu(e, i, t[i]);
   }
   function tc(e) {
     if (e.indexOf("-") === -1) return !1;
@@ -1653,7 +1653,7 @@ Error generating stack: ` + l.message + `
         return !0;
     }
   }
-  var cm = /* @__PURE__ */ new Map([
+  var om = /* @__PURE__ */ new Map([
     ["acceptCharset", "accept-charset"],
     ["htmlFor", "for"],
     ["httpEquiv", "http-equiv"],
@@ -1732,19 +1732,19 @@ Error generating stack: ` + l.message + `
     ["writingMode", "writing-mode"],
     ["xmlnsXlink", "xmlns:xlink"],
     ["xHeight", "x-height"]
-  ]), rm = /^[\u0000-\u001F ]*j[\r\n\t]*a[\r\n\t]*v[\r\n\t]*a[\r\n\t]*s[\r\n\t]*c[\r\n\t]*r[\r\n\t]*i[\r\n\t]*p[\r\n\t]*t[\r\n\t]*:/i;
-  function Dn(e) {
-    return rm.test("" + e) ? "javascript:throw new Error('React has blocked a javascript: URL as a security precaution.')" : e;
+  ]), hm = /^[\u0000-\u001F ]*j[\r\n\t]*a[\r\n\t]*v[\r\n\t]*a[\r\n\t]*s[\r\n\t]*c[\r\n\t]*r[\r\n\t]*i[\r\n\t]*p[\r\n\t]*t[\r\n\t]*:/i;
+  function Mn(e) {
+    return hm.test("" + e) ? "javascript:throw new Error('React has blocked a javascript: URL as a security precaution.')" : e;
   }
   var sc = null;
   function lc(e) {
     return e = e.target || e.srcElement || window, e.correspondingUseElement && (e = e.correspondingUseElement), e.nodeType === 3 ? e.parentNode : e;
   }
-  var Xl = null, Zl = null;
-  function Du(e) {
-    var t = Xt(e);
+  var Zl = null, Vl = null;
+  function Hu(e) {
+    var t = Zt(e);
     if (t && (e = t.stateNode)) {
-      var l = e[St] || null;
+      var l = e[nt] || null;
       e: switch (e = t.stateNode, t.type) {
         case "input":
           if (Pi(
@@ -1765,7 +1765,7 @@ Error generating stack: ` + l.message + `
             ), t = 0; t < l.length; t++) {
               var a = l[t];
               if (a !== e && a.form === e.form) {
-                var n = a[St] || null;
+                var n = a[nt] || null;
                 if (!n) throw Error(d(90));
                 Pi(
                   a,
@@ -1780,33 +1780,33 @@ Error generating stack: ` + l.message + `
               }
             }
             for (t = 0; t < l.length; t++)
-              a = l[t], a.form === e.form && Ou(a);
+              a = l[t], a.form === e.form && Au(a);
           }
           break e;
         case "textarea":
-          zu(e, l.value, l.defaultValue);
+          Uu(e, l.value, l.defaultValue);
           break e;
         case "select":
-          t = l.value, t != null && Gl(e, !!l.multiple, t, !1);
+          t = l.value, t != null && Ql(e, !!l.multiple, t, !1);
       }
     }
   }
   var ac = !1;
-  function Mu(e, t, l) {
+  function Bu(e, t, l) {
     if (ac) return e(t, l);
     ac = !0;
     try {
       var a = e(t);
       return a;
     } finally {
-      if (ac = !1, (Xl !== null || Zl !== null) && (bi(), Xl && (t = Xl, e = Zl, Zl = Xl = null, Du(t), e)))
-        for (t = 0; t < e.length; t++) Du(e[t]);
+      if (ac = !1, (Zl !== null || Vl !== null) && (yi(), Zl && (t = Zl, e = Vl, Vl = Zl = null, Hu(t), e)))
+        for (t = 0; t < e.length; t++) Hu(e[t]);
     }
   }
   function Ta(e, t) {
     var l = e.stateNode;
     if (l === null) return null;
-    var a = l[St] || null;
+    var a = l[nt] || null;
     if (a === null) return null;
     l = a[t];
     e: switch (t) {
@@ -1845,23 +1845,23 @@ Error generating stack: ` + l.message + `
     } catch {
       nc = !1;
     }
-  var el = null, ic = null, Mn = null;
-  function qu() {
-    if (Mn) return Mn;
+  var el = null, ic = null, qn = null;
+  function Lu() {
+    if (qn) return qn;
     var e, t = ic, l = t.length, a, n = "value" in el ? el.value : el.textContent, i = n.length;
     for (e = 0; e < l && t[e] === n[e]; e++) ;
     var c = l - e;
     for (a = 1; a <= c && t[l - a] === n[i - a]; a++) ;
-    return Mn = n.slice(e, 1 < a ? 1 - a : void 0);
+    return qn = n.slice(e, 1 < a ? 1 - a : void 0);
   }
-  function qn(e) {
+  function Hn(e) {
     var t = e.keyCode;
     return "charCode" in e ? (e = e.charCode, e === 0 && t === 13 && (e = 13)) : e = t, e === 10 && (e = 13), 32 <= e || e === 13 ? e : 0;
   }
-  function Hn() {
+  function Bn() {
     return !0;
   }
-  function Hu() {
+  function Yu() {
     return !1;
   }
   function ss(e) {
@@ -1869,21 +1869,21 @@ Error generating stack: ` + l.message + `
       this._reactName = l, this._targetInst = n, this.type = a, this.nativeEvent = i, this.target = c, this.currentTarget = null;
       for (var o in e)
         e.hasOwnProperty(o) && (l = e[o], this[o] = l ? l(i) : i[o]);
-      return this.isDefaultPrevented = (i.defaultPrevented != null ? i.defaultPrevented : i.returnValue === !1) ? Hn : Hu, this.isPropagationStopped = Hu, this;
+      return this.isDefaultPrevented = (i.defaultPrevented != null ? i.defaultPrevented : i.returnValue === !1) ? Bn : Yu, this.isPropagationStopped = Yu, this;
     }
     return U(t.prototype, {
       preventDefault: function() {
         this.defaultPrevented = !0;
         var l = this.nativeEvent;
-        l && (l.preventDefault ? l.preventDefault() : typeof l.returnValue != "unknown" && (l.returnValue = !1), this.isDefaultPrevented = Hn);
+        l && (l.preventDefault ? l.preventDefault() : typeof l.returnValue != "unknown" && (l.returnValue = !1), this.isDefaultPrevented = Bn);
       },
       stopPropagation: function() {
         var l = this.nativeEvent;
-        l && (l.stopPropagation ? l.stopPropagation() : typeof l.cancelBubble != "unknown" && (l.cancelBubble = !0), this.isPropagationStopped = Hn);
+        l && (l.stopPropagation ? l.stopPropagation() : typeof l.cancelBubble != "unknown" && (l.cancelBubble = !0), this.isPropagationStopped = Bn);
       },
       persist: function() {
       },
-      isPersistent: Hn
+      isPersistent: Bn
     }), t;
   }
   var wl = {
@@ -1895,7 +1895,7 @@ Error generating stack: ` + l.message + `
     },
     defaultPrevented: 0,
     isTrusted: 0
-  }, Bn = ss(wl), Aa = U({}, wl, { view: 0, detail: 0 }), um = ss(Aa), cc, rc, Ra, Ln = U({}, Aa, {
+  }, Ln = ss(wl), Aa = U({}, wl, { view: 0, detail: 0 }), fm = ss(Aa), cc, rc, Ra, Yn = U({}, Aa, {
     screenX: 0,
     screenY: 0,
     clientX: 0,
@@ -1918,15 +1918,15 @@ Error generating stack: ` + l.message + `
     movementY: function(e) {
       return "movementY" in e ? e.movementY : rc;
     }
-  }), Bu = ss(Ln), dm = U({}, Ln, { dataTransfer: 0 }), om = ss(dm), hm = U({}, Aa, { relatedTarget: 0 }), uc = ss(hm), fm = U({}, wl, {
+  }), Gu = ss(Yn), mm = U({}, Yn, { dataTransfer: 0 }), xm = ss(mm), jm = U({}, Aa, { relatedTarget: 0 }), uc = ss(jm), vm = U({}, wl, {
     animationName: 0,
     elapsedTime: 0,
     pseudoElement: 0
-  }), mm = ss(fm), xm = U({}, wl, {
+  }), pm = ss(vm), gm = U({}, wl, {
     clipboardData: function(e) {
       return "clipboardData" in e ? e.clipboardData : window.clipboardData;
     }
-  }), jm = ss(xm), vm = U({}, wl, { data: 0 }), Lu = ss(vm), pm = {
+  }), bm = ss(gm), ym = U({}, wl, { data: 0 }), Qu = ss(ym), _m = {
     Esc: "Escape",
     Spacebar: " ",
     Left: "ArrowLeft",
@@ -1939,7 +1939,7 @@ Error generating stack: ` + l.message + `
     Apps: "ContextMenu",
     Scroll: "ScrollLock",
     MozPrintableKey: "Unidentified"
-  }, gm = {
+  }, Nm = {
     8: "Backspace",
     9: "Tab",
     12: "Clear",
@@ -1976,26 +1976,26 @@ Error generating stack: ` + l.message + `
     144: "NumLock",
     145: "ScrollLock",
     224: "Meta"
-  }, bm = {
+  }, Sm = {
     Alt: "altKey",
     Control: "ctrlKey",
     Meta: "metaKey",
     Shift: "shiftKey"
   };
-  function ym(e) {
+  function wm(e) {
     var t = this.nativeEvent;
-    return t.getModifierState ? t.getModifierState(e) : (e = bm[e]) ? !!t[e] : !1;
+    return t.getModifierState ? t.getModifierState(e) : (e = Sm[e]) ? !!t[e] : !1;
   }
   function dc() {
-    return ym;
+    return wm;
   }
-  var _m = U({}, Aa, {
+  var km = U({}, Aa, {
     key: function(e) {
       if (e.key) {
-        var t = pm[e.key] || e.key;
+        var t = _m[e.key] || e.key;
         if (t !== "Unidentified") return t;
       }
-      return e.type === "keypress" ? (e = qn(e), e === 13 ? "Enter" : String.fromCharCode(e)) : e.type === "keydown" || e.type === "keyup" ? gm[e.keyCode] || "Unidentified" : "";
+      return e.type === "keypress" ? (e = Hn(e), e === 13 ? "Enter" : String.fromCharCode(e)) : e.type === "keydown" || e.type === "keyup" ? Nm[e.keyCode] || "Unidentified" : "";
     },
     code: 0,
     location: 0,
@@ -2007,15 +2007,15 @@ Error generating stack: ` + l.message + `
     locale: 0,
     getModifierState: dc,
     charCode: function(e) {
-      return e.type === "keypress" ? qn(e) : 0;
+      return e.type === "keypress" ? Hn(e) : 0;
     },
     keyCode: function(e) {
       return e.type === "keydown" || e.type === "keyup" ? e.keyCode : 0;
     },
     which: function(e) {
-      return e.type === "keypress" ? qn(e) : e.type === "keydown" || e.type === "keyup" ? e.keyCode : 0;
+      return e.type === "keypress" ? Hn(e) : e.type === "keydown" || e.type === "keyup" ? e.keyCode : 0;
     }
-  }), Nm = ss(_m), Sm = U({}, Ln, {
+  }), Cm = ss(km), Em = U({}, Yn, {
     pointerId: 0,
     width: 0,
     height: 0,
@@ -2026,7 +2026,7 @@ Error generating stack: ` + l.message + `
     twist: 0,
     pointerType: 0,
     isPrimary: 0
-  }), Yu = ss(Sm), wm = U({}, Aa, {
+  }), Xu = ss(Em), Om = U({}, Aa, {
     touches: 0,
     targetTouches: 0,
     changedTouches: 0,
@@ -2035,11 +2035,11 @@ Error generating stack: ` + l.message + `
     ctrlKey: 0,
     shiftKey: 0,
     getModifierState: dc
-  }), km = ss(wm), Cm = U({}, wl, {
+  }), Tm = ss(Om), zm = U({}, wl, {
     propertyName: 0,
     elapsedTime: 0,
     pseudoElement: 0
-  }), Em = ss(Cm), Om = U({}, Ln, {
+  }), Am = ss(zm), Rm = U({}, Yn, {
     deltaX: function(e) {
       return "deltaX" in e ? e.deltaX : "wheelDeltaX" in e ? -e.wheelDeltaX : 0;
     },
@@ -2048,16 +2048,16 @@ Error generating stack: ` + l.message + `
     },
     deltaZ: 0,
     deltaMode: 0
-  }), Tm = ss(Om), zm = U({}, wl, {
+  }), Um = ss(Rm), Dm = U({}, wl, {
     newState: 0,
     oldState: 0
-  }), Am = ss(zm), Rm = [9, 13, 27, 32], oc = Ms && "CompositionEvent" in window, Ua = null;
+  }), Mm = ss(Dm), qm = [9, 13, 27, 32], oc = Ms && "CompositionEvent" in window, Ua = null;
   Ms && "documentMode" in document && (Ua = document.documentMode);
-  var Um = Ms && "TextEvent" in window && !Ua, Gu = Ms && (!oc || Ua && 8 < Ua && 11 >= Ua), Qu = " ", Xu = !1;
-  function Zu(e, t) {
+  var Hm = Ms && "TextEvent" in window && !Ua, Zu = Ms && (!oc || Ua && 8 < Ua && 11 >= Ua), Vu = " ", Ju = !1;
+  function Ku(e, t) {
     switch (e) {
       case "keyup":
-        return Rm.indexOf(t.keyCode) !== -1;
+        return qm.indexOf(t.keyCode) !== -1;
       case "keydown":
         return t.keyCode !== 229;
       case "keypress":
@@ -2068,25 +2068,25 @@ Error generating stack: ` + l.message + `
         return !1;
     }
   }
-  function Vu(e) {
+  function $u(e) {
     return e = e.detail, typeof e == "object" && "data" in e ? e.data : null;
   }
-  var Vl = !1;
-  function Dm(e, t) {
+  var Jl = !1;
+  function Bm(e, t) {
     switch (e) {
       case "compositionend":
-        return Vu(t);
+        return $u(t);
       case "keypress":
-        return t.which !== 32 ? null : (Xu = !0, Qu);
+        return t.which !== 32 ? null : (Ju = !0, Vu);
       case "textInput":
-        return e = t.data, e === Qu && Xu ? null : e;
+        return e = t.data, e === Vu && Ju ? null : e;
       default:
         return null;
     }
   }
-  function Mm(e, t) {
-    if (Vl)
-      return e === "compositionend" || !oc && Zu(e, t) ? (e = qu(), Mn = ic = el = null, Vl = !1, e) : null;
+  function Lm(e, t) {
+    if (Jl)
+      return e === "compositionend" || !oc && Ku(e, t) ? (e = Lu(), qn = ic = el = null, Jl = !1, e) : null;
     switch (e) {
       case "paste":
         return null;
@@ -2098,12 +2098,12 @@ Error generating stack: ` + l.message + `
         }
         return null;
       case "compositionend":
-        return Gu && t.locale !== "ko" ? null : t.data;
+        return Zu && t.locale !== "ko" ? null : t.data;
       default:
         return null;
     }
   }
-  var qm = {
+  var Ym = {
     color: !0,
     date: !0,
     datetime: !0,
@@ -2120,12 +2120,12 @@ Error generating stack: ` + l.message + `
     url: !0,
     week: !0
   };
-  function Ju(e) {
+  function Wu(e) {
     var t = e && e.nodeName && e.nodeName.toLowerCase();
-    return t === "input" ? !!qm[e.type] : t === "textarea";
+    return t === "input" ? !!Ym[e.type] : t === "textarea";
   }
-  function Ku(e, t, l, a) {
-    Xl ? Zl ? Zl.push(a) : Zl = [a] : Xl = a, t = ki(t, "onChange"), 0 < t.length && (l = new Bn(
+  function Fu(e, t, l, a) {
+    Zl ? Vl ? Vl.push(a) : Vl = [a] : Zl = a, t = Ci(t, "onChange"), 0 < t.length && (l = new Ln(
       "onChange",
       "change",
       null,
@@ -2134,61 +2134,61 @@ Error generating stack: ` + l.message + `
     ), e.push({ event: l, listeners: t }));
   }
   var Da = null, Ma = null;
-  function Hm(e) {
-    Oh(e, 0);
+  function Gm(e) {
+    Ah(e, 0);
   }
-  function Yn(e) {
+  function Gn(e) {
     var t = Cs(e);
-    if (Ou(t)) return e;
+    if (Au(t)) return e;
   }
-  function $u(e, t) {
+  function Iu(e, t) {
     if (e === "change") return t;
   }
-  var Wu = !1;
+  var Pu = !1;
   if (Ms) {
     var hc;
     if (Ms) {
       var fc = "oninput" in document;
       if (!fc) {
-        var Fu = document.createElement("div");
-        Fu.setAttribute("oninput", "return;"), fc = typeof Fu.oninput == "function";
+        var ed = document.createElement("div");
+        ed.setAttribute("oninput", "return;"), fc = typeof ed.oninput == "function";
       }
       hc = fc;
     } else hc = !1;
-    Wu = hc && (!document.documentMode || 9 < document.documentMode);
+    Pu = hc && (!document.documentMode || 9 < document.documentMode);
   }
-  function Iu() {
-    Da && (Da.detachEvent("onpropertychange", Pu), Ma = Da = null);
+  function td() {
+    Da && (Da.detachEvent("onpropertychange", sd), Ma = Da = null);
   }
-  function Pu(e) {
-    if (e.propertyName === "value" && Yn(Ma)) {
+  function sd(e) {
+    if (e.propertyName === "value" && Gn(Ma)) {
       var t = [];
-      Ku(
+      Fu(
         t,
         Ma,
         e,
         lc(e)
-      ), Mu(Hm, t);
+      ), Bu(Gm, t);
     }
   }
-  function Bm(e, t, l) {
-    e === "focusin" ? (Iu(), Da = t, Ma = l, Da.attachEvent("onpropertychange", Pu)) : e === "focusout" && Iu();
+  function Qm(e, t, l) {
+    e === "focusin" ? (td(), Da = t, Ma = l, Da.attachEvent("onpropertychange", sd)) : e === "focusout" && td();
   }
-  function Lm(e) {
+  function Xm(e) {
     if (e === "selectionchange" || e === "keyup" || e === "keydown")
-      return Yn(Ma);
+      return Gn(Ma);
   }
-  function Ym(e, t) {
-    if (e === "click") return Yn(t);
+  function Zm(e, t) {
+    if (e === "click") return Gn(t);
   }
-  function Gm(e, t) {
+  function Vm(e, t) {
     if (e === "input" || e === "change")
-      return Yn(t);
+      return Gn(t);
   }
-  function Qm(e, t) {
+  function Jm(e, t) {
     return e === t && (e !== 0 || 1 / e === 1 / t) || e !== e && t !== t;
   }
-  var is = typeof Object.is == "function" ? Object.is : Qm;
+  var is = typeof Object.is == "function" ? Object.is : Jm;
   function qa(e, t) {
     if (is(e, t)) return !0;
     if (typeof e != "object" || e === null || typeof t != "object" || t === null)
@@ -2197,17 +2197,17 @@ Error generating stack: ` + l.message + `
     if (l.length !== a.length) return !1;
     for (a = 0; a < l.length; a++) {
       var n = l[a];
-      if (!Pe.call(t, n) || !is(e[n], t[n]))
+      if (!et.call(t, n) || !is(e[n], t[n]))
         return !1;
     }
     return !0;
   }
-  function ed(e) {
+  function ld(e) {
     for (; e && e.firstChild; ) e = e.firstChild;
     return e;
   }
-  function td(e, t) {
-    var l = ed(e);
+  function ad(e, t) {
+    var l = ld(e);
     e = 0;
     for (var a; l; ) {
       if (l.nodeType === 3) {
@@ -2225,15 +2225,15 @@ Error generating stack: ` + l.message + `
         }
         l = void 0;
       }
-      l = ed(l);
+      l = ld(l);
     }
   }
-  function sd(e, t) {
-    return e && t ? e === t ? !0 : e && e.nodeType === 3 ? !1 : t && t.nodeType === 3 ? sd(e, t.parentNode) : "contains" in e ? e.contains(t) : e.compareDocumentPosition ? !!(e.compareDocumentPosition(t) & 16) : !1 : !1;
+  function nd(e, t) {
+    return e && t ? e === t ? !0 : e && e.nodeType === 3 ? !1 : t && t.nodeType === 3 ? nd(e, t.parentNode) : "contains" in e ? e.contains(t) : e.compareDocumentPosition ? !!(e.compareDocumentPosition(t) & 16) : !1 : !1;
   }
-  function ld(e) {
+  function id(e) {
     e = e != null && e.ownerDocument != null && e.ownerDocument.defaultView != null ? e.ownerDocument.defaultView : window;
-    for (var t = Un(e.document); t instanceof e.HTMLIFrameElement; ) {
+    for (var t = Dn(e.document); t instanceof e.HTMLIFrameElement; ) {
       try {
         var l = typeof t.contentWindow.location.href == "string";
       } catch {
@@ -2241,7 +2241,7 @@ Error generating stack: ` + l.message + `
       }
       if (l) e = t.contentWindow;
       else break;
-      t = Un(e.document);
+      t = Dn(e.document);
     }
     return t;
   }
@@ -2249,27 +2249,27 @@ Error generating stack: ` + l.message + `
     var t = e && e.nodeName && e.nodeName.toLowerCase();
     return t && (t === "input" && (e.type === "text" || e.type === "search" || e.type === "tel" || e.type === "url" || e.type === "password") || t === "textarea" || e.contentEditable === "true");
   }
-  var Xm = Ms && "documentMode" in document && 11 >= document.documentMode, Jl = null, xc = null, Ha = null, jc = !1;
-  function ad(e, t, l) {
+  var Km = Ms && "documentMode" in document && 11 >= document.documentMode, Kl = null, xc = null, Ha = null, jc = !1;
+  function cd(e, t, l) {
     var a = l.window === l ? l.document : l.nodeType === 9 ? l : l.ownerDocument;
-    jc || Jl == null || Jl !== Un(a) || (a = Jl, "selectionStart" in a && mc(a) ? a = { start: a.selectionStart, end: a.selectionEnd } : (a = (a.ownerDocument && a.ownerDocument.defaultView || window).getSelection(), a = {
+    jc || Kl == null || Kl !== Dn(a) || (a = Kl, "selectionStart" in a && mc(a) ? a = { start: a.selectionStart, end: a.selectionEnd } : (a = (a.ownerDocument && a.ownerDocument.defaultView || window).getSelection(), a = {
       anchorNode: a.anchorNode,
       anchorOffset: a.anchorOffset,
       focusNode: a.focusNode,
       focusOffset: a.focusOffset
-    }), Ha && qa(Ha, a) || (Ha = a, a = ki(xc, "onSelect"), 0 < a.length && (t = new Bn(
+    }), Ha && qa(Ha, a) || (Ha = a, a = Ci(xc, "onSelect"), 0 < a.length && (t = new Ln(
       "onSelect",
       "select",
       null,
       t,
       l
-    ), e.push({ event: t, listeners: a }), t.target = Jl)));
+    ), e.push({ event: t, listeners: a }), t.target = Kl)));
   }
   function kl(e, t) {
     var l = {};
     return l[e.toLowerCase()] = t.toLowerCase(), l["Webkit" + e] = "webkit" + t, l["Moz" + e] = "moz" + t, l;
   }
-  var Kl = {
+  var $l = {
     animationend: kl("Animation", "AnimationEnd"),
     animationiteration: kl("Animation", "AnimationIteration"),
     animationstart: kl("Animation", "AnimationStart"),
@@ -2277,43 +2277,43 @@ Error generating stack: ` + l.message + `
     transitionstart: kl("Transition", "TransitionStart"),
     transitioncancel: kl("Transition", "TransitionCancel"),
     transitionend: kl("Transition", "TransitionEnd")
-  }, vc = {}, nd = {};
-  Ms && (nd = document.createElement("div").style, "AnimationEvent" in window || (delete Kl.animationend.animation, delete Kl.animationiteration.animation, delete Kl.animationstart.animation), "TransitionEvent" in window || delete Kl.transitionend.transition);
+  }, vc = {}, rd = {};
+  Ms && (rd = document.createElement("div").style, "AnimationEvent" in window || (delete $l.animationend.animation, delete $l.animationiteration.animation, delete $l.animationstart.animation), "TransitionEvent" in window || delete $l.transitionend.transition);
   function Cl(e) {
     if (vc[e]) return vc[e];
-    if (!Kl[e]) return e;
-    var t = Kl[e], l;
+    if (!$l[e]) return e;
+    var t = $l[e], l;
     for (l in t)
-      if (t.hasOwnProperty(l) && l in nd)
+      if (t.hasOwnProperty(l) && l in rd)
         return vc[e] = t[l];
     return e;
   }
-  var id = Cl("animationend"), cd = Cl("animationiteration"), rd = Cl("animationstart"), Zm = Cl("transitionrun"), Vm = Cl("transitionstart"), Jm = Cl("transitioncancel"), ud = Cl("transitionend"), dd = /* @__PURE__ */ new Map(), pc = "abort auxClick beforeToggle cancel canPlay canPlayThrough click close contextMenu copy cut drag dragEnd dragEnter dragExit dragLeave dragOver dragStart drop durationChange emptied encrypted ended error gotPointerCapture input invalid keyDown keyPress keyUp load loadedData loadedMetadata loadStart lostPointerCapture mouseDown mouseMove mouseOut mouseOver mouseUp paste pause play playing pointerCancel pointerDown pointerMove pointerOut pointerOver pointerUp progress rateChange reset resize seeked seeking stalled submit suspend timeUpdate touchCancel touchEnd touchStart volumeChange scroll toggle touchMove waiting wheel".split(
+  var ud = Cl("animationend"), dd = Cl("animationiteration"), od = Cl("animationstart"), $m = Cl("transitionrun"), Wm = Cl("transitionstart"), Fm = Cl("transitioncancel"), hd = Cl("transitionend"), fd = /* @__PURE__ */ new Map(), pc = "abort auxClick beforeToggle cancel canPlay canPlayThrough click close contextMenu copy cut drag dragEnd dragEnter dragExit dragLeave dragOver dragStart drop durationChange emptied encrypted ended error gotPointerCapture input invalid keyDown keyPress keyUp load loadedData loadedMetadata loadStart lostPointerCapture mouseDown mouseMove mouseOut mouseOver mouseUp paste pause play playing pointerCancel pointerDown pointerMove pointerOut pointerOver pointerUp progress rateChange reset resize seeked seeking stalled submit suspend timeUpdate touchCancel touchEnd touchStart volumeChange scroll toggle touchMove waiting wheel".split(
     " "
   );
   pc.push("scrollEnd");
   function _s(e, t) {
-    dd.set(e, t), It(t, [e]);
+    fd.set(e, t), It(t, [e]);
   }
-  var od = /* @__PURE__ */ new WeakMap();
+  var md = /* @__PURE__ */ new WeakMap();
   function xs(e, t) {
     if (typeof e == "object" && e !== null) {
-      var l = od.get(e);
+      var l = md.get(e);
       return l !== void 0 ? l : (t = {
         value: e,
         source: t,
-        stack: Cu(t)
-      }, od.set(e, t), t);
+        stack: Tu(t)
+      }, md.set(e, t), t);
     }
     return {
       value: e,
       source: t,
-      stack: Cu(t)
+      stack: Tu(t)
     };
   }
-  var js = [], $l = 0, gc = 0;
-  function Gn() {
-    for (var e = $l, t = gc = $l = 0; t < e; ) {
+  var js = [], Wl = 0, gc = 0;
+  function Qn() {
+    for (var e = Wl, t = gc = Wl = 0; t < e; ) {
       var l = js[t];
       js[t++] = null;
       var a = js[t];
@@ -2325,39 +2325,39 @@ Error generating stack: ` + l.message + `
         var c = a.pending;
         c === null ? n.next = n : (n.next = c.next, c.next = n), a.pending = n;
       }
-      i !== 0 && hd(l, n, i);
+      i !== 0 && xd(l, n, i);
     }
   }
-  function Qn(e, t, l, a) {
-    js[$l++] = e, js[$l++] = t, js[$l++] = l, js[$l++] = a, gc |= a, e.lanes |= a, e = e.alternate, e !== null && (e.lanes |= a);
+  function Xn(e, t, l, a) {
+    js[Wl++] = e, js[Wl++] = t, js[Wl++] = l, js[Wl++] = a, gc |= a, e.lanes |= a, e = e.alternate, e !== null && (e.lanes |= a);
   }
   function bc(e, t, l, a) {
-    return Qn(e, t, l, a), Xn(e);
+    return Xn(e, t, l, a), Zn(e);
   }
-  function Wl(e, t) {
-    return Qn(e, null, null, t), Xn(e);
+  function Fl(e, t) {
+    return Xn(e, null, null, t), Zn(e);
   }
-  function hd(e, t, l) {
+  function xd(e, t, l) {
     e.lanes |= l;
     var a = e.alternate;
     a !== null && (a.lanes |= l);
     for (var n = !1, i = e.return; i !== null; )
       i.childLanes |= l, a = i.alternate, a !== null && (a.childLanes |= l), i.tag === 22 && (e = i.stateNode, e === null || e._visibility & 1 || (n = !0)), e = i, i = i.return;
-    return e.tag === 3 ? (i = e.stateNode, n && t !== null && (n = 31 - tt(l), e = i.hiddenUpdates, a = e[n], a === null ? e[n] = [t] : a.push(t), t.lane = l | 536870912), i) : null;
+    return e.tag === 3 ? (i = e.stateNode, n && t !== null && (n = 31 - Xe(l), e = i.hiddenUpdates, a = e[n], a === null ? e[n] = [t] : a.push(t), t.lane = l | 536870912), i) : null;
   }
-  function Xn(e) {
+  function Zn(e) {
     if (50 < dn)
       throw dn = 0, kr = null, Error(d(185));
     for (var t = e.return; t !== null; )
       e = t, t = e.return;
     return e.tag === 3 ? e.stateNode : null;
   }
-  var Fl = {};
-  function Km(e, t, l, a) {
+  var Il = {};
+  function Im(e, t, l, a) {
     this.tag = e, this.key = l, this.sibling = this.child = this.return = this.stateNode = this.type = this.elementType = null, this.index = 0, this.refCleanup = this.ref = null, this.pendingProps = t, this.dependencies = this.memoizedState = this.updateQueue = this.memoizedProps = null, this.mode = a, this.subtreeFlags = this.flags = 0, this.deletions = null, this.childLanes = this.lanes = 0, this.alternate = null;
   }
   function cs(e, t, l, a) {
-    return new Km(e, t, l, a);
+    return new Im(e, t, l, a);
   }
   function yc(e) {
     return e = e.prototype, !(!e || !e.isReactComponent);
@@ -2371,7 +2371,7 @@ Error generating stack: ` + l.message + `
       e.mode
     ), l.elementType = e.elementType, l.type = e.type, l.stateNode = e.stateNode, l.alternate = e, e.alternate = l) : (l.pendingProps = t, l.type = e.type, l.flags = 0, l.subtreeFlags = 0, l.deletions = null), l.flags = e.flags & 65011712, l.childLanes = e.childLanes, l.lanes = e.lanes, l.child = e.child, l.memoizedProps = e.memoizedProps, l.memoizedState = e.memoizedState, l.updateQueue = e.updateQueue, t = e.dependencies, l.dependencies = t === null ? null : { lanes: t.lanes, firstContext: t.firstContext }, l.sibling = e.sibling, l.index = e.index, l.ref = e.ref, l.refCleanup = e.refCleanup, l;
   }
-  function fd(e, t) {
+  function jd(e, t) {
     e.flags &= 65011714;
     var l = e.alternate;
     return l === null ? (e.childLanes = 0, e.lanes = t, e.child = null, e.subtreeFlags = 0, e.memoizedProps = null, e.memoizedState = null, e.updateQueue = null, e.dependencies = null, e.stateNode = null) : (e.childLanes = l.childLanes, e.lanes = l.lanes, e.child = l.child, e.subtreeFlags = 0, e.deletions = null, e.memoizedProps = l.memoizedProps, e.memoizedState = l.memoizedState, e.updateQueue = l.updateQueue, e.type = l.type, t = l.dependencies, e.dependencies = t === null ? null : {
@@ -2379,47 +2379,47 @@ Error generating stack: ` + l.message + `
       firstContext: t.firstContext
     }), e;
   }
-  function Zn(e, t, l, a, n, i) {
+  function Vn(e, t, l, a, n, i) {
     var c = 0;
     if (a = e, typeof e == "function") yc(e) && (c = 1);
     else if (typeof e == "string")
-      c = Wx(
+      c = ej(
         e,
         l,
         ae.current
       ) ? 26 : e === "html" || e === "head" || e === "body" ? 27 : 5;
     else
       e: switch (e) {
-        case Be:
-          return e = cs(31, l, t, n), e.elementType = Be, e.lanes = i, e;
+        case Ye:
+          return e = cs(31, l, t, n), e.elementType = Ye, e.lanes = i, e;
         case xe:
           return El(l.children, n, i, t);
-        case _e:
+        case Ne:
           c = 8, n |= 24;
           break;
-        case ye:
-          return e = cs(12, l, t, n | 2), e.elementType = ye, e.lanes = i, e;
+        case Se:
+          return e = cs(12, l, t, n | 2), e.elementType = Se, e.lanes = i, e;
         case ne:
           return e = cs(13, l, t, n), e.elementType = ne, e.lanes = i, e;
-        case D:
-          return e = cs(19, l, t, n), e.elementType = D, e.lanes = i, e;
+        case q:
+          return e = cs(19, l, t, n), e.elementType = q, e.lanes = i, e;
         default:
           if (typeof e == "object" && e !== null)
             switch (e.$$typeof) {
-              case Ee:
+              case Te:
               case I:
                 c = 10;
                 break e;
-              case me:
+              case fe:
                 c = 9;
                 break e;
-              case oe:
+              case de:
                 c = 11;
                 break e;
-              case je:
+              case ve:
                 c = 14;
                 break e;
-              case Re:
+              case Me:
                 c = 16, a = null;
                 break e;
             }
@@ -2447,66 +2447,66 @@ Error generating stack: ` + l.message + `
       implementation: e.implementation
     }, t;
   }
-  var Il = [], Pl = 0, Vn = null, Jn = 0, vs = [], ps = 0, Ol = null, Hs = 1, Bs = "";
+  var Pl = [], ea = 0, Jn = null, Kn = 0, vs = [], ps = 0, Ol = null, Hs = 1, Bs = "";
   function Tl(e, t) {
-    Il[Pl++] = Jn, Il[Pl++] = Vn, Vn = e, Jn = t;
+    Pl[ea++] = Kn, Pl[ea++] = Jn, Jn = e, Kn = t;
   }
-  function md(e, t, l) {
+  function vd(e, t, l) {
     vs[ps++] = Hs, vs[ps++] = Bs, vs[ps++] = Ol, Ol = e;
     var a = Hs;
     e = Bs;
-    var n = 32 - tt(a) - 1;
+    var n = 32 - Xe(a) - 1;
     a &= ~(1 << n), l += 1;
-    var i = 32 - tt(t) + n;
+    var i = 32 - Xe(t) + n;
     if (30 < i) {
       var c = n - n % 5;
-      i = (a & (1 << c) - 1).toString(32), a >>= c, n -= c, Hs = 1 << 32 - tt(t) + n | l << n | a, Bs = i + e;
+      i = (a & (1 << c) - 1).toString(32), a >>= c, n -= c, Hs = 1 << 32 - Xe(t) + n | l << n | a, Bs = i + e;
     } else
       Hs = 1 << i | l << n | a, Bs = e;
   }
   function Sc(e) {
-    e.return !== null && (Tl(e, 1), md(e, 1, 0));
+    e.return !== null && (Tl(e, 1), vd(e, 1, 0));
   }
   function wc(e) {
-    for (; e === Vn; )
-      Vn = Il[--Pl], Il[Pl] = null, Jn = Il[--Pl], Il[Pl] = null;
+    for (; e === Jn; )
+      Jn = Pl[--ea], Pl[ea] = null, Kn = Pl[--ea], Pl[ea] = null;
     for (; e === Ol; )
       Ol = vs[--ps], vs[ps] = null, Bs = vs[--ps], vs[ps] = null, Hs = vs[--ps], vs[ps] = null;
   }
-  var ts = null, Ut = null, jt = !1, zl = null, Es = !1, kc = Error(d(519));
+  var ts = null, Ut = null, bt = !1, zl = null, Es = !1, kc = Error(d(519));
   function Al(e) {
     var t = Error(d(418, ""));
     throw Ya(xs(t, e)), kc;
   }
-  function xd(e) {
+  function pd(e) {
     var t = e.stateNode, l = e.type, a = e.memoizedProps;
-    switch (t[rt] = e, t[St] = a, l) {
+    switch (t[me] = e, t[nt] = a, l) {
       case "dialog":
-        ht("cancel", t), ht("close", t);
+        xt("cancel", t), xt("close", t);
         break;
       case "iframe":
       case "object":
       case "embed":
-        ht("load", t);
+        xt("load", t);
         break;
       case "video":
       case "audio":
         for (l = 0; l < hn.length; l++)
-          ht(hn[l], t);
+          xt(hn[l], t);
         break;
       case "source":
-        ht("error", t);
+        xt("error", t);
         break;
       case "img":
       case "image":
       case "link":
-        ht("error", t), ht("load", t);
+        xt("error", t), xt("load", t);
         break;
       case "details":
-        ht("toggle", t);
+        xt("toggle", t);
         break;
       case "input":
-        ht("invalid", t), Tu(
+        xt("invalid", t), Ru(
           t,
           a.value,
           a.defaultValue,
@@ -2515,17 +2515,17 @@ Error generating stack: ` + l.message + `
           a.type,
           a.name,
           !0
-        ), Rn(t);
+        ), Un(t);
         break;
       case "select":
-        ht("invalid", t);
+        xt("invalid", t);
         break;
       case "textarea":
-        ht("invalid", t), Au(t, a.value, a.defaultValue, a.children), Rn(t);
+        xt("invalid", t), Du(t, a.value, a.defaultValue, a.children), Un(t);
     }
-    l = a.children, typeof l != "string" && typeof l != "number" && typeof l != "bigint" || t.textContent === "" + l || a.suppressHydrationWarning === !0 || Rh(t.textContent, l) ? (a.popover != null && (ht("beforetoggle", t), ht("toggle", t)), a.onScroll != null && ht("scroll", t), a.onScrollEnd != null && ht("scrollend", t), a.onClick != null && (t.onclick = Ci), t = !0) : t = !1, t || Al(e);
+    l = a.children, typeof l != "string" && typeof l != "number" && typeof l != "bigint" || t.textContent === "" + l || a.suppressHydrationWarning === !0 || Mh(t.textContent, l) ? (a.popover != null && (xt("beforetoggle", t), xt("toggle", t)), a.onScroll != null && xt("scroll", t), a.onScrollEnd != null && xt("scrollend", t), a.onClick != null && (t.onclick = Ei), t = !0) : t = !1, t || Al(e);
   }
-  function jd(e) {
+  function gd(e) {
     for (ts = e.return; ts; )
       switch (ts.tag) {
         case 5:
@@ -2542,9 +2542,9 @@ Error generating stack: ` + l.message + `
   }
   function Ba(e) {
     if (e !== ts) return !1;
-    if (!jt) return jd(e), jt = !0, !1;
+    if (!bt) return gd(e), bt = !0, !1;
     var t = e.tag, l;
-    if ((l = t !== 3 && t !== 27) && ((l = t === 5) && (l = e.type, l = !(l !== "form" && l !== "button") || Gr(e.type, e.memoizedProps)), l = !l), l && Ut && Al(e), jd(e), t === 13) {
+    if ((l = t !== 3 && t !== 27) && ((l = t === 5) && (l = e.type, l = !(l !== "form" && l !== "button") || Gr(e.type, e.memoizedProps)), l = !l), l && Ut && Al(e), gd(e), t === 13) {
       if (e = e.memoizedState, e = e !== null ? e.dehydrated : null, !e) throw Error(d(317));
       e: {
         for (e = e.nextSibling, t = 0; e; ) {
@@ -2566,9 +2566,9 @@ Error generating stack: ` + l.message + `
     return !0;
   }
   function La() {
-    Ut = ts = null, jt = !1;
+    Ut = ts = null, bt = !1;
   }
-  function vd() {
+  function bd() {
     var e = zl;
     return e !== null && (ns === null ? ns = e : ns.push.apply(
       ns,
@@ -2578,9 +2578,9 @@ Error generating stack: ` + l.message + `
   function Ya(e) {
     zl === null ? zl = [e] : zl.push(e);
   }
-  var Cc = H(null), Rl = null, Ls = null;
+  var Cc = B(null), Rl = null, Ls = null;
   function tl(e, t, l) {
-    $(Cc, t._currentValue), t._currentValue = l;
+    W(Cc, t._currentValue), t._currentValue = l;
   }
   function Ys(e) {
     e._currentValue = Cc.current, te(Cc);
@@ -2602,8 +2602,8 @@ Error generating stack: ` + l.message + `
         e: for (; i !== null; ) {
           var o = i;
           i = n;
-          for (var g = 0; g < t.length; g++)
-            if (o.context === t[g]) {
+          for (var p = 0; p < t.length; p++)
+            if (o.context === t[p]) {
               i.lanes |= l, o = i.alternate, o !== null && (o.lanes |= l), Ec(
                 i.return,
                 l,
@@ -2647,7 +2647,7 @@ Error generating stack: ` + l.message + `
           var o = n.type;
           is(n.pendingProps.value, c.value) || (e !== null ? e.push(o) : e = [o]);
         }
-      } else if (n === Ce.current) {
+      } else if (n === Oe.current) {
         if (c = n.alternate, c === null) throw Error(d(387));
         c.memoizedState.memoizedState !== n.memoizedState.memoizedState && (e !== null ? e.push(pn) : e = [pn]);
       }
@@ -2660,7 +2660,7 @@ Error generating stack: ` + l.message + `
       a
     ), t.flags |= 262144;
   }
-  function Kn(e) {
+  function $n(e) {
     for (e = e.firstContext; e !== null; ) {
       if (!is(
         e.context._currentValue,
@@ -2675,12 +2675,12 @@ Error generating stack: ` + l.message + `
     Rl = e, Ls = null, e = e.dependencies, e !== null && (e.firstContext = null);
   }
   function Pt(e) {
-    return pd(Rl, e);
+    return yd(Rl, e);
   }
-  function $n(e, t) {
-    return Rl === null && Ul(e), pd(e, t);
+  function Wn(e, t) {
+    return Rl === null && Ul(e), yd(e, t);
   }
-  function pd(e, t) {
+  function yd(e, t) {
     var l = t._currentValue;
     if (t = { context: t, memoizedValue: l, next: null }, Ls === null) {
       if (e === null) throw Error(d(308));
@@ -2688,7 +2688,7 @@ Error generating stack: ` + l.message + `
     } else Ls = Ls.next = t;
     return l;
   }
-  var $m = typeof AbortController < "u" ? AbortController : function() {
+  var Pm = typeof AbortController < "u" ? AbortController : function() {
     var e = [], t = this.signal = {
       aborted: !1,
       addEventListener: function(l, a) {
@@ -2700,7 +2700,7 @@ Error generating stack: ` + l.message + `
         return l();
       });
     };
-  }, Wm = u.unstable_scheduleCallback, Fm = u.unstable_NormalPriority, Gt = {
+  }, ex = u.unstable_scheduleCallback, tx = u.unstable_NormalPriority, Qt = {
     $$typeof: I,
     Consumer: null,
     Provider: null,
@@ -2710,21 +2710,21 @@ Error generating stack: ` + l.message + `
   };
   function Tc() {
     return {
-      controller: new $m(),
+      controller: new Pm(),
       data: /* @__PURE__ */ new Map(),
       refCount: 0
     };
   }
   function Qa(e) {
-    e.refCount--, e.refCount === 0 && Wm(Fm, function() {
+    e.refCount--, e.refCount === 0 && ex(tx, function() {
       e.controller.abort();
     });
   }
-  var Xa = null, zc = 0, ea = 0, ta = null;
-  function Im(e, t) {
+  var Xa = null, zc = 0, ta = 0, sa = null;
+  function sx(e, t) {
     if (Xa === null) {
       var l = Xa = [];
-      zc = 0, ea = Rr(), ta = {
+      zc = 0, ta = Rr(), sa = {
         status: "pending",
         value: void 0,
         then: function(a) {
@@ -2732,17 +2732,17 @@ Error generating stack: ` + l.message + `
         }
       };
     }
-    return zc++, t.then(gd, gd), t;
+    return zc++, t.then(_d, _d), t;
   }
-  function gd() {
+  function _d() {
     if (--zc === 0 && Xa !== null) {
-      ta !== null && (ta.status = "fulfilled");
+      sa !== null && (sa.status = "fulfilled");
       var e = Xa;
-      Xa = null, ea = 0, ta = null;
+      Xa = null, ta = 0, sa = null;
       for (var t = 0; t < e.length; t++) (0, e[t])();
     }
   }
-  function Pm(e, t) {
+  function lx(e, t) {
     var l = [], a = {
       status: "pending",
       value: null,
@@ -2762,39 +2762,39 @@ Error generating stack: ` + l.message + `
       }
     ), a;
   }
-  var bd = y.S;
-  y.S = function(e, t) {
-    typeof t == "object" && t !== null && typeof t.then == "function" && Im(e, t), bd !== null && bd(e, t);
+  var Nd = b.S;
+  b.S = function(e, t) {
+    typeof t == "object" && t !== null && typeof t.then == "function" && sx(e, t), Nd !== null && Nd(e, t);
   };
-  var Dl = H(null);
+  var Dl = B(null);
   function Ac() {
     var e = Dl.current;
-    return e !== null ? e : kt.pooledCache;
+    return e !== null ? e : Et.pooledCache;
   }
-  function Wn(e, t) {
-    t === null ? $(Dl, Dl.current) : $(Dl, t.pool);
+  function Fn(e, t) {
+    t === null ? W(Dl, Dl.current) : W(Dl, t.pool);
   }
-  function yd() {
+  function Sd() {
     var e = Ac();
-    return e === null ? null : { parent: Gt._currentValue, pool: e };
+    return e === null ? null : { parent: Qt._currentValue, pool: e };
   }
-  var Za = Error(d(460)), _d = Error(d(474)), Fn = Error(d(542)), Rc = { then: function() {
+  var Za = Error(d(460)), wd = Error(d(474)), In = Error(d(542)), Rc = { then: function() {
   } };
-  function Nd(e) {
+  function kd(e) {
     return e = e.status, e === "fulfilled" || e === "rejected";
   }
-  function In() {
+  function Pn() {
   }
-  function Sd(e, t, l) {
-    switch (l = e[l], l === void 0 ? e.push(t) : l !== t && (t.then(In, In), t = l), t.status) {
+  function Cd(e, t, l) {
+    switch (l = e[l], l === void 0 ? e.push(t) : l !== t && (t.then(Pn, Pn), t = l), t.status) {
       case "fulfilled":
         return t.value;
       case "rejected":
-        throw e = t.reason, kd(e), e;
+        throw e = t.reason, Od(e), e;
       default:
-        if (typeof t.status == "string") t.then(In, In);
+        if (typeof t.status == "string") t.then(Pn, Pn);
         else {
-          if (e = kt, e !== null && 100 < e.shellSuspendCounter)
+          if (e = Et, e !== null && 100 < e.shellSuspendCounter)
             throw Error(d(482));
           e = t, e.status = "pending", e.then(
             function(a) {
@@ -2815,19 +2815,19 @@ Error generating stack: ` + l.message + `
           case "fulfilled":
             return t.value;
           case "rejected":
-            throw e = t.reason, kd(e), e;
+            throw e = t.reason, Od(e), e;
         }
         throw Va = t, Za;
     }
   }
   var Va = null;
-  function wd() {
+  function Ed() {
     if (Va === null) throw Error(d(459));
     var e = Va;
     return Va = null, e;
   }
-  function kd(e) {
-    if (e === Za || e === Fn)
+  function Od(e) {
+    if (e === Za || e === In)
       throw Error(d(483));
   }
   var sl = !1;
@@ -2855,16 +2855,16 @@ Error generating stack: ` + l.message + `
   function al(e, t, l) {
     var a = e.updateQueue;
     if (a === null) return null;
-    if (a = a.shared, (gt & 2) !== 0) {
+    if (a = a.shared, (yt & 2) !== 0) {
       var n = a.pending;
-      return n === null ? t.next = t : (t.next = n.next, n.next = t), a.pending = t, t = Xn(e), hd(e, null, l), t;
+      return n === null ? t.next = t : (t.next = n.next, n.next = t), a.pending = t, t = Zn(e), xd(e, null, l), t;
     }
-    return Qn(e, a, t, l), Xn(e);
+    return Xn(e, a, t, l), Zn(e);
   }
   function Ja(e, t, l) {
     if (t = t.updateQueue, t !== null && (t = t.shared, (l & 4194048) !== 0)) {
       var a = t.lanes;
-      a &= e.pendingLanes, l |= a, t.lanes = l, x(e, l);
+      a &= e.pendingLanes, l |= a, t.lanes = l, N(e, l);
     }
   }
   function Mc(e, t) {
@@ -2898,7 +2898,7 @@ Error generating stack: ` + l.message + `
   var qc = !1;
   function Ka() {
     if (qc) {
-      var e = ta;
+      var e = sa;
       if (e !== null) throw e;
     }
   }
@@ -2909,18 +2909,18 @@ Error generating stack: ` + l.message + `
     var i = n.firstBaseUpdate, c = n.lastBaseUpdate, o = n.shared.pending;
     if (o !== null) {
       n.shared.pending = null;
-      var g = o, T = g.next;
-      g.next = null, c === null ? i = T : c.next = T, c = g;
+      var p = o, T = p.next;
+      p.next = null, c === null ? i = T : c.next = T, c = p;
       var J = e.alternate;
-      J !== null && (J = J.updateQueue, o = J.lastBaseUpdate, o !== c && (o === null ? J.firstBaseUpdate = T : o.next = T, J.lastBaseUpdate = g));
+      J !== null && (J = J.updateQueue, o = J.lastBaseUpdate, o !== c && (o === null ? J.firstBaseUpdate = T : o.next = T, J.lastBaseUpdate = p));
     }
     if (i !== null) {
       var se = n.baseState;
-      c = 0, J = T = g = null, o = i;
+      c = 0, J = T = p = null, o = i;
       do {
-        var A = o.lane & -536870913, q = A !== o.lane;
-        if (q ? (ft & A) === A : (a & A) === A) {
-          A !== 0 && A === ea && (qc = !0), J !== null && (J = J.next = {
+        var R = o.lane & -536870913, H = R !== o.lane;
+        if (H ? (vt & R) === R : (a & R) === R) {
+          R !== 0 && R === ta && (qc = !0), J !== null && (J = J.next = {
             lane: 0,
             tag: o.tag,
             payload: o.payload,
@@ -2928,67 +2928,67 @@ Error generating stack: ` + l.message + `
             next: null
           });
           e: {
-            var Ie = e, Je = o;
-            A = t;
-            var Nt = l;
-            switch (Je.tag) {
+            var Pe = e, We = o;
+            R = t;
+            var kt = l;
+            switch (We.tag) {
               case 1:
-                if (Ie = Je.payload, typeof Ie == "function") {
-                  se = Ie.call(Nt, se, A);
+                if (Pe = We.payload, typeof Pe == "function") {
+                  se = Pe.call(kt, se, R);
                   break e;
                 }
-                se = Ie;
+                se = Pe;
                 break e;
               case 3:
-                Ie.flags = Ie.flags & -65537 | 128;
+                Pe.flags = Pe.flags & -65537 | 128;
               case 0:
-                if (Ie = Je.payload, A = typeof Ie == "function" ? Ie.call(Nt, se, A) : Ie, A == null) break e;
-                se = U({}, se, A);
+                if (Pe = We.payload, R = typeof Pe == "function" ? Pe.call(kt, se, R) : Pe, R == null) break e;
+                se = U({}, se, R);
                 break e;
               case 2:
                 sl = !0;
             }
           }
-          A = o.callback, A !== null && (e.flags |= 64, q && (e.flags |= 8192), q = n.callbacks, q === null ? n.callbacks = [A] : q.push(A));
+          R = o.callback, R !== null && (e.flags |= 64, H && (e.flags |= 8192), H = n.callbacks, H === null ? n.callbacks = [R] : H.push(R));
         } else
-          q = {
-            lane: A,
+          H = {
+            lane: R,
             tag: o.tag,
             payload: o.payload,
             callback: o.callback,
             next: null
-          }, J === null ? (T = J = q, g = se) : J = J.next = q, c |= A;
+          }, J === null ? (T = J = H, p = se) : J = J.next = H, c |= R;
         if (o = o.next, o === null) {
           if (o = n.shared.pending, o === null)
             break;
-          q = o, o = q.next, q.next = null, n.lastBaseUpdate = q, n.shared.pending = null;
+          H = o, o = H.next, H.next = null, n.lastBaseUpdate = H, n.shared.pending = null;
         }
       } while (!0);
-      J === null && (g = se), n.baseState = g, n.firstBaseUpdate = T, n.lastBaseUpdate = J, i === null && (n.shared.lanes = 0), hl |= c, e.lanes = c, e.memoizedState = se;
+      J === null && (p = se), n.baseState = p, n.firstBaseUpdate = T, n.lastBaseUpdate = J, i === null && (n.shared.lanes = 0), hl |= c, e.lanes = c, e.memoizedState = se;
     }
   }
-  function Cd(e, t) {
+  function Td(e, t) {
     if (typeof e != "function")
       throw Error(d(191, e));
     e.call(t);
   }
-  function Ed(e, t) {
+  function zd(e, t) {
     var l = e.callbacks;
     if (l !== null)
       for (e.callbacks = null, e = 0; e < l.length; e++)
-        Cd(l[e], t);
+        Td(l[e], t);
   }
-  var sa = H(null), Pn = H(0);
-  function Od(e, t) {
-    e = Ks, $(Pn, e), $(sa, t), Ks = e | t.baseLanes;
+  var la = B(null), ei = B(0);
+  function Ad(e, t) {
+    e = Ks, W(ei, e), W(la, t), Ks = e | t.baseLanes;
   }
   function Hc() {
-    $(Pn, Ks), $(sa, sa.current);
+    W(ei, Ks), W(la, la.current);
   }
   function Bc() {
-    Ks = Pn.current, te(sa), te(Pn);
+    Ks = ei.current, te(la), te(ei);
   }
-  var nl = 0, ct = null, yt = null, Lt = null, ei = !1, la = !1, Ml = !1, ti = 0, Wa = 0, aa = null, ex = 0;
+  var nl = 0, ot = null, St = null, Lt = null, ti = !1, aa = !1, Ml = !1, si = 0, Wa = 0, na = null, ax = 0;
   function Ht() {
     throw Error(d(321));
   }
@@ -2999,52 +2999,52 @@ Error generating stack: ` + l.message + `
     return !0;
   }
   function Yc(e, t, l, a, n, i) {
-    return nl = i, ct = t, t.memoizedState = null, t.updateQueue = null, t.lanes = 0, y.H = e === null || e.memoizedState === null ? fo : mo, Ml = !1, i = l(a, n), Ml = !1, la && (i = zd(
+    return nl = i, ot = t, t.memoizedState = null, t.updateQueue = null, t.lanes = 0, b.H = e === null || e.memoizedState === null ? jo : vo, Ml = !1, i = l(a, n), Ml = !1, aa && (i = Ud(
       t,
       l,
       a,
       n
-    )), Td(e), i;
+    )), Rd(e), i;
   }
-  function Td(e) {
-    y.H = ci;
-    var t = yt !== null && yt.next !== null;
-    if (nl = 0, Lt = yt = ct = null, ei = !1, Wa = 0, aa = null, t) throw Error(d(300));
-    e === null || Zt || (e = e.dependencies, e !== null && Kn(e) && (Zt = !0));
+  function Rd(e) {
+    b.H = ri;
+    var t = St !== null && St.next !== null;
+    if (nl = 0, Lt = St = ot = null, ti = !1, Wa = 0, na = null, t) throw Error(d(300));
+    e === null || Vt || (e = e.dependencies, e !== null && $n(e) && (Vt = !0));
   }
-  function zd(e, t, l, a) {
-    ct = e;
+  function Ud(e, t, l, a) {
+    ot = e;
     var n = 0;
     do {
-      if (la && (aa = null), Wa = 0, la = !1, 25 <= n) throw Error(d(301));
-      if (n += 1, Lt = yt = null, e.updateQueue != null) {
+      if (aa && (na = null), Wa = 0, aa = !1, 25 <= n) throw Error(d(301));
+      if (n += 1, Lt = St = null, e.updateQueue != null) {
         var i = e.updateQueue;
         i.lastEffect = null, i.events = null, i.stores = null, i.memoCache != null && (i.memoCache.index = 0);
       }
-      y.H = cx, i = t(l, a);
-    } while (la);
+      b.H = ox, i = t(l, a);
+    } while (aa);
     return i;
   }
-  function tx() {
-    var e = y.H, t = e.useState()[0];
-    return t = typeof t.then == "function" ? Fa(t) : t, e = e.useState()[0], (yt !== null ? yt.memoizedState : null) !== e && (ct.flags |= 1024), t;
+  function nx() {
+    var e = b.H, t = e.useState()[0];
+    return t = typeof t.then == "function" ? Fa(t) : t, e = e.useState()[0], (St !== null ? St.memoizedState : null) !== e && (ot.flags |= 1024), t;
   }
   function Gc() {
-    var e = ti !== 0;
-    return ti = 0, e;
+    var e = si !== 0;
+    return si = 0, e;
   }
   function Qc(e, t, l) {
     t.updateQueue = e.updateQueue, t.flags &= -2053, e.lanes &= ~l;
   }
   function Xc(e) {
-    if (ei) {
+    if (ti) {
       for (e = e.memoizedState; e !== null; ) {
         var t = e.queue;
         t !== null && (t.pending = null), e = e.next;
       }
-      ei = !1;
+      ti = !1;
     }
-    nl = 0, Lt = yt = ct = null, la = !1, Wa = ti = 0, aa = null;
+    nl = 0, Lt = St = ot = null, aa = !1, Wa = si = 0, na = null;
   }
   function ls() {
     var e = {
@@ -3054,26 +3054,26 @@ Error generating stack: ` + l.message + `
       queue: null,
       next: null
     };
-    return Lt === null ? ct.memoizedState = Lt = e : Lt = Lt.next = e, Lt;
+    return Lt === null ? ot.memoizedState = Lt = e : Lt = Lt.next = e, Lt;
   }
   function Yt() {
-    if (yt === null) {
-      var e = ct.alternate;
+    if (St === null) {
+      var e = ot.alternate;
       e = e !== null ? e.memoizedState : null;
-    } else e = yt.next;
-    var t = Lt === null ? ct.memoizedState : Lt.next;
+    } else e = St.next;
+    var t = Lt === null ? ot.memoizedState : Lt.next;
     if (t !== null)
-      Lt = t, yt = e;
+      Lt = t, St = e;
     else {
       if (e === null)
-        throw ct.alternate === null ? Error(d(467)) : Error(d(310));
-      yt = e, e = {
-        memoizedState: yt.memoizedState,
-        baseState: yt.baseState,
-        baseQueue: yt.baseQueue,
-        queue: yt.queue,
+        throw ot.alternate === null ? Error(d(467)) : Error(d(310));
+      St = e, e = {
+        memoizedState: St.memoizedState,
+        baseState: St.baseState,
+        baseQueue: St.baseQueue,
+        queue: St.queue,
         next: null
-      }, Lt === null ? ct.memoizedState = Lt = e : Lt = Lt.next = e;
+      }, Lt === null ? ot.memoizedState = Lt = e : Lt = Lt.next = e;
     }
     return Lt;
   }
@@ -3082,9 +3082,9 @@ Error generating stack: ` + l.message + `
   }
   function Fa(e) {
     var t = Wa;
-    return Wa += 1, aa === null && (aa = []), e = Sd(aa, e, t), t = ct, (Lt === null ? t.memoizedState : Lt.next) === null && (t = t.alternate, y.H = t === null || t.memoizedState === null ? fo : mo), e;
+    return Wa += 1, na === null && (na = []), e = Cd(na, e, t), t = ot, (Lt === null ? t.memoizedState : Lt.next) === null && (t = t.alternate, b.H = t === null || t.memoizedState === null ? jo : vo), e;
   }
-  function si(e) {
+  function li(e) {
     if (e !== null && typeof e == "object") {
       if (typeof e.then == "function") return Fa(e);
       if (e.$$typeof === I) return Pt(e);
@@ -3092,9 +3092,9 @@ Error generating stack: ` + l.message + `
     throw Error(d(438, String(e)));
   }
   function Vc(e) {
-    var t = null, l = ct.updateQueue;
+    var t = null, l = ot.updateQueue;
     if (l !== null && (t = l.memoCache), t == null) {
-      var a = ct.alternate;
+      var a = ot.alternate;
       a !== null && (a = a.updateQueue, a !== null && (a = a.memoCache, a != null && (t = {
         data: a.data.map(function(n) {
           return n.slice();
@@ -3102,17 +3102,17 @@ Error generating stack: ` + l.message + `
         index: 0
       })));
     }
-    if (t == null && (t = { data: [], index: 0 }), l === null && (l = Zc(), ct.updateQueue = l), l.memoCache = t, l = t.data[t.index], l === void 0)
+    if (t == null && (t = { data: [], index: 0 }), l === null && (l = Zc(), ot.updateQueue = l), l.memoCache = t, l = t.data[t.index], l === void 0)
       for (l = t.data[t.index] = Array(e), a = 0; a < e; a++)
-        l[a] = Xe;
+        l[a] = Je;
     return t.index++, l;
   }
   function Gs(e, t) {
     return typeof t == "function" ? t(e) : t;
   }
-  function li(e) {
+  function ai(e) {
     var t = Yt();
-    return Jc(t, yt, e);
+    return Jc(t, St, e);
   }
   function Jc(e, t, l) {
     var a = e.queue;
@@ -3129,22 +3129,22 @@ Error generating stack: ` + l.message + `
     if (i = e.baseState, n === null) e.memoizedState = i;
     else {
       t = n.next;
-      var o = c = null, g = null, T = t, J = !1;
+      var o = c = null, p = null, T = t, J = !1;
       do {
         var se = T.lane & -536870913;
-        if (se !== T.lane ? (ft & se) === se : (nl & se) === se) {
-          var A = T.revertLane;
-          if (A === 0)
-            g !== null && (g = g.next = {
+        if (se !== T.lane ? (vt & se) === se : (nl & se) === se) {
+          var R = T.revertLane;
+          if (R === 0)
+            p !== null && (p = p.next = {
               lane: 0,
               revertLane: 0,
               action: T.action,
               hasEagerState: T.hasEagerState,
               eagerState: T.eagerState,
               next: null
-            }), se === ea && (J = !0);
-          else if ((nl & A) === A) {
-            T = T.next, A === ea && (J = !0);
+            }), se === ta && (J = !0);
+          else if ((nl & R) === R) {
+            T = T.next, R === ta && (J = !0);
             continue;
           } else
             se = {
@@ -3154,22 +3154,22 @@ Error generating stack: ` + l.message + `
               hasEagerState: T.hasEagerState,
               eagerState: T.eagerState,
               next: null
-            }, g === null ? (o = g = se, c = i) : g = g.next = se, ct.lanes |= A, hl |= A;
+            }, p === null ? (o = p = se, c = i) : p = p.next = se, ot.lanes |= R, hl |= R;
           se = T.action, Ml && l(i, se), i = T.hasEagerState ? T.eagerState : l(i, se);
         } else
-          A = {
+          R = {
             lane: se,
             revertLane: T.revertLane,
             action: T.action,
             hasEagerState: T.hasEagerState,
             eagerState: T.eagerState,
             next: null
-          }, g === null ? (o = g = A, c = i) : g = g.next = A, ct.lanes |= se, hl |= se;
+          }, p === null ? (o = p = R, c = i) : p = p.next = R, ot.lanes |= se, hl |= se;
         T = T.next;
       } while (T !== null && T !== t);
-      if (g === null ? c = i : g.next = o, !is(i, e.memoizedState) && (Zt = !0, J && (l = ta, l !== null)))
+      if (p === null ? c = i : p.next = o, !is(i, e.memoizedState) && (Vt = !0, J && (l = sa, l !== null)))
         throw l;
-      e.memoizedState = i, e.baseState = c, e.baseQueue = g, a.lastRenderedState = i;
+      e.memoizedState = i, e.baseState = c, e.baseQueue = p, a.lastRenderedState = i;
     }
     return n === null && (a.lanes = 0), [e.memoizedState, a.dispatch];
   }
@@ -3184,27 +3184,27 @@ Error generating stack: ` + l.message + `
       do
         i = e(i, c.action), c = c.next;
       while (c !== n);
-      is(i, t.memoizedState) || (Zt = !0), t.memoizedState = i, t.baseQueue === null && (t.baseState = i), l.lastRenderedState = i;
+      is(i, t.memoizedState) || (Vt = !0), t.memoizedState = i, t.baseQueue === null && (t.baseState = i), l.lastRenderedState = i;
     }
     return [i, a];
   }
-  function Ad(e, t, l) {
-    var a = ct, n = Yt(), i = jt;
+  function Dd(e, t, l) {
+    var a = ot, n = Yt(), i = bt;
     if (i) {
       if (l === void 0) throw Error(d(407));
       l = l();
     } else l = t();
     var c = !is(
-      (yt || n).memoizedState,
+      (St || n).memoizedState,
       l
     );
-    c && (n.memoizedState = l, Zt = !0), n = n.queue;
-    var o = Dd.bind(null, a, n, e);
+    c && (n.memoizedState = l, Vt = !0), n = n.queue;
+    var o = Hd.bind(null, a, n, e);
     if (Ia(2048, 8, o, [e]), n.getSnapshot !== t || c || Lt !== null && Lt.memoizedState.tag & 1) {
-      if (a.flags |= 2048, na(
+      if (a.flags |= 2048, ia(
         9,
-        ai(),
-        Ud.bind(
+        ni(),
+        qd.bind(
           null,
           a,
           n,
@@ -3212,23 +3212,23 @@ Error generating stack: ` + l.message + `
           t
         ),
         null
-      ), kt === null) throw Error(d(349));
-      i || (nl & 124) !== 0 || Rd(a, t, l);
+      ), Et === null) throw Error(d(349));
+      i || (nl & 124) !== 0 || Md(a, t, l);
     }
     return l;
   }
-  function Rd(e, t, l) {
-    e.flags |= 16384, e = { getSnapshot: t, value: l }, t = ct.updateQueue, t === null ? (t = Zc(), ct.updateQueue = t, t.stores = [e]) : (l = t.stores, l === null ? t.stores = [e] : l.push(e));
+  function Md(e, t, l) {
+    e.flags |= 16384, e = { getSnapshot: t, value: l }, t = ot.updateQueue, t === null ? (t = Zc(), ot.updateQueue = t, t.stores = [e]) : (l = t.stores, l === null ? t.stores = [e] : l.push(e));
   }
-  function Ud(e, t, l, a) {
-    t.value = l, t.getSnapshot = a, Md(t) && qd(e);
+  function qd(e, t, l, a) {
+    t.value = l, t.getSnapshot = a, Bd(t) && Ld(e);
   }
-  function Dd(e, t, l) {
+  function Hd(e, t, l) {
     return l(function() {
-      Md(t) && qd(e);
+      Bd(t) && Ld(e);
     });
   }
-  function Md(e) {
+  function Bd(e) {
     var t = e.getSnapshot;
     e = e.value;
     try {
@@ -3238,8 +3238,8 @@ Error generating stack: ` + l.message + `
       return !0;
     }
   }
-  function qd(e) {
-    var t = Wl(e, 2);
+  function Ld(e) {
+    var t = Fl(e, 2);
     t !== null && hs(t, e, 2);
   }
   function $c(e) {
@@ -3247,11 +3247,11 @@ Error generating stack: ` + l.message + `
     if (typeof e == "function") {
       var l = e;
       if (e = l(), Ml) {
-        He(!0);
+        Le(!0);
         try {
           l();
         } finally {
-          He(!1);
+          Le(!1);
         }
       }
     }
@@ -3263,15 +3263,15 @@ Error generating stack: ` + l.message + `
       lastRenderedState: e
     }, t;
   }
-  function Hd(e, t, l, a) {
+  function Yd(e, t, l, a) {
     return e.baseState = l, Jc(
       e,
-      yt,
+      St,
       typeof a == "function" ? a : Gs
     );
   }
-  function sx(e, t, l, a, n) {
-    if (ii(e)) throw Error(d(485));
+  function ix(e, t, l, a, n) {
+    if (ci(e)) throw Error(d(485));
     if (e = t.action, e !== null) {
       var i = {
         payload: n,
@@ -3286,66 +3286,66 @@ Error generating stack: ` + l.message + `
           i.listeners.push(c);
         }
       };
-      y.T !== null ? l(!0) : i.isTransition = !1, a(i), l = t.pending, l === null ? (i.next = t.pending = i, Bd(t, i)) : (i.next = l.next, t.pending = l.next = i);
+      b.T !== null ? l(!0) : i.isTransition = !1, a(i), l = t.pending, l === null ? (i.next = t.pending = i, Gd(t, i)) : (i.next = l.next, t.pending = l.next = i);
     }
   }
-  function Bd(e, t) {
+  function Gd(e, t) {
     var l = t.action, a = t.payload, n = e.state;
     if (t.isTransition) {
-      var i = y.T, c = {};
-      y.T = c;
+      var i = b.T, c = {};
+      b.T = c;
       try {
-        var o = l(n, a), g = y.S;
-        g !== null && g(c, o), Ld(e, t, o);
+        var o = l(n, a), p = b.S;
+        p !== null && p(c, o), Qd(e, t, o);
       } catch (T) {
         Wc(e, t, T);
       } finally {
-        y.T = i;
+        b.T = i;
       }
     } else
       try {
-        i = l(n, a), Ld(e, t, i);
+        i = l(n, a), Qd(e, t, i);
       } catch (T) {
         Wc(e, t, T);
       }
   }
-  function Ld(e, t, l) {
+  function Qd(e, t, l) {
     l !== null && typeof l == "object" && typeof l.then == "function" ? l.then(
       function(a) {
-        Yd(e, t, a);
+        Xd(e, t, a);
       },
       function(a) {
         return Wc(e, t, a);
       }
-    ) : Yd(e, t, l);
+    ) : Xd(e, t, l);
   }
-  function Yd(e, t, l) {
-    t.status = "fulfilled", t.value = l, Gd(t), e.state = l, t = e.pending, t !== null && (l = t.next, l === t ? e.pending = null : (l = l.next, t.next = l, Bd(e, l)));
+  function Xd(e, t, l) {
+    t.status = "fulfilled", t.value = l, Zd(t), e.state = l, t = e.pending, t !== null && (l = t.next, l === t ? e.pending = null : (l = l.next, t.next = l, Gd(e, l)));
   }
   function Wc(e, t, l) {
     var a = e.pending;
     if (e.pending = null, a !== null) {
       a = a.next;
       do
-        t.status = "rejected", t.reason = l, Gd(t), t = t.next;
+        t.status = "rejected", t.reason = l, Zd(t), t = t.next;
       while (t !== a);
     }
     e.action = null;
   }
-  function Gd(e) {
+  function Zd(e) {
     e = e.listeners;
     for (var t = 0; t < e.length; t++) (0, e[t])();
   }
-  function Qd(e, t) {
+  function Vd(e, t) {
     return t;
   }
-  function Xd(e, t) {
-    if (jt) {
-      var l = kt.formState;
+  function Jd(e, t) {
+    if (bt) {
+      var l = Et.formState;
       if (l !== null) {
         e: {
-          var a = ct;
-          if (jt) {
+          var a = ot;
+          if (bt) {
             if (Ut) {
               t: {
                 for (var n = Ut, i = Es; n.nodeType !== 8; ) {
@@ -3380,15 +3380,15 @@ Error generating stack: ` + l.message + `
       pending: null,
       lanes: 0,
       dispatch: null,
-      lastRenderedReducer: Qd,
+      lastRenderedReducer: Vd,
       lastRenderedState: t
-    }, l.queue = a, l = uo.bind(
+    }, l.queue = a, l = fo.bind(
       null,
-      ct,
+      ot,
       a
     ), a.dispatch = l, a = $c(!1), i = tr.bind(
       null,
-      ct,
+      ot,
       !1,
       a.queue
     ), a = ls(), n = {
@@ -3396,64 +3396,64 @@ Error generating stack: ` + l.message + `
       dispatch: null,
       action: e,
       pending: null
-    }, a.queue = n, l = sx.bind(
+    }, a.queue = n, l = ix.bind(
       null,
-      ct,
+      ot,
       n,
       i,
       l
     ), n.dispatch = l, a.memoizedState = e, [t, l, !1];
   }
-  function Zd(e) {
+  function Kd(e) {
     var t = Yt();
-    return Vd(t, yt, e);
+    return $d(t, St, e);
   }
-  function Vd(e, t, l) {
+  function $d(e, t, l) {
     if (t = Jc(
       e,
       t,
-      Qd
-    )[0], e = li(Gs)[0], typeof t == "object" && t !== null && typeof t.then == "function")
+      Vd
+    )[0], e = ai(Gs)[0], typeof t == "object" && t !== null && typeof t.then == "function")
       try {
         var a = Fa(t);
       } catch (c) {
-        throw c === Za ? Fn : c;
+        throw c === Za ? In : c;
       }
     else a = t;
     t = Yt();
     var n = t.queue, i = n.dispatch;
-    return l !== t.memoizedState && (ct.flags |= 2048, na(
+    return l !== t.memoizedState && (ot.flags |= 2048, ia(
       9,
-      ai(),
-      lx.bind(null, n, l),
+      ni(),
+      cx.bind(null, n, l),
       null
     )), [a, i, e];
   }
-  function lx(e, t) {
+  function cx(e, t) {
     e.action = t;
   }
-  function Jd(e) {
-    var t = Yt(), l = yt;
+  function Wd(e) {
+    var t = Yt(), l = St;
     if (l !== null)
-      return Vd(t, l, e);
+      return $d(t, l, e);
     Yt(), t = t.memoizedState, l = Yt();
     var a = l.queue.dispatch;
     return l.memoizedState = e, [t, a, !1];
   }
-  function na(e, t, l, a) {
-    return e = { tag: e, create: l, deps: a, inst: t, next: null }, t = ct.updateQueue, t === null && (t = Zc(), ct.updateQueue = t), l = t.lastEffect, l === null ? t.lastEffect = e.next = e : (a = l.next, l.next = e, e.next = a, t.lastEffect = e), e;
+  function ia(e, t, l, a) {
+    return e = { tag: e, create: l, deps: a, inst: t, next: null }, t = ot.updateQueue, t === null && (t = Zc(), ot.updateQueue = t), l = t.lastEffect, l === null ? t.lastEffect = e.next = e : (a = l.next, l.next = e, e.next = a, t.lastEffect = e), e;
   }
-  function ai() {
+  function ni() {
     return { destroy: void 0, resource: void 0 };
   }
-  function Kd() {
+  function Fd() {
     return Yt().memoizedState;
   }
-  function ni(e, t, l, a) {
+  function ii(e, t, l, a) {
     var n = ls();
-    a = a === void 0 ? null : a, ct.flags |= e, n.memoizedState = na(
+    a = a === void 0 ? null : a, ot.flags |= e, n.memoizedState = ia(
       1 | t,
-      ai(),
+      ni(),
       l,
       a
     );
@@ -3462,26 +3462,26 @@ Error generating stack: ` + l.message + `
     var n = Yt();
     a = a === void 0 ? null : a;
     var i = n.memoizedState.inst;
-    yt !== null && a !== null && Lc(a, yt.memoizedState.deps) ? n.memoizedState = na(t, i, l, a) : (ct.flags |= e, n.memoizedState = na(
+    St !== null && a !== null && Lc(a, St.memoizedState.deps) ? n.memoizedState = ia(t, i, l, a) : (ot.flags |= e, n.memoizedState = ia(
       1 | t,
       i,
       l,
       a
     ));
   }
-  function $d(e, t) {
-    ni(8390656, 8, e, t);
-  }
-  function Wd(e, t) {
-    Ia(2048, 8, e, t);
-  }
-  function Fd(e, t) {
-    return Ia(4, 2, e, t);
-  }
   function Id(e, t) {
-    return Ia(4, 4, e, t);
+    ii(8390656, 8, e, t);
   }
   function Pd(e, t) {
+    Ia(2048, 8, e, t);
+  }
+  function eo(e, t) {
+    return Ia(4, 2, e, t);
+  }
+  function to(e, t) {
+    return Ia(4, 4, e, t);
+  }
+  function so(e, t) {
     if (typeof t == "function") {
       e = e();
       var l = t(e);
@@ -3494,49 +3494,49 @@ Error generating stack: ` + l.message + `
         t.current = null;
       };
   }
-  function eo(e, t, l) {
-    l = l != null ? l.concat([e]) : null, Ia(4, 4, Pd.bind(null, t, e), l);
+  function lo(e, t, l) {
+    l = l != null ? l.concat([e]) : null, Ia(4, 4, so.bind(null, t, e), l);
   }
   function Fc() {
   }
-  function to(e, t) {
+  function ao(e, t) {
     var l = Yt();
     t = t === void 0 ? null : t;
     var a = l.memoizedState;
     return t !== null && Lc(t, a[1]) ? a[0] : (l.memoizedState = [e, t], e);
   }
-  function so(e, t) {
+  function no(e, t) {
     var l = Yt();
     t = t === void 0 ? null : t;
     var a = l.memoizedState;
     if (t !== null && Lc(t, a[1]))
       return a[0];
     if (a = e(), Ml) {
-      He(!0);
+      Le(!0);
       try {
         e();
       } finally {
-        He(!1);
+        Le(!1);
       }
     }
     return l.memoizedState = [a, t], a;
   }
   function Ic(e, t, l) {
-    return l === void 0 || (nl & 1073741824) !== 0 ? e.memoizedState = t : (e.memoizedState = l, e = ih(), ct.lanes |= e, hl |= e, l);
+    return l === void 0 || (nl & 1073741824) !== 0 ? e.memoizedState = t : (e.memoizedState = l, e = uh(), ot.lanes |= e, hl |= e, l);
   }
-  function lo(e, t, l, a) {
-    return is(l, t) ? l : sa.current !== null ? (e = Ic(e, l, a), is(e, t) || (Zt = !0), e) : (nl & 42) === 0 ? (Zt = !0, e.memoizedState = l) : (e = ih(), ct.lanes |= e, hl |= e, t);
+  function io(e, t, l, a) {
+    return is(l, t) ? l : la.current !== null ? (e = Ic(e, l, a), is(e, t) || (Vt = !0), e) : (nl & 42) === 0 ? (Vt = !0, e.memoizedState = l) : (e = uh(), ot.lanes |= e, hl |= e, t);
   }
-  function ao(e, t, l, a, n) {
-    var i = Y.p;
-    Y.p = i !== 0 && 8 > i ? i : 8;
-    var c = y.T, o = {};
-    y.T = o, tr(e, !1, t, l);
+  function co(e, t, l, a, n) {
+    var i = G.p;
+    G.p = i !== 0 && 8 > i ? i : 8;
+    var c = b.T, o = {};
+    b.T = o, tr(e, !1, t, l);
     try {
-      var g = n(), T = y.S;
-      if (T !== null && T(o, g), g !== null && typeof g == "object" && typeof g.then == "function") {
-        var J = Pm(
-          g,
+      var p = n(), T = b.S;
+      if (T !== null && T(o, p), p !== null && typeof p == "object" && typeof p.then == "function") {
+        var J = lx(
+          p,
           a
         );
         Pa(
@@ -3561,25 +3561,25 @@ Error generating stack: ` + l.message + `
         os()
       );
     } finally {
-      Y.p = i, y.T = c;
+      G.p = i, b.T = c;
     }
   }
-  function ax() {
+  function rx() {
   }
   function Pc(e, t, l, a) {
     if (e.tag !== 5) throw Error(d(476));
-    var n = no(e).queue;
-    ao(
+    var n = ro(e).queue;
+    co(
       e,
       n,
       t,
       ee,
-      l === null ? ax : function() {
-        return io(e), l(a);
+      l === null ? rx : function() {
+        return uo(e), l(a);
       }
     );
   }
-  function no(e) {
+  function ro(e) {
     var t = e.memoizedState;
     if (t !== null) return t;
     t = {
@@ -3610,20 +3610,20 @@ Error generating stack: ` + l.message + `
       next: null
     }, e.memoizedState = t, e = e.alternate, e !== null && (e.memoizedState = t), t;
   }
-  function io(e) {
-    var t = no(e).next.queue;
+  function uo(e) {
+    var t = ro(e).next.queue;
     Pa(e, t, {}, os());
   }
   function er() {
     return Pt(pn);
   }
-  function co() {
+  function oo() {
     return Yt().memoizedState;
   }
-  function ro() {
+  function ho() {
     return Yt().memoizedState;
   }
-  function nx(e) {
+  function ux(e) {
     for (var t = e.return; t !== null; ) {
       switch (t.tag) {
         case 24:
@@ -3637,7 +3637,7 @@ Error generating stack: ` + l.message + `
       t = t.return;
     }
   }
-  function ix(e, t, l) {
+  function dx(e, t, l) {
     var a = os();
     l = {
       lane: a,
@@ -3646,9 +3646,9 @@ Error generating stack: ` + l.message + `
       hasEagerState: !1,
       eagerState: null,
       next: null
-    }, ii(e) ? oo(t, l) : (l = bc(e, t, l, a), l !== null && (hs(l, e, a), ho(l, t, a)));
+    }, ci(e) ? mo(t, l) : (l = bc(e, t, l, a), l !== null && (hs(l, e, a), xo(l, t, a)));
   }
-  function uo(e, t, l) {
+  function fo(e, t, l) {
     var a = os();
     Pa(e, t, l, a);
   }
@@ -3661,19 +3661,19 @@ Error generating stack: ` + l.message + `
       eagerState: null,
       next: null
     };
-    if (ii(e)) oo(t, n);
+    if (ci(e)) mo(t, n);
     else {
       var i = e.alternate;
       if (e.lanes === 0 && (i === null || i.lanes === 0) && (i = t.lastRenderedReducer, i !== null))
         try {
           var c = t.lastRenderedState, o = i(c, l);
           if (n.hasEagerState = !0, n.eagerState = o, is(o, c))
-            return Qn(e, t, n, 0), kt === null && Gn(), !1;
+            return Xn(e, t, n, 0), Et === null && Qn(), !1;
         } catch {
         } finally {
         }
       if (l = bc(e, t, n, a), l !== null)
-        return hs(l, e, a), ho(l, t, a), !0;
+        return hs(l, e, a), xo(l, t, a), !0;
     }
     return !1;
   }
@@ -3685,7 +3685,7 @@ Error generating stack: ` + l.message + `
       hasEagerState: !1,
       eagerState: null,
       next: null
-    }, ii(e)) {
+    }, ci(e)) {
       if (t) throw Error(d(479));
     } else
       t = bc(
@@ -3695,24 +3695,24 @@ Error generating stack: ` + l.message + `
         2
       ), t !== null && hs(t, e, 2);
   }
-  function ii(e) {
+  function ci(e) {
     var t = e.alternate;
-    return e === ct || t !== null && t === ct;
+    return e === ot || t !== null && t === ot;
   }
-  function oo(e, t) {
-    la = ei = !0;
+  function mo(e, t) {
+    aa = ti = !0;
     var l = e.pending;
     l === null ? t.next = t : (t.next = l.next, l.next = t), e.pending = t;
   }
-  function ho(e, t, l) {
+  function xo(e, t, l) {
     if ((l & 4194048) !== 0) {
       var a = t.lanes;
-      a &= e.pendingLanes, l |= a, t.lanes = l, x(e, l);
+      a &= e.pendingLanes, l |= a, t.lanes = l, N(e, l);
     }
   }
-  var ci = {
+  var ri = {
     readContext: Pt,
-    use: si,
+    use: li,
     useCallback: Ht,
     useContext: Ht,
     useEffect: Ht,
@@ -3734,9 +3734,9 @@ Error generating stack: ` + l.message + `
     useOptimistic: Ht,
     useMemoCache: Ht,
     useCacheRefresh: Ht
-  }, fo = {
+  }, jo = {
     readContext: Pt,
-    use: si,
+    use: li,
     useCallback: function(e, t) {
       return ls().memoizedState = [
         e,
@@ -3744,31 +3744,31 @@ Error generating stack: ` + l.message + `
       ], e;
     },
     useContext: Pt,
-    useEffect: $d,
+    useEffect: Id,
     useImperativeHandle: function(e, t, l) {
-      l = l != null ? l.concat([e]) : null, ni(
+      l = l != null ? l.concat([e]) : null, ii(
         4194308,
         4,
-        Pd.bind(null, t, e),
+        so.bind(null, t, e),
         l
       );
     },
     useLayoutEffect: function(e, t) {
-      return ni(4194308, 4, e, t);
+      return ii(4194308, 4, e, t);
     },
     useInsertionEffect: function(e, t) {
-      ni(4, 2, e, t);
+      ii(4, 2, e, t);
     },
     useMemo: function(e, t) {
       var l = ls();
       t = t === void 0 ? null : t;
       var a = e();
       if (Ml) {
-        He(!0);
+        Le(!0);
         try {
           e();
         } finally {
-          He(!1);
+          Le(!1);
         }
       }
       return l.memoizedState = [a, t], a;
@@ -3778,11 +3778,11 @@ Error generating stack: ` + l.message + `
       if (l !== void 0) {
         var n = l(t);
         if (Ml) {
-          He(!0);
+          Le(!0);
           try {
             l(t);
           } finally {
-            He(!1);
+            Le(!1);
           }
         }
       } else n = t;
@@ -3792,9 +3792,9 @@ Error generating stack: ` + l.message + `
         dispatch: null,
         lastRenderedReducer: e,
         lastRenderedState: n
-      }, a.queue = e, e = e.dispatch = ix.bind(
+      }, a.queue = e, e = e.dispatch = dx.bind(
         null,
-        ct,
+        ot,
         e
       ), [a.memoizedState, e];
     },
@@ -3804,7 +3804,7 @@ Error generating stack: ` + l.message + `
     },
     useState: function(e) {
       e = $c(e);
-      var t = e.queue, l = uo.bind(null, ct, t);
+      var t = e.queue, l = fo.bind(null, ot, t);
       return t.dispatch = l, [e.memoizedState, l];
     },
     useDebugValue: Fc,
@@ -3814,33 +3814,33 @@ Error generating stack: ` + l.message + `
     },
     useTransition: function() {
       var e = $c(!1);
-      return e = ao.bind(
+      return e = co.bind(
         null,
-        ct,
+        ot,
         e.queue,
         !0,
         !1
       ), ls().memoizedState = e, [!1, e];
     },
     useSyncExternalStore: function(e, t, l) {
-      var a = ct, n = ls();
-      if (jt) {
+      var a = ot, n = ls();
+      if (bt) {
         if (l === void 0)
           throw Error(d(407));
         l = l();
       } else {
-        if (l = t(), kt === null)
+        if (l = t(), Et === null)
           throw Error(d(349));
-        (ft & 124) !== 0 || Rd(a, t, l);
+        (vt & 124) !== 0 || Md(a, t, l);
       }
       n.memoizedState = l;
       var i = { value: l, getSnapshot: t };
-      return n.queue = i, $d(Dd.bind(null, a, i, e), [
+      return n.queue = i, Id(Hd.bind(null, a, i, e), [
         e
-      ]), a.flags |= 2048, na(
+      ]), a.flags |= 2048, ia(
         9,
-        ai(),
-        Ud.bind(
+        ni(),
+        qd.bind(
           null,
           a,
           i,
@@ -3851,17 +3851,17 @@ Error generating stack: ` + l.message + `
       ), l;
     },
     useId: function() {
-      var e = ls(), t = kt.identifierPrefix;
-      if (jt) {
+      var e = ls(), t = Et.identifierPrefix;
+      if (bt) {
         var l = Bs, a = Hs;
-        l = (a & ~(1 << 32 - tt(a) - 1)).toString(32) + l, t = "«" + t + "R" + l, l = ti++, 0 < l && (t += "H" + l.toString(32)), t += "»";
+        l = (a & ~(1 << 32 - Xe(a) - 1)).toString(32) + l, t = "«" + t + "R" + l, l = si++, 0 < l && (t += "H" + l.toString(32)), t += "»";
       } else
-        l = ex++, t = "«" + t + "r" + l.toString(32) + "»";
+        l = ax++, t = "«" + t + "r" + l.toString(32) + "»";
       return e.memoizedState = t;
     },
     useHostTransitionStatus: er,
-    useFormState: Xd,
-    useActionState: Xd,
+    useFormState: Jd,
+    useActionState: Jd,
     useOptimistic: function(e) {
       var t = ls();
       t.memoizedState = t.baseState = e;
@@ -3874,82 +3874,82 @@ Error generating stack: ` + l.message + `
       };
       return t.queue = l, t = tr.bind(
         null,
-        ct,
+        ot,
         !0,
         l
       ), l.dispatch = t, [e, t];
     },
     useMemoCache: Vc,
     useCacheRefresh: function() {
-      return ls().memoizedState = nx.bind(
+      return ls().memoizedState = ux.bind(
         null,
-        ct
+        ot
       );
     }
-  }, mo = {
+  }, vo = {
     readContext: Pt,
-    use: si,
-    useCallback: to,
+    use: li,
+    useCallback: ao,
     useContext: Pt,
-    useEffect: Wd,
-    useImperativeHandle: eo,
-    useInsertionEffect: Fd,
-    useLayoutEffect: Id,
-    useMemo: so,
-    useReducer: li,
-    useRef: Kd,
+    useEffect: Pd,
+    useImperativeHandle: lo,
+    useInsertionEffect: eo,
+    useLayoutEffect: to,
+    useMemo: no,
+    useReducer: ai,
+    useRef: Fd,
     useState: function() {
-      return li(Gs);
+      return ai(Gs);
     },
     useDebugValue: Fc,
     useDeferredValue: function(e, t) {
       var l = Yt();
-      return lo(
+      return io(
         l,
-        yt.memoizedState,
+        St.memoizedState,
         e,
         t
       );
     },
     useTransition: function() {
-      var e = li(Gs)[0], t = Yt().memoizedState;
+      var e = ai(Gs)[0], t = Yt().memoizedState;
       return [
         typeof e == "boolean" ? e : Fa(e),
         t
       ];
     },
-    useSyncExternalStore: Ad,
-    useId: co,
+    useSyncExternalStore: Dd,
+    useId: oo,
     useHostTransitionStatus: er,
-    useFormState: Zd,
-    useActionState: Zd,
+    useFormState: Kd,
+    useActionState: Kd,
     useOptimistic: function(e, t) {
       var l = Yt();
-      return Hd(l, yt, e, t);
+      return Yd(l, St, e, t);
     },
     useMemoCache: Vc,
-    useCacheRefresh: ro
-  }, cx = {
+    useCacheRefresh: ho
+  }, ox = {
     readContext: Pt,
-    use: si,
-    useCallback: to,
+    use: li,
+    useCallback: ao,
     useContext: Pt,
-    useEffect: Wd,
-    useImperativeHandle: eo,
-    useInsertionEffect: Fd,
-    useLayoutEffect: Id,
-    useMemo: so,
+    useEffect: Pd,
+    useImperativeHandle: lo,
+    useInsertionEffect: eo,
+    useLayoutEffect: to,
+    useMemo: no,
     useReducer: Kc,
-    useRef: Kd,
+    useRef: Fd,
     useState: function() {
       return Kc(Gs);
     },
     useDebugValue: Fc,
     useDeferredValue: function(e, t) {
       var l = Yt();
-      return yt === null ? Ic(l, e, t) : lo(
+      return St === null ? Ic(l, e, t) : io(
         l,
-        yt.memoizedState,
+        St.memoizedState,
         e,
         t
       );
@@ -3961,26 +3961,26 @@ Error generating stack: ` + l.message + `
         t
       ];
     },
-    useSyncExternalStore: Ad,
-    useId: co,
+    useSyncExternalStore: Dd,
+    useId: oo,
     useHostTransitionStatus: er,
-    useFormState: Jd,
-    useActionState: Jd,
+    useFormState: Wd,
+    useActionState: Wd,
     useOptimistic: function(e, t) {
       var l = Yt();
-      return yt !== null ? Hd(l, yt, e, t) : (l.baseState = e, [e, l.queue.dispatch]);
+      return St !== null ? Yd(l, St, e, t) : (l.baseState = e, [e, l.queue.dispatch]);
     },
     useMemoCache: Vc,
-    useCacheRefresh: ro
-  }, ia = null, en = 0;
-  function ri(e) {
+    useCacheRefresh: ho
+  }, ca = null, en = 0;
+  function ui(e) {
     var t = en;
-    return en += 1, ia === null && (ia = []), Sd(ia, e, t);
+    return en += 1, ca === null && (ca = []), Cd(ca, e, t);
   }
   function tn(e, t) {
     t = t.props.ref, e.ref = t !== void 0 ? t : null;
   }
-  function ui(e, t) {
+  function di(e, t) {
     throw t.$$typeof === K ? Error(d(525)) : (e = Object.prototype.toString.call(t), Error(
       d(
         31,
@@ -3988,297 +3988,297 @@ Error generating stack: ` + l.message + `
       )
     ));
   }
-  function xo(e) {
+  function po(e) {
     var t = e._init;
     return t(e._payload);
   }
-  function jo(e) {
-    function t(C, N) {
+  function go(e) {
+    function t(C, S) {
       if (e) {
         var O = C.deletions;
-        O === null ? (C.deletions = [N], C.flags |= 16) : O.push(N);
+        O === null ? (C.deletions = [S], C.flags |= 16) : O.push(S);
       }
     }
-    function l(C, N) {
+    function l(C, S) {
       if (!e) return null;
-      for (; N !== null; )
-        t(C, N), N = N.sibling;
+      for (; S !== null; )
+        t(C, S), S = S.sibling;
       return null;
     }
     function a(C) {
-      for (var N = /* @__PURE__ */ new Map(); C !== null; )
-        C.key !== null ? N.set(C.key, C) : N.set(C.index, C), C = C.sibling;
-      return N;
+      for (var S = /* @__PURE__ */ new Map(); C !== null; )
+        C.key !== null ? S.set(C.key, C) : S.set(C.index, C), C = C.sibling;
+      return S;
     }
-    function n(C, N) {
-      return C = qs(C, N), C.index = 0, C.sibling = null, C;
+    function n(C, S) {
+      return C = qs(C, S), C.index = 0, C.sibling = null, C;
     }
-    function i(C, N, O) {
-      return C.index = O, e ? (O = C.alternate, O !== null ? (O = O.index, O < N ? (C.flags |= 67108866, N) : O) : (C.flags |= 67108866, N)) : (C.flags |= 1048576, N);
+    function i(C, S, O) {
+      return C.index = O, e ? (O = C.alternate, O !== null ? (O = O.index, O < S ? (C.flags |= 67108866, S) : O) : (C.flags |= 67108866, S)) : (C.flags |= 1048576, S);
     }
     function c(C) {
       return e && C.alternate === null && (C.flags |= 67108866), C;
     }
-    function o(C, N, O, F) {
-      return N === null || N.tag !== 6 ? (N = _c(O, C.mode, F), N.return = C, N) : (N = n(N, O), N.return = C, N);
+    function o(C, S, O, F) {
+      return S === null || S.tag !== 6 ? (S = _c(O, C.mode, F), S.return = C, S) : (S = n(S, O), S.return = C, S);
     }
-    function g(C, N, O, F) {
-      var Me = O.type;
-      return Me === xe ? J(
+    function p(C, S, O, F) {
+      var He = O.type;
+      return He === xe ? J(
         C,
-        N,
+        S,
         O.props.children,
         F,
         O.key
-      ) : N !== null && (N.elementType === Me || typeof Me == "object" && Me !== null && Me.$$typeof === Re && xo(Me) === N.type) ? (N = n(N, O.props), tn(N, O), N.return = C, N) : (N = Zn(
+      ) : S !== null && (S.elementType === He || typeof He == "object" && He !== null && He.$$typeof === Me && po(He) === S.type) ? (S = n(S, O.props), tn(S, O), S.return = C, S) : (S = Vn(
         O.type,
         O.key,
         O.props,
         null,
         C.mode,
         F
-      ), tn(N, O), N.return = C, N);
+      ), tn(S, O), S.return = C, S);
     }
-    function T(C, N, O, F) {
-      return N === null || N.tag !== 4 || N.stateNode.containerInfo !== O.containerInfo || N.stateNode.implementation !== O.implementation ? (N = Nc(O, C.mode, F), N.return = C, N) : (N = n(N, O.children || []), N.return = C, N);
+    function T(C, S, O, F) {
+      return S === null || S.tag !== 4 || S.stateNode.containerInfo !== O.containerInfo || S.stateNode.implementation !== O.implementation ? (S = Nc(O, C.mode, F), S.return = C, S) : (S = n(S, O.children || []), S.return = C, S);
     }
-    function J(C, N, O, F, Me) {
-      return N === null || N.tag !== 7 ? (N = El(
+    function J(C, S, O, F, He) {
+      return S === null || S.tag !== 7 ? (S = El(
         O,
         C.mode,
         F,
-        Me
-      ), N.return = C, N) : (N = n(N, O), N.return = C, N);
+        He
+      ), S.return = C, S) : (S = n(S, O), S.return = C, S);
     }
-    function se(C, N, O) {
-      if (typeof N == "string" && N !== "" || typeof N == "number" || typeof N == "bigint")
-        return N = _c(
-          "" + N,
+    function se(C, S, O) {
+      if (typeof S == "string" && S !== "" || typeof S == "number" || typeof S == "bigint")
+        return S = _c(
+          "" + S,
           C.mode,
           O
-        ), N.return = C, N;
-      if (typeof N == "object" && N !== null) {
-        switch (N.$$typeof) {
+        ), S.return = C, S;
+      if (typeof S == "object" && S !== null) {
+        switch (S.$$typeof) {
           case k:
-            return O = Zn(
-              N.type,
-              N.key,
-              N.props,
+            return O = Vn(
+              S.type,
+              S.key,
+              S.props,
               null,
               C.mode,
               O
-            ), tn(O, N), O.return = C, O;
+            ), tn(O, S), O.return = C, O;
           case le:
-            return N = Nc(
-              N,
+            return S = Nc(
+              S,
               C.mode,
               O
-            ), N.return = C, N;
-          case Re:
-            var F = N._init;
-            return N = F(N._payload), se(C, N, O);
+            ), S.return = C, S;
+          case Me:
+            var F = S._init;
+            return S = F(S._payload), se(C, S, O);
         }
-        if (de(N) || pe(N))
-          return N = El(
-            N,
+        if (ce(S) || pe(S))
+          return S = El(
+            S,
             C.mode,
             O,
             null
-          ), N.return = C, N;
-        if (typeof N.then == "function")
-          return se(C, ri(N), O);
-        if (N.$$typeof === I)
+          ), S.return = C, S;
+        if (typeof S.then == "function")
+          return se(C, ui(S), O);
+        if (S.$$typeof === I)
           return se(
             C,
-            $n(C, N),
+            Wn(C, S),
             O
           );
-        ui(C, N);
+        di(C, S);
       }
       return null;
     }
-    function A(C, N, O, F) {
-      var Me = N !== null ? N.key : null;
+    function R(C, S, O, F) {
+      var He = S !== null ? S.key : null;
       if (typeof O == "string" && O !== "" || typeof O == "number" || typeof O == "bigint")
-        return Me !== null ? null : o(C, N, "" + O, F);
+        return He !== null ? null : o(C, S, "" + O, F);
       if (typeof O == "object" && O !== null) {
         switch (O.$$typeof) {
           case k:
-            return O.key === Me ? g(C, N, O, F) : null;
+            return O.key === He ? p(C, S, O, F) : null;
           case le:
-            return O.key === Me ? T(C, N, O, F) : null;
-          case Re:
-            return Me = O._init, O = Me(O._payload), A(C, N, O, F);
+            return O.key === He ? T(C, S, O, F) : null;
+          case Me:
+            return He = O._init, O = He(O._payload), R(C, S, O, F);
         }
-        if (de(O) || pe(O))
-          return Me !== null ? null : J(C, N, O, F, null);
+        if (ce(O) || pe(O))
+          return He !== null ? null : J(C, S, O, F, null);
         if (typeof O.then == "function")
-          return A(
+          return R(
             C,
-            N,
-            ri(O),
+            S,
+            ui(O),
             F
           );
         if (O.$$typeof === I)
-          return A(
+          return R(
             C,
-            N,
-            $n(C, O),
+            S,
+            Wn(C, O),
             F
           );
-        ui(C, O);
+        di(C, O);
       }
       return null;
     }
-    function q(C, N, O, F, Me) {
+    function H(C, S, O, F, He) {
       if (typeof F == "string" && F !== "" || typeof F == "number" || typeof F == "bigint")
-        return C = C.get(O) || null, o(N, C, "" + F, Me);
+        return C = C.get(O) || null, o(S, C, "" + F, He);
       if (typeof F == "object" && F !== null) {
         switch (F.$$typeof) {
           case k:
             return C = C.get(
               F.key === null ? O : F.key
-            ) || null, g(N, C, F, Me);
+            ) || null, p(S, C, F, He);
           case le:
             return C = C.get(
               F.key === null ? O : F.key
-            ) || null, T(N, C, F, Me);
-          case Re:
-            var ut = F._init;
-            return F = ut(F._payload), q(
+            ) || null, T(S, C, F, He);
+          case Me:
+            var ht = F._init;
+            return F = ht(F._payload), H(
               C,
-              N,
+              S,
               O,
               F,
-              Me
+              He
             );
         }
-        if (de(F) || pe(F))
-          return C = C.get(O) || null, J(N, C, F, Me, null);
+        if (ce(F) || pe(F))
+          return C = C.get(O) || null, J(S, C, F, He, null);
         if (typeof F.then == "function")
-          return q(
+          return H(
             C,
-            N,
+            S,
             O,
-            ri(F),
-            Me
+            ui(F),
+            He
           );
         if (F.$$typeof === I)
-          return q(
+          return H(
             C,
-            N,
+            S,
             O,
-            $n(N, F),
-            Me
+            Wn(S, F),
+            He
           );
-        ui(N, F);
+        di(S, F);
       }
       return null;
     }
-    function Ie(C, N, O, F) {
-      for (var Me = null, ut = null, Ye = N, $e = N = 0, Jt = null; Ye !== null && $e < O.length; $e++) {
-        Ye.index > $e ? (Jt = Ye, Ye = null) : Jt = Ye.sibling;
-        var mt = A(
+    function Pe(C, S, O, F) {
+      for (var He = null, ht = null, Ge = S, Ie = S = 0, Kt = null; Ge !== null && Ie < O.length; Ie++) {
+        Ge.index > Ie ? (Kt = Ge, Ge = null) : Kt = Ge.sibling;
+        var gt = R(
           C,
-          Ye,
-          O[$e],
+          Ge,
+          O[Ie],
           F
         );
-        if (mt === null) {
-          Ye === null && (Ye = Jt);
+        if (gt === null) {
+          Ge === null && (Ge = Kt);
           break;
         }
-        e && Ye && mt.alternate === null && t(C, Ye), N = i(mt, N, $e), ut === null ? Me = mt : ut.sibling = mt, ut = mt, Ye = Jt;
+        e && Ge && gt.alternate === null && t(C, Ge), S = i(gt, S, Ie), ht === null ? He = gt : ht.sibling = gt, ht = gt, Ge = Kt;
       }
-      if ($e === O.length)
-        return l(C, Ye), jt && Tl(C, $e), Me;
-      if (Ye === null) {
-        for (; $e < O.length; $e++)
-          Ye = se(C, O[$e], F), Ye !== null && (N = i(
-            Ye,
-            N,
-            $e
-          ), ut === null ? Me = Ye : ut.sibling = Ye, ut = Ye);
-        return jt && Tl(C, $e), Me;
+      if (Ie === O.length)
+        return l(C, Ge), bt && Tl(C, Ie), He;
+      if (Ge === null) {
+        for (; Ie < O.length; Ie++)
+          Ge = se(C, O[Ie], F), Ge !== null && (S = i(
+            Ge,
+            S,
+            Ie
+          ), ht === null ? He = Ge : ht.sibling = Ge, ht = Ge);
+        return bt && Tl(C, Ie), He;
       }
-      for (Ye = a(Ye); $e < O.length; $e++)
-        Jt = q(
-          Ye,
+      for (Ge = a(Ge); Ie < O.length; Ie++)
+        Kt = H(
+          Ge,
           C,
-          $e,
-          O[$e],
+          Ie,
+          O[Ie],
           F
-        ), Jt !== null && (e && Jt.alternate !== null && Ye.delete(
-          Jt.key === null ? $e : Jt.key
-        ), N = i(
-          Jt,
-          N,
-          $e
-        ), ut === null ? Me = Jt : ut.sibling = Jt, ut = Jt);
-      return e && Ye.forEach(function(yl) {
+        ), Kt !== null && (e && Kt.alternate !== null && Ge.delete(
+          Kt.key === null ? Ie : Kt.key
+        ), S = i(
+          Kt,
+          S,
+          Ie
+        ), ht === null ? He = Kt : ht.sibling = Kt, ht = Kt);
+      return e && Ge.forEach(function(yl) {
         return t(C, yl);
-      }), jt && Tl(C, $e), Me;
+      }), bt && Tl(C, Ie), He;
     }
-    function Je(C, N, O, F) {
+    function We(C, S, O, F) {
       if (O == null) throw Error(d(151));
-      for (var Me = null, ut = null, Ye = N, $e = N = 0, Jt = null, mt = O.next(); Ye !== null && !mt.done; $e++, mt = O.next()) {
-        Ye.index > $e ? (Jt = Ye, Ye = null) : Jt = Ye.sibling;
-        var yl = A(C, Ye, mt.value, F);
+      for (var He = null, ht = null, Ge = S, Ie = S = 0, Kt = null, gt = O.next(); Ge !== null && !gt.done; Ie++, gt = O.next()) {
+        Ge.index > Ie ? (Kt = Ge, Ge = null) : Kt = Ge.sibling;
+        var yl = R(C, Ge, gt.value, F);
         if (yl === null) {
-          Ye === null && (Ye = Jt);
+          Ge === null && (Ge = Kt);
           break;
         }
-        e && Ye && yl.alternate === null && t(C, Ye), N = i(yl, N, $e), ut === null ? Me = yl : ut.sibling = yl, ut = yl, Ye = Jt;
+        e && Ge && yl.alternate === null && t(C, Ge), S = i(yl, S, Ie), ht === null ? He = yl : ht.sibling = yl, ht = yl, Ge = Kt;
       }
-      if (mt.done)
-        return l(C, Ye), jt && Tl(C, $e), Me;
-      if (Ye === null) {
-        for (; !mt.done; $e++, mt = O.next())
-          mt = se(C, mt.value, F), mt !== null && (N = i(mt, N, $e), ut === null ? Me = mt : ut.sibling = mt, ut = mt);
-        return jt && Tl(C, $e), Me;
+      if (gt.done)
+        return l(C, Ge), bt && Tl(C, Ie), He;
+      if (Ge === null) {
+        for (; !gt.done; Ie++, gt = O.next())
+          gt = se(C, gt.value, F), gt !== null && (S = i(gt, S, Ie), ht === null ? He = gt : ht.sibling = gt, ht = gt);
+        return bt && Tl(C, Ie), He;
       }
-      for (Ye = a(Ye); !mt.done; $e++, mt = O.next())
-        mt = q(Ye, C, $e, mt.value, F), mt !== null && (e && mt.alternate !== null && Ye.delete(mt.key === null ? $e : mt.key), N = i(mt, N, $e), ut === null ? Me = mt : ut.sibling = mt, ut = mt);
-      return e && Ye.forEach(function(rj) {
-        return t(C, rj);
-      }), jt && Tl(C, $e), Me;
+      for (Ge = a(Ge); !gt.done; Ie++, gt = O.next())
+        gt = H(Ge, C, Ie, gt.value, F), gt !== null && (e && gt.alternate !== null && Ge.delete(gt.key === null ? Ie : gt.key), S = i(gt, S, Ie), ht === null ? He = gt : ht.sibling = gt, ht = gt);
+      return e && Ge.forEach(function(hj) {
+        return t(C, hj);
+      }), bt && Tl(C, Ie), He;
     }
-    function Nt(C, N, O, F) {
+    function kt(C, S, O, F) {
       if (typeof O == "object" && O !== null && O.type === xe && O.key === null && (O = O.props.children), typeof O == "object" && O !== null) {
         switch (O.$$typeof) {
           case k:
             e: {
-              for (var Me = O.key; N !== null; ) {
-                if (N.key === Me) {
-                  if (Me = O.type, Me === xe) {
-                    if (N.tag === 7) {
+              for (var He = O.key; S !== null; ) {
+                if (S.key === He) {
+                  if (He = O.type, He === xe) {
+                    if (S.tag === 7) {
                       l(
                         C,
-                        N.sibling
+                        S.sibling
                       ), F = n(
-                        N,
+                        S,
                         O.props.children
                       ), F.return = C, C = F;
                       break e;
                     }
-                  } else if (N.elementType === Me || typeof Me == "object" && Me !== null && Me.$$typeof === Re && xo(Me) === N.type) {
+                  } else if (S.elementType === He || typeof He == "object" && He !== null && He.$$typeof === Me && po(He) === S.type) {
                     l(
                       C,
-                      N.sibling
-                    ), F = n(N, O.props), tn(F, O), F.return = C, C = F;
+                      S.sibling
+                    ), F = n(S, O.props), tn(F, O), F.return = C, C = F;
                     break e;
                   }
-                  l(C, N);
+                  l(C, S);
                   break;
-                } else t(C, N);
-                N = N.sibling;
+                } else t(C, S);
+                S = S.sibling;
               }
               O.type === xe ? (F = El(
                 O.props.children,
                 C.mode,
                 F,
                 O.key
-              ), F.return = C, C = F) : (F = Zn(
+              ), F.return = C, C = F) : (F = Vn(
                 O.type,
                 O.key,
                 O.props,
@@ -4290,105 +4290,105 @@ Error generating stack: ` + l.message + `
             return c(C);
           case le:
             e: {
-              for (Me = O.key; N !== null; ) {
-                if (N.key === Me)
-                  if (N.tag === 4 && N.stateNode.containerInfo === O.containerInfo && N.stateNode.implementation === O.implementation) {
+              for (He = O.key; S !== null; ) {
+                if (S.key === He)
+                  if (S.tag === 4 && S.stateNode.containerInfo === O.containerInfo && S.stateNode.implementation === O.implementation) {
                     l(
                       C,
-                      N.sibling
-                    ), F = n(N, O.children || []), F.return = C, C = F;
+                      S.sibling
+                    ), F = n(S, O.children || []), F.return = C, C = F;
                     break e;
                   } else {
-                    l(C, N);
+                    l(C, S);
                     break;
                   }
-                else t(C, N);
-                N = N.sibling;
+                else t(C, S);
+                S = S.sibling;
               }
               F = Nc(O, C.mode, F), F.return = C, C = F;
             }
             return c(C);
-          case Re:
-            return Me = O._init, O = Me(O._payload), Nt(
+          case Me:
+            return He = O._init, O = He(O._payload), kt(
               C,
-              N,
+              S,
               O,
               F
             );
         }
-        if (de(O))
-          return Ie(
+        if (ce(O))
+          return Pe(
             C,
-            N,
+            S,
             O,
             F
           );
         if (pe(O)) {
-          if (Me = pe(O), typeof Me != "function") throw Error(d(150));
-          return O = Me.call(O), Je(
+          if (He = pe(O), typeof He != "function") throw Error(d(150));
+          return O = He.call(O), We(
             C,
-            N,
+            S,
             O,
             F
           );
         }
         if (typeof O.then == "function")
-          return Nt(
+          return kt(
             C,
-            N,
-            ri(O),
+            S,
+            ui(O),
             F
           );
         if (O.$$typeof === I)
-          return Nt(
+          return kt(
             C,
-            N,
-            $n(C, O),
+            S,
+            Wn(C, O),
             F
           );
-        ui(C, O);
+        di(C, O);
       }
-      return typeof O == "string" && O !== "" || typeof O == "number" || typeof O == "bigint" ? (O = "" + O, N !== null && N.tag === 6 ? (l(C, N.sibling), F = n(N, O), F.return = C, C = F) : (l(C, N), F = _c(O, C.mode, F), F.return = C, C = F), c(C)) : l(C, N);
+      return typeof O == "string" && O !== "" || typeof O == "number" || typeof O == "bigint" ? (O = "" + O, S !== null && S.tag === 6 ? (l(C, S.sibling), F = n(S, O), F.return = C, C = F) : (l(C, S), F = _c(O, C.mode, F), F.return = C, C = F), c(C)) : l(C, S);
     }
-    return function(C, N, O, F) {
+    return function(C, S, O, F) {
       try {
         en = 0;
-        var Me = Nt(
+        var He = kt(
           C,
-          N,
+          S,
           O,
           F
         );
-        return ia = null, Me;
-      } catch (Ye) {
-        if (Ye === Za || Ye === Fn) throw Ye;
-        var ut = cs(29, Ye, null, C.mode);
-        return ut.lanes = F, ut.return = C, ut;
+        return ca = null, He;
+      } catch (Ge) {
+        if (Ge === Za || Ge === In) throw Ge;
+        var ht = cs(29, Ge, null, C.mode);
+        return ht.lanes = F, ht.return = C, ht;
       } finally {
       }
     };
   }
-  var ca = jo(!0), vo = jo(!1), gs = H(null), Os = null;
+  var ra = go(!0), bo = go(!1), gs = B(null), Os = null;
   function il(e) {
     var t = e.alternate;
-    $(Qt, Qt.current & 1), $(gs, e), Os === null && (t === null || sa.current !== null || t.memoizedState !== null) && (Os = e);
+    W(Xt, Xt.current & 1), W(gs, e), Os === null && (t === null || la.current !== null || t.memoizedState !== null) && (Os = e);
   }
-  function po(e) {
+  function yo(e) {
     if (e.tag === 22) {
-      if ($(Qt, Qt.current), $(gs, e), Os === null) {
+      if (W(Xt, Xt.current), W(gs, e), Os === null) {
         var t = e.alternate;
         t !== null && t.memoizedState !== null && (Os = e);
       }
     } else cl();
   }
   function cl() {
-    $(Qt, Qt.current), $(gs, gs.current);
+    W(Xt, Xt.current), W(gs, gs.current);
   }
   function Qs(e) {
-    te(gs), Os === e && (Os = null), te(Qt);
+    te(gs), Os === e && (Os = null), te(Xt);
   }
-  var Qt = H(0);
-  function di(e) {
+  var Xt = B(0);
+  function oi(e) {
     for (var t = e; t !== null; ) {
       if (t.tag === 13) {
         var l = t.memoizedState;
@@ -4429,10 +4429,10 @@ Error generating stack: ` + l.message + `
       a.tag = 2, t != null && (a.callback = t), t = al(e, a, l), t !== null && (hs(t, e, l), Ja(t, e, l));
     }
   };
-  function go(e, t, l, a, n, i, c) {
+  function _o(e, t, l, a, n, i, c) {
     return e = e.stateNode, typeof e.shouldComponentUpdate == "function" ? e.shouldComponentUpdate(a, i, c) : t.prototype && t.prototype.isPureReactComponent ? !qa(l, a) || !qa(n, i) : !0;
   }
-  function bo(e, t, l, a) {
+  function No(e, t, l, a) {
     e = t.state, typeof t.componentWillReceiveProps == "function" && t.componentWillReceiveProps(l, a), typeof t.UNSAFE_componentWillReceiveProps == "function" && t.UNSAFE_componentWillReceiveProps(l, a), t.state !== e && lr.enqueueReplaceState(t, t.state, null);
   }
   function ql(e, t) {
@@ -4449,7 +4449,7 @@ Error generating stack: ` + l.message + `
     }
     return l;
   }
-  var oi = typeof reportError == "function" ? reportError : function(e) {
+  var hi = typeof reportError == "function" ? reportError : function(e) {
     if (typeof window == "object" && typeof window.ErrorEvent == "function") {
       var t = new window.ErrorEvent("error", {
         bubbles: !0,
@@ -4464,16 +4464,16 @@ Error generating stack: ` + l.message + `
     }
     console.error(e);
   };
-  function yo(e) {
-    oi(e);
+  function So(e) {
+    hi(e);
   }
-  function _o(e) {
+  function wo(e) {
     console.error(e);
   }
-  function No(e) {
-    oi(e);
+  function ko(e) {
+    hi(e);
   }
-  function hi(e, t) {
+  function fi(e, t) {
     try {
       var l = e.onUncaughtError;
       l(t.value, { componentStack: t.stack });
@@ -4483,7 +4483,7 @@ Error generating stack: ` + l.message + `
       });
     }
   }
-  function So(e, t, l) {
+  function Co(e, t, l) {
     try {
       var a = e.onCaughtError;
       a(l.value, {
@@ -4498,32 +4498,32 @@ Error generating stack: ` + l.message + `
   }
   function ar(e, t, l) {
     return l = ll(l), l.tag = 3, l.payload = { element: null }, l.callback = function() {
-      hi(e, t);
+      fi(e, t);
     }, l;
   }
-  function wo(e) {
+  function Eo(e) {
     return e = ll(e), e.tag = 3, e;
   }
-  function ko(e, t, l, a) {
+  function Oo(e, t, l, a) {
     var n = l.type.getDerivedStateFromError;
     if (typeof n == "function") {
       var i = a.value;
       e.payload = function() {
         return n(i);
       }, e.callback = function() {
-        So(t, l, a);
+        Co(t, l, a);
       };
     }
     var c = l.stateNode;
     c !== null && typeof c.componentDidCatch == "function" && (e.callback = function() {
-      So(t, l, a), typeof n != "function" && (fl === null ? fl = /* @__PURE__ */ new Set([this]) : fl.add(this));
+      Co(t, l, a), typeof n != "function" && (fl === null ? fl = /* @__PURE__ */ new Set([this]) : fl.add(this));
       var o = a.stack;
       this.componentDidCatch(a.value, {
         componentStack: o !== null ? o : ""
       });
     });
   }
-  function rx(e, t, l, a, n) {
+  function hx(e, t, l, a, n) {
     if (l.flags |= 32768, a !== null && typeof a == "object" && typeof a.then == "function") {
       if (t = l.alternate, t !== null && Ga(
         t,
@@ -4545,7 +4545,7 @@ Error generating stack: ` + l.message + `
       }
       return Tr(e, a, n), Er(), !1;
     }
-    if (jt)
+    if (bt)
       return t = gs.current, t !== null ? ((t.flags & 65536) === 0 && (t.flags |= 256), t.flags |= 65536, t.lanes = n, a !== kc && (e = Error(d(422), { cause: a }), Ya(xs(e, l)))) : (a !== kc && (t = Error(d(423), {
         cause: a
       }), Ya(
@@ -4564,7 +4564,7 @@ Error generating stack: ` + l.message + `
           return l.flags |= 65536, e = n & -n, l.lanes |= e, e = ar(l.stateNode, a, e), Mc(l, e), !1;
         case 1:
           if (t = l.type, i = l.stateNode, (l.flags & 128) === 0 && (typeof t.getDerivedStateFromError == "function" || i !== null && typeof i.componentDidCatch == "function" && (fl === null || !fl.has(i))))
-            return l.flags |= 65536, n &= -n, l.lanes |= n, n = wo(n), ko(
+            return l.flags |= 65536, n &= -n, l.lanes |= n, n = Eo(n), Oo(
               n,
               e,
               l,
@@ -4575,16 +4575,16 @@ Error generating stack: ` + l.message + `
     } while (l !== null);
     return !1;
   }
-  var Co = Error(d(461)), Zt = !1;
-  function Kt(e, t, l, a) {
-    t.child = e === null ? vo(t, null, l, a) : ca(
+  var To = Error(d(461)), Vt = !1;
+  function $t(e, t, l, a) {
+    t.child = e === null ? bo(t, null, l, a) : ra(
       t,
       e.child,
       l,
       a
     );
   }
-  function Eo(e, t, l, a, n) {
+  function zo(e, t, l, a, n) {
     l = l.render;
     var i = t.ref;
     if ("ref" in a) {
@@ -4599,18 +4599,18 @@ Error generating stack: ` + l.message + `
       c,
       i,
       n
-    ), o = Gc(), e !== null && !Zt ? (Qc(e, t, n), Xs(e, t, n)) : (jt && o && Sc(t), t.flags |= 1, Kt(e, t, a, n), t.child);
+    ), o = Gc(), e !== null && !Vt ? (Qc(e, t, n), Xs(e, t, n)) : (bt && o && Sc(t), t.flags |= 1, $t(e, t, a, n), t.child);
   }
-  function Oo(e, t, l, a, n) {
+  function Ao(e, t, l, a, n) {
     if (e === null) {
       var i = l.type;
-      return typeof i == "function" && !yc(i) && i.defaultProps === void 0 && l.compare === null ? (t.tag = 15, t.type = i, To(
+      return typeof i == "function" && !yc(i) && i.defaultProps === void 0 && l.compare === null ? (t.tag = 15, t.type = i, Ro(
         e,
         t,
         i,
         a,
         n
-      )) : (e = Zn(
+      )) : (e = Vn(
         l.type,
         null,
         a,
@@ -4626,12 +4626,12 @@ Error generating stack: ` + l.message + `
     }
     return t.flags |= 1, e = qs(i, a), e.ref = t.ref, e.return = t, t.child = e;
   }
-  function To(e, t, l, a, n) {
+  function Ro(e, t, l, a, n) {
     if (e !== null) {
       var i = e.memoizedProps;
       if (qa(i, a) && e.ref === t.ref)
-        if (Zt = !1, t.pendingProps = a = i, hr(e, n))
-          (e.flags & 131072) !== 0 && (Zt = !0);
+        if (Vt = !1, t.pendingProps = a = i, hr(e, n))
+          (e.flags & 131072) !== 0 && (Vt = !0);
         else
           return t.lanes = e.lanes, Xs(e, t, n);
     }
@@ -4643,7 +4643,7 @@ Error generating stack: ` + l.message + `
       n
     );
   }
-  function zo(e, t, l) {
+  function Uo(e, t, l) {
     var a = t.pendingProps, n = a.children, i = e !== null ? e.memoizedState : null;
     if (a.mode === "hidden") {
       if ((t.flags & 128) !== 0) {
@@ -4652,7 +4652,7 @@ Error generating stack: ` + l.message + `
             i = i | n.lanes | n.childLanes, n = n.sibling;
           t.childLanes = i & ~a;
         } else t.childLanes = 0, t.child = null;
-        return Ao(
+        return Do(
           e,
           t,
           a,
@@ -4660,29 +4660,29 @@ Error generating stack: ` + l.message + `
         );
       }
       if ((l & 536870912) !== 0)
-        t.memoizedState = { baseLanes: 0, cachePool: null }, e !== null && Wn(
+        t.memoizedState = { baseLanes: 0, cachePool: null }, e !== null && Fn(
           t,
           i !== null ? i.cachePool : null
-        ), i !== null ? Od(t, i) : Hc(), po(t);
+        ), i !== null ? Ad(t, i) : Hc(), yo(t);
       else
-        return t.lanes = t.childLanes = 536870912, Ao(
+        return t.lanes = t.childLanes = 536870912, Do(
           e,
           t,
           i !== null ? i.baseLanes | l : l,
           l
         );
     } else
-      i !== null ? (Wn(t, i.cachePool), Od(t, i), cl(), t.memoizedState = null) : (e !== null && Wn(t, null), Hc(), cl());
-    return Kt(e, t, n, l), t.child;
+      i !== null ? (Fn(t, i.cachePool), Ad(t, i), cl(), t.memoizedState = null) : (e !== null && Fn(t, null), Hc(), cl());
+    return $t(e, t, n, l), t.child;
   }
-  function Ao(e, t, l, a) {
+  function Do(e, t, l, a) {
     var n = Ac();
-    return n = n === null ? null : { parent: Gt._currentValue, pool: n }, t.memoizedState = {
+    return n = n === null ? null : { parent: Qt._currentValue, pool: n }, t.memoizedState = {
       baseLanes: l,
       cachePool: n
-    }, e !== null && Wn(t, null), Hc(), po(t), e !== null && Ga(e, t, a, !0), null;
+    }, e !== null && Fn(t, null), Hc(), yo(t), e !== null && Ga(e, t, a, !0), null;
   }
-  function fi(e, t) {
+  function mi(e, t) {
     var l = t.ref;
     if (l === null)
       e !== null && e.ref !== null && (t.flags |= 4194816);
@@ -4700,20 +4700,20 @@ Error generating stack: ` + l.message + `
       a,
       void 0,
       n
-    ), a = Gc(), e !== null && !Zt ? (Qc(e, t, n), Xs(e, t, n)) : (jt && a && Sc(t), t.flags |= 1, Kt(e, t, l, n), t.child);
+    ), a = Gc(), e !== null && !Vt ? (Qc(e, t, n), Xs(e, t, n)) : (bt && a && Sc(t), t.flags |= 1, $t(e, t, l, n), t.child);
   }
-  function Ro(e, t, l, a, n, i) {
-    return Ul(t), t.updateQueue = null, l = zd(
+  function Mo(e, t, l, a, n, i) {
+    return Ul(t), t.updateQueue = null, l = Ud(
       t,
       a,
       l,
       n
-    ), Td(e), a = Gc(), e !== null && !Zt ? (Qc(e, t, i), Xs(e, t, i)) : (jt && a && Sc(t), t.flags |= 1, Kt(e, t, l, i), t.child);
+    ), Rd(e), a = Gc(), e !== null && !Vt ? (Qc(e, t, i), Xs(e, t, i)) : (bt && a && Sc(t), t.flags |= 1, $t(e, t, l, i), t.child);
   }
-  function Uo(e, t, l, a, n) {
+  function qo(e, t, l, a, n) {
     if (Ul(t), t.stateNode === null) {
-      var i = Fl, c = l.contextType;
-      typeof c == "object" && c !== null && (i = Pt(c)), i = new l(a, i), t.memoizedState = i.state !== null && i.state !== void 0 ? i.state : null, i.updater = lr, t.stateNode = i, i._reactInternals = t, i = t.stateNode, i.props = a, i.state = t.memoizedState, i.refs = {}, Uc(t), c = l.contextType, i.context = typeof c == "object" && c !== null ? Pt(c) : Fl, i.state = t.memoizedState, c = l.getDerivedStateFromProps, typeof c == "function" && (sr(
+      var i = Il, c = l.contextType;
+      typeof c == "object" && c !== null && (i = Pt(c)), i = new l(a, i), t.memoizedState = i.state !== null && i.state !== void 0 ? i.state : null, i.updater = lr, t.stateNode = i, i._reactInternals = t, i = t.stateNode, i.props = a, i.state = t.memoizedState, i.refs = {}, Uc(t), c = l.contextType, i.context = typeof c == "object" && c !== null ? Pt(c) : Il, i.state = t.memoizedState, c = l.getDerivedStateFromProps, typeof c == "function" && (sr(
         t,
         l,
         c,
@@ -4721,77 +4721,77 @@ Error generating stack: ` + l.message + `
       ), i.state = t.memoizedState), typeof l.getDerivedStateFromProps == "function" || typeof i.getSnapshotBeforeUpdate == "function" || typeof i.UNSAFE_componentWillMount != "function" && typeof i.componentWillMount != "function" || (c = i.state, typeof i.componentWillMount == "function" && i.componentWillMount(), typeof i.UNSAFE_componentWillMount == "function" && i.UNSAFE_componentWillMount(), c !== i.state && lr.enqueueReplaceState(i, i.state, null), $a(t, a, i, n), Ka(), i.state = t.memoizedState), typeof i.componentDidMount == "function" && (t.flags |= 4194308), a = !0;
     } else if (e === null) {
       i = t.stateNode;
-      var o = t.memoizedProps, g = ql(l, o);
-      i.props = g;
+      var o = t.memoizedProps, p = ql(l, o);
+      i.props = p;
       var T = i.context, J = l.contextType;
-      c = Fl, typeof J == "object" && J !== null && (c = Pt(J));
+      c = Il, typeof J == "object" && J !== null && (c = Pt(J));
       var se = l.getDerivedStateFromProps;
-      J = typeof se == "function" || typeof i.getSnapshotBeforeUpdate == "function", o = t.pendingProps !== o, J || typeof i.UNSAFE_componentWillReceiveProps != "function" && typeof i.componentWillReceiveProps != "function" || (o || T !== c) && bo(
+      J = typeof se == "function" || typeof i.getSnapshotBeforeUpdate == "function", o = t.pendingProps !== o, J || typeof i.UNSAFE_componentWillReceiveProps != "function" && typeof i.componentWillReceiveProps != "function" || (o || T !== c) && No(
         t,
         i,
         a,
         c
       ), sl = !1;
-      var A = t.memoizedState;
-      i.state = A, $a(t, a, i, n), Ka(), T = t.memoizedState, o || A !== T || sl ? (typeof se == "function" && (sr(
+      var R = t.memoizedState;
+      i.state = R, $a(t, a, i, n), Ka(), T = t.memoizedState, o || R !== T || sl ? (typeof se == "function" && (sr(
         t,
         l,
         se,
         a
-      ), T = t.memoizedState), (g = sl || go(
+      ), T = t.memoizedState), (p = sl || _o(
         t,
         l,
-        g,
+        p,
         a,
-        A,
+        R,
         T,
         c
-      )) ? (J || typeof i.UNSAFE_componentWillMount != "function" && typeof i.componentWillMount != "function" || (typeof i.componentWillMount == "function" && i.componentWillMount(), typeof i.UNSAFE_componentWillMount == "function" && i.UNSAFE_componentWillMount()), typeof i.componentDidMount == "function" && (t.flags |= 4194308)) : (typeof i.componentDidMount == "function" && (t.flags |= 4194308), t.memoizedProps = a, t.memoizedState = T), i.props = a, i.state = T, i.context = c, a = g) : (typeof i.componentDidMount == "function" && (t.flags |= 4194308), a = !1);
+      )) ? (J || typeof i.UNSAFE_componentWillMount != "function" && typeof i.componentWillMount != "function" || (typeof i.componentWillMount == "function" && i.componentWillMount(), typeof i.UNSAFE_componentWillMount == "function" && i.UNSAFE_componentWillMount()), typeof i.componentDidMount == "function" && (t.flags |= 4194308)) : (typeof i.componentDidMount == "function" && (t.flags |= 4194308), t.memoizedProps = a, t.memoizedState = T), i.props = a, i.state = T, i.context = c, a = p) : (typeof i.componentDidMount == "function" && (t.flags |= 4194308), a = !1);
     } else {
-      i = t.stateNode, Dc(e, t), c = t.memoizedProps, J = ql(l, c), i.props = J, se = t.pendingProps, A = i.context, T = l.contextType, g = Fl, typeof T == "object" && T !== null && (g = Pt(T)), o = l.getDerivedStateFromProps, (T = typeof o == "function" || typeof i.getSnapshotBeforeUpdate == "function") || typeof i.UNSAFE_componentWillReceiveProps != "function" && typeof i.componentWillReceiveProps != "function" || (c !== se || A !== g) && bo(
+      i = t.stateNode, Dc(e, t), c = t.memoizedProps, J = ql(l, c), i.props = J, se = t.pendingProps, R = i.context, T = l.contextType, p = Il, typeof T == "object" && T !== null && (p = Pt(T)), o = l.getDerivedStateFromProps, (T = typeof o == "function" || typeof i.getSnapshotBeforeUpdate == "function") || typeof i.UNSAFE_componentWillReceiveProps != "function" && typeof i.componentWillReceiveProps != "function" || (c !== se || R !== p) && No(
         t,
         i,
         a,
-        g
-      ), sl = !1, A = t.memoizedState, i.state = A, $a(t, a, i, n), Ka();
-      var q = t.memoizedState;
-      c !== se || A !== q || sl || e !== null && e.dependencies !== null && Kn(e.dependencies) ? (typeof o == "function" && (sr(
+        p
+      ), sl = !1, R = t.memoizedState, i.state = R, $a(t, a, i, n), Ka();
+      var H = t.memoizedState;
+      c !== se || R !== H || sl || e !== null && e.dependencies !== null && $n(e.dependencies) ? (typeof o == "function" && (sr(
         t,
         l,
         o,
         a
-      ), q = t.memoizedState), (J = sl || go(
+      ), H = t.memoizedState), (J = sl || _o(
         t,
         l,
         J,
         a,
-        A,
-        q,
-        g
-      ) || e !== null && e.dependencies !== null && Kn(e.dependencies)) ? (T || typeof i.UNSAFE_componentWillUpdate != "function" && typeof i.componentWillUpdate != "function" || (typeof i.componentWillUpdate == "function" && i.componentWillUpdate(a, q, g), typeof i.UNSAFE_componentWillUpdate == "function" && i.UNSAFE_componentWillUpdate(
+        R,
+        H,
+        p
+      ) || e !== null && e.dependencies !== null && $n(e.dependencies)) ? (T || typeof i.UNSAFE_componentWillUpdate != "function" && typeof i.componentWillUpdate != "function" || (typeof i.componentWillUpdate == "function" && i.componentWillUpdate(a, H, p), typeof i.UNSAFE_componentWillUpdate == "function" && i.UNSAFE_componentWillUpdate(
         a,
-        q,
-        g
-      )), typeof i.componentDidUpdate == "function" && (t.flags |= 4), typeof i.getSnapshotBeforeUpdate == "function" && (t.flags |= 1024)) : (typeof i.componentDidUpdate != "function" || c === e.memoizedProps && A === e.memoizedState || (t.flags |= 4), typeof i.getSnapshotBeforeUpdate != "function" || c === e.memoizedProps && A === e.memoizedState || (t.flags |= 1024), t.memoizedProps = a, t.memoizedState = q), i.props = a, i.state = q, i.context = g, a = J) : (typeof i.componentDidUpdate != "function" || c === e.memoizedProps && A === e.memoizedState || (t.flags |= 4), typeof i.getSnapshotBeforeUpdate != "function" || c === e.memoizedProps && A === e.memoizedState || (t.flags |= 1024), a = !1);
+        H,
+        p
+      )), typeof i.componentDidUpdate == "function" && (t.flags |= 4), typeof i.getSnapshotBeforeUpdate == "function" && (t.flags |= 1024)) : (typeof i.componentDidUpdate != "function" || c === e.memoizedProps && R === e.memoizedState || (t.flags |= 4), typeof i.getSnapshotBeforeUpdate != "function" || c === e.memoizedProps && R === e.memoizedState || (t.flags |= 1024), t.memoizedProps = a, t.memoizedState = H), i.props = a, i.state = H, i.context = p, a = J) : (typeof i.componentDidUpdate != "function" || c === e.memoizedProps && R === e.memoizedState || (t.flags |= 4), typeof i.getSnapshotBeforeUpdate != "function" || c === e.memoizedProps && R === e.memoizedState || (t.flags |= 1024), a = !1);
     }
-    return i = a, fi(e, t), a = (t.flags & 128) !== 0, i || a ? (i = t.stateNode, l = a && typeof l.getDerivedStateFromError != "function" ? null : i.render(), t.flags |= 1, e !== null && a ? (t.child = ca(
+    return i = a, mi(e, t), a = (t.flags & 128) !== 0, i || a ? (i = t.stateNode, l = a && typeof l.getDerivedStateFromError != "function" ? null : i.render(), t.flags |= 1, e !== null && a ? (t.child = ra(
       t,
       e.child,
       null,
       n
-    ), t.child = ca(
+    ), t.child = ra(
       t,
       null,
       l,
       n
-    )) : Kt(e, t, l, n), t.memoizedState = i.state, e = t.child) : e = Xs(
+    )) : $t(e, t, l, n), t.memoizedState = i.state, e = t.child) : e = Xs(
       e,
       t,
       n
     ), e;
   }
-  function Do(e, t, l, a) {
-    return La(), t.flags |= 256, Kt(e, t, l, a), t.child;
+  function Ho(e, t, l, a) {
+    return La(), t.flags |= 256, $t(e, t, l, a), t.child;
   }
   var ir = {
     dehydrated: null,
@@ -4800,52 +4800,52 @@ Error generating stack: ` + l.message + `
     hydrationErrors: null
   };
   function cr(e) {
-    return { baseLanes: e, cachePool: yd() };
+    return { baseLanes: e, cachePool: Sd() };
   }
   function rr(e, t, l) {
     return e = e !== null ? e.childLanes & ~l : 0, t && (e |= bs), e;
   }
-  function Mo(e, t, l) {
+  function Bo(e, t, l) {
     var a = t.pendingProps, n = !1, i = (t.flags & 128) !== 0, c;
-    if ((c = i) || (c = e !== null && e.memoizedState === null ? !1 : (Qt.current & 2) !== 0), c && (n = !0, t.flags &= -129), c = (t.flags & 32) !== 0, t.flags &= -33, e === null) {
-      if (jt) {
-        if (n ? il(t) : cl(), jt) {
-          var o = Ut, g;
-          if (g = o) {
+    if ((c = i) || (c = e !== null && e.memoizedState === null ? !1 : (Xt.current & 2) !== 0), c && (n = !0, t.flags &= -129), c = (t.flags & 32) !== 0, t.flags &= -33, e === null) {
+      if (bt) {
+        if (n ? il(t) : cl(), bt) {
+          var o = Ut, p;
+          if (p = o) {
             e: {
-              for (g = o, o = Es; g.nodeType !== 8; ) {
+              for (p = o, o = Es; p.nodeType !== 8; ) {
                 if (!o) {
                   o = null;
                   break e;
                 }
-                if (g = Ss(
-                  g.nextSibling
-                ), g === null) {
+                if (p = Ss(
+                  p.nextSibling
+                ), p === null) {
                   o = null;
                   break e;
                 }
               }
-              o = g;
+              o = p;
             }
             o !== null ? (t.memoizedState = {
               dehydrated: o,
               treeContext: Ol !== null ? { id: Hs, overflow: Bs } : null,
               retryLane: 536870912,
               hydrationErrors: null
-            }, g = cs(
+            }, p = cs(
               18,
               null,
               null,
               0
-            ), g.stateNode = o, g.return = t, t.child = g, ts = t, Ut = null, g = !0) : g = !1;
+            ), p.stateNode = o, p.return = t, t.child = p, ts = t, Ut = null, p = !0) : p = !1;
           }
-          g || Al(t);
+          p || Al(t);
         }
         if (o = t.memoizedState, o !== null && (o = o.dehydrated, o !== null))
           return Zr(o) ? t.lanes = 32 : t.lanes = 536870912, null;
         Qs(t);
       }
-      return o = a.children, a = a.fallback, n ? (cl(), n = t.mode, o = mi(
+      return o = a.children, a = a.fallback, n ? (cl(), n = t.mode, o = xi(
         { mode: "hidden", children: o },
         n
       ), a = El(
@@ -4859,13 +4859,13 @@ Error generating stack: ` + l.message + `
         l
       ), t.memoizedState = ir, a) : (il(t), ur(t, o));
     }
-    if (g = e.memoizedState, g !== null && (o = g.dehydrated, o !== null)) {
+    if (p = e.memoizedState, p !== null && (o = p.dehydrated, o !== null)) {
       if (i)
         t.flags & 256 ? (il(t), t.flags &= -257, t = dr(
           e,
           t,
           l
-        )) : t.memoizedState !== null ? (cl(), t.child = e.child, t.flags |= 128, t = null) : (cl(), n = a.fallback, o = t.mode, a = mi(
+        )) : t.memoizedState !== null ? (cl(), t.child = e.child, t.flags |= 128, t = null) : (cl(), n = a.fallback, o = t.mode, a = xi(
           { mode: "visible", children: a.children },
           o
         ), n = El(
@@ -4873,7 +4873,7 @@ Error generating stack: ` + l.message + `
           o,
           l,
           null
-        ), n.flags |= 2, a.return = t, n.return = t, a.sibling = n, t.child = a, ca(
+        ), n.flags |= 2, a.return = t, n.return = t, a.sibling = n, t.child = a, ra(
           t,
           e.child,
           null,
@@ -4890,34 +4890,34 @@ Error generating stack: ` + l.message + `
           t,
           l
         );
-      } else if (Zt || Ga(e, t, l, !1), c = (l & e.childLanes) !== 0, Zt || c) {
-        if (c = kt, c !== null && (a = l & -l, a = (a & 42) !== 0 ? 1 : ce(a), a = (a & (c.suspendedLanes | l)) !== 0 ? 0 : a, a !== 0 && a !== g.retryLane))
-          throw g.retryLane = a, Wl(e, a), hs(c, e, a), Co;
+      } else if (Vt || Ga(e, t, l, !1), c = (l & e.childLanes) !== 0, Vt || c) {
+        if (c = Et, c !== null && (a = l & -l, a = (a & 42) !== 0 ? 1 : oe(a), a = (a & (c.suspendedLanes | l)) !== 0 ? 0 : a, a !== 0 && a !== p.retryLane))
+          throw p.retryLane = a, Fl(e, a), hs(c, e, a), To;
         o.data === "$?" || Er(), t = dr(
           e,
           t,
           l
         );
       } else
-        o.data === "$?" ? (t.flags |= 192, t.child = e.child, t = null) : (e = g.treeContext, Ut = Ss(
+        o.data === "$?" ? (t.flags |= 192, t.child = e.child, t = null) : (e = p.treeContext, Ut = Ss(
           o.nextSibling
-        ), ts = t, jt = !0, zl = null, Es = !1, e !== null && (vs[ps++] = Hs, vs[ps++] = Bs, vs[ps++] = Ol, Hs = e.id, Bs = e.overflow, Ol = t), t = ur(
+        ), ts = t, bt = !0, zl = null, Es = !1, e !== null && (vs[ps++] = Hs, vs[ps++] = Bs, vs[ps++] = Ol, Hs = e.id, Bs = e.overflow, Ol = t), t = ur(
           t,
           a.children
         ), t.flags |= 4096);
       return t;
     }
-    return n ? (cl(), n = a.fallback, o = t.mode, g = e.child, T = g.sibling, a = qs(g, {
+    return n ? (cl(), n = a.fallback, o = t.mode, p = e.child, T = p.sibling, a = qs(p, {
       mode: "hidden",
       children: a.children
-    }), a.subtreeFlags = g.subtreeFlags & 65011712, T !== null ? n = qs(T, n) : (n = El(
+    }), a.subtreeFlags = p.subtreeFlags & 65011712, T !== null ? n = qs(T, n) : (n = El(
       n,
       o,
       l,
       null
-    ), n.flags |= 2), n.return = t, a.return = t, a.sibling = n, t.child = a, a = n, n = t.child, o = e.child.memoizedState, o === null ? o = cr(l) : (g = o.cachePool, g !== null ? (T = Gt._currentValue, g = g.parent !== T ? { parent: T, pool: T } : g) : g = yd(), o = {
+    ), n.flags |= 2), n.return = t, a.return = t, a.sibling = n, t.child = a, a = n, n = t.child, o = e.child.memoizedState, o === null ? o = cr(l) : (p = o.cachePool, p !== null ? (T = Qt._currentValue, p = p.parent !== T ? { parent: T, pool: T } : p) : p = Sd(), o = {
       baseLanes: o.baseLanes | l,
-      cachePool: g
+      cachePool: p
     }), n.memoizedState = o, n.childLanes = rr(
       e,
       c,
@@ -4928,12 +4928,12 @@ Error generating stack: ` + l.message + `
     }), l.return = t, l.sibling = null, e !== null && (c = t.deletions, c === null ? (t.deletions = [e], t.flags |= 16) : c.push(e)), t.child = l, t.memoizedState = null, l);
   }
   function ur(e, t) {
-    return t = mi(
+    return t = xi(
       { mode: "visible", children: t },
       e.mode
     ), t.return = e, e.child = t;
   }
-  function mi(e, t) {
+  function xi(e, t) {
     return e = cs(22, e, null, t), e.lanes = 0, e.stateNode = {
       _visibility: 1,
       _pendingMarkers: null,
@@ -4942,12 +4942,12 @@ Error generating stack: ` + l.message + `
     }, e;
   }
   function dr(e, t, l) {
-    return ca(t, e.child, null, l), e = ur(
+    return ra(t, e.child, null, l), e = ur(
       t,
       t.pendingProps.children
     ), e.flags |= 2, t.memoizedState = null, e;
   }
-  function qo(e, t, l) {
+  function Lo(e, t, l) {
     e.lanes |= t;
     var a = e.alternate;
     a !== null && (a.lanes |= t), Ec(e.return, t, l);
@@ -4963,17 +4963,17 @@ Error generating stack: ` + l.message + `
       tailMode: n
     } : (i.isBackwards = t, i.rendering = null, i.renderingStartTime = 0, i.last = a, i.tail = l, i.tailMode = n);
   }
-  function Ho(e, t, l) {
+  function Yo(e, t, l) {
     var a = t.pendingProps, n = a.revealOrder, i = a.tail;
-    if (Kt(e, t, a.children, l), a = Qt.current, (a & 2) !== 0)
+    if ($t(e, t, a.children, l), a = Xt.current, (a & 2) !== 0)
       a = a & 1 | 2, t.flags |= 128;
     else {
       if (e !== null && (e.flags & 128) !== 0)
         e: for (e = t.child; e !== null; ) {
           if (e.tag === 13)
-            e.memoizedState !== null && qo(e, l, t);
+            e.memoizedState !== null && Lo(e, l, t);
           else if (e.tag === 19)
-            qo(e, l, t);
+            Lo(e, l, t);
           else if (e.child !== null) {
             e.child.return = e, e = e.child;
             continue;
@@ -4988,10 +4988,10 @@ Error generating stack: ` + l.message + `
         }
       a &= 1;
     }
-    switch ($(Qt, a), n) {
+    switch (W(Xt, a), n) {
       case "forwards":
         for (l = t.child, n = null; l !== null; )
-          e = l.alternate, e !== null && di(e) === null && (n = l), l = l.sibling;
+          e = l.alternate, e !== null && oi(e) === null && (n = l), l = l.sibling;
         l = n, l === null ? (n = t.child, t.child = null) : (n = l.sibling, l.sibling = null), or(
           t,
           !1,
@@ -5002,7 +5002,7 @@ Error generating stack: ` + l.message + `
         break;
       case "backwards":
         for (l = null, n = t.child, t.child = null; n !== null; ) {
-          if (e = n.alternate, e !== null && di(e) === null) {
+          if (e = n.alternate, e !== null && oi(e) === null) {
             t.child = n;
             break;
           }
@@ -5045,16 +5045,16 @@ Error generating stack: ` + l.message + `
     return t.child;
   }
   function hr(e, t) {
-    return (e.lanes & t) !== 0 ? !0 : (e = e.dependencies, !!(e !== null && Kn(e)));
+    return (e.lanes & t) !== 0 ? !0 : (e = e.dependencies, !!(e !== null && $n(e)));
   }
-  function ux(e, t, l) {
+  function fx(e, t, l) {
     switch (t.tag) {
       case 3:
-        ie(t, t.stateNode.containerInfo), tl(t, Gt, e.memoizedState.cache), La();
+        ie(t, t.stateNode.containerInfo), tl(t, Qt, e.memoizedState.cache), La();
         break;
       case 27:
       case 5:
-        st(t);
+        lt(t);
         break;
       case 4:
         ie(t, t.stateNode.containerInfo);
@@ -5069,7 +5069,7 @@ Error generating stack: ` + l.message + `
       case 13:
         var a = t.memoizedState;
         if (a !== null)
-          return a.dehydrated !== null ? (il(t), t.flags |= 128, null) : (l & t.child.childLanes) !== 0 ? Mo(e, t, l) : (il(t), e = Xs(
+          return a.dehydrated !== null ? (il(t), t.flags |= 128, null) : (l & t.child.childLanes) !== 0 ? Bo(e, t, l) : (il(t), e = Xs(
             e,
             t,
             l
@@ -5085,45 +5085,45 @@ Error generating stack: ` + l.message + `
           !1
         ), a = (l & t.childLanes) !== 0), n) {
           if (a)
-            return Ho(
+            return Yo(
               e,
               t,
               l
             );
           t.flags |= 128;
         }
-        if (n = t.memoizedState, n !== null && (n.rendering = null, n.tail = null, n.lastEffect = null), $(Qt, Qt.current), a) break;
+        if (n = t.memoizedState, n !== null && (n.rendering = null, n.tail = null, n.lastEffect = null), W(Xt, Xt.current), a) break;
         return null;
       case 22:
       case 23:
-        return t.lanes = 0, zo(e, t, l);
+        return t.lanes = 0, Uo(e, t, l);
       case 24:
-        tl(t, Gt, e.memoizedState.cache);
+        tl(t, Qt, e.memoizedState.cache);
     }
     return Xs(e, t, l);
   }
-  function Bo(e, t, l) {
+  function Go(e, t, l) {
     if (e !== null)
       if (e.memoizedProps !== t.pendingProps)
-        Zt = !0;
+        Vt = !0;
       else {
         if (!hr(e, l) && (t.flags & 128) === 0)
-          return Zt = !1, ux(
+          return Vt = !1, fx(
             e,
             t,
             l
           );
-        Zt = (e.flags & 131072) !== 0;
+        Vt = (e.flags & 131072) !== 0;
       }
     else
-      Zt = !1, jt && (t.flags & 1048576) !== 0 && md(t, Jn, t.index);
+      Vt = !1, bt && (t.flags & 1048576) !== 0 && vd(t, Kn, t.index);
     switch (t.lanes = 0, t.tag) {
       case 16:
         e: {
           e = t.pendingProps;
           var a = t.elementType, n = a._init;
           if (a = n(a._payload), t.type = a, typeof a == "function")
-            yc(a) ? (e = ql(a, e), t.tag = 1, t = Uo(
+            yc(a) ? (e = ql(a, e), t.tag = 1, t = qo(
               null,
               t,
               a,
@@ -5138,8 +5138,8 @@ Error generating stack: ` + l.message + `
             ));
           else {
             if (a != null) {
-              if (n = a.$$typeof, n === oe) {
-                t.tag = 11, t = Eo(
+              if (n = a.$$typeof, n === de) {
+                t.tag = 11, t = zo(
                   null,
                   t,
                   a,
@@ -5147,8 +5147,8 @@ Error generating stack: ` + l.message + `
                   l
                 );
                 break e;
-              } else if (n === je) {
-                t.tag = 14, t = Oo(
+              } else if (n === ve) {
+                t.tag = 14, t = Ao(
                   null,
                   t,
                   a,
@@ -5158,7 +5158,7 @@ Error generating stack: ` + l.message + `
                 break e;
               }
             }
-            throw t = X(a) || a, Error(d(306, t, ""));
+            throw t = Q(a) || a, Error(d(306, t, ""));
           }
         }
         return t;
@@ -5174,7 +5174,7 @@ Error generating stack: ` + l.message + `
         return a = t.type, n = ql(
           a,
           t.pendingProps
-        ), Uo(
+        ), qo(
           e,
           t,
           a,
@@ -5191,9 +5191,9 @@ Error generating stack: ` + l.message + `
           var i = t.memoizedState;
           n = i.element, Dc(e, t), $a(t, a, null, l);
           var c = t.memoizedState;
-          if (a = c.cache, tl(t, Gt, a), a !== i.cache && Oc(
+          if (a = c.cache, tl(t, Qt, a), a !== i.cache && Oc(
             t,
-            [Gt],
+            [Qt],
             l,
             !0
           ), Ka(), a = c.element, i.isDehydrated)
@@ -5202,7 +5202,7 @@ Error generating stack: ` + l.message + `
               isDehydrated: !1,
               cache: c.cache
             }, t.updateQueue.baseState = i, t.memoizedState = i, t.flags & 256) {
-              t = Do(
+              t = Ho(
                 e,
                 t,
                 a,
@@ -5213,7 +5213,7 @@ Error generating stack: ` + l.message + `
               n = xs(
                 Error(d(424)),
                 t
-              ), Ya(n), t = Do(
+              ), Ya(n), t = Ho(
                 e,
                 t,
                 a,
@@ -5228,7 +5228,7 @@ Error generating stack: ` + l.message + `
                 default:
                   e = e.nodeName === "HTML" ? e.ownerDocument.body : e;
               }
-              for (Ut = Ss(e.firstChild), ts = t, jt = !0, zl = null, Es = !0, l = vo(
+              for (Ut = Ss(e.firstChild), ts = t, bt = !0, zl = null, Es = !0, l = bo(
                 t,
                 null,
                 a,
@@ -5245,7 +5245,7 @@ Error generating stack: ` + l.message + `
               );
               break e;
             }
-            Kt(
+            $t(
               e,
               t,
               a,
@@ -5256,73 +5256,73 @@ Error generating stack: ` + l.message + `
         }
         return t;
       case 26:
-        return fi(e, t), e === null ? (l = Qh(
+        return mi(e, t), e === null ? (l = Vh(
           t.type,
           null,
           t.pendingProps,
           null
-        )) ? t.memoizedState = l : jt || (l = t.type, e = t.pendingProps, a = Ei(
+        )) ? t.memoizedState = l : bt || (l = t.type, e = t.pendingProps, a = Oi(
           P.current
-        ).createElement(l), a[rt] = t, a[St] = e, Wt(a, l, e), qt(a), t.stateNode = a) : t.memoizedState = Qh(
+        ).createElement(l), a[me] = t, a[nt] = e, Ft(a, l, e), qt(a), t.stateNode = a) : t.memoizedState = Vh(
           t.type,
           e.memoizedProps,
           t.pendingProps,
           e.memoizedState
         ), null;
       case 27:
-        return st(t), e === null && jt && (a = t.stateNode = Lh(
+        return lt(t), e === null && bt && (a = t.stateNode = Qh(
           t.type,
           t.pendingProps,
           P.current
         ), ts = t, Es = !0, n = Ut, jl(t.type) ? (Vr = n, Ut = Ss(
           a.firstChild
-        )) : Ut = n), Kt(
+        )) : Ut = n), $t(
           e,
           t,
           t.pendingProps.children,
           l
-        ), fi(e, t), e === null && (t.flags |= 4194304), t.child;
+        ), mi(e, t), e === null && (t.flags |= 4194304), t.child;
       case 5:
-        return e === null && jt && ((n = a = Ut) && (a = qx(
+        return e === null && bt && ((n = a = Ut) && (a = Yx(
           a,
           t.type,
           t.pendingProps,
           Es
         ), a !== null ? (t.stateNode = a, ts = t, Ut = Ss(
           a.firstChild
-        ), Es = !1, n = !0) : n = !1), n || Al(t)), st(t), n = t.type, i = t.pendingProps, c = e !== null ? e.memoizedProps : null, a = i.children, Gr(n, i) ? a = null : c !== null && Gr(n, c) && (t.flags |= 32), t.memoizedState !== null && (n = Yc(
+        ), Es = !1, n = !0) : n = !1), n || Al(t)), lt(t), n = t.type, i = t.pendingProps, c = e !== null ? e.memoizedProps : null, a = i.children, Gr(n, i) ? a = null : c !== null && Gr(n, c) && (t.flags |= 32), t.memoizedState !== null && (n = Yc(
           e,
           t,
-          tx,
+          nx,
           null,
           null,
           l
-        ), pn._currentValue = n), fi(e, t), Kt(e, t, a, l), t.child;
+        ), pn._currentValue = n), mi(e, t), $t(e, t, a, l), t.child;
       case 6:
-        return e === null && jt && ((e = l = Ut) && (l = Hx(
+        return e === null && bt && ((e = l = Ut) && (l = Gx(
           l,
           t.pendingProps,
           Es
         ), l !== null ? (t.stateNode = l, ts = t, Ut = null, e = !0) : e = !1), e || Al(t)), null;
       case 13:
-        return Mo(e, t, l);
+        return Bo(e, t, l);
       case 4:
         return ie(
           t,
           t.stateNode.containerInfo
-        ), a = t.pendingProps, e === null ? t.child = ca(
+        ), a = t.pendingProps, e === null ? t.child = ra(
           t,
           null,
           a,
           l
-        ) : Kt(
+        ) : $t(
           e,
           t,
           a,
           l
         ), t.child;
       case 11:
-        return Eo(
+        return zo(
           e,
           t,
           t.type,
@@ -5330,37 +5330,37 @@ Error generating stack: ` + l.message + `
           l
         );
       case 7:
-        return Kt(
+        return $t(
           e,
           t,
           t.pendingProps,
           l
         ), t.child;
       case 8:
-        return Kt(
+        return $t(
           e,
           t,
           t.pendingProps.children,
           l
         ), t.child;
       case 12:
-        return Kt(
+        return $t(
           e,
           t,
           t.pendingProps.children,
           l
         ), t.child;
       case 10:
-        return a = t.pendingProps, tl(t, t.type, a.value), Kt(
+        return a = t.pendingProps, tl(t, t.type, a.value), $t(
           e,
           t,
           a.children,
           l
         ), t.child;
       case 9:
-        return n = t.type._context, a = t.pendingProps.children, Ul(t), n = Pt(n), a = a(n), t.flags |= 1, Kt(e, t, a, l), t.child;
+        return n = t.type._context, a = t.pendingProps.children, Ul(t), n = Pt(n), a = a(n), t.flags |= 1, $t(e, t, a, l), t.child;
       case 14:
-        return Oo(
+        return Ao(
           e,
           t,
           t.type,
@@ -5368,7 +5368,7 @@ Error generating stack: ` + l.message + `
           l
         );
       case 15:
-        return To(
+        return Ro(
           e,
           t,
           t.type,
@@ -5376,27 +5376,27 @@ Error generating stack: ` + l.message + `
           l
         );
       case 19:
-        return Ho(e, t, l);
+        return Yo(e, t, l);
       case 31:
         return a = t.pendingProps, l = t.mode, a = {
           mode: a.mode,
           children: a.children
-        }, e === null ? (l = mi(
+        }, e === null ? (l = xi(
           a,
           l
         ), l.ref = t.ref, t.child = l, l.return = t, t = l) : (l = qs(e.child, a), l.ref = t.ref, t.child = l, l.return = t, t = l), t;
       case 22:
-        return zo(e, t, l);
+        return Uo(e, t, l);
       case 24:
-        return Ul(t), a = Pt(Gt), e === null ? (n = Ac(), n === null && (n = kt, i = Tc(), n.pooledCache = i, i.refCount++, i !== null && (n.pooledCacheLanes |= l), n = i), t.memoizedState = {
+        return Ul(t), a = Pt(Qt), e === null ? (n = Ac(), n === null && (n = Et, i = Tc(), n.pooledCache = i, i.refCount++, i !== null && (n.pooledCacheLanes |= l), n = i), t.memoizedState = {
           parent: a,
           cache: n
-        }, Uc(t), tl(t, Gt, n)) : ((e.lanes & l) !== 0 && (Dc(e, t), $a(t, null, null, l), Ka()), n = e.memoizedState, i = t.memoizedState, n.parent !== a ? (n = { parent: a, cache: a }, t.memoizedState = n, t.lanes === 0 && (t.memoizedState = t.updateQueue.baseState = n), tl(t, Gt, a)) : (a = i.cache, tl(t, Gt, a), a !== n.cache && Oc(
+        }, Uc(t), tl(t, Qt, n)) : ((e.lanes & l) !== 0 && (Dc(e, t), $a(t, null, null, l), Ka()), n = e.memoizedState, i = t.memoizedState, n.parent !== a ? (n = { parent: a, cache: a }, t.memoizedState = n, t.lanes === 0 && (t.memoizedState = t.updateQueue.baseState = n), tl(t, Qt, a)) : (a = i.cache, tl(t, Qt, a), a !== n.cache && Oc(
           t,
-          [Gt],
+          [Qt],
           l,
           !0
-        ))), Kt(
+        ))), $t(
           e,
           t,
           t.pendingProps.children,
@@ -5410,20 +5410,20 @@ Error generating stack: ` + l.message + `
   function Zs(e) {
     e.flags |= 4;
   }
-  function Lo(e, t) {
+  function Qo(e, t) {
     if (t.type !== "stylesheet" || (t.state.loading & 4) !== 0)
       e.flags &= -16777217;
-    else if (e.flags |= 16777216, !Kh(t)) {
-      if (t = gs.current, t !== null && ((ft & 4194048) === ft ? Os !== null : (ft & 62914560) !== ft && (ft & 536870912) === 0 || t !== Os))
-        throw Va = Rc, _d;
+    else if (e.flags |= 16777216, !Fh(t)) {
+      if (t = gs.current, t !== null && ((vt & 4194048) === vt ? Os !== null : (vt & 62914560) !== vt && (vt & 536870912) === 0 || t !== Os))
+        throw Va = Rc, wd;
       e.flags |= 8192;
     }
   }
-  function xi(e, t) {
-    t !== null && (e.flags |= 4), e.flags & 16384 && (t = e.tag !== 22 ? z() : 536870912, e.lanes |= t, oa |= t);
+  function ji(e, t) {
+    t !== null && (e.flags |= 4), e.flags & 16384 && (t = e.tag !== 22 ? D() : 536870912, e.lanes |= t, ha |= t);
   }
   function sn(e, t) {
-    if (!jt)
+    if (!bt)
       switch (e.tailMode) {
         case "hidden":
           t = e.tail;
@@ -5438,7 +5438,7 @@ Error generating stack: ` + l.message + `
           a === null ? t || e.tail === null ? e.tail = null : e.tail.sibling = null : a.sibling = null;
       }
   }
-  function zt(e) {
+  function At(e) {
     var t = e.alternate !== null && e.alternate.child === e.child, l = 0, a = 0;
     if (t)
       for (var n = e.child; n !== null; )
@@ -5448,7 +5448,7 @@ Error generating stack: ` + l.message + `
         l |= n.lanes | n.childLanes, a |= n.subtreeFlags, a |= n.flags, n.return = e, n = n.sibling;
     return e.subtreeFlags |= a, e.childLanes = l, t;
   }
-  function dx(e, t, l) {
+  function mx(e, t, l) {
     var a = t.pendingProps;
     switch (wc(t), t.tag) {
       case 31:
@@ -5461,15 +5461,15 @@ Error generating stack: ` + l.message + `
       case 12:
       case 9:
       case 14:
-        return zt(t), null;
+        return At(t), null;
       case 1:
-        return zt(t), null;
+        return At(t), null;
       case 3:
-        return l = t.stateNode, a = null, e !== null && (a = e.memoizedState.cache), t.memoizedState.cache !== a && (t.flags |= 2048), Ys(Gt), Se(), l.pendingContext && (l.context = l.pendingContext, l.pendingContext = null), (e === null || e.child === null) && (Ba(t) ? Zs(t) : e === null || e.memoizedState.isDehydrated && (t.flags & 256) === 0 || (t.flags |= 1024, vd())), zt(t), null;
+        return l = t.stateNode, a = null, e !== null && (a = e.memoizedState.cache), t.memoizedState.cache !== a && (t.flags |= 2048), Ys(Qt), Ce(), l.pendingContext && (l.context = l.pendingContext, l.pendingContext = null), (e === null || e.child === null) && (Ba(t) ? Zs(t) : e === null || e.memoizedState.isDehydrated && (t.flags & 256) === 0 || (t.flags |= 1024, bd())), At(t), null;
       case 26:
-        return l = t.memoizedState, e === null ? (Zs(t), l !== null ? (zt(t), Lo(t, l)) : (zt(t), t.flags &= -16777217)) : l ? l !== e.memoizedState ? (Zs(t), zt(t), Lo(t, l)) : (zt(t), t.flags &= -16777217) : (e.memoizedProps !== a && Zs(t), zt(t), t.flags &= -16777217), null;
+        return l = t.memoizedState, e === null ? (Zs(t), l !== null ? (At(t), Qo(t, l)) : (At(t), t.flags &= -16777217)) : l ? l !== e.memoizedState ? (Zs(t), At(t), Qo(t, l)) : (At(t), t.flags &= -16777217) : (e.memoizedProps !== a && Zs(t), At(t), t.flags &= -16777217), null;
       case 27:
-        lt(t), l = P.current;
+        at(t), l = P.current;
         var n = t.type;
         if (e !== null && t.stateNode != null)
           e.memoizedProps !== a && Zs(t);
@@ -5477,24 +5477,24 @@ Error generating stack: ` + l.message + `
           if (!a) {
             if (t.stateNode === null)
               throw Error(d(166));
-            return zt(t), null;
+            return At(t), null;
           }
-          e = ae.current, Ba(t) ? xd(t) : (e = Lh(n, a, l), t.stateNode = e, Zs(t));
+          e = ae.current, Ba(t) ? pd(t) : (e = Qh(n, a, l), t.stateNode = e, Zs(t));
         }
-        return zt(t), null;
+        return At(t), null;
       case 5:
-        if (lt(t), l = t.type, e !== null && t.stateNode != null)
+        if (at(t), l = t.type, e !== null && t.stateNode != null)
           e.memoizedProps !== a && Zs(t);
         else {
           if (!a) {
             if (t.stateNode === null)
               throw Error(d(166));
-            return zt(t), null;
+            return At(t), null;
           }
           if (e = ae.current, Ba(t))
-            xd(t);
+            pd(t);
           else {
-            switch (n = Ei(
+            switch (n = Oi(
               P.current
             ), e) {
               case 1:
@@ -5533,7 +5533,7 @@ Error generating stack: ` + l.message + `
                     e = typeof a.is == "string" ? n.createElement(l, { is: a.is }) : n.createElement(l);
                 }
             }
-            e[rt] = t, e[St] = a;
+            e[me] = t, e[nt] = a;
             e: for (n = t.child; n !== null; ) {
               if (n.tag === 5 || n.tag === 6)
                 e.appendChild(n.stateNode);
@@ -5550,7 +5550,7 @@ Error generating stack: ` + l.message + `
               n.sibling.return = n.return, n = n.sibling;
             }
             t.stateNode = e;
-            e: switch (Wt(e, l, a), l) {
+            e: switch (Ft(e, l, a), l) {
               case "button":
               case "input":
               case "select":
@@ -5566,7 +5566,7 @@ Error generating stack: ` + l.message + `
             e && Zs(t);
           }
         }
-        return zt(t), t.flags &= -16777217, null;
+        return At(t), t.flags &= -16777217, null;
       case 6:
         if (e && t.stateNode != null)
           e.memoizedProps !== a && Zs(t);
@@ -5580,25 +5580,25 @@ Error generating stack: ` + l.message + `
                 case 5:
                   a = n.memoizedProps;
               }
-            e[rt] = t, e = !!(e.nodeValue === l || a !== null && a.suppressHydrationWarning === !0 || Rh(e.nodeValue, l)), e || Al(t);
+            e[me] = t, e = !!(e.nodeValue === l || a !== null && a.suppressHydrationWarning === !0 || Mh(e.nodeValue, l)), e || Al(t);
           } else
-            e = Ei(e).createTextNode(
+            e = Oi(e).createTextNode(
               a
-            ), e[rt] = t, t.stateNode = e;
+            ), e[me] = t, t.stateNode = e;
         }
-        return zt(t), null;
+        return At(t), null;
       case 13:
         if (a = t.memoizedState, e === null || e.memoizedState !== null && e.memoizedState.dehydrated !== null) {
           if (n = Ba(t), a !== null && a.dehydrated !== null) {
             if (e === null) {
               if (!n) throw Error(d(318));
               if (n = t.memoizedState, n = n !== null ? n.dehydrated : null, !n) throw Error(d(317));
-              n[rt] = t;
+              n[me] = t;
             } else
               La(), (t.flags & 128) === 0 && (t.memoizedState = null), t.flags |= 4;
-            zt(t), n = !1;
+            At(t), n = !1;
           } else
-            n = vd(), e !== null && e.memoizedState !== null && (e.memoizedState.hydrationErrors = n), n = !0;
+            n = bd(), e !== null && e.memoizedState !== null && (e.memoizedState.hydrationErrors = n), n = !0;
           if (!n)
             return t.flags & 256 ? (Qs(t), t) : (Qs(t), null);
         }
@@ -5609,45 +5609,45 @@ Error generating stack: ` + l.message + `
           var i = null;
           a.memoizedState !== null && a.memoizedState.cachePool !== null && (i = a.memoizedState.cachePool.pool), i !== n && (a.flags |= 2048);
         }
-        return l !== e && l && (t.child.flags |= 8192), xi(t, t.updateQueue), zt(t), null;
+        return l !== e && l && (t.child.flags |= 8192), ji(t, t.updateQueue), At(t), null;
       case 4:
-        return Se(), e === null && qr(t.stateNode.containerInfo), zt(t), null;
+        return Ce(), e === null && qr(t.stateNode.containerInfo), At(t), null;
       case 10:
-        return Ys(t.type), zt(t), null;
+        return Ys(t.type), At(t), null;
       case 19:
-        if (te(Qt), n = t.memoizedState, n === null) return zt(t), null;
+        if (te(Xt), n = t.memoizedState, n === null) return At(t), null;
         if (a = (t.flags & 128) !== 0, i = n.rendering, i === null)
           if (a) sn(n, !1);
           else {
             if (Dt !== 0 || e !== null && (e.flags & 128) !== 0)
               for (e = t.child; e !== null; ) {
-                if (i = di(e), i !== null) {
-                  for (t.flags |= 128, sn(n, !1), e = i.updateQueue, t.updateQueue = e, xi(t, e), t.subtreeFlags = 0, e = l, l = t.child; l !== null; )
-                    fd(l, e), l = l.sibling;
-                  return $(
-                    Qt,
-                    Qt.current & 1 | 2
+                if (i = oi(e), i !== null) {
+                  for (t.flags |= 128, sn(n, !1), e = i.updateQueue, t.updateQueue = e, ji(t, e), t.subtreeFlags = 0, e = l, l = t.child; l !== null; )
+                    jd(l, e), l = l.sibling;
+                  return W(
+                    Xt,
+                    Xt.current & 1 | 2
                   ), t.child;
                 }
                 e = e.sibling;
               }
-            n.tail !== null && Le() > pi && (t.flags |= 128, a = !0, sn(n, !1), t.lanes = 4194304);
+            n.tail !== null && Be() > gi && (t.flags |= 128, a = !0, sn(n, !1), t.lanes = 4194304);
           }
         else {
           if (!a)
-            if (e = di(i), e !== null) {
-              if (t.flags |= 128, a = !0, e = e.updateQueue, t.updateQueue = e, xi(t, e), sn(n, !0), n.tail === null && n.tailMode === "hidden" && !i.alternate && !jt)
-                return zt(t), null;
+            if (e = oi(i), e !== null) {
+              if (t.flags |= 128, a = !0, e = e.updateQueue, t.updateQueue = e, ji(t, e), sn(n, !0), n.tail === null && n.tailMode === "hidden" && !i.alternate && !bt)
+                return At(t), null;
             } else
-              2 * Le() - n.renderingStartTime > pi && l !== 536870912 && (t.flags |= 128, a = !0, sn(n, !1), t.lanes = 4194304);
+              2 * Be() - n.renderingStartTime > gi && l !== 536870912 && (t.flags |= 128, a = !0, sn(n, !1), t.lanes = 4194304);
           n.isBackwards ? (i.sibling = t.child, t.child = i) : (e = n.last, e !== null ? e.sibling = i : t.child = i, n.last = i);
         }
-        return n.tail !== null ? (t = n.tail, n.rendering = t, n.tail = t.sibling, n.renderingStartTime = Le(), t.sibling = null, e = Qt.current, $(Qt, a ? e & 1 | 2 : e & 1), t) : (zt(t), null);
+        return n.tail !== null ? (t = n.tail, n.rendering = t, n.tail = t.sibling, n.renderingStartTime = Be(), t.sibling = null, e = Xt.current, W(Xt, a ? e & 1 | 2 : e & 1), t) : (At(t), null);
       case 22:
       case 23:
-        return Qs(t), Bc(), a = t.memoizedState !== null, e !== null ? e.memoizedState !== null !== a && (t.flags |= 8192) : a && (t.flags |= 8192), a ? (l & 536870912) !== 0 && (t.flags & 128) === 0 && (zt(t), t.subtreeFlags & 6 && (t.flags |= 8192)) : zt(t), l = t.updateQueue, l !== null && xi(t, l.retryQueue), l = null, e !== null && e.memoizedState !== null && e.memoizedState.cachePool !== null && (l = e.memoizedState.cachePool.pool), a = null, t.memoizedState !== null && t.memoizedState.cachePool !== null && (a = t.memoizedState.cachePool.pool), a !== l && (t.flags |= 2048), e !== null && te(Dl), null;
+        return Qs(t), Bc(), a = t.memoizedState !== null, e !== null ? e.memoizedState !== null !== a && (t.flags |= 8192) : a && (t.flags |= 8192), a ? (l & 536870912) !== 0 && (t.flags & 128) === 0 && (At(t), t.subtreeFlags & 6 && (t.flags |= 8192)) : At(t), l = t.updateQueue, l !== null && ji(t, l.retryQueue), l = null, e !== null && e.memoizedState !== null && e.memoizedState.cachePool !== null && (l = e.memoizedState.cachePool.pool), a = null, t.memoizedState !== null && t.memoizedState.cachePool !== null && (a = t.memoizedState.cachePool.pool), a !== l && (t.flags |= 2048), e !== null && te(Dl), null;
       case 24:
-        return l = null, e !== null && (l = e.memoizedState.cache), t.memoizedState.cache !== l && (t.flags |= 2048), Ys(Gt), zt(t), null;
+        return l = null, e !== null && (l = e.memoizedState.cache), t.memoizedState.cache !== l && (t.flags |= 2048), Ys(Qt), At(t), null;
       case 25:
         return null;
       case 30:
@@ -5655,16 +5655,16 @@ Error generating stack: ` + l.message + `
     }
     throw Error(d(156, t.tag));
   }
-  function ox(e, t) {
+  function xx(e, t) {
     switch (wc(t), t.tag) {
       case 1:
         return e = t.flags, e & 65536 ? (t.flags = e & -65537 | 128, t) : null;
       case 3:
-        return Ys(Gt), Se(), e = t.flags, (e & 65536) !== 0 && (e & 128) === 0 ? (t.flags = e & -65537 | 128, t) : null;
+        return Ys(Qt), Ce(), e = t.flags, (e & 65536) !== 0 && (e & 128) === 0 ? (t.flags = e & -65537 | 128, t) : null;
       case 26:
       case 27:
       case 5:
-        return lt(t), null;
+        return at(t), null;
       case 13:
         if (Qs(t), e = t.memoizedState, e !== null && e.dehydrated !== null) {
           if (t.alternate === null)
@@ -5673,40 +5673,40 @@ Error generating stack: ` + l.message + `
         }
         return e = t.flags, e & 65536 ? (t.flags = e & -65537 | 128, t) : null;
       case 19:
-        return te(Qt), null;
+        return te(Xt), null;
       case 4:
-        return Se(), null;
+        return Ce(), null;
       case 10:
         return Ys(t.type), null;
       case 22:
       case 23:
         return Qs(t), Bc(), e !== null && te(Dl), e = t.flags, e & 65536 ? (t.flags = e & -65537 | 128, t) : null;
       case 24:
-        return Ys(Gt), null;
+        return Ys(Qt), null;
       case 25:
         return null;
       default:
         return null;
     }
   }
-  function Yo(e, t) {
+  function Xo(e, t) {
     switch (wc(t), t.tag) {
       case 3:
-        Ys(Gt), Se();
+        Ys(Qt), Ce();
         break;
       case 26:
       case 27:
       case 5:
-        lt(t);
+        at(t);
         break;
       case 4:
-        Se();
+        Ce();
         break;
       case 13:
         Qs(t);
         break;
       case 19:
-        te(Qt);
+        te(Xt);
         break;
       case 10:
         Ys(t.type);
@@ -5716,7 +5716,7 @@ Error generating stack: ` + l.message + `
         Qs(t), Bc(), e !== null && te(Dl);
         break;
       case 24:
-        Ys(Gt);
+        Ys(Qt);
     }
   }
   function ln(e, t) {
@@ -5735,7 +5735,7 @@ Error generating stack: ` + l.message + `
         } while (l !== n);
       }
     } catch (o) {
-      wt(t, t.return, o);
+      Ct(t, t.return, o);
     }
   }
   function rl(e, t, l) {
@@ -5749,13 +5749,13 @@ Error generating stack: ` + l.message + `
             var c = a.inst, o = c.destroy;
             if (o !== void 0) {
               c.destroy = void 0, n = t;
-              var g = l, T = o;
+              var p = l, T = o;
               try {
                 T();
               } catch (J) {
-                wt(
+                Ct(
                   n,
-                  g,
+                  p,
                   J
                 );
               }
@@ -5765,21 +5765,21 @@ Error generating stack: ` + l.message + `
         } while (a !== i);
       }
     } catch (J) {
-      wt(t, t.return, J);
+      Ct(t, t.return, J);
     }
   }
-  function Go(e) {
+  function Zo(e) {
     var t = e.updateQueue;
     if (t !== null) {
       var l = e.stateNode;
       try {
-        Ed(t, l);
+        zd(t, l);
       } catch (a) {
-        wt(e, e.return, a);
+        Ct(e, e.return, a);
       }
     }
   }
-  function Qo(e, t, l) {
+  function Vo(e, t, l) {
     l.props = ql(
       e.type,
       e.memoizedProps
@@ -5787,7 +5787,7 @@ Error generating stack: ` + l.message + `
     try {
       l.componentWillUnmount();
     } catch (a) {
-      wt(e, t, a);
+      Ct(e, t, a);
     }
   }
   function an(e, t) {
@@ -5809,7 +5809,7 @@ Error generating stack: ` + l.message + `
         typeof l == "function" ? e.refCleanup = l(a) : l.current = a;
       }
     } catch (n) {
-      wt(e, t, n);
+      Ct(e, t, n);
     }
   }
   function Ts(e, t) {
@@ -5819,7 +5819,7 @@ Error generating stack: ` + l.message + `
         try {
           a();
         } catch (n) {
-          wt(e, t, n);
+          Ct(e, t, n);
         } finally {
           e.refCleanup = null, e = e.alternate, e != null && (e.refCleanup = null);
         }
@@ -5827,11 +5827,11 @@ Error generating stack: ` + l.message + `
         try {
           l(null);
         } catch (n) {
-          wt(e, t, n);
+          Ct(e, t, n);
         }
       else l.current = null;
   }
-  function Xo(e) {
+  function Jo(e) {
     var t = e.type, l = e.memoizedProps, a = e.stateNode;
     try {
       e: switch (t) {
@@ -5845,24 +5845,24 @@ Error generating stack: ` + l.message + `
           l.src ? a.src = l.src : l.srcSet && (a.srcset = l.srcSet);
       }
     } catch (n) {
-      wt(e, e.return, n);
+      Ct(e, e.return, n);
     }
   }
   function fr(e, t, l) {
     try {
       var a = e.stateNode;
-      Ax(a, e.type, l, t), a[St] = t;
+      Mx(a, e.type, l, t), a[nt] = t;
     } catch (n) {
-      wt(e, e.return, n);
+      Ct(e, e.return, n);
     }
   }
-  function Zo(e) {
+  function Ko(e) {
     return e.tag === 5 || e.tag === 3 || e.tag === 26 || e.tag === 27 && jl(e.type) || e.tag === 4;
   }
   function mr(e) {
     e: for (; ; ) {
       for (; e.sibling === null; ) {
-        if (e.return === null || Zo(e.return)) return null;
+        if (e.return === null || Ko(e.return)) return null;
         e = e.return;
       }
       for (e.sibling.return = e.return, e = e.sibling; e.tag !== 5 && e.tag !== 6 && e.tag !== 18; ) {
@@ -5875,32 +5875,32 @@ Error generating stack: ` + l.message + `
   function xr(e, t, l) {
     var a = e.tag;
     if (a === 5 || a === 6)
-      e = e.stateNode, t ? (l.nodeType === 9 ? l.body : l.nodeName === "HTML" ? l.ownerDocument.body : l).insertBefore(e, t) : (t = l.nodeType === 9 ? l.body : l.nodeName === "HTML" ? l.ownerDocument.body : l, t.appendChild(e), l = l._reactRootContainer, l != null || t.onclick !== null || (t.onclick = Ci));
+      e = e.stateNode, t ? (l.nodeType === 9 ? l.body : l.nodeName === "HTML" ? l.ownerDocument.body : l).insertBefore(e, t) : (t = l.nodeType === 9 ? l.body : l.nodeName === "HTML" ? l.ownerDocument.body : l, t.appendChild(e), l = l._reactRootContainer, l != null || t.onclick !== null || (t.onclick = Ei));
     else if (a !== 4 && (a === 27 && jl(e.type) && (l = e.stateNode, t = null), e = e.child, e !== null))
       for (xr(e, t, l), e = e.sibling; e !== null; )
         xr(e, t, l), e = e.sibling;
   }
-  function ji(e, t, l) {
+  function vi(e, t, l) {
     var a = e.tag;
     if (a === 5 || a === 6)
       e = e.stateNode, t ? l.insertBefore(e, t) : l.appendChild(e);
     else if (a !== 4 && (a === 27 && jl(e.type) && (l = e.stateNode), e = e.child, e !== null))
-      for (ji(e, t, l), e = e.sibling; e !== null; )
-        ji(e, t, l), e = e.sibling;
+      for (vi(e, t, l), e = e.sibling; e !== null; )
+        vi(e, t, l), e = e.sibling;
   }
-  function Vo(e) {
+  function $o(e) {
     var t = e.stateNode, l = e.memoizedProps;
     try {
       for (var a = e.type, n = t.attributes; n.length; )
         t.removeAttributeNode(n[0]);
-      Wt(t, a, l), t[rt] = e, t[St] = l;
+      Ft(t, a, l), t[me] = e, t[nt] = l;
     } catch (i) {
-      wt(e, e.return, i);
+      Ct(e, e.return, i);
     }
   }
-  var Vs = !1, Bt = !1, jr = !1, Jo = typeof WeakSet == "function" ? WeakSet : Set, Vt = null;
-  function hx(e, t) {
-    if (e = e.containerInfo, Lr = Ui, e = ld(e), mc(e)) {
+  var Vs = !1, Bt = !1, jr = !1, Wo = typeof WeakSet == "function" ? WeakSet : Set, Jt = null;
+  function jx(e, t) {
+    if (e = e.containerInfo, Lr = Di, e = id(e), mc(e)) {
       if ("selectionStart" in e)
         var l = {
           start: e.selectionStart,
@@ -5920,28 +5920,28 @@ Error generating stack: ` + l.message + `
               l = null;
               break e;
             }
-            var c = 0, o = -1, g = -1, T = 0, J = 0, se = e, A = null;
+            var c = 0, o = -1, p = -1, T = 0, J = 0, se = e, R = null;
             t: for (; ; ) {
-              for (var q; se !== l || n !== 0 && se.nodeType !== 3 || (o = c + n), se !== i || a !== 0 && se.nodeType !== 3 || (g = c + a), se.nodeType === 3 && (c += se.nodeValue.length), (q = se.firstChild) !== null; )
-                A = se, se = q;
+              for (var H; se !== l || n !== 0 && se.nodeType !== 3 || (o = c + n), se !== i || a !== 0 && se.nodeType !== 3 || (p = c + a), se.nodeType === 3 && (c += se.nodeValue.length), (H = se.firstChild) !== null; )
+                R = se, se = H;
               for (; ; ) {
                 if (se === e) break t;
-                if (A === l && ++T === n && (o = c), A === i && ++J === a && (g = c), (q = se.nextSibling) !== null) break;
-                se = A, A = se.parentNode;
+                if (R === l && ++T === n && (o = c), R === i && ++J === a && (p = c), (H = se.nextSibling) !== null) break;
+                se = R, R = se.parentNode;
               }
-              se = q;
+              se = H;
             }
-            l = o === -1 || g === -1 ? null : { start: o, end: g };
+            l = o === -1 || p === -1 ? null : { start: o, end: p };
           } else l = null;
         }
       l = l || { start: 0, end: 0 };
     } else l = null;
-    for (Yr = { focusedElem: e, selectionRange: l }, Ui = !1, Vt = t; Vt !== null; )
-      if (t = Vt, e = t.child, (t.subtreeFlags & 1024) !== 0 && e !== null)
-        e.return = t, Vt = e;
+    for (Yr = { focusedElem: e, selectionRange: l }, Di = !1, Jt = t; Jt !== null; )
+      if (t = Jt, e = t.child, (t.subtreeFlags & 1024) !== 0 && e !== null)
+        e.return = t, Jt = e;
       else
-        for (; Vt !== null; ) {
-          switch (t = Vt, i = t.alternate, e = t.flags, t.tag) {
+        for (; Jt !== null; ) {
+          switch (t = Jt, i = t.alternate, e = t.flags, t.tag) {
             case 0:
               break;
             case 11:
@@ -5951,20 +5951,20 @@ Error generating stack: ` + l.message + `
               if ((e & 1024) !== 0 && i !== null) {
                 e = void 0, l = t, n = i.memoizedProps, i = i.memoizedState, a = l.stateNode;
                 try {
-                  var Ie = ql(
+                  var Pe = ql(
                     l.type,
                     n,
                     l.elementType === l.type
                   );
                   e = a.getSnapshotBeforeUpdate(
-                    Ie,
+                    Pe,
                     i
                   ), a.__reactInternalSnapshotBeforeUpdate = e;
-                } catch (Je) {
-                  wt(
+                } catch (We) {
+                  Ct(
                     l,
                     l.return,
-                    Je
+                    We
                   );
                 }
               }
@@ -5996,13 +5996,13 @@ Error generating stack: ` + l.message + `
               if ((e & 1024) !== 0) throw Error(d(163));
           }
           if (e = t.sibling, e !== null) {
-            e.return = t.return, Vt = e;
+            e.return = t.return, Jt = e;
             break;
           }
-          Vt = t.return;
+          Jt = t.return;
         }
   }
-  function Ko(e, t, l) {
+  function Fo(e, t, l) {
     var a = l.flags;
     switch (l.tag) {
       case 0:
@@ -6016,7 +6016,7 @@ Error generating stack: ` + l.message + `
             try {
               e.componentDidMount();
             } catch (c) {
-              wt(l, l.return, c);
+              Ct(l, l.return, c);
             }
           else {
             var n = ql(
@@ -6031,14 +6031,14 @@ Error generating stack: ` + l.message + `
                 e.__reactInternalSnapshotBeforeUpdate
               );
             } catch (c) {
-              wt(
+              Ct(
                 l,
                 l.return,
                 c
               );
             }
           }
-        a & 64 && Go(l), a & 512 && an(l, l.return);
+        a & 64 && Zo(l), a & 512 && an(l, l.return);
         break;
       case 3:
         if (ul(e, l), a & 64 && (e = l.updateQueue, e !== null)) {
@@ -6052,26 +6052,26 @@ Error generating stack: ` + l.message + `
                 t = l.child.stateNode;
             }
           try {
-            Ed(e, t);
+            zd(e, t);
           } catch (c) {
-            wt(l, l.return, c);
+            Ct(l, l.return, c);
           }
         }
         break;
       case 27:
-        t === null && a & 4 && Vo(l);
+        t === null && a & 4 && $o(l);
       case 26:
       case 5:
-        ul(e, l), t === null && a & 4 && Xo(l), a & 512 && an(l, l.return);
+        ul(e, l), t === null && a & 4 && Jo(l), a & 512 && an(l, l.return);
         break;
       case 12:
         ul(e, l);
         break;
       case 13:
-        ul(e, l), a & 4 && Fo(e, l), a & 64 && (e = l.memoizedState, e !== null && (e = e.dehydrated, e !== null && (l = yx.bind(
+        ul(e, l), a & 4 && eh(e, l), a & 64 && (e = l.memoizedState, e !== null && (e = e.dehydrated, e !== null && (l = wx.bind(
           null,
           l
-        ), Bx(e, l))));
+        ), Qx(e, l))));
         break;
       case 22:
         if (a = l.memoizedState !== null || Vs, !a) {
@@ -6090,19 +6090,19 @@ Error generating stack: ` + l.message + `
         ul(e, l);
     }
   }
-  function $o(e) {
+  function Io(e) {
     var t = e.alternate;
-    t !== null && (e.alternate = null, $o(t)), e.child = null, e.deletions = null, e.sibling = null, e.tag === 5 && (t = e.stateNode, t !== null && Ae(t)), e.stateNode = null, e.return = null, e.dependencies = null, e.memoizedProps = null, e.memoizedState = null, e.pendingProps = null, e.stateNode = null, e.updateQueue = null;
+    t !== null && (e.alternate = null, Io(t)), e.child = null, e.deletions = null, e.sibling = null, e.tag === 5 && (t = e.stateNode, t !== null && De(t)), e.stateNode = null, e.return = null, e.dependencies = null, e.memoizedProps = null, e.memoizedState = null, e.pendingProps = null, e.stateNode = null, e.updateQueue = null;
   }
-  var Ot = null, as = !1;
+  var Tt = null, as = !1;
   function Js(e, t, l) {
     for (l = l.child; l !== null; )
-      Wo(e, t, l), l = l.sibling;
+      Po(e, t, l), l = l.sibling;
   }
-  function Wo(e, t, l) {
-    if (ve && typeof ve.onCommitFiberUnmount == "function")
+  function Po(e, t, l) {
+    if (we && typeof we.onCommitFiberUnmount == "function")
       try {
-        ve.onCommitFiberUnmount(W, l);
+        we.onCommitFiberUnmount($, l);
       } catch {
       }
     switch (l.tag) {
@@ -6115,26 +6115,26 @@ Error generating stack: ` + l.message + `
         break;
       case 27:
         Bt || Ts(l, t);
-        var a = Ot, n = as;
-        jl(l.type) && (Ot = l.stateNode, as = !1), Js(
+        var a = Tt, n = as;
+        jl(l.type) && (Tt = l.stateNode, as = !1), Js(
           e,
           t,
           l
-        ), mn(l.stateNode), Ot = a, as = n;
+        ), mn(l.stateNode), Tt = a, as = n;
         break;
       case 5:
         Bt || Ts(l, t);
       case 6:
-        if (a = Ot, n = as, Ot = null, Js(
+        if (a = Tt, n = as, Tt = null, Js(
           e,
           t,
           l
-        ), Ot = a, as = n, Ot !== null)
+        ), Tt = a, as = n, Tt !== null)
           if (as)
             try {
-              (Ot.nodeType === 9 ? Ot.body : Ot.nodeName === "HTML" ? Ot.ownerDocument.body : Ot).removeChild(l.stateNode);
+              (Tt.nodeType === 9 ? Tt.body : Tt.nodeName === "HTML" ? Tt.ownerDocument.body : Tt).removeChild(l.stateNode);
             } catch (i) {
-              wt(
+              Ct(
                 l,
                 t,
                 i
@@ -6142,9 +6142,9 @@ Error generating stack: ` + l.message + `
             }
           else
             try {
-              Ot.removeChild(l.stateNode);
+              Tt.removeChild(l.stateNode);
             } catch (i) {
-              wt(
+              Ct(
                 l,
                 t,
                 i
@@ -6152,17 +6152,17 @@ Error generating stack: ` + l.message + `
             }
         break;
       case 18:
-        Ot !== null && (as ? (e = Ot, Hh(
+        Tt !== null && (as ? (e = Tt, Yh(
           e.nodeType === 9 ? e.body : e.nodeName === "HTML" ? e.ownerDocument.body : e,
           l.stateNode
-        ), _n(e)) : Hh(Ot, l.stateNode));
+        ), _n(e)) : Yh(Tt, l.stateNode));
         break;
       case 4:
-        a = Ot, n = as, Ot = l.stateNode.containerInfo, as = !0, Js(
+        a = Tt, n = as, Tt = l.stateNode.containerInfo, as = !0, Js(
           e,
           t,
           l
-        ), Ot = a, as = n;
+        ), Tt = a, as = n;
         break;
       case 0:
       case 11:
@@ -6175,7 +6175,7 @@ Error generating stack: ` + l.message + `
         );
         break;
       case 1:
-        Bt || (Ts(l, t), a = l.stateNode, typeof a.componentWillUnmount == "function" && Qo(
+        Bt || (Ts(l, t), a = l.stateNode, typeof a.componentWillUnmount == "function" && Vo(
           l,
           t,
           a
@@ -6207,30 +6207,30 @@ Error generating stack: ` + l.message + `
         );
     }
   }
-  function Fo(e, t) {
+  function eh(e, t) {
     if (t.memoizedState === null && (e = t.alternate, e !== null && (e = e.memoizedState, e !== null && (e = e.dehydrated, e !== null))))
       try {
         _n(e);
       } catch (l) {
-        wt(t, t.return, l);
+        Ct(t, t.return, l);
       }
   }
-  function fx(e) {
+  function vx(e) {
     switch (e.tag) {
       case 13:
       case 19:
         var t = e.stateNode;
-        return t === null && (t = e.stateNode = new Jo()), t;
+        return t === null && (t = e.stateNode = new Wo()), t;
       case 22:
-        return e = e.stateNode, t = e._retryCache, t === null && (t = e._retryCache = new Jo()), t;
+        return e = e.stateNode, t = e._retryCache, t === null && (t = e._retryCache = new Wo()), t;
       default:
         throw Error(d(435, e.tag));
     }
   }
   function vr(e, t) {
-    var l = fx(e);
+    var l = vx(e);
     t.forEach(function(a) {
-      var n = _x.bind(null, e, a);
+      var n = kx.bind(null, e, a);
       l.has(a) || (l.add(a), a.then(n, n));
     });
   }
@@ -6243,29 +6243,29 @@ Error generating stack: ` + l.message + `
           switch (o.tag) {
             case 27:
               if (jl(o.type)) {
-                Ot = o.stateNode, as = !1;
+                Tt = o.stateNode, as = !1;
                 break e;
               }
               break;
             case 5:
-              Ot = o.stateNode, as = !1;
+              Tt = o.stateNode, as = !1;
               break e;
             case 3:
             case 4:
-              Ot = o.stateNode.containerInfo, as = !0;
+              Tt = o.stateNode.containerInfo, as = !0;
               break e;
           }
           o = o.return;
         }
-        if (Ot === null) throw Error(d(160));
-        Wo(i, c, n), Ot = null, as = !1, i = n.alternate, i !== null && (i.return = null), n.return = null;
+        if (Tt === null) throw Error(d(160));
+        Po(i, c, n), Tt = null, as = !1, i = n.alternate, i !== null && (i.return = null), n.return = null;
       }
     if (t.subtreeFlags & 13878)
       for (t = t.child; t !== null; )
-        Io(t, e), t = t.sibling;
+        th(t, e), t = t.sibling;
   }
   var Ns = null;
-  function Io(e, t) {
+  function th(e, t) {
     var l = e.alternate, a = e.flags;
     switch (e.tag) {
       case 0:
@@ -6288,13 +6288,13 @@ Error generating stack: ` + l.message + `
                   a = e.type, l = e.memoizedProps, n = n.ownerDocument || n;
                   t: switch (a) {
                     case "title":
-                      i = n.getElementsByTagName("title")[0], (!i || i[ze] || i[rt] || i.namespaceURI === "http://www.w3.org/2000/svg" || i.hasAttribute("itemprop")) && (i = n.createElement(a), n.head.insertBefore(
+                      i = n.getElementsByTagName("title")[0], (!i || i[Ue] || i[me] || i.namespaceURI === "http://www.w3.org/2000/svg" || i.hasAttribute("itemprop")) && (i = n.createElement(a), n.head.insertBefore(
                         i,
                         n.querySelector("head > title")
-                      )), Wt(i, a, l), i[rt] = e, qt(i), a = i;
+                      )), Ft(i, a, l), i[me] = e, qt(i), a = i;
                       break e;
                     case "link":
-                      var c = Vh(
+                      var c = $h(
                         "link",
                         "href",
                         n
@@ -6306,10 +6306,10 @@ Error generating stack: ` + l.message + `
                             break t;
                           }
                       }
-                      i = n.createElement(a), Wt(i, a, l), n.head.appendChild(i);
+                      i = n.createElement(a), Ft(i, a, l), n.head.appendChild(i);
                       break;
                     case "meta":
-                      if (c = Vh(
+                      if (c = $h(
                         "meta",
                         "content",
                         n
@@ -6320,32 +6320,32 @@ Error generating stack: ` + l.message + `
                             break t;
                           }
                       }
-                      i = n.createElement(a), Wt(i, a, l), n.head.appendChild(i);
+                      i = n.createElement(a), Ft(i, a, l), n.head.appendChild(i);
                       break;
                     default:
                       throw Error(d(468, a));
                   }
-                  i[rt] = e, qt(i), a = i;
+                  i[me] = e, qt(i), a = i;
                 }
                 e.stateNode = a;
               } else
-                Jh(
+                Wh(
                   n,
                   e.type,
                   e.stateNode
                 );
             else
-              e.stateNode = Zh(
+              e.stateNode = Kh(
                 n,
                 a,
                 e.memoizedProps
               );
           else
-            i !== a ? (i === null ? l.stateNode !== null && (l = l.stateNode, l.parentNode.removeChild(l)) : i.count--, a === null ? Jh(
+            i !== a ? (i === null ? l.stateNode !== null && (l = l.stateNode, l.parentNode.removeChild(l)) : i.count--, a === null ? Wh(
               n,
               e.type,
               e.stateNode
-            ) : Zh(
+            ) : Kh(
               n,
               a,
               e.memoizedProps
@@ -6367,9 +6367,9 @@ Error generating stack: ` + l.message + `
         if (rs(t, e), us(e), a & 512 && (Bt || l === null || Ts(l, l.return)), e.flags & 32) {
           n = e.stateNode;
           try {
-            Ql(n, "");
-          } catch (q) {
-            wt(e, e.return, q);
+            Xl(n, "");
+          } catch (H) {
+            Ct(e, e.return, H);
           }
         }
         a & 4 && e.stateNode != null && (n = e.memoizedProps, fr(
@@ -6385,22 +6385,22 @@ Error generating stack: ` + l.message + `
           a = e.memoizedProps, l = e.stateNode;
           try {
             l.nodeValue = a;
-          } catch (q) {
-            wt(e, e.return, q);
+          } catch (H) {
+            Ct(e, e.return, H);
           }
         }
         break;
       case 3:
-        if (zi = null, n = Ns, Ns = Oi(t.containerInfo), rs(t, e), Ns = n, us(e), a & 4 && l !== null && l.memoizedState.isDehydrated)
+        if (Ai = null, n = Ns, Ns = Ti(t.containerInfo), rs(t, e), Ns = n, us(e), a & 4 && l !== null && l.memoizedState.isDehydrated)
           try {
             _n(t.containerInfo);
-          } catch (q) {
-            wt(e, e.return, q);
+          } catch (H) {
+            Ct(e, e.return, H);
           }
-        jr && (jr = !1, Po(e));
+        jr && (jr = !1, sh(e));
         break;
       case 4:
-        a = Ns, Ns = Oi(
+        a = Ns, Ns = Ti(
           e.stateNode.containerInfo
         ), rs(t, e), us(e), Ns = a;
         break;
@@ -6408,35 +6408,35 @@ Error generating stack: ` + l.message + `
         rs(t, e), us(e);
         break;
       case 13:
-        rs(t, e), us(e), e.child.flags & 8192 && e.memoizedState !== null != (l !== null && l.memoizedState !== null) && (Nr = Le()), a & 4 && (a = e.updateQueue, a !== null && (e.updateQueue = null, vr(e, a)));
+        rs(t, e), us(e), e.child.flags & 8192 && e.memoizedState !== null != (l !== null && l.memoizedState !== null) && (Nr = Be()), a & 4 && (a = e.updateQueue, a !== null && (e.updateQueue = null, vr(e, a)));
         break;
       case 22:
         n = e.memoizedState !== null;
-        var g = l !== null && l.memoizedState !== null, T = Vs, J = Bt;
-        if (Vs = T || n, Bt = J || g, rs(t, e), Bt = J, Vs = T, us(e), a & 8192)
-          e: for (t = e.stateNode, t._visibility = n ? t._visibility & -2 : t._visibility | 1, n && (l === null || g || Vs || Bt || Hl(e)), l = null, t = e; ; ) {
+        var p = l !== null && l.memoizedState !== null, T = Vs, J = Bt;
+        if (Vs = T || n, Bt = J || p, rs(t, e), Bt = J, Vs = T, us(e), a & 8192)
+          e: for (t = e.stateNode, t._visibility = n ? t._visibility & -2 : t._visibility | 1, n && (l === null || p || Vs || Bt || Hl(e)), l = null, t = e; ; ) {
             if (t.tag === 5 || t.tag === 26) {
               if (l === null) {
-                g = l = t;
+                p = l = t;
                 try {
-                  if (i = g.stateNode, n)
+                  if (i = p.stateNode, n)
                     c = i.style, typeof c.setProperty == "function" ? c.setProperty("display", "none", "important") : c.display = "none";
                   else {
-                    o = g.stateNode;
-                    var se = g.memoizedProps.style, A = se != null && se.hasOwnProperty("display") ? se.display : null;
-                    o.style.display = A == null || typeof A == "boolean" ? "" : ("" + A).trim();
+                    o = p.stateNode;
+                    var se = p.memoizedProps.style, R = se != null && se.hasOwnProperty("display") ? se.display : null;
+                    o.style.display = R == null || typeof R == "boolean" ? "" : ("" + R).trim();
                   }
-                } catch (q) {
-                  wt(g, g.return, q);
+                } catch (H) {
+                  Ct(p, p.return, H);
                 }
               }
             } else if (t.tag === 6) {
               if (l === null) {
-                g = t;
+                p = t;
                 try {
-                  g.stateNode.nodeValue = n ? "" : g.memoizedProps;
-                } catch (q) {
-                  wt(g, g.return, q);
+                  p.stateNode.nodeValue = n ? "" : p.memoizedProps;
+                } catch (H) {
+                  Ct(p, p.return, H);
                 }
               }
             } else if ((t.tag !== 22 && t.tag !== 23 || t.memoizedState === null || t === e) && t.child !== null) {
@@ -6468,7 +6468,7 @@ Error generating stack: ` + l.message + `
     if (t & 2) {
       try {
         for (var l, a = e.return; a !== null; ) {
-          if (Zo(a)) {
+          if (Ko(a)) {
             l = a;
             break;
           }
@@ -6478,44 +6478,44 @@ Error generating stack: ` + l.message + `
         switch (l.tag) {
           case 27:
             var n = l.stateNode, i = mr(e);
-            ji(e, i, n);
+            vi(e, i, n);
             break;
           case 5:
             var c = l.stateNode;
-            l.flags & 32 && (Ql(c, ""), l.flags &= -33);
+            l.flags & 32 && (Xl(c, ""), l.flags &= -33);
             var o = mr(e);
-            ji(e, o, c);
+            vi(e, o, c);
             break;
           case 3:
           case 4:
-            var g = l.stateNode.containerInfo, T = mr(e);
+            var p = l.stateNode.containerInfo, T = mr(e);
             xr(
               e,
               T,
-              g
+              p
             );
             break;
           default:
             throw Error(d(161));
         }
       } catch (J) {
-        wt(e, e.return, J);
+        Ct(e, e.return, J);
       }
       e.flags &= -3;
     }
     t & 4096 && (e.flags &= -4097);
   }
-  function Po(e) {
+  function sh(e) {
     if (e.subtreeFlags & 1024)
       for (e = e.child; e !== null; ) {
         var t = e;
-        Po(t), t.tag === 5 && t.flags & 1024 && t.stateNode.reset(), e = e.sibling;
+        sh(t), t.tag === 5 && t.flags & 1024 && t.stateNode.reset(), e = e.sibling;
       }
   }
   function ul(e, t) {
     if (t.subtreeFlags & 8772)
       for (t = t.child; t !== null; )
-        Ko(e, t.alternate, t), t = t.sibling;
+        Fo(e, t.alternate, t), t = t.sibling;
   }
   function Hl(e) {
     for (e = e.child; e !== null; ) {
@@ -6530,7 +6530,7 @@ Error generating stack: ` + l.message + `
         case 1:
           Ts(t, t.return);
           var l = t.stateNode;
-          typeof l.componentWillUnmount == "function" && Qo(
+          typeof l.componentWillUnmount == "function" && Vo(
             t,
             t.return,
             l
@@ -6576,30 +6576,30 @@ Error generating stack: ` + l.message + `
             try {
               n.componentDidMount();
             } catch (T) {
-              wt(a, a.return, T);
+              Ct(a, a.return, T);
             }
           if (a = i, n = a.updateQueue, n !== null) {
             var o = a.stateNode;
             try {
-              var g = n.shared.hiddenCallbacks;
-              if (g !== null)
-                for (n.shared.hiddenCallbacks = null, n = 0; n < g.length; n++)
-                  Cd(g[n], o);
+              var p = n.shared.hiddenCallbacks;
+              if (p !== null)
+                for (n.shared.hiddenCallbacks = null, n = 0; n < p.length; n++)
+                  Td(p[n], o);
             } catch (T) {
-              wt(a, a.return, T);
+              Ct(a, a.return, T);
             }
           }
-          l && c & 64 && Go(i), an(i, i.return);
+          l && c & 64 && Zo(i), an(i, i.return);
           break;
         case 27:
-          Vo(i);
+          $o(i);
         case 26:
         case 5:
           dl(
             n,
             i,
             l
-          ), l && a === null && c & 4 && Xo(i), an(i, i.return);
+          ), l && a === null && c & 4 && Jo(i), an(i, i.return);
           break;
         case 12:
           dl(
@@ -6613,7 +6613,7 @@ Error generating stack: ` + l.message + `
             n,
             i,
             l
-          ), l && c & 4 && Fo(n, i);
+          ), l && c & 4 && eh(n, i);
           break;
         case 22:
           i.memoizedState === null && dl(
@@ -6644,14 +6644,14 @@ Error generating stack: ` + l.message + `
   function zs(e, t, l, a) {
     if (t.subtreeFlags & 10256)
       for (t = t.child; t !== null; )
-        eh(
+        lh(
           e,
           t,
           l,
           a
         ), t = t.sibling;
   }
-  function eh(e, t, l, a) {
+  function lh(e, t, l, a) {
     var n = t.flags;
     switch (t.tag) {
       case 0:
@@ -6696,8 +6696,8 @@ Error generating stack: ` + l.message + `
               e.passiveEffectDuration,
               -0
             );
-          } catch (g) {
-            wt(t, t.return, g);
+          } catch (p) {
+            Ct(t, t.return, p);
           }
         } else
           zs(
@@ -6728,7 +6728,7 @@ Error generating stack: ` + l.message + `
           t,
           l,
           a
-        ) : (i._visibility |= 2, ra(
+        ) : (i._visibility |= 2, ua(
           e,
           t,
           l,
@@ -6753,18 +6753,18 @@ Error generating stack: ` + l.message + `
         );
     }
   }
-  function ra(e, t, l, a, n) {
+  function ua(e, t, l, a, n) {
     for (n = n && (t.subtreeFlags & 10256) !== 0, t = t.child; t !== null; ) {
-      var i = e, c = t, o = l, g = a, T = c.flags;
+      var i = e, c = t, o = l, p = a, T = c.flags;
       switch (c.tag) {
         case 0:
         case 11:
         case 15:
-          ra(
+          ua(
             i,
             c,
             o,
-            g,
+            p,
             n
           ), ln(8, c);
           break;
@@ -6772,20 +6772,20 @@ Error generating stack: ` + l.message + `
           break;
         case 22:
           var J = c.stateNode;
-          c.memoizedState !== null ? J._visibility & 2 ? ra(
+          c.memoizedState !== null ? J._visibility & 2 ? ua(
             i,
             c,
             o,
-            g,
+            p,
             n
           ) : nn(
             i,
             c
-          ) : (J._visibility |= 2, ra(
+          ) : (J._visibility |= 2, ua(
             i,
             c,
             o,
-            g,
+            p,
             n
           )), n && T & 2048 && pr(
             c.alternate,
@@ -6793,20 +6793,20 @@ Error generating stack: ` + l.message + `
           );
           break;
         case 24:
-          ra(
+          ua(
             i,
             c,
             o,
-            g,
+            p,
             n
           ), n && T & 2048 && gr(c.alternate, c);
           break;
         default:
-          ra(
+          ua(
             i,
             c,
             o,
-            g,
+            p,
             n
           );
       }
@@ -6834,36 +6834,36 @@ Error generating stack: ` + l.message + `
       }
   }
   var cn = 8192;
-  function ua(e) {
+  function da(e) {
     if (e.subtreeFlags & cn)
       for (e = e.child; e !== null; )
-        th(e), e = e.sibling;
+        ah(e), e = e.sibling;
   }
-  function th(e) {
+  function ah(e) {
     switch (e.tag) {
       case 26:
-        ua(e), e.flags & cn && e.memoizedState !== null && Ix(
+        da(e), e.flags & cn && e.memoizedState !== null && sj(
           Ns,
           e.memoizedState,
           e.memoizedProps
         );
         break;
       case 5:
-        ua(e);
+        da(e);
         break;
       case 3:
       case 4:
         var t = Ns;
-        Ns = Oi(e.stateNode.containerInfo), ua(e), Ns = t;
+        Ns = Ti(e.stateNode.containerInfo), da(e), Ns = t;
         break;
       case 22:
-        e.memoizedState === null && (t = e.alternate, t !== null && t.memoizedState !== null ? (t = cn, cn = 16777216, ua(e), cn = t) : ua(e));
+        e.memoizedState === null && (t = e.alternate, t !== null && t.memoizedState !== null ? (t = cn, cn = 16777216, da(e), cn = t) : da(e));
         break;
       default:
-        ua(e);
+        da(e);
     }
   }
-  function sh(e) {
+  function nh(e) {
     var t = e.alternate;
     if (t !== null && (e = t.child, e !== null)) {
       t.child = null;
@@ -6878,18 +6878,18 @@ Error generating stack: ` + l.message + `
       if (t !== null)
         for (var l = 0; l < t.length; l++) {
           var a = t[l];
-          Vt = a, ah(
+          Jt = a, ch(
             a,
             e
           );
         }
-      sh(e);
+      nh(e);
     }
     if (e.subtreeFlags & 10256)
       for (e = e.child; e !== null; )
-        lh(e), e = e.sibling;
+        ih(e), e = e.sibling;
   }
-  function lh(e) {
+  function ih(e) {
     switch (e.tag) {
       case 0:
       case 11:
@@ -6904,44 +6904,44 @@ Error generating stack: ` + l.message + `
         break;
       case 22:
         var t = e.stateNode;
-        e.memoizedState !== null && t._visibility & 2 && (e.return === null || e.return.tag !== 13) ? (t._visibility &= -3, vi(e)) : rn(e);
+        e.memoizedState !== null && t._visibility & 2 && (e.return === null || e.return.tag !== 13) ? (t._visibility &= -3, pi(e)) : rn(e);
         break;
       default:
         rn(e);
     }
   }
-  function vi(e) {
+  function pi(e) {
     var t = e.deletions;
     if ((e.flags & 16) !== 0) {
       if (t !== null)
         for (var l = 0; l < t.length; l++) {
           var a = t[l];
-          Vt = a, ah(
+          Jt = a, ch(
             a,
             e
           );
         }
-      sh(e);
+      nh(e);
     }
     for (e = e.child; e !== null; ) {
       switch (t = e, t.tag) {
         case 0:
         case 11:
         case 15:
-          rl(8, t, t.return), vi(t);
+          rl(8, t, t.return), pi(t);
           break;
         case 22:
-          l = t.stateNode, l._visibility & 2 && (l._visibility &= -3, vi(t));
+          l = t.stateNode, l._visibility & 2 && (l._visibility &= -3, pi(t));
           break;
         default:
-          vi(t);
+          pi(t);
       }
       e = e.sibling;
     }
   }
-  function ah(e, t) {
-    for (; Vt !== null; ) {
-      var l = Vt;
+  function ch(e, t) {
+    for (; Jt !== null; ) {
+      var l = Jt;
       switch (l.tag) {
         case 0:
         case 11:
@@ -6958,65 +6958,65 @@ Error generating stack: ` + l.message + `
         case 24:
           Qa(l.memoizedState.cache);
       }
-      if (a = l.child, a !== null) a.return = l, Vt = a;
+      if (a = l.child, a !== null) a.return = l, Jt = a;
       else
-        e: for (l = e; Vt !== null; ) {
-          a = Vt;
+        e: for (l = e; Jt !== null; ) {
+          a = Jt;
           var n = a.sibling, i = a.return;
-          if ($o(a), a === l) {
-            Vt = null;
+          if (Io(a), a === l) {
+            Jt = null;
             break e;
           }
           if (n !== null) {
-            n.return = i, Vt = n;
+            n.return = i, Jt = n;
             break e;
           }
-          Vt = i;
+          Jt = i;
         }
     }
   }
-  var mx = {
+  var px = {
     getCacheForType: function(e) {
-      var t = Pt(Gt), l = t.data.get(e);
+      var t = Pt(Qt), l = t.data.get(e);
       return l === void 0 && (l = e(), t.data.set(e, l)), l;
     }
-  }, xx = typeof WeakMap == "function" ? WeakMap : Map, gt = 0, kt = null, ot = null, ft = 0, bt = 0, ds = null, ol = !1, da = !1, br = !1, Ks = 0, Dt = 0, hl = 0, Bl = 0, yr = 0, bs = 0, oa = 0, un = null, ns = null, _r = !1, Nr = 0, pi = 1 / 0, gi = null, fl = null, $t = 0, ml = null, ha = null, fa = 0, Sr = 0, wr = null, nh = null, dn = 0, kr = null;
+  }, gx = typeof WeakMap == "function" ? WeakMap : Map, yt = 0, Et = null, mt = null, vt = 0, _t = 0, ds = null, ol = !1, oa = !1, br = !1, Ks = 0, Dt = 0, hl = 0, Bl = 0, yr = 0, bs = 0, ha = 0, un = null, ns = null, _r = !1, Nr = 0, gi = 1 / 0, bi = null, fl = null, Wt = 0, ml = null, fa = null, ma = 0, Sr = 0, wr = null, rh = null, dn = 0, kr = null;
   function os() {
-    if ((gt & 2) !== 0 && ft !== 0)
-      return ft & -ft;
-    if (y.T !== null) {
-      var e = ea;
+    if ((yt & 2) !== 0 && vt !== 0)
+      return vt & -vt;
+    if (b.T !== null) {
+      var e = ta;
       return e !== 0 ? e : Rr();
     }
-    return vt();
+    return Nt();
   }
-  function ih() {
-    bs === 0 && (bs = (ft & 536870912) === 0 || jt ? xt() : 536870912);
+  function uh() {
+    bs === 0 && (bs = (vt & 536870912) === 0 || bt ? pt() : 536870912);
     var e = gs.current;
     return e !== null && (e.flags |= 32), bs;
   }
   function hs(e, t, l) {
-    (e === kt && (bt === 2 || bt === 9) || e.cancelPendingCommit !== null) && (ma(e, 0), xl(
+    (e === Et && (_t === 2 || _t === 9) || e.cancelPendingCommit !== null) && (xa(e, 0), xl(
       e,
-      ft,
+      vt,
       bs,
       !1
-    )), ue(e, l), ((gt & 2) === 0 || e !== kt) && (e === kt && ((gt & 2) === 0 && (Bl |= l), Dt === 4 && xl(
+    )), ue(e, l), ((yt & 2) === 0 || e !== Et) && (e === Et && ((yt & 2) === 0 && (Bl |= l), Dt === 4 && xl(
       e,
-      ft,
+      vt,
       bs,
       !1
     )), As(e));
   }
-  function ch(e, t, l) {
-    if ((gt & 6) !== 0) throw Error(d(327));
-    var a = !l && (t & 124) === 0 && (t & e.expiredLanes) === 0 || ge(e, t), n = a ? px(e, t) : Or(e, t, !0), i = a;
+  function dh(e, t, l) {
+    if ((yt & 6) !== 0) throw Error(d(327));
+    var a = !l && (t & 124) === 0 && (t & e.expiredLanes) === 0 || ge(e, t), n = a ? _x(e, t) : Or(e, t, !0), i = a;
     do {
       if (n === 0) {
-        da && !a && xl(e, t, 0, !1);
+        oa && !a && xl(e, t, 0, !1);
         break;
       } else {
-        if (l = e.current.alternate, i && !jx(l)) {
+        if (l = e.current.alternate, i && !bx(l)) {
           n = Or(e, t, !1), i = !1;
           continue;
         }
@@ -7030,13 +7030,13 @@ Error generating stack: ` + l.message + `
             e: {
               var o = e;
               n = un;
-              var g = o.current.memoizedState.isDehydrated;
-              if (g && (ma(o, c).flags |= 256), c = Or(
+              var p = o.current.memoizedState.isDehydrated;
+              if (p && (xa(o, c).flags |= 256), c = Or(
                 o,
                 c,
                 !1
               ), c !== 2) {
-                if (br && !g) {
+                if (br && !p) {
                   o.errorRecoveryDisabledLanes |= i, Bl |= i, n = 4;
                   break e;
                 }
@@ -7051,7 +7051,7 @@ Error generating stack: ` + l.message + `
           }
         }
         if (n === 1) {
-          ma(e, 0), xl(e, t, 0, !0);
+          xa(e, 0), xl(e, t, 0, !0);
           break;
         }
         e: {
@@ -7078,25 +7078,25 @@ Error generating stack: ` + l.message + `
             default:
               throw Error(d(329));
           }
-          if ((t & 62914560) === t && (n = Nr + 300 - Le(), 10 < n)) {
+          if ((t & 62914560) === t && (n = Nr + 300 - Be(), 10 < n)) {
             if (xl(
               a,
               t,
               bs,
               !ol
-            ), be(a, 0, !0) !== 0) break e;
-            a.timeoutHandle = Mh(
-              rh.bind(
+            ), ye(a, 0, !0) !== 0) break e;
+            a.timeoutHandle = Bh(
+              oh.bind(
                 null,
                 a,
                 l,
                 ns,
-                gi,
+                bi,
                 _r,
                 t,
                 bs,
                 Bl,
-                oa,
+                ha,
                 ol,
                 i,
                 2,
@@ -7107,16 +7107,16 @@ Error generating stack: ` + l.message + `
             );
             break e;
           }
-          rh(
+          oh(
             a,
             l,
             ns,
-            gi,
+            bi,
             _r,
             t,
             bs,
             Bl,
-            oa,
+            ha,
             ol,
             i,
             0,
@@ -7129,10 +7129,10 @@ Error generating stack: ` + l.message + `
     } while (!0);
     As(e);
   }
-  function rh(e, t, l, a, n, i, c, o, g, T, J, se, A, q) {
-    if (e.timeoutHandle = -1, se = t.subtreeFlags, (se & 8192 || (se & 16785408) === 16785408) && (vn = { stylesheets: null, count: 0, unsuspend: Fx }, th(t), se = Px(), se !== null)) {
+  function oh(e, t, l, a, n, i, c, o, p, T, J, se, R, H) {
+    if (e.timeoutHandle = -1, se = t.subtreeFlags, (se & 8192 || (se & 16785408) === 16785408) && (vn = { stylesheets: null, count: 0, unsuspend: tj }, ah(t), se = lj(), se !== null)) {
       e.cancelPendingCommit = se(
-        xh.bind(
+        ph.bind(
           null,
           e,
           t,
@@ -7142,16 +7142,16 @@ Error generating stack: ` + l.message + `
           n,
           c,
           o,
-          g,
+          p,
           J,
           1,
-          A,
-          q
+          R,
+          H
         )
       ), xl(e, i, c, !T);
       return;
     }
-    xh(
+    ph(
       e,
       t,
       i,
@@ -7160,10 +7160,10 @@ Error generating stack: ` + l.message + `
       n,
       c,
       o,
-      g
+      p
     );
   }
-  function jx(e) {
+  function bx(e) {
     for (var t = e; ; ) {
       var l = t.tag;
       if ((l === 0 || l === 11 || l === 15) && t.flags & 16384 && (l = t.updateQueue, l !== null && (l = l.stores, l !== null)))
@@ -7192,69 +7192,69 @@ Error generating stack: ` + l.message + `
   function xl(e, t, l, a) {
     t &= ~yr, t &= ~Bl, e.suspendedLanes |= t, e.pingedLanes &= ~t, a && (e.warmLanes |= t), a = e.expirationTimes;
     for (var n = t; 0 < n; ) {
-      var i = 31 - tt(n), c = 1 << i;
+      var i = 31 - Xe(n), c = 1 << i;
       a[i] = -1, n &= ~c;
     }
-    l !== 0 && G(e, l, t);
+    l !== 0 && ut(e, l, t);
   }
-  function bi() {
-    return (gt & 6) === 0 ? (on(0), !1) : !0;
+  function yi() {
+    return (yt & 6) === 0 ? (on(0), !1) : !0;
   }
   function Cr() {
-    if (ot !== null) {
-      if (bt === 0)
-        var e = ot.return;
+    if (mt !== null) {
+      if (_t === 0)
+        var e = mt.return;
       else
-        e = ot, Ls = Rl = null, Xc(e), ia = null, en = 0, e = ot;
+        e = mt, Ls = Rl = null, Xc(e), ca = null, en = 0, e = mt;
       for (; e !== null; )
-        Yo(e.alternate, e), e = e.return;
-      ot = null;
+        Xo(e.alternate, e), e = e.return;
+      mt = null;
     }
   }
-  function ma(e, t) {
+  function xa(e, t) {
     var l = e.timeoutHandle;
-    l !== -1 && (e.timeoutHandle = -1, Ux(l)), l = e.cancelPendingCommit, l !== null && (e.cancelPendingCommit = null, l()), Cr(), kt = e, ot = l = qs(e.current, null), ft = t, bt = 0, ds = null, ol = !1, da = ge(e, t), br = !1, oa = bs = yr = Bl = hl = Dt = 0, ns = un = null, _r = !1, (t & 8) !== 0 && (t |= t & 32);
+    l !== -1 && (e.timeoutHandle = -1, Hx(l)), l = e.cancelPendingCommit, l !== null && (e.cancelPendingCommit = null, l()), Cr(), Et = e, mt = l = qs(e.current, null), vt = t, _t = 0, ds = null, ol = !1, oa = ge(e, t), br = !1, ha = bs = yr = Bl = hl = Dt = 0, ns = un = null, _r = !1, (t & 8) !== 0 && (t |= t & 32);
     var a = e.entangledLanes;
     if (a !== 0)
       for (e = e.entanglements, a &= t; 0 < a; ) {
-        var n = 31 - tt(a), i = 1 << n;
+        var n = 31 - Xe(a), i = 1 << n;
         t |= e[n], a &= ~i;
       }
-    return Ks = t, Gn(), l;
+    return Ks = t, Qn(), l;
   }
-  function uh(e, t) {
-    ct = null, y.H = ci, t === Za || t === Fn ? (t = wd(), bt = 3) : t === _d ? (t = wd(), bt = 4) : bt = t === Co ? 8 : t !== null && typeof t == "object" && typeof t.then == "function" ? 6 : 1, ds = t, ot === null && (Dt = 1, hi(
+  function hh(e, t) {
+    ot = null, b.H = ri, t === Za || t === In ? (t = Ed(), _t = 3) : t === wd ? (t = Ed(), _t = 4) : _t = t === To ? 8 : t !== null && typeof t == "object" && typeof t.then == "function" ? 6 : 1, ds = t, mt === null && (Dt = 1, fi(
       e,
       xs(t, e.current)
     ));
   }
-  function dh() {
-    var e = y.H;
-    return y.H = ci, e === null ? ci : e;
+  function fh() {
+    var e = b.H;
+    return b.H = ri, e === null ? ri : e;
   }
-  function oh() {
-    var e = y.A;
-    return y.A = mx, e;
+  function mh() {
+    var e = b.A;
+    return b.A = px, e;
   }
   function Er() {
-    Dt = 4, ol || (ft & 4194048) !== ft && gs.current !== null || (da = !0), (hl & 134217727) === 0 && (Bl & 134217727) === 0 || kt === null || xl(
-      kt,
-      ft,
+    Dt = 4, ol || (vt & 4194048) !== vt && gs.current !== null || (oa = !0), (hl & 134217727) === 0 && (Bl & 134217727) === 0 || Et === null || xl(
+      Et,
+      vt,
       bs,
       !1
     );
   }
   function Or(e, t, l) {
-    var a = gt;
-    gt |= 2;
-    var n = dh(), i = oh();
-    (kt !== e || ft !== t) && (gi = null, ma(e, t)), t = !1;
+    var a = yt;
+    yt |= 2;
+    var n = fh(), i = mh();
+    (Et !== e || vt !== t) && (bi = null, xa(e, t)), t = !1;
     var c = Dt;
     e: do
       try {
-        if (bt !== 0 && ot !== null) {
-          var o = ot, g = ds;
-          switch (bt) {
+        if (_t !== 0 && mt !== null) {
+          var o = mt, p = ds;
+          switch (_t) {
             case 8:
               Cr(), c = 6;
               break e;
@@ -7263,86 +7263,86 @@ Error generating stack: ` + l.message + `
             case 9:
             case 6:
               gs.current === null && (t = !0);
-              var T = bt;
-              if (bt = 0, ds = null, xa(e, o, g, T), l && da) {
+              var T = _t;
+              if (_t = 0, ds = null, ja(e, o, p, T), l && oa) {
                 c = 0;
                 break e;
               }
               break;
             default:
-              T = bt, bt = 0, ds = null, xa(e, o, g, T);
+              T = _t, _t = 0, ds = null, ja(e, o, p, T);
           }
         }
-        vx(), c = Dt;
+        yx(), c = Dt;
         break;
       } catch (J) {
-        uh(e, J);
+        hh(e, J);
       }
     while (!0);
-    return t && e.shellSuspendCounter++, Ls = Rl = null, gt = a, y.H = n, y.A = i, ot === null && (kt = null, ft = 0, Gn()), c;
+    return t && e.shellSuspendCounter++, Ls = Rl = null, yt = a, b.H = n, b.A = i, mt === null && (Et = null, vt = 0, Qn()), c;
   }
-  function vx() {
-    for (; ot !== null; ) hh(ot);
+  function yx() {
+    for (; mt !== null; ) xh(mt);
   }
-  function px(e, t) {
-    var l = gt;
-    gt |= 2;
-    var a = dh(), n = oh();
-    kt !== e || ft !== t ? (gi = null, pi = Le() + 500, ma(e, t)) : da = ge(
+  function _x(e, t) {
+    var l = yt;
+    yt |= 2;
+    var a = fh(), n = mh();
+    Et !== e || vt !== t ? (bi = null, gi = Be() + 500, xa(e, t)) : oa = ge(
       e,
       t
     );
     e: do
       try {
-        if (bt !== 0 && ot !== null) {
-          t = ot;
+        if (_t !== 0 && mt !== null) {
+          t = mt;
           var i = ds;
-          t: switch (bt) {
+          t: switch (_t) {
             case 1:
-              bt = 0, ds = null, xa(e, t, i, 1);
+              _t = 0, ds = null, ja(e, t, i, 1);
               break;
             case 2:
             case 9:
-              if (Nd(i)) {
-                bt = 0, ds = null, fh(t);
+              if (kd(i)) {
+                _t = 0, ds = null, jh(t);
                 break;
               }
               t = function() {
-                bt !== 2 && bt !== 9 || kt !== e || (bt = 7), As(e);
+                _t !== 2 && _t !== 9 || Et !== e || (_t = 7), As(e);
               }, i.then(t, t);
               break e;
             case 3:
-              bt = 7;
+              _t = 7;
               break e;
             case 4:
-              bt = 5;
+              _t = 5;
               break e;
             case 7:
-              Nd(i) ? (bt = 0, ds = null, fh(t)) : (bt = 0, ds = null, xa(e, t, i, 7));
+              kd(i) ? (_t = 0, ds = null, jh(t)) : (_t = 0, ds = null, ja(e, t, i, 7));
               break;
             case 5:
               var c = null;
-              switch (ot.tag) {
+              switch (mt.tag) {
                 case 26:
-                  c = ot.memoizedState;
+                  c = mt.memoizedState;
                 case 5:
                 case 27:
-                  var o = ot;
-                  if (!c || Kh(c)) {
-                    bt = 0, ds = null;
-                    var g = o.sibling;
-                    if (g !== null) ot = g;
+                  var o = mt;
+                  if (!c || Fh(c)) {
+                    _t = 0, ds = null;
+                    var p = o.sibling;
+                    if (p !== null) mt = p;
                     else {
                       var T = o.return;
-                      T !== null ? (ot = T, yi(T)) : ot = null;
+                      T !== null ? (mt = T, _i(T)) : mt = null;
                     }
                     break t;
                   }
               }
-              bt = 0, ds = null, xa(e, t, i, 5);
+              _t = 0, ds = null, ja(e, t, i, 5);
               break;
             case 6:
-              bt = 0, ds = null, xa(e, t, i, 6);
+              _t = 0, ds = null, ja(e, t, i, 6);
               break;
             case 8:
               Cr(), Dt = 6;
@@ -7351,242 +7351,242 @@ Error generating stack: ` + l.message + `
               throw Error(d(462));
           }
         }
-        gx();
+        Nx();
         break;
       } catch (J) {
-        uh(e, J);
+        hh(e, J);
       }
     while (!0);
-    return Ls = Rl = null, y.H = a, y.A = n, gt = l, ot !== null ? 0 : (kt = null, ft = 0, Gn(), Dt);
+    return Ls = Rl = null, b.H = a, b.A = n, yt = l, mt !== null ? 0 : (Et = null, vt = 0, Qn(), Dt);
   }
-  function gx() {
-    for (; ot !== null && !De(); )
-      hh(ot);
+  function Nx() {
+    for (; mt !== null && !qe(); )
+      xh(mt);
   }
-  function hh(e) {
-    var t = Bo(e.alternate, e, Ks);
-    e.memoizedProps = e.pendingProps, t === null ? yi(e) : ot = t;
+  function xh(e) {
+    var t = Go(e.alternate, e, Ks);
+    e.memoizedProps = e.pendingProps, t === null ? _i(e) : mt = t;
   }
-  function fh(e) {
+  function jh(e) {
     var t = e, l = t.alternate;
     switch (t.tag) {
       case 15:
       case 0:
-        t = Ro(
+        t = Mo(
           l,
           t,
           t.pendingProps,
           t.type,
           void 0,
-          ft
+          vt
         );
         break;
       case 11:
-        t = Ro(
+        t = Mo(
           l,
           t,
           t.pendingProps,
           t.type.render,
           t.ref,
-          ft
+          vt
         );
         break;
       case 5:
         Xc(t);
       default:
-        Yo(l, t), t = ot = fd(t, Ks), t = Bo(l, t, Ks);
+        Xo(l, t), t = mt = jd(t, Ks), t = Go(l, t, Ks);
     }
-    e.memoizedProps = e.pendingProps, t === null ? yi(e) : ot = t;
+    e.memoizedProps = e.pendingProps, t === null ? _i(e) : mt = t;
   }
-  function xa(e, t, l, a) {
-    Ls = Rl = null, Xc(t), ia = null, en = 0;
+  function ja(e, t, l, a) {
+    Ls = Rl = null, Xc(t), ca = null, en = 0;
     var n = t.return;
     try {
-      if (rx(
+      if (hx(
         e,
         n,
         t,
         l,
-        ft
+        vt
       )) {
-        Dt = 1, hi(
+        Dt = 1, fi(
           e,
           xs(l, e.current)
-        ), ot = null;
+        ), mt = null;
         return;
       }
     } catch (i) {
-      if (n !== null) throw ot = n, i;
-      Dt = 1, hi(
+      if (n !== null) throw mt = n, i;
+      Dt = 1, fi(
         e,
         xs(l, e.current)
-      ), ot = null;
+      ), mt = null;
       return;
     }
-    t.flags & 32768 ? (jt || a === 1 ? e = !0 : da || (ft & 536870912) !== 0 ? e = !1 : (ol = e = !0, (a === 2 || a === 9 || a === 3 || a === 6) && (a = gs.current, a !== null && a.tag === 13 && (a.flags |= 16384))), mh(t, e)) : yi(t);
+    t.flags & 32768 ? (bt || a === 1 ? e = !0 : oa || (vt & 536870912) !== 0 ? e = !1 : (ol = e = !0, (a === 2 || a === 9 || a === 3 || a === 6) && (a = gs.current, a !== null && a.tag === 13 && (a.flags |= 16384))), vh(t, e)) : _i(t);
   }
-  function yi(e) {
+  function _i(e) {
     var t = e;
     do {
       if ((t.flags & 32768) !== 0) {
-        mh(
+        vh(
           t,
           ol
         );
         return;
       }
       e = t.return;
-      var l = dx(
+      var l = mx(
         t.alternate,
         t,
         Ks
       );
       if (l !== null) {
-        ot = l;
+        mt = l;
         return;
       }
       if (t = t.sibling, t !== null) {
-        ot = t;
+        mt = t;
         return;
       }
-      ot = t = e;
+      mt = t = e;
     } while (t !== null);
     Dt === 0 && (Dt = 5);
   }
-  function mh(e, t) {
+  function vh(e, t) {
     do {
-      var l = ox(e.alternate, e);
+      var l = xx(e.alternate, e);
       if (l !== null) {
-        l.flags &= 32767, ot = l;
+        l.flags &= 32767, mt = l;
         return;
       }
       if (l = e.return, l !== null && (l.flags |= 32768, l.subtreeFlags = 0, l.deletions = null), !t && (e = e.sibling, e !== null)) {
-        ot = e;
+        mt = e;
         return;
       }
-      ot = e = l;
+      mt = e = l;
     } while (e !== null);
-    Dt = 6, ot = null;
+    Dt = 6, mt = null;
   }
-  function xh(e, t, l, a, n, i, c, o, g) {
+  function ph(e, t, l, a, n, i, c, o, p) {
     e.cancelPendingCommit = null;
     do
-      _i();
-    while ($t !== 0);
-    if ((gt & 6) !== 0) throw Error(d(327));
+      Ni();
+    while (Wt !== 0);
+    if ((yt & 6) !== 0) throw Error(d(327));
     if (t !== null) {
       if (t === e.current) throw Error(d(177));
-      if (i = t.lanes | t.childLanes, i |= gc, f(
+      if (i = t.lanes | t.childLanes, i |= gc, be(
         e,
         l,
         i,
         c,
         o,
-        g
-      ), e === kt && (ot = kt = null, ft = 0), ha = t, ml = e, fa = l, Sr = i, wr = n, nh = a, (t.subtreeFlags & 10256) !== 0 || (t.flags & 10256) !== 0 ? (e.callbackNode = null, e.callbackPriority = 0, Nx(he, function() {
-        return bh(), null;
+        p
+      ), e === Et && (mt = Et = null, vt = 0), fa = t, ml = e, ma = l, Sr = i, wr = n, rh = a, (t.subtreeFlags & 10256) !== 0 || (t.flags & 10256) !== 0 ? (e.callbackNode = null, e.callbackPriority = 0, Cx(je, function() {
+        return Nh(), null;
       })) : (e.callbackNode = null, e.callbackPriority = 0), a = (t.flags & 13878) !== 0, (t.subtreeFlags & 13878) !== 0 || a) {
-        a = y.T, y.T = null, n = Y.p, Y.p = 2, c = gt, gt |= 4;
+        a = b.T, b.T = null, n = G.p, G.p = 2, c = yt, yt |= 4;
         try {
-          hx(e, t, l);
+          jx(e, t, l);
         } finally {
-          gt = c, Y.p = n, y.T = a;
+          yt = c, G.p = n, b.T = a;
         }
       }
-      $t = 1, jh(), vh(), ph();
+      Wt = 1, gh(), bh(), yh();
     }
   }
-  function jh() {
-    if ($t === 1) {
-      $t = 0;
-      var e = ml, t = ha, l = (t.flags & 13878) !== 0;
+  function gh() {
+    if (Wt === 1) {
+      Wt = 0;
+      var e = ml, t = fa, l = (t.flags & 13878) !== 0;
       if ((t.subtreeFlags & 13878) !== 0 || l) {
-        l = y.T, y.T = null;
-        var a = Y.p;
-        Y.p = 2;
-        var n = gt;
-        gt |= 4;
+        l = b.T, b.T = null;
+        var a = G.p;
+        G.p = 2;
+        var n = yt;
+        yt |= 4;
         try {
-          Io(t, e);
-          var i = Yr, c = ld(e.containerInfo), o = i.focusedElem, g = i.selectionRange;
-          if (c !== o && o && o.ownerDocument && sd(
+          th(t, e);
+          var i = Yr, c = id(e.containerInfo), o = i.focusedElem, p = i.selectionRange;
+          if (c !== o && o && o.ownerDocument && nd(
             o.ownerDocument.documentElement,
             o
           )) {
-            if (g !== null && mc(o)) {
-              var T = g.start, J = g.end;
+            if (p !== null && mc(o)) {
+              var T = p.start, J = p.end;
               if (J === void 0 && (J = T), "selectionStart" in o)
                 o.selectionStart = T, o.selectionEnd = Math.min(
                   J,
                   o.value.length
                 );
               else {
-                var se = o.ownerDocument || document, A = se && se.defaultView || window;
-                if (A.getSelection) {
-                  var q = A.getSelection(), Ie = o.textContent.length, Je = Math.min(g.start, Ie), Nt = g.end === void 0 ? Je : Math.min(g.end, Ie);
-                  !q.extend && Je > Nt && (c = Nt, Nt = Je, Je = c);
-                  var C = td(
+                var se = o.ownerDocument || document, R = se && se.defaultView || window;
+                if (R.getSelection) {
+                  var H = R.getSelection(), Pe = o.textContent.length, We = Math.min(p.start, Pe), kt = p.end === void 0 ? We : Math.min(p.end, Pe);
+                  !H.extend && We > kt && (c = kt, kt = We, We = c);
+                  var C = ad(
                     o,
-                    Je
-                  ), N = td(
+                    We
+                  ), S = ad(
                     o,
-                    Nt
+                    kt
                   );
-                  if (C && N && (q.rangeCount !== 1 || q.anchorNode !== C.node || q.anchorOffset !== C.offset || q.focusNode !== N.node || q.focusOffset !== N.offset)) {
+                  if (C && S && (H.rangeCount !== 1 || H.anchorNode !== C.node || H.anchorOffset !== C.offset || H.focusNode !== S.node || H.focusOffset !== S.offset)) {
                     var O = se.createRange();
-                    O.setStart(C.node, C.offset), q.removeAllRanges(), Je > Nt ? (q.addRange(O), q.extend(N.node, N.offset)) : (O.setEnd(N.node, N.offset), q.addRange(O));
+                    O.setStart(C.node, C.offset), H.removeAllRanges(), We > kt ? (H.addRange(O), H.extend(S.node, S.offset)) : (O.setEnd(S.node, S.offset), H.addRange(O));
                   }
                 }
               }
             }
-            for (se = [], q = o; q = q.parentNode; )
-              q.nodeType === 1 && se.push({
-                element: q,
-                left: q.scrollLeft,
-                top: q.scrollTop
+            for (se = [], H = o; H = H.parentNode; )
+              H.nodeType === 1 && se.push({
+                element: H,
+                left: H.scrollLeft,
+                top: H.scrollTop
               });
             for (typeof o.focus == "function" && o.focus(), o = 0; o < se.length; o++) {
               var F = se[o];
               F.element.scrollLeft = F.left, F.element.scrollTop = F.top;
             }
           }
-          Ui = !!Lr, Yr = Lr = null;
+          Di = !!Lr, Yr = Lr = null;
         } finally {
-          gt = n, Y.p = a, y.T = l;
+          yt = n, G.p = a, b.T = l;
         }
       }
-      e.current = t, $t = 2;
+      e.current = t, Wt = 2;
     }
   }
-  function vh() {
-    if ($t === 2) {
-      $t = 0;
-      var e = ml, t = ha, l = (t.flags & 8772) !== 0;
+  function bh() {
+    if (Wt === 2) {
+      Wt = 0;
+      var e = ml, t = fa, l = (t.flags & 8772) !== 0;
       if ((t.subtreeFlags & 8772) !== 0 || l) {
-        l = y.T, y.T = null;
-        var a = Y.p;
-        Y.p = 2;
-        var n = gt;
-        gt |= 4;
+        l = b.T, b.T = null;
+        var a = G.p;
+        G.p = 2;
+        var n = yt;
+        yt |= 4;
         try {
-          Ko(e, t.alternate, t);
+          Fo(e, t.alternate, t);
         } finally {
-          gt = n, Y.p = a, y.T = l;
+          yt = n, G.p = a, b.T = l;
         }
       }
-      $t = 3;
+      Wt = 3;
     }
   }
-  function ph() {
-    if ($t === 4 || $t === 3) {
-      $t = 0, Ne();
-      var e = ml, t = ha, l = fa, a = nh;
-      (t.subtreeFlags & 10256) !== 0 || (t.flags & 10256) !== 0 ? $t = 5 : ($t = 0, ha = ml = null, gh(e, e.pendingLanes));
+  function yh() {
+    if (Wt === 4 || Wt === 3) {
+      Wt = 0, ke();
+      var e = ml, t = fa, l = ma, a = rh;
+      (t.subtreeFlags & 10256) !== 0 || (t.flags & 10256) !== 0 ? Wt = 5 : (Wt = 0, fa = ml = null, _h(e, e.pendingLanes));
       var n = e.pendingLanes;
-      if (n === 0 && (fl = null), qe(l), t = t.stateNode, ve && typeof ve.onCommitFiberRoot == "function")
+      if (n === 0 && (fl = null), Ve(l), t = t.stateNode, we && typeof we.onCommitFiberRoot == "function")
         try {
-          ve.onCommitFiberRoot(
-            W,
+          we.onCommitFiberRoot(
+            $,
             t,
             void 0,
             (t.current.flags & 128) === 128
@@ -7594,7 +7594,7 @@ Error generating stack: ` + l.message + `
         } catch {
         }
       if (a !== null) {
-        t = y.T, n = Y.p, Y.p = 2, y.T = null;
+        t = b.T, n = G.p, G.p = 2, b.T = null;
         try {
           for (var i = e.onRecoverableError, c = 0; c < a.length; c++) {
             var o = a[c];
@@ -7603,53 +7603,53 @@ Error generating stack: ` + l.message + `
             });
           }
         } finally {
-          y.T = t, Y.p = n;
+          b.T = t, G.p = n;
         }
       }
-      (fa & 3) !== 0 && _i(), As(e), n = e.pendingLanes, (l & 4194090) !== 0 && (n & 42) !== 0 ? e === kr ? dn++ : (dn = 0, kr = e) : dn = 0, on(0);
+      (ma & 3) !== 0 && Ni(), As(e), n = e.pendingLanes, (l & 4194090) !== 0 && (n & 42) !== 0 ? e === kr ? dn++ : (dn = 0, kr = e) : dn = 0, on(0);
     }
   }
-  function gh(e, t) {
+  function _h(e, t) {
     (e.pooledCacheLanes &= t) === 0 && (t = e.pooledCache, t != null && (e.pooledCache = null, Qa(t)));
   }
-  function _i(e) {
-    return jh(), vh(), ph(), bh();
+  function Ni(e) {
+    return gh(), bh(), yh(), Nh();
   }
-  function bh() {
-    if ($t !== 5) return !1;
+  function Nh() {
+    if (Wt !== 5) return !1;
     var e = ml, t = Sr;
     Sr = 0;
-    var l = qe(fa), a = y.T, n = Y.p;
+    var l = Ve(ma), a = b.T, n = G.p;
     try {
-      Y.p = 32 > l ? 32 : l, y.T = null, l = wr, wr = null;
-      var i = ml, c = fa;
-      if ($t = 0, ha = ml = null, fa = 0, (gt & 6) !== 0) throw Error(d(331));
-      var o = gt;
-      if (gt |= 4, lh(i.current), eh(
+      G.p = 32 > l ? 32 : l, b.T = null, l = wr, wr = null;
+      var i = ml, c = ma;
+      if (Wt = 0, fa = ml = null, ma = 0, (yt & 6) !== 0) throw Error(d(331));
+      var o = yt;
+      if (yt |= 4, ih(i.current), lh(
         i,
         i.current,
         c,
         l
-      ), gt = o, on(0, !1), ve && typeof ve.onPostCommitFiberRoot == "function")
+      ), yt = o, on(0, !1), we && typeof we.onPostCommitFiberRoot == "function")
         try {
-          ve.onPostCommitFiberRoot(W, i);
+          we.onPostCommitFiberRoot($, i);
         } catch {
         }
       return !0;
     } finally {
-      Y.p = n, y.T = a, gh(e, t);
+      G.p = n, b.T = a, _h(e, t);
     }
   }
-  function yh(e, t, l) {
+  function Sh(e, t, l) {
     t = xs(l, t), t = ar(e.stateNode, t, 2), e = al(e, t, 2), e !== null && (ue(e, 2), As(e));
   }
-  function wt(e, t, l) {
+  function Ct(e, t, l) {
     if (e.tag === 3)
-      yh(e, e, l);
+      Sh(e, e, l);
     else
       for (; t !== null; ) {
         if (t.tag === 3) {
-          yh(
+          Sh(
             t,
             e,
             l
@@ -7658,7 +7658,7 @@ Error generating stack: ` + l.message + `
         } else if (t.tag === 1) {
           var a = t.stateNode;
           if (typeof t.type.getDerivedStateFromError == "function" || typeof a.componentDidCatch == "function" && (fl === null || !fl.has(a))) {
-            e = xs(l, e), l = wo(2), a = al(t, l, 2), a !== null && (ko(
+            e = xs(l, e), l = Eo(2), a = al(t, l, 2), a !== null && (Oo(
               l,
               a,
               t,
@@ -7673,25 +7673,25 @@ Error generating stack: ` + l.message + `
   function Tr(e, t, l) {
     var a = e.pingCache;
     if (a === null) {
-      a = e.pingCache = new xx();
+      a = e.pingCache = new gx();
       var n = /* @__PURE__ */ new Set();
       a.set(t, n);
     } else
       n = a.get(t), n === void 0 && (n = /* @__PURE__ */ new Set(), a.set(t, n));
-    n.has(l) || (br = !0, n.add(l), e = bx.bind(null, e, t, l), t.then(e, e));
+    n.has(l) || (br = !0, n.add(l), e = Sx.bind(null, e, t, l), t.then(e, e));
   }
-  function bx(e, t, l) {
+  function Sx(e, t, l) {
     var a = e.pingCache;
-    a !== null && a.delete(t), e.pingedLanes |= e.suspendedLanes & l, e.warmLanes &= ~l, kt === e && (ft & l) === l && (Dt === 4 || Dt === 3 && (ft & 62914560) === ft && 300 > Le() - Nr ? (gt & 2) === 0 && ma(e, 0) : yr |= l, oa === ft && (oa = 0)), As(e);
+    a !== null && a.delete(t), e.pingedLanes |= e.suspendedLanes & l, e.warmLanes &= ~l, Et === e && (vt & l) === l && (Dt === 4 || Dt === 3 && (vt & 62914560) === vt && 300 > Be() - Nr ? (yt & 2) === 0 && xa(e, 0) : yr |= l, ha === vt && (ha = 0)), As(e);
   }
-  function _h(e, t) {
-    t === 0 && (t = z()), e = Wl(e, t), e !== null && (ue(e, t), As(e));
+  function wh(e, t) {
+    t === 0 && (t = D()), e = Fl(e, t), e !== null && (ue(e, t), As(e));
   }
-  function yx(e) {
+  function wx(e) {
     var t = e.memoizedState, l = 0;
-    t !== null && (l = t.retryLane), _h(e, l);
+    t !== null && (l = t.retryLane), wh(e, l);
   }
-  function _x(e, t) {
+  function kx(e, t) {
     var l = 0;
     switch (e.tag) {
       case 13:
@@ -7707,126 +7707,126 @@ Error generating stack: ` + l.message + `
       default:
         throw Error(d(314));
     }
-    a !== null && a.delete(t), _h(e, l);
+    a !== null && a.delete(t), wh(e, l);
   }
-  function Nx(e, t) {
-    return Oe(e, t);
+  function Cx(e, t) {
+    return Ae(e, t);
   }
-  var Ni = null, ja = null, zr = !1, Si = !1, Ar = !1, Ll = 0;
+  var Si = null, va = null, zr = !1, wi = !1, Ar = !1, Ll = 0;
   function As(e) {
-    e !== ja && e.next === null && (ja === null ? Ni = ja = e : ja = ja.next = e), Si = !0, zr || (zr = !0, wx());
+    e !== va && e.next === null && (va === null ? Si = va = e : va = va.next = e), wi = !0, zr || (zr = !0, Ox());
   }
   function on(e, t) {
-    if (!Ar && Si) {
+    if (!Ar && wi) {
       Ar = !0;
       do
-        for (var l = !1, a = Ni; a !== null; ) {
+        for (var l = !1, a = Si; a !== null; ) {
           if (e !== 0) {
             var n = a.pendingLanes;
             if (n === 0) var i = 0;
             else {
               var c = a.suspendedLanes, o = a.pingedLanes;
-              i = (1 << 31 - tt(42 | e) + 1) - 1, i &= n & ~(c & ~o), i = i & 201326741 ? i & 201326741 | 1 : i ? i | 2 : 0;
+              i = (1 << 31 - Xe(42 | e) + 1) - 1, i &= n & ~(c & ~o), i = i & 201326741 ? i & 201326741 | 1 : i ? i | 2 : 0;
             }
-            i !== 0 && (l = !0, kh(a, i));
+            i !== 0 && (l = !0, Oh(a, i));
           } else
-            i = ft, i = be(
+            i = vt, i = ye(
               a,
-              a === kt ? i : 0,
+              a === Et ? i : 0,
               a.cancelPendingCommit !== null || a.timeoutHandle !== -1
-            ), (i & 3) === 0 || ge(a, i) || (l = !0, kh(a, i));
+            ), (i & 3) === 0 || ge(a, i) || (l = !0, Oh(a, i));
           a = a.next;
         }
       while (l);
       Ar = !1;
     }
   }
-  function Sx() {
-    Nh();
+  function Ex() {
+    kh();
   }
-  function Nh() {
-    Si = zr = !1;
+  function kh() {
+    wi = zr = !1;
     var e = 0;
-    Ll !== 0 && (Rx() && (e = Ll), Ll = 0);
-    for (var t = Le(), l = null, a = Ni; a !== null; ) {
-      var n = a.next, i = Sh(a, t);
-      i === 0 ? (a.next = null, l === null ? Ni = n : l.next = n, n === null && (ja = l)) : (l = a, (e !== 0 || (i & 3) !== 0) && (Si = !0)), a = n;
+    Ll !== 0 && (qx() && (e = Ll), Ll = 0);
+    for (var t = Be(), l = null, a = Si; a !== null; ) {
+      var n = a.next, i = Ch(a, t);
+      i === 0 ? (a.next = null, l === null ? Si = n : l.next = n, n === null && (va = l)) : (l = a, (e !== 0 || (i & 3) !== 0) && (wi = !0)), a = n;
     }
     on(e);
   }
-  function Sh(e, t) {
+  function Ch(e, t) {
     for (var l = e.suspendedLanes, a = e.pingedLanes, n = e.expirationTimes, i = e.pendingLanes & -62914561; 0 < i; ) {
-      var c = 31 - tt(i), o = 1 << c, g = n[c];
-      g === -1 ? ((o & l) === 0 || (o & a) !== 0) && (n[c] = Qe(o, t)) : g <= t && (e.expiredLanes |= o), i &= ~o;
+      var c = 31 - Xe(i), o = 1 << c, p = n[c];
+      p === -1 ? ((o & l) === 0 || (o & a) !== 0) && (n[c] = Ze(o, t)) : p <= t && (e.expiredLanes |= o), i &= ~o;
     }
-    if (t = kt, l = ft, l = be(
+    if (t = Et, l = vt, l = ye(
       e,
       e === t ? l : 0,
       e.cancelPendingCommit !== null || e.timeoutHandle !== -1
-    ), a = e.callbackNode, l === 0 || e === t && (bt === 2 || bt === 9) || e.cancelPendingCommit !== null)
-      return a !== null && a !== null && Te(a), e.callbackNode = null, e.callbackPriority = 0;
+    ), a = e.callbackNode, l === 0 || e === t && (_t === 2 || _t === 9) || e.cancelPendingCommit !== null)
+      return a !== null && a !== null && Re(a), e.callbackNode = null, e.callbackPriority = 0;
     if ((l & 3) === 0 || ge(e, l)) {
       if (t = l & -l, t === e.callbackPriority) return t;
-      switch (a !== null && Te(a), qe(l)) {
+      switch (a !== null && Re(a), Ve(l)) {
         case 2:
         case 8:
-          l = Ze;
+          l = rt;
           break;
         case 32:
-          l = he;
+          l = je;
           break;
         case 268435456:
-          l = Ue;
+          l = ze;
           break;
         default:
-          l = he;
+          l = je;
       }
-      return a = wh.bind(null, e), l = Oe(l, a), e.callbackPriority = t, e.callbackNode = l, t;
+      return a = Eh.bind(null, e), l = Ae(l, a), e.callbackPriority = t, e.callbackNode = l, t;
     }
-    return a !== null && a !== null && Te(a), e.callbackPriority = 2, e.callbackNode = null, 2;
+    return a !== null && a !== null && Re(a), e.callbackPriority = 2, e.callbackNode = null, 2;
   }
-  function wh(e, t) {
-    if ($t !== 0 && $t !== 5)
+  function Eh(e, t) {
+    if (Wt !== 0 && Wt !== 5)
       return e.callbackNode = null, e.callbackPriority = 0, null;
     var l = e.callbackNode;
-    if (_i() && e.callbackNode !== l)
+    if (Ni() && e.callbackNode !== l)
       return null;
-    var a = ft;
-    return a = be(
+    var a = vt;
+    return a = ye(
       e,
-      e === kt ? a : 0,
+      e === Et ? a : 0,
       e.cancelPendingCommit !== null || e.timeoutHandle !== -1
-    ), a === 0 ? null : (ch(e, a, t), Sh(e, Le()), e.callbackNode != null && e.callbackNode === l ? wh.bind(null, e) : null);
+    ), a === 0 ? null : (dh(e, a, t), Ch(e, Be()), e.callbackNode != null && e.callbackNode === l ? Eh.bind(null, e) : null);
   }
-  function kh(e, t) {
-    if (_i()) return null;
-    ch(e, t, !0);
+  function Oh(e, t) {
+    if (Ni()) return null;
+    dh(e, t, !0);
   }
-  function wx() {
-    Dx(function() {
-      (gt & 6) !== 0 ? Oe(
-        Fe,
-        Sx
-      ) : Nh();
+  function Ox() {
+    Bx(function() {
+      (yt & 6) !== 0 ? Ae(
+        st,
+        Ex
+      ) : kh();
     });
   }
   function Rr() {
-    return Ll === 0 && (Ll = xt()), Ll;
+    return Ll === 0 && (Ll = pt()), Ll;
   }
-  function Ch(e) {
-    return e == null || typeof e == "symbol" || typeof e == "boolean" ? null : typeof e == "function" ? e : Dn("" + e);
+  function Th(e) {
+    return e == null || typeof e == "symbol" || typeof e == "boolean" ? null : typeof e == "function" ? e : Mn("" + e);
   }
-  function Eh(e, t) {
+  function zh(e, t) {
     var l = t.ownerDocument.createElement("input");
     return l.name = t.name, l.value = t.value, e.id && l.setAttribute("form", e.id), t.parentNode.insertBefore(l, t), e = new FormData(e), l.parentNode.removeChild(l), e;
   }
-  function kx(e, t, l, a, n) {
+  function Tx(e, t, l, a, n) {
     if (t === "submit" && l && l.stateNode === n) {
-      var i = Ch(
-        (n[St] || null).action
+      var i = Th(
+        (n[nt] || null).action
       ), c = a.submitter;
-      c && (t = (t = c[St] || null) ? Ch(t.formAction) : c.getAttribute("formAction"), t !== null && (i = t, c = null));
-      var o = new Bn(
+      c && (t = (t = c[nt] || null) ? Th(t.formAction) : c.getAttribute("formAction"), t !== null && (i = t, c = null));
+      var o = new Ln(
         "action",
         "action",
         null,
@@ -7841,30 +7841,30 @@ Error generating stack: ` + l.message + `
             listener: function() {
               if (a.defaultPrevented) {
                 if (Ll !== 0) {
-                  var g = c ? Eh(n, c) : new FormData(n);
+                  var p = c ? zh(n, c) : new FormData(n);
                   Pc(
                     l,
                     {
                       pending: !0,
-                      data: g,
+                      data: p,
                       method: n.method,
                       action: i
                     },
                     null,
-                    g
+                    p
                   );
                 }
               } else
-                typeof i == "function" && (o.preventDefault(), g = c ? Eh(n, c) : new FormData(n), Pc(
+                typeof i == "function" && (o.preventDefault(), p = c ? zh(n, c) : new FormData(n), Pc(
                   l,
                   {
                     pending: !0,
-                    data: g,
+                    data: p,
                     method: n.method,
                     action: i
                   },
                   i,
-                  g
+                  p
                 ));
             },
             currentTarget: n
@@ -7874,13 +7874,13 @@ Error generating stack: ` + l.message + `
     }
   }
   for (var Ur = 0; Ur < pc.length; Ur++) {
-    var Dr = pc[Ur], Cx = Dr.toLowerCase(), Ex = Dr[0].toUpperCase() + Dr.slice(1);
+    var Dr = pc[Ur], zx = Dr.toLowerCase(), Ax = Dr[0].toUpperCase() + Dr.slice(1);
     _s(
-      Cx,
-      "on" + Ex
+      zx,
+      "on" + Ax
     );
   }
-  _s(id, "onAnimationEnd"), _s(cd, "onAnimationIteration"), _s(rd, "onAnimationStart"), _s("dblclick", "onDoubleClick"), _s("focusin", "onFocus"), _s("focusout", "onBlur"), _s(Zm, "onTransitionRun"), _s(Vm, "onTransitionStart"), _s(Jm, "onTransitionCancel"), _s(ud, "onTransitionEnd"), Ps("onMouseEnter", ["mouseout", "mouseover"]), Ps("onMouseLeave", ["mouseout", "mouseover"]), Ps("onPointerEnter", ["pointerout", "pointerover"]), Ps("onPointerLeave", ["pointerout", "pointerover"]), It(
+  _s(ud, "onAnimationEnd"), _s(dd, "onAnimationIteration"), _s(od, "onAnimationStart"), _s("dblclick", "onDoubleClick"), _s("focusin", "onFocus"), _s("focusout", "onBlur"), _s($m, "onTransitionRun"), _s(Wm, "onTransitionStart"), _s(Fm, "onTransitionCancel"), _s(hd, "onTransitionEnd"), Ps("onMouseEnter", ["mouseout", "mouseover"]), Ps("onMouseLeave", ["mouseout", "mouseover"]), Ps("onPointerEnter", ["pointerout", "pointerover"]), Ps("onPointerLeave", ["pointerout", "pointerover"]), It(
     "onChange",
     "change click focusin focusout input keydown keyup selectionchange".split(" ")
   ), It(
@@ -7905,10 +7905,10 @@ Error generating stack: ` + l.message + `
   );
   var hn = "abort canplay canplaythrough durationchange emptied encrypted ended error loadeddata loadedmetadata loadstart pause play playing progress ratechange resize seeked seeking stalled suspend timeupdate volumechange waiting".split(
     " "
-  ), Ox = new Set(
+  ), Rx = new Set(
     "beforetoggle cancel close invalid load scroll scrollend toggle".split(" ").concat(hn)
   );
-  function Oh(e, t) {
+  function Ah(e, t) {
     t = (t & 4) !== 0;
     for (var l = 0; l < e.length; l++) {
       var a = e[l], n = a.event;
@@ -7917,64 +7917,64 @@ Error generating stack: ` + l.message + `
         var i = void 0;
         if (t)
           for (var c = a.length - 1; 0 <= c; c--) {
-            var o = a[c], g = o.instance, T = o.currentTarget;
-            if (o = o.listener, g !== i && n.isPropagationStopped())
+            var o = a[c], p = o.instance, T = o.currentTarget;
+            if (o = o.listener, p !== i && n.isPropagationStopped())
               break e;
             i = o, n.currentTarget = T;
             try {
               i(n);
             } catch (J) {
-              oi(J);
+              hi(J);
             }
-            n.currentTarget = null, i = g;
+            n.currentTarget = null, i = p;
           }
         else
           for (c = 0; c < a.length; c++) {
-            if (o = a[c], g = o.instance, T = o.currentTarget, o = o.listener, g !== i && n.isPropagationStopped())
+            if (o = a[c], p = o.instance, T = o.currentTarget, o = o.listener, p !== i && n.isPropagationStopped())
               break e;
             i = o, n.currentTarget = T;
             try {
               i(n);
             } catch (J) {
-              oi(J);
+              hi(J);
             }
-            n.currentTarget = null, i = g;
+            n.currentTarget = null, i = p;
           }
       }
     }
   }
-  function ht(e, t) {
-    var l = t[we];
-    l === void 0 && (l = t[we] = /* @__PURE__ */ new Set());
+  function xt(e, t) {
+    var l = t[_e];
+    l === void 0 && (l = t[_e] = /* @__PURE__ */ new Set());
     var a = e + "__bubble";
-    l.has(a) || (Th(t, e, 2, !1), l.add(a));
+    l.has(a) || (Rh(t, e, 2, !1), l.add(a));
   }
   function Mr(e, t, l) {
     var a = 0;
-    t && (a |= 4), Th(
+    t && (a |= 4), Rh(
       l,
       e,
       a,
       t
     );
   }
-  var wi = "_reactListening" + Math.random().toString(36).slice(2);
+  var ki = "_reactListening" + Math.random().toString(36).slice(2);
   function qr(e) {
-    if (!e[wi]) {
-      e[wi] = !0, Ea.forEach(function(l) {
-        l !== "selectionchange" && (Ox.has(l) || Mr(l, !1, e), Mr(l, !0, e));
+    if (!e[ki]) {
+      e[ki] = !0, Ea.forEach(function(l) {
+        l !== "selectionchange" && (Rx.has(l) || Mr(l, !1, e), Mr(l, !0, e));
       });
       var t = e.nodeType === 9 ? e : e.ownerDocument;
-      t === null || t[wi] || (t[wi] = !0, Mr("selectionchange", !1, t));
+      t === null || t[ki] || (t[ki] = !0, Mr("selectionchange", !1, t));
     }
   }
-  function Th(e, t, l, a) {
-    switch (ef(t)) {
+  function Rh(e, t, l, a) {
+    switch (lf(t)) {
       case 2:
-        var n = sj;
+        var n = ij;
         break;
       case 8:
-        n = lj;
+        n = cj;
         break;
       default:
         n = Fr;
@@ -8002,14 +8002,14 @@ Error generating stack: ` + l.message + `
           if (o === n) break;
           if (c === 4)
             for (c = a.return; c !== null; ) {
-              var g = c.tag;
-              if ((g === 3 || g === 4) && c.stateNode.containerInfo === n)
+              var p = c.tag;
+              if ((p === 3 || p === 4) && c.stateNode.containerInfo === n)
                 return;
               c = c.return;
             }
           for (; o !== null; ) {
-            if (c = at(o), c === null) return;
-            if (g = c.tag, g === 5 || g === 6 || g === 26 || g === 27) {
+            if (c = ct(o), c === null) return;
+            if (p = c.tag, p === 5 || p === 6 || p === 26 || p === 27) {
               a = i = c;
               continue e;
             }
@@ -8018,28 +8018,28 @@ Error generating stack: ` + l.message + `
         }
         a = a.return;
       }
-    Mu(function() {
+    Bu(function() {
       var T = i, J = lc(l), se = [];
       e: {
-        var A = dd.get(e);
-        if (A !== void 0) {
-          var q = Bn, Ie = e;
+        var R = fd.get(e);
+        if (R !== void 0) {
+          var H = Ln, Pe = e;
           switch (e) {
             case "keypress":
-              if (qn(l) === 0) break e;
+              if (Hn(l) === 0) break e;
             case "keydown":
             case "keyup":
-              q = Nm;
+              H = Cm;
               break;
             case "focusin":
-              Ie = "focus", q = uc;
+              Pe = "focus", H = uc;
               break;
             case "focusout":
-              Ie = "blur", q = uc;
+              Pe = "blur", H = uc;
               break;
             case "beforeblur":
             case "afterblur":
-              q = uc;
+              H = uc;
               break;
             case "click":
               if (l.button === 2) break e;
@@ -8051,7 +8051,7 @@ Error generating stack: ` + l.message + `
             case "mouseout":
             case "mouseover":
             case "contextmenu":
-              q = Bu;
+              H = Gu;
               break;
             case "drag":
             case "dragend":
@@ -8061,33 +8061,33 @@ Error generating stack: ` + l.message + `
             case "dragover":
             case "dragstart":
             case "drop":
-              q = om;
+              H = xm;
               break;
             case "touchcancel":
             case "touchend":
             case "touchmove":
             case "touchstart":
-              q = km;
-              break;
-            case id:
-            case cd:
-            case rd:
-              q = mm;
+              H = Tm;
               break;
             case ud:
-              q = Em;
+            case dd:
+            case od:
+              H = pm;
+              break;
+            case hd:
+              H = Am;
               break;
             case "scroll":
             case "scrollend":
-              q = um;
+              H = fm;
               break;
             case "wheel":
-              q = Tm;
+              H = Um;
               break;
             case "copy":
             case "cut":
             case "paste":
-              q = jm;
+              H = bm;
               break;
             case "gotpointercapture":
             case "lostpointercapture":
@@ -8097,109 +8097,109 @@ Error generating stack: ` + l.message + `
             case "pointerout":
             case "pointerover":
             case "pointerup":
-              q = Yu;
+              H = Xu;
               break;
             case "toggle":
             case "beforetoggle":
-              q = Am;
+              H = Mm;
           }
-          var Je = (t & 4) !== 0, Nt = !Je && (e === "scroll" || e === "scrollend"), C = Je ? A !== null ? A + "Capture" : null : A;
-          Je = [];
-          for (var N = T, O; N !== null; ) {
-            var F = N;
-            if (O = F.stateNode, F = F.tag, F !== 5 && F !== 26 && F !== 27 || O === null || C === null || (F = Ta(N, C), F != null && Je.push(
-              fn(N, F, O)
-            )), Nt) break;
-            N = N.return;
+          var We = (t & 4) !== 0, kt = !We && (e === "scroll" || e === "scrollend"), C = We ? R !== null ? R + "Capture" : null : R;
+          We = [];
+          for (var S = T, O; S !== null; ) {
+            var F = S;
+            if (O = F.stateNode, F = F.tag, F !== 5 && F !== 26 && F !== 27 || O === null || C === null || (F = Ta(S, C), F != null && We.push(
+              fn(S, F, O)
+            )), kt) break;
+            S = S.return;
           }
-          0 < Je.length && (A = new q(
-            A,
-            Ie,
+          0 < We.length && (R = new H(
+            R,
+            Pe,
             null,
             l,
             J
-          ), se.push({ event: A, listeners: Je }));
+          ), se.push({ event: R, listeners: We }));
         }
       }
       if ((t & 7) === 0) {
         e: {
-          if (A = e === "mouseover" || e === "pointerover", q = e === "mouseout" || e === "pointerout", A && l !== sc && (Ie = l.relatedTarget || l.fromElement) && (at(Ie) || Ie[b]))
+          if (R = e === "mouseover" || e === "pointerover", H = e === "mouseout" || e === "pointerout", R && l !== sc && (Pe = l.relatedTarget || l.fromElement) && (ct(Pe) || Pe[j]))
             break e;
-          if ((q || A) && (A = J.window === J ? J : (A = J.ownerDocument) ? A.defaultView || A.parentWindow : window, q ? (Ie = l.relatedTarget || l.toElement, q = T, Ie = Ie ? at(Ie) : null, Ie !== null && (Nt = B(Ie), Je = Ie.tag, Ie !== Nt || Je !== 5 && Je !== 27 && Je !== 6) && (Ie = null)) : (q = null, Ie = T), q !== Ie)) {
-            if (Je = Bu, F = "onMouseLeave", C = "onMouseEnter", N = "mouse", (e === "pointerout" || e === "pointerover") && (Je = Yu, F = "onPointerLeave", C = "onPointerEnter", N = "pointer"), Nt = q == null ? A : Cs(q), O = Ie == null ? A : Cs(Ie), A = new Je(
+          if ((H || R) && (R = J.window === J ? J : (R = J.ownerDocument) ? R.defaultView || R.parentWindow : window, H ? (Pe = l.relatedTarget || l.toElement, H = T, Pe = Pe ? ct(Pe) : null, Pe !== null && (kt = M(Pe), We = Pe.tag, Pe !== kt || We !== 5 && We !== 27 && We !== 6) && (Pe = null)) : (H = null, Pe = T), H !== Pe)) {
+            if (We = Gu, F = "onMouseLeave", C = "onMouseEnter", S = "mouse", (e === "pointerout" || e === "pointerover") && (We = Xu, F = "onPointerLeave", C = "onPointerEnter", S = "pointer"), kt = H == null ? R : Cs(H), O = Pe == null ? R : Cs(Pe), R = new We(
               F,
-              N + "leave",
-              q,
+              S + "leave",
+              H,
               l,
               J
-            ), A.target = Nt, A.relatedTarget = O, F = null, at(J) === T && (Je = new Je(
+            ), R.target = kt, R.relatedTarget = O, F = null, ct(J) === T && (We = new We(
               C,
-              N + "enter",
-              Ie,
+              S + "enter",
+              Pe,
               l,
               J
-            ), Je.target = O, Je.relatedTarget = Nt, F = Je), Nt = F, q && Ie)
+            ), We.target = O, We.relatedTarget = kt, F = We), kt = F, H && Pe)
               t: {
-                for (Je = q, C = Ie, N = 0, O = Je; O; O = va(O))
-                  N++;
-                for (O = 0, F = C; F; F = va(F))
+                for (We = H, C = Pe, S = 0, O = We; O; O = pa(O))
+                  S++;
+                for (O = 0, F = C; F; F = pa(F))
                   O++;
-                for (; 0 < N - O; )
-                  Je = va(Je), N--;
-                for (; 0 < O - N; )
-                  C = va(C), O--;
-                for (; N--; ) {
-                  if (Je === C || C !== null && Je === C.alternate)
+                for (; 0 < S - O; )
+                  We = pa(We), S--;
+                for (; 0 < O - S; )
+                  C = pa(C), O--;
+                for (; S--; ) {
+                  if (We === C || C !== null && We === C.alternate)
                     break t;
-                  Je = va(Je), C = va(C);
+                  We = pa(We), C = pa(C);
                 }
-                Je = null;
+                We = null;
               }
-            else Je = null;
-            q !== null && zh(
+            else We = null;
+            H !== null && Uh(
               se,
-              A,
-              q,
-              Je,
+              R,
+              H,
+              We,
               !1
-            ), Ie !== null && Nt !== null && zh(
+            ), Pe !== null && kt !== null && Uh(
               se,
-              Nt,
-              Ie,
-              Je,
+              kt,
+              Pe,
+              We,
               !0
             );
           }
         }
         e: {
-          if (A = T ? Cs(T) : window, q = A.nodeName && A.nodeName.toLowerCase(), q === "select" || q === "input" && A.type === "file")
-            var Me = $u;
-          else if (Ju(A))
-            if (Wu)
-              Me = Gm;
+          if (R = T ? Cs(T) : window, H = R.nodeName && R.nodeName.toLowerCase(), H === "select" || H === "input" && R.type === "file")
+            var He = Iu;
+          else if (Wu(R))
+            if (Pu)
+              He = Vm;
             else {
-              Me = Lm;
-              var ut = Bm;
+              He = Xm;
+              var ht = Qm;
             }
           else
-            q = A.nodeName, !q || q.toLowerCase() !== "input" || A.type !== "checkbox" && A.type !== "radio" ? T && tc(T.elementType) && (Me = $u) : Me = Ym;
-          if (Me && (Me = Me(e, T))) {
-            Ku(
+            H = R.nodeName, !H || H.toLowerCase() !== "input" || R.type !== "checkbox" && R.type !== "radio" ? T && tc(T.elementType) && (He = Iu) : He = Zm;
+          if (He && (He = He(e, T))) {
+            Fu(
               se,
-              Me,
+              He,
               l,
               J
             );
             break e;
           }
-          ut && ut(e, A, T), e === "focusout" && T && A.type === "number" && T.memoizedProps.value != null && ec(A, "number", A.value);
+          ht && ht(e, R, T), e === "focusout" && T && R.type === "number" && T.memoizedProps.value != null && ec(R, "number", R.value);
         }
-        switch (ut = T ? Cs(T) : window, e) {
+        switch (ht = T ? Cs(T) : window, e) {
           case "focusin":
-            (Ju(ut) || ut.contentEditable === "true") && (Jl = ut, xc = T, Ha = null);
+            (Wu(ht) || ht.contentEditable === "true") && (Kl = ht, xc = T, Ha = null);
             break;
           case "focusout":
-            Ha = xc = Jl = null;
+            Ha = xc = Kl = null;
             break;
           case "mousedown":
             jc = !0;
@@ -8207,48 +8207,48 @@ Error generating stack: ` + l.message + `
           case "contextmenu":
           case "mouseup":
           case "dragend":
-            jc = !1, ad(se, l, J);
+            jc = !1, cd(se, l, J);
             break;
           case "selectionchange":
-            if (Xm) break;
+            if (Km) break;
           case "keydown":
           case "keyup":
-            ad(se, l, J);
+            cd(se, l, J);
         }
-        var Ye;
+        var Ge;
         if (oc)
           e: {
             switch (e) {
               case "compositionstart":
-                var $e = "onCompositionStart";
+                var Ie = "onCompositionStart";
                 break e;
               case "compositionend":
-                $e = "onCompositionEnd";
+                Ie = "onCompositionEnd";
                 break e;
               case "compositionupdate":
-                $e = "onCompositionUpdate";
+                Ie = "onCompositionUpdate";
                 break e;
             }
-            $e = void 0;
+            Ie = void 0;
           }
         else
-          Vl ? Zu(e, l) && ($e = "onCompositionEnd") : e === "keydown" && l.keyCode === 229 && ($e = "onCompositionStart");
-        $e && (Gu && l.locale !== "ko" && (Vl || $e !== "onCompositionStart" ? $e === "onCompositionEnd" && Vl && (Ye = qu()) : (el = J, ic = "value" in el ? el.value : el.textContent, Vl = !0)), ut = ki(T, $e), 0 < ut.length && ($e = new Lu(
-          $e,
+          Jl ? Ku(e, l) && (Ie = "onCompositionEnd") : e === "keydown" && l.keyCode === 229 && (Ie = "onCompositionStart");
+        Ie && (Zu && l.locale !== "ko" && (Jl || Ie !== "onCompositionStart" ? Ie === "onCompositionEnd" && Jl && (Ge = Lu()) : (el = J, ic = "value" in el ? el.value : el.textContent, Jl = !0)), ht = Ci(T, Ie), 0 < ht.length && (Ie = new Qu(
+          Ie,
           e,
           null,
           l,
           J
-        ), se.push({ event: $e, listeners: ut }), Ye ? $e.data = Ye : (Ye = Vu(l), Ye !== null && ($e.data = Ye)))), (Ye = Um ? Dm(e, l) : Mm(e, l)) && ($e = ki(T, "onBeforeInput"), 0 < $e.length && (ut = new Lu(
+        ), se.push({ event: Ie, listeners: ht }), Ge ? Ie.data = Ge : (Ge = $u(l), Ge !== null && (Ie.data = Ge)))), (Ge = Hm ? Bm(e, l) : Lm(e, l)) && (Ie = Ci(T, "onBeforeInput"), 0 < Ie.length && (ht = new Qu(
           "onBeforeInput",
           "beforeinput",
           null,
           l,
           J
         ), se.push({
-          event: ut,
-          listeners: $e
-        }), ut.data = Ye)), kx(
+          event: ht,
+          listeners: Ie
+        }), ht.data = Ge)), Tx(
           se,
           e,
           T,
@@ -8256,7 +8256,7 @@ Error generating stack: ` + l.message + `
           J
         );
       }
-      Oh(se, t);
+      Ah(se, t);
     });
   }
   function fn(e, t, l) {
@@ -8266,7 +8266,7 @@ Error generating stack: ` + l.message + `
       currentTarget: l
     };
   }
-  function ki(e, t) {
+  function Ci(e, t) {
     for (var l = t + "Capture", a = []; e !== null; ) {
       var n = e, i = n.stateNode;
       if (n = n.tag, n !== 5 && n !== 26 && n !== 27 || i === null || (n = Ta(e, l), n != null && a.unshift(
@@ -8278,59 +8278,59 @@ Error generating stack: ` + l.message + `
     }
     return [];
   }
-  function va(e) {
+  function pa(e) {
     if (e === null) return null;
     do
       e = e.return;
     while (e && e.tag !== 5 && e.tag !== 27);
     return e || null;
   }
-  function zh(e, t, l, a, n) {
+  function Uh(e, t, l, a, n) {
     for (var i = t._reactName, c = []; l !== null && l !== a; ) {
-      var o = l, g = o.alternate, T = o.stateNode;
-      if (o = o.tag, g !== null && g === a) break;
-      o !== 5 && o !== 26 && o !== 27 || T === null || (g = T, n ? (T = Ta(l, i), T != null && c.unshift(
-        fn(l, T, g)
+      var o = l, p = o.alternate, T = o.stateNode;
+      if (o = o.tag, p !== null && p === a) break;
+      o !== 5 && o !== 26 && o !== 27 || T === null || (p = T, n ? (T = Ta(l, i), T != null && c.unshift(
+        fn(l, T, p)
       )) : n || (T = Ta(l, i), T != null && c.push(
-        fn(l, T, g)
+        fn(l, T, p)
       ))), l = l.return;
     }
     c.length !== 0 && e.push({ event: t, listeners: c });
   }
-  var Tx = /\r\n?/g, zx = /\u0000|\uFFFD/g;
-  function Ah(e) {
-    return (typeof e == "string" ? e : "" + e).replace(Tx, `
-`).replace(zx, "");
+  var Ux = /\r\n?/g, Dx = /\u0000|\uFFFD/g;
+  function Dh(e) {
+    return (typeof e == "string" ? e : "" + e).replace(Ux, `
+`).replace(Dx, "");
   }
-  function Rh(e, t) {
-    return t = Ah(t), Ah(e) === t;
+  function Mh(e, t) {
+    return t = Dh(t), Dh(e) === t;
   }
-  function Ci() {
+  function Ei() {
   }
-  function _t(e, t, l, a, n, i) {
+  function wt(e, t, l, a, n, i) {
     switch (l) {
       case "children":
-        typeof a == "string" ? t === "body" || t === "textarea" && a === "" || Ql(e, a) : (typeof a == "number" || typeof a == "bigint") && t !== "body" && Ql(e, "" + a);
+        typeof a == "string" ? t === "body" || t === "textarea" && a === "" || Xl(e, a) : (typeof a == "number" || typeof a == "bigint") && t !== "body" && Xl(e, "" + a);
         break;
       case "className":
-        An(e, "class", a);
+        Rn(e, "class", a);
         break;
       case "tabIndex":
-        An(e, "tabindex", a);
+        Rn(e, "tabindex", a);
         break;
       case "dir":
       case "role":
       case "viewBox":
       case "width":
       case "height":
-        An(e, l, a);
+        Rn(e, l, a);
         break;
       case "style":
-        Uu(e, a, i);
+        qu(e, a, i);
         break;
       case "data":
         if (t !== "object") {
-          An(e, "data", a);
+          Rn(e, "data", a);
           break;
         }
       case "src":
@@ -8343,7 +8343,7 @@ Error generating stack: ` + l.message + `
           e.removeAttribute(l);
           break;
         }
-        a = Dn("" + a), e.setAttribute(l, a);
+        a = Mn("" + a), e.setAttribute(l, a);
         break;
       case "action":
       case "formAction":
@@ -8354,42 +8354,42 @@ Error generating stack: ` + l.message + `
           );
           break;
         } else
-          typeof i == "function" && (l === "formAction" ? (t !== "input" && _t(e, t, "name", n.name, n, null), _t(
+          typeof i == "function" && (l === "formAction" ? (t !== "input" && wt(e, t, "name", n.name, n, null), wt(
             e,
             t,
             "formEncType",
             n.formEncType,
             n,
             null
-          ), _t(
+          ), wt(
             e,
             t,
             "formMethod",
             n.formMethod,
             n,
             null
-          ), _t(
+          ), wt(
             e,
             t,
             "formTarget",
             n.formTarget,
             n,
             null
-          )) : (_t(e, t, "encType", n.encType, n, null), _t(e, t, "method", n.method, n, null), _t(e, t, "target", n.target, n, null)));
+          )) : (wt(e, t, "encType", n.encType, n, null), wt(e, t, "method", n.method, n, null), wt(e, t, "target", n.target, n, null)));
         if (a == null || typeof a == "symbol" || typeof a == "boolean") {
           e.removeAttribute(l);
           break;
         }
-        a = Dn("" + a), e.setAttribute(l, a);
+        a = Mn("" + a), e.setAttribute(l, a);
         break;
       case "onClick":
-        a != null && (e.onclick = Ci);
+        a != null && (e.onclick = Ei);
         break;
       case "onScroll":
-        a != null && ht("scroll", e);
+        a != null && xt("scroll", e);
         break;
       case "onScrollEnd":
-        a != null && ht("scrollend", e);
+        a != null && xt("scrollend", e);
         break;
       case "dangerouslySetInnerHTML":
         if (a != null) {
@@ -8421,7 +8421,7 @@ Error generating stack: ` + l.message + `
           e.removeAttribute("xlink:href");
           break;
         }
-        l = Dn("" + a), e.setAttributeNS(
+        l = Mn("" + a), e.setAttributeNS(
           "http://www.w3.org/1999/xlink",
           "xlink:href",
           l
@@ -8477,7 +8477,7 @@ Error generating stack: ` + l.message + `
         a == null || typeof a == "function" || typeof a == "symbol" || isNaN(a) ? e.removeAttribute(l) : e.setAttribute(l, a);
         break;
       case "popover":
-        ht("beforetoggle", e), ht("toggle", e), zn(e, "popover", a);
+        xt("beforetoggle", e), xt("toggle", e), An(e, "popover", a);
         break;
       case "xlinkActuate":
         Ds(
@@ -8552,19 +8552,19 @@ Error generating stack: ` + l.message + `
         );
         break;
       case "is":
-        zn(e, "is", a);
+        An(e, "is", a);
         break;
       case "innerText":
       case "textContent":
         break;
       default:
-        (!(2 < l.length) || l[0] !== "o" && l[0] !== "O" || l[1] !== "n" && l[1] !== "N") && (l = cm.get(l) || l, zn(e, l, a));
+        (!(2 < l.length) || l[0] !== "o" && l[0] !== "O" || l[1] !== "n" && l[1] !== "N") && (l = om.get(l) || l, An(e, l, a));
     }
   }
   function Br(e, t, l, a, n, i) {
     switch (l) {
       case "style":
-        Uu(e, a, i);
+        qu(e, a, i);
         break;
       case "dangerouslySetInnerHTML":
         if (a != null) {
@@ -8577,16 +8577,16 @@ Error generating stack: ` + l.message + `
         }
         break;
       case "children":
-        typeof a == "string" ? Ql(e, a) : (typeof a == "number" || typeof a == "bigint") && Ql(e, "" + a);
+        typeof a == "string" ? Xl(e, a) : (typeof a == "number" || typeof a == "bigint") && Xl(e, "" + a);
         break;
       case "onScroll":
-        a != null && ht("scroll", e);
+        a != null && xt("scroll", e);
         break;
       case "onScrollEnd":
-        a != null && ht("scrollend", e);
+        a != null && xt("scrollend", e);
         break;
       case "onClick":
-        a != null && (e.onclick = Ci);
+        a != null && (e.onclick = Ei);
         break;
       case "suppressContentEditableWarning":
       case "suppressHydrationWarning":
@@ -8599,15 +8599,15 @@ Error generating stack: ` + l.message + `
       default:
         if (!Oa.hasOwnProperty(l))
           e: {
-            if (l[0] === "o" && l[1] === "n" && (n = l.endsWith("Capture"), t = l.slice(2, n ? l.length - 7 : void 0), i = e[St] || null, i = i != null ? i[l] : null, typeof i == "function" && e.removeEventListener(t, i, n), typeof a == "function")) {
+            if (l[0] === "o" && l[1] === "n" && (n = l.endsWith("Capture"), t = l.slice(2, n ? l.length - 7 : void 0), i = e[nt] || null, i = i != null ? i[l] : null, typeof i == "function" && e.removeEventListener(t, i, n), typeof a == "function")) {
               typeof i != "function" && i !== null && (l in e ? e[l] = null : e.hasAttribute(l) && e.removeAttribute(l)), e.addEventListener(t, a, n);
               break e;
             }
-            l in e ? e[l] = a : a === !0 ? e.setAttribute(l, "") : zn(e, l, a);
+            l in e ? e[l] = a : a === !0 ? e.setAttribute(l, "") : An(e, l, a);
           }
     }
   }
-  function Wt(e, t, l) {
+  function Ft(e, t, l) {
     switch (t) {
       case "div":
       case "span":
@@ -8619,7 +8619,7 @@ Error generating stack: ` + l.message + `
       case "li":
         break;
       case "img":
-        ht("error", e), ht("load", e);
+        xt("error", e), xt("load", e);
         var a = !1, n = !1, i;
         for (i in l)
           if (l.hasOwnProperty(i)) {
@@ -8636,14 +8636,14 @@ Error generating stack: ` + l.message + `
                 case "dangerouslySetInnerHTML":
                   throw Error(d(137, t));
                 default:
-                  _t(e, t, i, c, l, null);
+                  wt(e, t, i, c, l, null);
               }
           }
-        n && _t(e, t, "srcSet", l.srcSet, l, null), a && _t(e, t, "src", l.src, l, null);
+        n && wt(e, t, "srcSet", l.srcSet, l, null), a && wt(e, t, "src", l.src, l, null);
         return;
       case "input":
-        ht("invalid", e);
-        var o = i = c = n = null, g = null, T = null;
+        xt("invalid", e);
+        var o = i = c = n = null, p = null, T = null;
         for (a in l)
           if (l.hasOwnProperty(a)) {
             var J = l[a];
@@ -8656,7 +8656,7 @@ Error generating stack: ` + l.message + `
                   c = J;
                   break;
                 case "checked":
-                  g = J;
+                  p = J;
                   break;
                 case "defaultChecked":
                   T = J;
@@ -8673,22 +8673,22 @@ Error generating stack: ` + l.message + `
                     throw Error(d(137, t));
                   break;
                 default:
-                  _t(e, t, a, J, l, null);
+                  wt(e, t, a, J, l, null);
               }
           }
-        Tu(
+        Ru(
           e,
           i,
           o,
-          g,
+          p,
           T,
           c,
           n,
           !1
-        ), Rn(e);
+        ), Un(e);
         return;
       case "select":
-        ht("invalid", e), a = c = i = null;
+        xt("invalid", e), a = c = i = null;
         for (n in l)
           if (l.hasOwnProperty(n) && (o = l[n], o != null))
             switch (n) {
@@ -8701,12 +8701,12 @@ Error generating stack: ` + l.message + `
               case "multiple":
                 a = o;
               default:
-                _t(e, t, n, o, l, null);
+                wt(e, t, n, o, l, null);
             }
-        t = i, l = c, e.multiple = !!a, t != null ? Gl(e, !!a, t, !1) : l != null && Gl(e, !!a, l, !0);
+        t = i, l = c, e.multiple = !!a, t != null ? Ql(e, !!a, t, !1) : l != null && Ql(e, !!a, l, !0);
         return;
       case "textarea":
-        ht("invalid", e), i = n = a = null;
+        xt("invalid", e), i = n = a = null;
         for (c in l)
           if (l.hasOwnProperty(c) && (o = l[c], o != null))
             switch (c) {
@@ -8723,43 +8723,43 @@ Error generating stack: ` + l.message + `
                 if (o != null) throw Error(d(91));
                 break;
               default:
-                _t(e, t, c, o, l, null);
+                wt(e, t, c, o, l, null);
             }
-        Au(e, a, n, i), Rn(e);
+        Du(e, a, n, i), Un(e);
         return;
       case "option":
-        for (g in l)
-          if (l.hasOwnProperty(g) && (a = l[g], a != null))
-            switch (g) {
+        for (p in l)
+          if (l.hasOwnProperty(p) && (a = l[p], a != null))
+            switch (p) {
               case "selected":
                 e.selected = a && typeof a != "function" && typeof a != "symbol";
                 break;
               default:
-                _t(e, t, g, a, l, null);
+                wt(e, t, p, a, l, null);
             }
         return;
       case "dialog":
-        ht("beforetoggle", e), ht("toggle", e), ht("cancel", e), ht("close", e);
+        xt("beforetoggle", e), xt("toggle", e), xt("cancel", e), xt("close", e);
         break;
       case "iframe":
       case "object":
-        ht("load", e);
+        xt("load", e);
         break;
       case "video":
       case "audio":
         for (a = 0; a < hn.length; a++)
-          ht(hn[a], e);
+          xt(hn[a], e);
         break;
       case "image":
-        ht("error", e), ht("load", e);
+        xt("error", e), xt("load", e);
         break;
       case "details":
-        ht("toggle", e);
+        xt("toggle", e);
         break;
       case "embed":
       case "source":
       case "link":
-        ht("error", e), ht("load", e);
+        xt("error", e), xt("load", e);
       case "area":
       case "base":
       case "br":
@@ -8778,7 +8778,7 @@ Error generating stack: ` + l.message + `
               case "dangerouslySetInnerHTML":
                 throw Error(d(137, t));
               default:
-                _t(e, t, T, a, l, null);
+                wt(e, t, T, a, l, null);
             }
         return;
       default:
@@ -8796,9 +8796,9 @@ Error generating stack: ` + l.message + `
         }
     }
     for (o in l)
-      l.hasOwnProperty(o) && (a = l[o], a != null && _t(e, t, o, a, l, null));
+      l.hasOwnProperty(o) && (a = l[o], a != null && wt(e, t, o, a, l, null));
   }
-  function Ax(e, t, l, a) {
+  function Mx(e, t, l, a) {
     switch (t) {
       case "div":
       case "span":
@@ -8810,54 +8810,54 @@ Error generating stack: ` + l.message + `
       case "li":
         break;
       case "input":
-        var n = null, i = null, c = null, o = null, g = null, T = null, J = null;
-        for (q in l) {
-          var se = l[q];
-          if (l.hasOwnProperty(q) && se != null)
-            switch (q) {
+        var n = null, i = null, c = null, o = null, p = null, T = null, J = null;
+        for (H in l) {
+          var se = l[H];
+          if (l.hasOwnProperty(H) && se != null)
+            switch (H) {
               case "checked":
                 break;
               case "value":
                 break;
               case "defaultValue":
-                g = se;
+                p = se;
               default:
-                a.hasOwnProperty(q) || _t(e, t, q, null, a, se);
+                a.hasOwnProperty(H) || wt(e, t, H, null, a, se);
             }
         }
-        for (var A in a) {
-          var q = a[A];
-          if (se = l[A], a.hasOwnProperty(A) && (q != null || se != null))
-            switch (A) {
+        for (var R in a) {
+          var H = a[R];
+          if (se = l[R], a.hasOwnProperty(R) && (H != null || se != null))
+            switch (R) {
               case "type":
-                i = q;
+                i = H;
                 break;
               case "name":
-                n = q;
+                n = H;
                 break;
               case "checked":
-                T = q;
+                T = H;
                 break;
               case "defaultChecked":
-                J = q;
+                J = H;
                 break;
               case "value":
-                c = q;
+                c = H;
                 break;
               case "defaultValue":
-                o = q;
+                o = H;
                 break;
               case "children":
               case "dangerouslySetInnerHTML":
-                if (q != null)
+                if (H != null)
                   throw Error(d(137, t));
                 break;
               default:
-                q !== se && _t(
+                H !== se && wt(
                   e,
                   t,
-                  A,
-                  q,
+                  R,
+                  H,
                   a,
                   se
                 );
@@ -8867,7 +8867,7 @@ Error generating stack: ` + l.message + `
           e,
           c,
           o,
-          g,
+          p,
           T,
           J,
           i,
@@ -8875,29 +8875,29 @@ Error generating stack: ` + l.message + `
         );
         return;
       case "select":
-        q = c = o = A = null;
+        H = c = o = R = null;
         for (i in l)
-          if (g = l[i], l.hasOwnProperty(i) && g != null)
+          if (p = l[i], l.hasOwnProperty(i) && p != null)
             switch (i) {
               case "value":
                 break;
               case "multiple":
-                q = g;
+                H = p;
               default:
-                a.hasOwnProperty(i) || _t(
+                a.hasOwnProperty(i) || wt(
                   e,
                   t,
                   i,
                   null,
                   a,
-                  g
+                  p
                 );
             }
         for (n in a)
-          if (i = a[n], g = l[n], a.hasOwnProperty(n) && (i != null || g != null))
+          if (i = a[n], p = l[n], a.hasOwnProperty(n) && (i != null || p != null))
             switch (n) {
               case "value":
-                A = i;
+                R = i;
                 break;
               case "defaultValue":
                 o = i;
@@ -8905,19 +8905,19 @@ Error generating stack: ` + l.message + `
               case "multiple":
                 c = i;
               default:
-                i !== g && _t(
+                i !== p && wt(
                   e,
                   t,
                   n,
                   i,
                   a,
-                  g
+                  p
                 );
             }
-        t = o, l = c, a = q, A != null ? Gl(e, !!l, A, !1) : !!a != !!l && (t != null ? Gl(e, !!l, t, !0) : Gl(e, !!l, l ? [] : "", !1));
+        t = o, l = c, a = H, R != null ? Ql(e, !!l, R, !1) : !!a != !!l && (t != null ? Ql(e, !!l, t, !0) : Ql(e, !!l, l ? [] : "", !1));
         return;
       case "textarea":
-        q = A = null;
+        H = R = null;
         for (o in l)
           if (n = l[o], l.hasOwnProperty(o) && n != null && !a.hasOwnProperty(o))
             switch (o) {
@@ -8926,16 +8926,16 @@ Error generating stack: ` + l.message + `
               case "children":
                 break;
               default:
-                _t(e, t, o, null, a, n);
+                wt(e, t, o, null, a, n);
             }
         for (c in a)
           if (n = a[c], i = l[c], a.hasOwnProperty(c) && (n != null || i != null))
             switch (c) {
               case "value":
-                A = n;
+                R = n;
                 break;
               case "defaultValue":
-                q = n;
+                H = n;
                 break;
               case "children":
                 break;
@@ -8943,41 +8943,41 @@ Error generating stack: ` + l.message + `
                 if (n != null) throw Error(d(91));
                 break;
               default:
-                n !== i && _t(e, t, c, n, a, i);
+                n !== i && wt(e, t, c, n, a, i);
             }
-        zu(e, A, q);
+        Uu(e, R, H);
         return;
       case "option":
-        for (var Ie in l)
-          if (A = l[Ie], l.hasOwnProperty(Ie) && A != null && !a.hasOwnProperty(Ie))
-            switch (Ie) {
+        for (var Pe in l)
+          if (R = l[Pe], l.hasOwnProperty(Pe) && R != null && !a.hasOwnProperty(Pe))
+            switch (Pe) {
               case "selected":
                 e.selected = !1;
                 break;
               default:
-                _t(
+                wt(
                   e,
                   t,
-                  Ie,
+                  Pe,
                   null,
                   a,
-                  A
+                  R
                 );
             }
-        for (g in a)
-          if (A = a[g], q = l[g], a.hasOwnProperty(g) && A !== q && (A != null || q != null))
-            switch (g) {
+        for (p in a)
+          if (R = a[p], H = l[p], a.hasOwnProperty(p) && R !== H && (R != null || H != null))
+            switch (p) {
               case "selected":
-                e.selected = A && typeof A != "function" && typeof A != "symbol";
+                e.selected = R && typeof R != "function" && typeof R != "symbol";
                 break;
               default:
-                _t(
+                wt(
                   e,
                   t,
-                  g,
-                  A,
+                  p,
+                  R,
                   a,
-                  q
+                  H
                 );
             }
         return;
@@ -8996,60 +8996,60 @@ Error generating stack: ` + l.message + `
       case "track":
       case "wbr":
       case "menuitem":
-        for (var Je in l)
-          A = l[Je], l.hasOwnProperty(Je) && A != null && !a.hasOwnProperty(Je) && _t(e, t, Je, null, a, A);
+        for (var We in l)
+          R = l[We], l.hasOwnProperty(We) && R != null && !a.hasOwnProperty(We) && wt(e, t, We, null, a, R);
         for (T in a)
-          if (A = a[T], q = l[T], a.hasOwnProperty(T) && A !== q && (A != null || q != null))
+          if (R = a[T], H = l[T], a.hasOwnProperty(T) && R !== H && (R != null || H != null))
             switch (T) {
               case "children":
               case "dangerouslySetInnerHTML":
-                if (A != null)
+                if (R != null)
                   throw Error(d(137, t));
                 break;
               default:
-                _t(
+                wt(
                   e,
                   t,
                   T,
-                  A,
+                  R,
                   a,
-                  q
+                  H
                 );
             }
         return;
       default:
         if (tc(t)) {
-          for (var Nt in l)
-            A = l[Nt], l.hasOwnProperty(Nt) && A !== void 0 && !a.hasOwnProperty(Nt) && Br(
+          for (var kt in l)
+            R = l[kt], l.hasOwnProperty(kt) && R !== void 0 && !a.hasOwnProperty(kt) && Br(
               e,
               t,
-              Nt,
+              kt,
               void 0,
               a,
-              A
+              R
             );
           for (J in a)
-            A = a[J], q = l[J], !a.hasOwnProperty(J) || A === q || A === void 0 && q === void 0 || Br(
+            R = a[J], H = l[J], !a.hasOwnProperty(J) || R === H || R === void 0 && H === void 0 || Br(
               e,
               t,
               J,
-              A,
+              R,
               a,
-              q
+              H
             );
           return;
         }
     }
     for (var C in l)
-      A = l[C], l.hasOwnProperty(C) && A != null && !a.hasOwnProperty(C) && _t(e, t, C, null, a, A);
+      R = l[C], l.hasOwnProperty(C) && R != null && !a.hasOwnProperty(C) && wt(e, t, C, null, a, R);
     for (se in a)
-      A = a[se], q = l[se], !a.hasOwnProperty(se) || A === q || A == null && q == null || _t(e, t, se, A, a, q);
+      R = a[se], H = l[se], !a.hasOwnProperty(se) || R === H || R == null && H == null || wt(e, t, se, R, a, H);
   }
   var Lr = null, Yr = null;
-  function Ei(e) {
+  function Oi(e) {
     return e.nodeType === 9 ? e : e.ownerDocument;
   }
-  function Uh(e) {
+  function qh(e) {
     switch (e) {
       case "http://www.w3.org/2000/svg":
         return 1;
@@ -9059,7 +9059,7 @@ Error generating stack: ` + l.message + `
         return 0;
     }
   }
-  function Dh(e, t) {
+  function Hh(e, t) {
     if (e === 0)
       switch (t) {
         case "svg":
@@ -9075,14 +9075,14 @@ Error generating stack: ` + l.message + `
     return e === "textarea" || e === "noscript" || typeof t.children == "string" || typeof t.children == "number" || typeof t.children == "bigint" || typeof t.dangerouslySetInnerHTML == "object" && t.dangerouslySetInnerHTML !== null && t.dangerouslySetInnerHTML.__html != null;
   }
   var Qr = null;
-  function Rx() {
+  function qx() {
     var e = window.event;
     return e && e.type === "popstate" ? e === Qr ? !1 : (Qr = e, !0) : (Qr = null, !1);
   }
-  var Mh = typeof setTimeout == "function" ? setTimeout : void 0, Ux = typeof clearTimeout == "function" ? clearTimeout : void 0, qh = typeof Promise == "function" ? Promise : void 0, Dx = typeof queueMicrotask == "function" ? queueMicrotask : typeof qh < "u" ? function(e) {
-    return qh.resolve(null).then(e).catch(Mx);
-  } : Mh;
-  function Mx(e) {
+  var Bh = typeof setTimeout == "function" ? setTimeout : void 0, Hx = typeof clearTimeout == "function" ? clearTimeout : void 0, Lh = typeof Promise == "function" ? Promise : void 0, Bx = typeof queueMicrotask == "function" ? queueMicrotask : typeof Lh < "u" ? function(e) {
+    return Lh.resolve(null).then(e).catch(Lx);
+  } : Bh;
+  function Lx(e) {
     setTimeout(function() {
       throw e;
     });
@@ -9090,7 +9090,7 @@ Error generating stack: ` + l.message + `
   function jl(e) {
     return e === "head";
   }
-  function Hh(e, t) {
+  function Yh(e, t) {
     var l = t, a = 0, n = 0;
     do {
       var i = l.nextSibling;
@@ -9101,8 +9101,8 @@ Error generating stack: ` + l.message + `
             var c = e.ownerDocument;
             if (l & 1 && mn(c.documentElement), l & 2 && mn(c.body), l & 4)
               for (l = c.head, mn(l), c = l.firstChild; c; ) {
-                var o = c.nextSibling, g = c.nodeName;
-                c[ze] || g === "SCRIPT" || g === "STYLE" || g === "LINK" && c.rel.toLowerCase() === "stylesheet" || l.removeChild(c), c = o;
+                var o = c.nextSibling, p = c.nodeName;
+                c[Ue] || p === "SCRIPT" || p === "STYLE" || p === "LINK" && c.rel.toLowerCase() === "stylesheet" || l.removeChild(c), c = o;
               }
           }
           if (n === 0) {
@@ -9125,7 +9125,7 @@ Error generating stack: ` + l.message + `
         case "HTML":
         case "HEAD":
         case "BODY":
-          Xr(l), Ae(l);
+          Xr(l), De(l);
           continue;
         case "SCRIPT":
         case "STYLE":
@@ -9136,14 +9136,14 @@ Error generating stack: ` + l.message + `
       e.removeChild(l);
     }
   }
-  function qx(e, t, l, a) {
+  function Yx(e, t, l, a) {
     for (; e.nodeType === 1; ) {
       var n = l;
       if (e.nodeName.toLowerCase() !== t.toLowerCase()) {
         if (!a && (e.nodeName !== "INPUT" || e.type !== "hidden"))
           break;
       } else if (a) {
-        if (!e[ze])
+        if (!e[Ue])
           switch (t) {
             case "meta":
               if (!e.hasAttribute("itemprop")) break;
@@ -9173,7 +9173,7 @@ Error generating stack: ` + l.message + `
     }
     return null;
   }
-  function Hx(e, t, l) {
+  function Gx(e, t, l) {
     if (t === "") return null;
     for (; e.nodeType !== 3; )
       if ((e.nodeType !== 1 || e.nodeName !== "INPUT" || e.type !== "hidden") && !l || (e = Ss(e.nextSibling), e === null)) return null;
@@ -9182,7 +9182,7 @@ Error generating stack: ` + l.message + `
   function Zr(e) {
     return e.data === "$!" || e.data === "$?" && e.ownerDocument.readyState === "complete";
   }
-  function Bx(e, t) {
+  function Qx(e, t) {
     var l = e.ownerDocument;
     if (e.data !== "$?" || l.readyState === "complete")
       t();
@@ -9206,7 +9206,7 @@ Error generating stack: ` + l.message + `
     return e;
   }
   var Vr = null;
-  function Bh(e) {
+  function Gh(e) {
     e = e.previousSibling;
     for (var t = 0; e; ) {
       if (e.nodeType === 8) {
@@ -9220,8 +9220,8 @@ Error generating stack: ` + l.message + `
     }
     return null;
   }
-  function Lh(e, t, l) {
-    switch (t = Ei(l), e) {
+  function Qh(e, t, l) {
+    switch (t = Oi(l), e) {
       case "html":
         if (e = t.documentElement, !e) throw Error(d(452));
         return e;
@@ -9238,49 +9238,49 @@ Error generating stack: ` + l.message + `
   function mn(e) {
     for (var t = e.attributes; t.length; )
       e.removeAttributeNode(t[0]);
-    Ae(e);
+    De(e);
   }
-  var ys = /* @__PURE__ */ new Map(), Yh = /* @__PURE__ */ new Set();
-  function Oi(e) {
+  var ys = /* @__PURE__ */ new Map(), Xh = /* @__PURE__ */ new Set();
+  function Ti(e) {
     return typeof e.getRootNode == "function" ? e.getRootNode() : e.nodeType === 9 ? e : e.ownerDocument;
   }
-  var $s = Y.d;
-  Y.d = {
-    f: Lx,
-    r: Yx,
-    D: Gx,
-    C: Qx,
-    L: Xx,
-    m: Zx,
-    X: Jx,
-    S: Vx,
-    M: Kx
+  var $s = G.d;
+  G.d = {
+    f: Xx,
+    r: Zx,
+    D: Vx,
+    C: Jx,
+    L: Kx,
+    m: $x,
+    X: Fx,
+    S: Wx,
+    M: Ix
   };
-  function Lx() {
-    var e = $s.f(), t = bi();
+  function Xx() {
+    var e = $s.f(), t = yi();
     return e || t;
   }
-  function Yx(e) {
-    var t = Xt(e);
-    t !== null && t.tag === 5 && t.type === "form" ? io(t) : $s.r(e);
+  function Zx(e) {
+    var t = Zt(e);
+    t !== null && t.tag === 5 && t.type === "form" ? uo(t) : $s.r(e);
   }
-  var pa = typeof document > "u" ? null : document;
-  function Gh(e, t, l) {
-    var a = pa;
+  var ga = typeof document > "u" ? null : document;
+  function Zh(e, t, l) {
+    var a = ga;
     if (a && typeof t == "string" && t) {
       var n = ms(t);
-      n = 'link[rel="' + e + '"][href="' + n + '"]', typeof l == "string" && (n += '[crossorigin="' + l + '"]'), Yh.has(n) || (Yh.add(n), e = { rel: e, crossOrigin: l, href: t }, a.querySelector(n) === null && (t = a.createElement("link"), Wt(t, "link", e), qt(t), a.head.appendChild(t)));
+      n = 'link[rel="' + e + '"][href="' + n + '"]', typeof l == "string" && (n += '[crossorigin="' + l + '"]'), Xh.has(n) || (Xh.add(n), e = { rel: e, crossOrigin: l, href: t }, a.querySelector(n) === null && (t = a.createElement("link"), Ft(t, "link", e), qt(t), a.head.appendChild(t)));
     }
   }
-  function Gx(e) {
-    $s.D(e), Gh("dns-prefetch", e, null);
+  function Vx(e) {
+    $s.D(e), Zh("dns-prefetch", e, null);
   }
-  function Qx(e, t) {
-    $s.C(e, t), Gh("preconnect", e, t);
+  function Jx(e, t) {
+    $s.C(e, t), Zh("preconnect", e, t);
   }
-  function Xx(e, t, l) {
+  function Kx(e, t, l) {
     $s.L(e, t, l);
-    var a = pa;
+    var a = ga;
     if (a && e && t) {
       var n = 'link[rel="preload"][as="' + ms(t) + '"]';
       t === "image" && l && l.imageSrcSet ? (n += '[imagesrcset="' + ms(
@@ -9291,10 +9291,10 @@ Error generating stack: ` + l.message + `
       var i = n;
       switch (t) {
         case "style":
-          i = ga(e);
+          i = ba(e);
           break;
         case "script":
-          i = ba(e);
+          i = ya(e);
       }
       ys.has(i) || (e = U(
         {
@@ -9303,12 +9303,12 @@ Error generating stack: ` + l.message + `
           as: t
         },
         l
-      ), ys.set(i, e), a.querySelector(n) !== null || t === "style" && a.querySelector(xn(i)) || t === "script" && a.querySelector(jn(i)) || (t = a.createElement("link"), Wt(t, "link", e), qt(t), a.head.appendChild(t)));
+      ), ys.set(i, e), a.querySelector(n) !== null || t === "style" && a.querySelector(xn(i)) || t === "script" && a.querySelector(jn(i)) || (t = a.createElement("link"), Ft(t, "link", e), qt(t), a.head.appendChild(t)));
     }
   }
-  function Zx(e, t) {
+  function $x(e, t) {
     $s.m(e, t);
-    var l = pa;
+    var l = ga;
     if (l && e) {
       var a = t && typeof t.as == "string" ? t.as : "script", n = 'link[rel="modulepreload"][as="' + ms(a) + '"][href="' + ms(e) + '"]', i = n;
       switch (a) {
@@ -9318,7 +9318,7 @@ Error generating stack: ` + l.message + `
         case "sharedworker":
         case "worker":
         case "script":
-          i = ba(e);
+          i = ya(e);
       }
       if (!ys.has(i) && (e = U({ rel: "modulepreload", href: e }, t), ys.set(i, e), l.querySelector(n) === null)) {
         switch (a) {
@@ -9331,15 +9331,15 @@ Error generating stack: ` + l.message + `
             if (l.querySelector(jn(i)))
               return;
         }
-        a = l.createElement("link"), Wt(a, "link", e), qt(a), l.head.appendChild(a);
+        a = l.createElement("link"), Ft(a, "link", e), qt(a), l.head.appendChild(a);
       }
     }
   }
-  function Vx(e, t, l) {
+  function Wx(e, t, l) {
     $s.S(e, t, l);
-    var a = pa;
+    var a = ga;
     if (a && e) {
-      var n = Us(a).hoistableStyles, i = ga(e);
+      var n = Us(a).hoistableStyles, i = ba(e);
       t = t || "default";
       var c = n.get(i);
       if (!c) {
@@ -9353,14 +9353,14 @@ Error generating stack: ` + l.message + `
             { rel: "stylesheet", href: e, "data-precedence": t },
             l
           ), (l = ys.get(i)) && Jr(e, l);
-          var g = c = a.createElement("link");
-          qt(g), Wt(g, "link", e), g._p = new Promise(function(T, J) {
-            g.onload = T, g.onerror = J;
-          }), g.addEventListener("load", function() {
+          var p = c = a.createElement("link");
+          qt(p), Ft(p, "link", e), p._p = new Promise(function(T, J) {
+            p.onload = T, p.onerror = J;
+          }), p.addEventListener("load", function() {
             o.loading |= 1;
-          }), g.addEventListener("error", function() {
+          }), p.addEventListener("error", function() {
             o.loading |= 2;
-          }), o.loading |= 4, Ti(c, t, a);
+          }), o.loading |= 4, zi(c, t, a);
         }
         c = {
           type: "stylesheet",
@@ -9371,12 +9371,12 @@ Error generating stack: ` + l.message + `
       }
     }
   }
-  function Jx(e, t) {
+  function Fx(e, t) {
     $s.X(e, t);
-    var l = pa;
+    var l = ga;
     if (l && e) {
-      var a = Us(l).hoistableScripts, n = ba(e), i = a.get(n);
-      i || (i = l.querySelector(jn(n)), i || (e = U({ src: e, async: !0 }, t), (t = ys.get(n)) && Kr(e, t), i = l.createElement("script"), qt(i), Wt(i, "link", e), l.head.appendChild(i)), i = {
+      var a = Us(l).hoistableScripts, n = ya(e), i = a.get(n);
+      i || (i = l.querySelector(jn(n)), i || (e = U({ src: e, async: !0 }, t), (t = ys.get(n)) && Kr(e, t), i = l.createElement("script"), qt(i), Ft(i, "link", e), l.head.appendChild(i)), i = {
         type: "script",
         instance: i,
         count: 1,
@@ -9384,12 +9384,12 @@ Error generating stack: ` + l.message + `
       }, a.set(n, i));
     }
   }
-  function Kx(e, t) {
+  function Ix(e, t) {
     $s.M(e, t);
-    var l = pa;
+    var l = ga;
     if (l && e) {
-      var a = Us(l).hoistableScripts, n = ba(e), i = a.get(n);
-      i || (i = l.querySelector(jn(n)), i || (e = U({ src: e, async: !0, type: "module" }, t), (t = ys.get(n)) && Kr(e, t), i = l.createElement("script"), qt(i), Wt(i, "link", e), l.head.appendChild(i)), i = {
+      var a = Us(l).hoistableScripts, n = ya(e), i = a.get(n);
+      i || (i = l.querySelector(jn(n)), i || (e = U({ src: e, async: !0, type: "module" }, t), (t = ys.get(n)) && Kr(e, t), i = l.createElement("script"), qt(i), Ft(i, "link", e), l.head.appendChild(i)), i = {
         type: "script",
         instance: i,
         count: 1,
@@ -9397,15 +9397,15 @@ Error generating stack: ` + l.message + `
       }, a.set(n, i));
     }
   }
-  function Qh(e, t, l, a) {
-    var n = (n = P.current) ? Oi(n) : null;
+  function Vh(e, t, l, a) {
+    var n = (n = P.current) ? Ti(n) : null;
     if (!n) throw Error(d(446));
     switch (e) {
       case "meta":
       case "title":
         return null;
       case "style":
-        return typeof l.precedence == "string" && typeof l.href == "string" ? (t = ga(l.href), l = Us(
+        return typeof l.precedence == "string" && typeof l.href == "string" ? (t = ba(l.href), l = Us(
           n
         ).hoistableStyles, a = l.get(t), a || (a = {
           type: "style",
@@ -9415,7 +9415,7 @@ Error generating stack: ` + l.message + `
         }, l.set(t, a)), a) : { type: "void", instance: null, count: 0, state: null };
       case "link":
         if (l.rel === "stylesheet" && typeof l.href == "string" && typeof l.precedence == "string") {
-          e = ga(l.href);
+          e = ba(l.href);
           var i = Us(
             n
           ).hoistableStyles, c = i.get(e);
@@ -9435,7 +9435,7 @@ Error generating stack: ` + l.message + `
             media: l.media,
             hrefLang: l.hrefLang,
             referrerPolicy: l.referrerPolicy
-          }, ys.set(e, l), i || $x(
+          }, ys.set(e, l), i || Px(
             n,
             e,
             l,
@@ -9448,7 +9448,7 @@ Error generating stack: ` + l.message + `
           throw Error(d(529, ""));
         return null;
       case "script":
-        return t = l.async, l = l.src, typeof l == "string" && t && typeof t != "function" && typeof t != "symbol" ? (t = ba(l), l = Us(
+        return t = l.async, l = l.src, typeof l == "string" && t && typeof t != "function" && typeof t != "symbol" ? (t = ya(l), l = Us(
           n
         ).hoistableScripts, a = l.get(t), a || (a = {
           type: "script",
@@ -9460,32 +9460,32 @@ Error generating stack: ` + l.message + `
         throw Error(d(444, e));
     }
   }
-  function ga(e) {
+  function ba(e) {
     return 'href="' + ms(e) + '"';
   }
   function xn(e) {
     return 'link[rel="stylesheet"][' + e + "]";
   }
-  function Xh(e) {
+  function Jh(e) {
     return U({}, e, {
       "data-precedence": e.precedence,
       precedence: null
     });
   }
-  function $x(e, t, l, a) {
+  function Px(e, t, l, a) {
     e.querySelector('link[rel="preload"][as="style"][' + t + "]") ? a.loading = 1 : (t = e.createElement("link"), a.preload = t, t.addEventListener("load", function() {
       return a.loading |= 1;
     }), t.addEventListener("error", function() {
       return a.loading |= 2;
-    }), Wt(t, "link", l), qt(t), e.head.appendChild(t));
+    }), Ft(t, "link", l), qt(t), e.head.appendChild(t));
   }
-  function ba(e) {
+  function ya(e) {
     return '[src="' + ms(e) + '"]';
   }
   function jn(e) {
     return "script[async]" + e;
   }
-  function Zh(e, t, l) {
+  function Kh(e, t, l) {
     if (t.count++, t.instance === null)
       switch (t.type) {
         case "style":
@@ -9502,33 +9502,33 @@ Error generating stack: ` + l.message + `
           });
           return a = (e.ownerDocument || e).createElement(
             "style"
-          ), qt(a), Wt(a, "style", n), Ti(a, l.precedence, e), t.instance = a;
+          ), qt(a), Ft(a, "style", n), zi(a, l.precedence, e), t.instance = a;
         case "stylesheet":
-          n = ga(l.href);
+          n = ba(l.href);
           var i = e.querySelector(
             xn(n)
           );
           if (i)
             return t.state.loading |= 4, t.instance = i, qt(i), i;
-          a = Xh(l), (n = ys.get(n)) && Jr(a, n), i = (e.ownerDocument || e).createElement("link"), qt(i);
+          a = Jh(l), (n = ys.get(n)) && Jr(a, n), i = (e.ownerDocument || e).createElement("link"), qt(i);
           var c = i;
-          return c._p = new Promise(function(o, g) {
-            c.onload = o, c.onerror = g;
-          }), Wt(i, "link", a), t.state.loading |= 4, Ti(i, l.precedence, e), t.instance = i;
+          return c._p = new Promise(function(o, p) {
+            c.onload = o, c.onerror = p;
+          }), Ft(i, "link", a), t.state.loading |= 4, zi(i, l.precedence, e), t.instance = i;
         case "script":
-          return i = ba(l.src), (n = e.querySelector(
+          return i = ya(l.src), (n = e.querySelector(
             jn(i)
-          )) ? (t.instance = n, qt(n), n) : (a = l, (n = ys.get(i)) && (a = U({}, l), Kr(a, n)), e = e.ownerDocument || e, n = e.createElement("script"), qt(n), Wt(n, "link", a), e.head.appendChild(n), t.instance = n);
+          )) ? (t.instance = n, qt(n), n) : (a = l, (n = ys.get(i)) && (a = U({}, l), Kr(a, n)), e = e.ownerDocument || e, n = e.createElement("script"), qt(n), Ft(n, "link", a), e.head.appendChild(n), t.instance = n);
         case "void":
           return null;
         default:
           throw Error(d(443, t.type));
       }
     else
-      t.type === "stylesheet" && (t.state.loading & 4) === 0 && (a = t.instance, t.state.loading |= 4, Ti(a, l.precedence, e));
+      t.type === "stylesheet" && (t.state.loading & 4) === 0 && (a = t.instance, t.state.loading |= 4, zi(a, l.precedence, e));
     return t.instance;
   }
-  function Ti(e, t, l) {
+  function zi(e, t, l) {
     for (var a = l.querySelectorAll(
       'link[rel="stylesheet"][data-precedence],style[data-precedence]'
     ), n = a.length ? a[a.length - 1] : null, i = n, c = 0; c < a.length; c++) {
@@ -9544,17 +9544,17 @@ Error generating stack: ` + l.message + `
   function Kr(e, t) {
     e.crossOrigin == null && (e.crossOrigin = t.crossOrigin), e.referrerPolicy == null && (e.referrerPolicy = t.referrerPolicy), e.integrity == null && (e.integrity = t.integrity);
   }
-  var zi = null;
-  function Vh(e, t, l) {
-    if (zi === null) {
-      var a = /* @__PURE__ */ new Map(), n = zi = /* @__PURE__ */ new Map();
+  var Ai = null;
+  function $h(e, t, l) {
+    if (Ai === null) {
+      var a = /* @__PURE__ */ new Map(), n = Ai = /* @__PURE__ */ new Map();
       n.set(l, a);
     } else
-      n = zi, a = n.get(l), a || (a = /* @__PURE__ */ new Map(), n.set(l, a));
+      n = Ai, a = n.get(l), a || (a = /* @__PURE__ */ new Map(), n.set(l, a));
     if (a.has(e)) return a;
     for (a.set(e, null), l = l.getElementsByTagName(e), n = 0; n < l.length; n++) {
       var i = l[n];
-      if (!(i[ze] || i[rt] || e === "link" && i.getAttribute("rel") === "stylesheet") && i.namespaceURI !== "http://www.w3.org/2000/svg") {
+      if (!(i[Ue] || i[me] || e === "link" && i.getAttribute("rel") === "stylesheet") && i.namespaceURI !== "http://www.w3.org/2000/svg") {
         var c = i.getAttribute(t) || "";
         c = e + c;
         var o = a.get(c);
@@ -9563,13 +9563,13 @@ Error generating stack: ` + l.message + `
     }
     return a;
   }
-  function Jh(e, t, l) {
+  function Wh(e, t, l) {
     e = e.ownerDocument || e, e.head.insertBefore(
       l,
       t === "title" ? e.querySelector("head > title") : null
     );
   }
-  function Wx(e, t, l) {
+  function ej(e, t, l) {
     if (l === 1 || t.itemProp != null) return !1;
     switch (e) {
       case "meta":
@@ -9594,34 +9594,34 @@ Error generating stack: ` + l.message + `
     }
     return !1;
   }
-  function Kh(e) {
+  function Fh(e) {
     return !(e.type === "stylesheet" && (e.state.loading & 3) === 0);
   }
   var vn = null;
-  function Fx() {
+  function tj() {
   }
-  function Ix(e, t, l) {
+  function sj(e, t, l) {
     if (vn === null) throw Error(d(475));
     var a = vn;
     if (t.type === "stylesheet" && (typeof l.media != "string" || matchMedia(l.media).matches !== !1) && (t.state.loading & 4) === 0) {
       if (t.instance === null) {
-        var n = ga(l.href), i = e.querySelector(
+        var n = ba(l.href), i = e.querySelector(
           xn(n)
         );
         if (i) {
-          e = i._p, e !== null && typeof e == "object" && typeof e.then == "function" && (a.count++, a = Ai.bind(a), e.then(a, a)), t.state.loading |= 4, t.instance = i, qt(i);
+          e = i._p, e !== null && typeof e == "object" && typeof e.then == "function" && (a.count++, a = Ri.bind(a), e.then(a, a)), t.state.loading |= 4, t.instance = i, qt(i);
           return;
         }
-        i = e.ownerDocument || e, l = Xh(l), (n = ys.get(n)) && Jr(l, n), i = i.createElement("link"), qt(i);
+        i = e.ownerDocument || e, l = Jh(l), (n = ys.get(n)) && Jr(l, n), i = i.createElement("link"), qt(i);
         var c = i;
-        c._p = new Promise(function(o, g) {
-          c.onload = o, c.onerror = g;
-        }), Wt(i, "link", l), t.instance = i;
+        c._p = new Promise(function(o, p) {
+          c.onload = o, c.onerror = p;
+        }), Ft(i, "link", l), t.instance = i;
       }
-      a.stylesheets === null && (a.stylesheets = /* @__PURE__ */ new Map()), a.stylesheets.set(t, e), (e = t.state.preload) && (t.state.loading & 3) === 0 && (a.count++, t = Ai.bind(a), e.addEventListener("load", t), e.addEventListener("error", t));
+      a.stylesheets === null && (a.stylesheets = /* @__PURE__ */ new Map()), a.stylesheets.set(t, e), (e = t.state.preload) && (t.state.loading & 3) === 0 && (a.count++, t = Ri.bind(a), e.addEventListener("load", t), e.addEventListener("error", t));
     }
   }
-  function Px() {
+  function lj() {
     if (vn === null) throw Error(d(475));
     var e = vn;
     return e.stylesheets && e.count === 0 && $r(e, e.stylesheets), 0 < e.count ? function(t) {
@@ -9636,7 +9636,7 @@ Error generating stack: ` + l.message + `
       };
     } : null;
   }
-  function Ai() {
+  function Ri() {
     if (this.count--, this.count === 0) {
       if (this.stylesheets) $r(this, this.stylesheets);
       else if (this.unsuspend) {
@@ -9645,16 +9645,16 @@ Error generating stack: ` + l.message + `
       }
     }
   }
-  var Ri = null;
+  var Ui = null;
   function $r(e, t) {
-    e.stylesheets = null, e.unsuspend !== null && (e.count++, Ri = /* @__PURE__ */ new Map(), t.forEach(ej, e), Ri = null, Ai.call(e));
+    e.stylesheets = null, e.unsuspend !== null && (e.count++, Ui = /* @__PURE__ */ new Map(), t.forEach(aj, e), Ui = null, Ri.call(e));
   }
-  function ej(e, t) {
+  function aj(e, t) {
     if (!(t.state.loading & 4)) {
-      var l = Ri.get(e);
+      var l = Ui.get(e);
       if (l) var a = l.get(null);
       else {
-        l = /* @__PURE__ */ new Map(), Ri.set(e, l);
+        l = /* @__PURE__ */ new Map(), Ui.set(e, l);
         for (var n = e.querySelectorAll(
           "link[data-precedence],style[data-precedence]"
         ), i = 0; i < n.length; i++) {
@@ -9663,7 +9663,7 @@ Error generating stack: ` + l.message + `
         }
         a && l.set(null, a);
       }
-      n = t.instance, c = n.getAttribute("data-precedence"), i = l.get(c) || a, i === a && l.set(null, n), l.set(c, n), this.count++, a = Ai.bind(this), n.addEventListener("load", a), n.addEventListener("error", a), i ? i.parentNode.insertBefore(n, i.nextSibling) : (e = e.nodeType === 9 ? e.head : e, e.insertBefore(n, e.firstChild)), t.state.loading |= 4;
+      n = t.instance, c = n.getAttribute("data-precedence"), i = l.get(c) || a, i === a && l.set(null, n), l.set(c, n), this.count++, a = Ri.bind(this), n.addEventListener("load", a), n.addEventListener("error", a), i ? i.parentNode.insertBefore(n, i.nextSibling) : (e = e.nodeType === 9 ? e.head : e, e.insertBefore(n, e.firstChild)), t.state.loading |= 4;
     }
   }
   var pn = {
@@ -9674,17 +9674,17 @@ Error generating stack: ` + l.message + `
     _currentValue2: ee,
     _threadCount: 0
   };
-  function tj(e, t, l, a, n, i, c, o) {
-    this.tag = 1, this.containerInfo = e, this.pingCache = this.current = this.pendingChildren = null, this.timeoutHandle = -1, this.callbackNode = this.next = this.pendingContext = this.context = this.cancelPendingCommit = null, this.callbackPriority = 0, this.expirationTimes = v(-1), this.entangledLanes = this.shellSuspendCounter = this.errorRecoveryDisabledLanes = this.expiredLanes = this.warmLanes = this.pingedLanes = this.suspendedLanes = this.pendingLanes = 0, this.entanglements = v(0), this.hiddenUpdates = v(null), this.identifierPrefix = a, this.onUncaughtError = n, this.onCaughtError = i, this.onRecoverableError = c, this.pooledCache = null, this.pooledCacheLanes = 0, this.formState = o, this.incompleteTransitions = /* @__PURE__ */ new Map();
+  function nj(e, t, l, a, n, i, c, o) {
+    this.tag = 1, this.containerInfo = e, this.pingCache = this.current = this.pendingChildren = null, this.timeoutHandle = -1, this.callbackNode = this.next = this.pendingContext = this.context = this.cancelPendingCommit = null, this.callbackPriority = 0, this.expirationTimes = x(-1), this.entangledLanes = this.shellSuspendCounter = this.errorRecoveryDisabledLanes = this.expiredLanes = this.warmLanes = this.pingedLanes = this.suspendedLanes = this.pendingLanes = 0, this.entanglements = x(0), this.hiddenUpdates = x(null), this.identifierPrefix = a, this.onUncaughtError = n, this.onCaughtError = i, this.onRecoverableError = c, this.pooledCache = null, this.pooledCacheLanes = 0, this.formState = o, this.incompleteTransitions = /* @__PURE__ */ new Map();
   }
-  function $h(e, t, l, a, n, i, c, o, g, T, J, se) {
-    return e = new tj(
+  function Ih(e, t, l, a, n, i, c, o, p, T, J, se) {
+    return e = new nj(
       e,
       t,
       l,
       c,
       o,
-      g,
+      p,
       T,
       se
     ), t = 1, i === !0 && (t |= 24), i = cs(3, null, null, t), e.current = i, i.stateNode = e, t = Tc(), t.refCount++, e.pooledCache = t, t.refCount++, i.memoizedState = {
@@ -9693,60 +9693,60 @@ Error generating stack: ` + l.message + `
       cache: t
     }, Uc(i), e;
   }
-  function Wh(e) {
-    return e ? (e = Fl, e) : Fl;
+  function Ph(e) {
+    return e ? (e = Il, e) : Il;
   }
-  function Fh(e, t, l, a, n, i) {
-    n = Wh(n), a.context === null ? a.context = n : a.pendingContext = n, a = ll(t), a.payload = { element: l }, i = i === void 0 ? null : i, i !== null && (a.callback = i), l = al(e, a, t), l !== null && (hs(l, e, t), Ja(l, e, t));
+  function ef(e, t, l, a, n, i) {
+    n = Ph(n), a.context === null ? a.context = n : a.pendingContext = n, a = ll(t), a.payload = { element: l }, i = i === void 0 ? null : i, i !== null && (a.callback = i), l = al(e, a, t), l !== null && (hs(l, e, t), Ja(l, e, t));
   }
-  function Ih(e, t) {
+  function tf(e, t) {
     if (e = e.memoizedState, e !== null && e.dehydrated !== null) {
       var l = e.retryLane;
       e.retryLane = l !== 0 && l < t ? l : t;
     }
   }
   function Wr(e, t) {
-    Ih(e, t), (e = e.alternate) && Ih(e, t);
+    tf(e, t), (e = e.alternate) && tf(e, t);
   }
-  function Ph(e) {
+  function sf(e) {
     if (e.tag === 13) {
-      var t = Wl(e, 67108864);
+      var t = Fl(e, 67108864);
       t !== null && hs(t, e, 67108864), Wr(e, 67108864);
     }
   }
-  var Ui = !0;
-  function sj(e, t, l, a) {
-    var n = y.T;
-    y.T = null;
-    var i = Y.p;
+  var Di = !0;
+  function ij(e, t, l, a) {
+    var n = b.T;
+    b.T = null;
+    var i = G.p;
     try {
-      Y.p = 2, Fr(e, t, l, a);
+      G.p = 2, Fr(e, t, l, a);
     } finally {
-      Y.p = i, y.T = n;
+      G.p = i, b.T = n;
     }
   }
-  function lj(e, t, l, a) {
-    var n = y.T;
-    y.T = null;
-    var i = Y.p;
+  function cj(e, t, l, a) {
+    var n = b.T;
+    b.T = null;
+    var i = G.p;
     try {
-      Y.p = 8, Fr(e, t, l, a);
+      G.p = 8, Fr(e, t, l, a);
     } finally {
-      Y.p = i, y.T = n;
+      G.p = i, b.T = n;
     }
   }
   function Fr(e, t, l, a) {
-    if (Ui) {
+    if (Di) {
       var n = Ir(a);
       if (n === null)
         Hr(
           e,
           t,
           a,
-          Di,
+          Mi,
           l
-        ), tf(e, a);
-      else if (nj(
+        ), af(e, a);
+      else if (uj(
         n,
         e,
         t,
@@ -9754,32 +9754,32 @@ Error generating stack: ` + l.message + `
         a
       ))
         a.stopPropagation();
-      else if (tf(e, a), t & 4 && -1 < aj.indexOf(e)) {
+      else if (af(e, a), t & 4 && -1 < rj.indexOf(e)) {
         for (; n !== null; ) {
-          var i = Xt(n);
+          var i = Zt(n);
           if (i !== null)
             switch (i.tag) {
               case 3:
                 if (i = i.stateNode, i.current.memoizedState.isDehydrated) {
-                  var c = _(i.pendingLanes);
+                  var c = y(i.pendingLanes);
                   if (c !== 0) {
                     var o = i;
                     for (o.pendingLanes |= 2, o.entangledLanes |= 2; c; ) {
-                      var g = 1 << 31 - tt(c);
-                      o.entanglements[1] |= g, c &= ~g;
+                      var p = 1 << 31 - Xe(c);
+                      o.entanglements[1] |= p, c &= ~p;
                     }
-                    As(i), (gt & 6) === 0 && (pi = Le() + 500, on(0));
+                    As(i), (yt & 6) === 0 && (gi = Be() + 500, on(0));
                   }
                 }
                 break;
               case 13:
-                o = Wl(i, 2), o !== null && hs(o, i, 2), bi(), Wr(i, 2);
+                o = Fl(i, 2), o !== null && hs(o, i, 2), yi(), Wr(i, 2);
             }
           if (i = Ir(a), i === null && Hr(
             e,
             t,
             a,
-            Di,
+            Mi,
             l
           ), i === n) break;
           n = i;
@@ -9798,10 +9798,10 @@ Error generating stack: ` + l.message + `
   function Ir(e) {
     return e = lc(e), Pr(e);
   }
-  var Di = null;
+  var Mi = null;
   function Pr(e) {
-    if (Di = null, e = at(e), e !== null) {
-      var t = B(e);
+    if (Mi = null, e = ct(e), e !== null) {
+      var t = M(e);
       if (t === null) e = null;
       else {
         var l = t.tag;
@@ -9815,9 +9815,9 @@ Error generating stack: ` + l.message + `
         } else t !== e && (e = null);
       }
     }
-    return Di = e, null;
+    return Mi = e, null;
   }
-  function ef(e) {
+  function lf(e) {
     switch (e) {
       case "beforetoggle":
       case "cancel":
@@ -9893,15 +9893,15 @@ Error generating stack: ` + l.message + `
       case "pointerleave":
         return 8;
       case "message":
-        switch (We()) {
-          case Fe:
+        switch (tt()) {
+          case st:
             return 2;
-          case Ze:
+          case rt:
             return 8;
-          case he:
-          case et:
+          case je:
+          case Ke:
             return 32;
-          case Ue:
+          case ze:
             return 268435456;
           default:
             return 32;
@@ -9910,10 +9910,10 @@ Error generating stack: ` + l.message + `
         return 32;
     }
   }
-  var eu = !1, vl = null, pl = null, gl = null, gn = /* @__PURE__ */ new Map(), bn = /* @__PURE__ */ new Map(), bl = [], aj = "mousedown mouseup touchcancel touchend touchstart auxclick dblclick pointercancel pointerdown pointerup dragend dragstart drop compositionend compositionstart keydown keypress keyup input textInput copy cut paste click change contextmenu reset".split(
+  var eu = !1, vl = null, pl = null, gl = null, gn = /* @__PURE__ */ new Map(), bn = /* @__PURE__ */ new Map(), bl = [], rj = "mousedown mouseup touchcancel touchend touchstart auxclick dblclick pointercancel pointerdown pointerup dragend dragstart drop compositionend compositionstart keydown keypress keyup input textInput copy cut paste click change contextmenu reset".split(
     " "
   );
-  function tf(e, t) {
+  function af(e, t) {
     switch (e) {
       case "focusin":
       case "focusout":
@@ -9943,9 +9943,9 @@ Error generating stack: ` + l.message + `
       eventSystemFlags: a,
       nativeEvent: i,
       targetContainers: [n]
-    }, t !== null && (t = Xt(t), t !== null && Ph(t)), e) : (e.eventSystemFlags |= a, t = e.targetContainers, n !== null && t.indexOf(n) === -1 && t.push(n), e);
+    }, t !== null && (t = Zt(t), t !== null && sf(t)), e) : (e.eventSystemFlags |= a, t = e.targetContainers, n !== null && t.indexOf(n) === -1 && t.push(n), e);
   }
-  function nj(e, t, l, a, n) {
+  function uj(e, t, l, a, n) {
     switch (t) {
       case "focusin":
         return vl = yn(
@@ -10002,18 +10002,18 @@ Error generating stack: ` + l.message + `
     }
     return !1;
   }
-  function sf(e) {
-    var t = at(e.target);
+  function nf(e) {
+    var t = ct(e.target);
     if (t !== null) {
-      var l = B(t);
+      var l = M(t);
       if (l !== null) {
         if (t = l.tag, t === 13) {
           if (t = V(l), t !== null) {
-            e.blockedOn = t, Rt(e.priority, function() {
+            e.blockedOn = t, g(e.priority, function() {
               if (l.tag === 13) {
                 var a = os();
-                a = ce(a);
-                var n = Wl(l, a);
+                a = oe(a);
+                var n = Fl(l, a);
                 n !== null && hs(n, l, a), Wr(l, a);
               }
             });
@@ -10027,7 +10027,7 @@ Error generating stack: ` + l.message + `
     }
     e.blockedOn = null;
   }
-  function Mi(e) {
+  function qi(e) {
     if (e.blockedOn !== null) return !1;
     for (var t = e.targetContainers; 0 < t.length; ) {
       var l = Ir(e.nativeEvent);
@@ -10039,29 +10039,29 @@ Error generating stack: ` + l.message + `
         );
         sc = a, l.target.dispatchEvent(a), sc = null;
       } else
-        return t = Xt(l), t !== null && Ph(t), e.blockedOn = l, !1;
+        return t = Zt(l), t !== null && sf(t), e.blockedOn = l, !1;
       t.shift();
     }
     return !0;
   }
-  function lf(e, t, l) {
-    Mi(e) && l.delete(t);
+  function cf(e, t, l) {
+    qi(e) && l.delete(t);
   }
-  function ij() {
-    eu = !1, vl !== null && Mi(vl) && (vl = null), pl !== null && Mi(pl) && (pl = null), gl !== null && Mi(gl) && (gl = null), gn.forEach(lf), bn.forEach(lf);
+  function dj() {
+    eu = !1, vl !== null && qi(vl) && (vl = null), pl !== null && qi(pl) && (pl = null), gl !== null && qi(gl) && (gl = null), gn.forEach(cf), bn.forEach(cf);
   }
-  function qi(e, t) {
+  function Hi(e, t) {
     e.blockedOn === t && (e.blockedOn = null, eu || (eu = !0, u.unstable_scheduleCallback(
       u.unstable_NormalPriority,
-      ij
+      dj
     )));
   }
-  var Hi = null;
-  function af(e) {
-    Hi !== e && (Hi = e, u.unstable_scheduleCallback(
+  var Bi = null;
+  function rf(e) {
+    Bi !== e && (Bi = e, u.unstable_scheduleCallback(
       u.unstable_NormalPriority,
       function() {
-        Hi === e && (Hi = null);
+        Bi === e && (Bi = null);
         for (var t = 0; t < e.length; t += 3) {
           var l = e[t], a = e[t + 1], n = e[t + 2];
           if (typeof a != "function") {
@@ -10069,7 +10069,7 @@ Error generating stack: ` + l.message + `
               continue;
             break;
           }
-          var i = Xt(l);
+          var i = Zt(l);
           i !== null && (e.splice(t, 3), t -= 3, Pc(
             i,
             {
@@ -10086,95 +10086,95 @@ Error generating stack: ` + l.message + `
     ));
   }
   function _n(e) {
-    function t(g) {
-      return qi(g, e);
+    function t(p) {
+      return Hi(p, e);
     }
-    vl !== null && qi(vl, e), pl !== null && qi(pl, e), gl !== null && qi(gl, e), gn.forEach(t), bn.forEach(t);
+    vl !== null && Hi(vl, e), pl !== null && Hi(pl, e), gl !== null && Hi(gl, e), gn.forEach(t), bn.forEach(t);
     for (var l = 0; l < bl.length; l++) {
       var a = bl[l];
       a.blockedOn === e && (a.blockedOn = null);
     }
     for (; 0 < bl.length && (l = bl[0], l.blockedOn === null); )
-      sf(l), l.blockedOn === null && bl.shift();
+      nf(l), l.blockedOn === null && bl.shift();
     if (l = (e.ownerDocument || e).$$reactFormReplay, l != null)
       for (a = 0; a < l.length; a += 3) {
-        var n = l[a], i = l[a + 1], c = n[St] || null;
+        var n = l[a], i = l[a + 1], c = n[nt] || null;
         if (typeof i == "function")
-          c || af(l);
+          c || rf(l);
         else if (c) {
           var o = null;
           if (i && i.hasAttribute("formAction")) {
-            if (n = i, c = i[St] || null)
+            if (n = i, c = i[nt] || null)
               o = c.formAction;
             else if (Pr(n) !== null) continue;
           } else o = c.action;
-          typeof o == "function" ? l[a + 1] = o : (l.splice(a, 3), a -= 3), af(l);
+          typeof o == "function" ? l[a + 1] = o : (l.splice(a, 3), a -= 3), rf(l);
         }
       }
   }
   function tu(e) {
     this._internalRoot = e;
   }
-  Bi.prototype.render = tu.prototype.render = function(e) {
+  Li.prototype.render = tu.prototype.render = function(e) {
     var t = this._internalRoot;
     if (t === null) throw Error(d(409));
     var l = t.current, a = os();
-    Fh(l, a, e, t, null, null);
-  }, Bi.prototype.unmount = tu.prototype.unmount = function() {
+    ef(l, a, e, t, null, null);
+  }, Li.prototype.unmount = tu.prototype.unmount = function() {
     var e = this._internalRoot;
     if (e !== null) {
       this._internalRoot = null;
       var t = e.containerInfo;
-      Fh(e.current, 2, null, e, null, null), bi(), t[b] = null;
+      ef(e.current, 2, null, e, null, null), yi(), t[j] = null;
     }
   };
-  function Bi(e) {
+  function Li(e) {
     this._internalRoot = e;
   }
-  Bi.prototype.unstable_scheduleHydration = function(e) {
+  Li.prototype.unstable_scheduleHydration = function(e) {
     if (e) {
-      var t = vt();
+      var t = Nt();
       e = { blockedOn: null, target: e, priority: t };
       for (var l = 0; l < bl.length && t !== 0 && t < bl[l].priority; l++) ;
-      bl.splice(l, 0, e), l === 0 && sf(e);
+      bl.splice(l, 0, e), l === 0 && nf(e);
     }
   };
-  var nf = h.version;
-  if (nf !== "19.1.0")
+  var uf = h.version;
+  if (uf !== "19.1.0")
     throw Error(
       d(
         527,
-        nf,
+        uf,
         "19.1.0"
       )
     );
-  Y.findDOMNode = function(e) {
+  G.findDOMNode = function(e) {
     var t = e._reactInternals;
     if (t === void 0)
       throw typeof e.render == "function" ? Error(d(188)) : (e = Object.keys(e).join(","), Error(d(268, e)));
-    return e = Q(t), e = e !== null ? p(e) : null, e = e === null ? null : e.stateNode, e;
+    return e = Y(t), e = e !== null ? v(e) : null, e = e === null ? null : e.stateNode, e;
   };
-  var cj = {
+  var oj = {
     bundleType: 0,
     version: "19.1.0",
     rendererPackageName: "react-dom",
-    currentDispatcherRef: y,
+    currentDispatcherRef: b,
     reconcilerVersion: "19.1.0"
   };
   if (typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ < "u") {
-    var Li = __REACT_DEVTOOLS_GLOBAL_HOOK__;
-    if (!Li.isDisabled && Li.supportsFiber)
+    var Yi = __REACT_DEVTOOLS_GLOBAL_HOOK__;
+    if (!Yi.isDisabled && Yi.supportsFiber)
       try {
-        W = Li.inject(
-          cj
-        ), ve = Li;
+        $ = Yi.inject(
+          oj
+        ), we = Yi;
       } catch {
       }
   }
   return Sn.createRoot = function(e, t) {
-    if (!R(e)) throw Error(d(299));
-    var l = !1, a = "", n = yo, i = _o, c = No, o = null;
-    return t != null && (t.unstable_strictMode === !0 && (l = !0), t.identifierPrefix !== void 0 && (a = t.identifierPrefix), t.onUncaughtError !== void 0 && (n = t.onUncaughtError), t.onCaughtError !== void 0 && (i = t.onCaughtError), t.onRecoverableError !== void 0 && (c = t.onRecoverableError), t.unstable_transitionCallbacks !== void 0 && (o = t.unstable_transitionCallbacks)), t = $h(
+    if (!A(e)) throw Error(d(299));
+    var l = !1, a = "", n = So, i = wo, c = ko, o = null;
+    return t != null && (t.unstable_strictMode === !0 && (l = !0), t.identifierPrefix !== void 0 && (a = t.identifierPrefix), t.onUncaughtError !== void 0 && (n = t.onUncaughtError), t.onCaughtError !== void 0 && (i = t.onCaughtError), t.onRecoverableError !== void 0 && (c = t.onRecoverableError), t.unstable_transitionCallbacks !== void 0 && (o = t.unstable_transitionCallbacks)), t = Ih(
       e,
       1,
       !1,
@@ -10187,11 +10187,11 @@ Error generating stack: ` + l.message + `
       c,
       o,
       null
-    ), e[b] = t.current, qr(e), new tu(t);
+    ), e[j] = t.current, qr(e), new tu(t);
   }, Sn.hydrateRoot = function(e, t, l) {
-    if (!R(e)) throw Error(d(299));
-    var a = !1, n = "", i = yo, c = _o, o = No, g = null, T = null;
-    return l != null && (l.unstable_strictMode === !0 && (a = !0), l.identifierPrefix !== void 0 && (n = l.identifierPrefix), l.onUncaughtError !== void 0 && (i = l.onUncaughtError), l.onCaughtError !== void 0 && (c = l.onCaughtError), l.onRecoverableError !== void 0 && (o = l.onRecoverableError), l.unstable_transitionCallbacks !== void 0 && (g = l.unstable_transitionCallbacks), l.formState !== void 0 && (T = l.formState)), t = $h(
+    if (!A(e)) throw Error(d(299));
+    var a = !1, n = "", i = So, c = wo, o = ko, p = null, T = null;
+    return l != null && (l.unstable_strictMode === !0 && (a = !0), l.identifierPrefix !== void 0 && (n = l.identifierPrefix), l.onUncaughtError !== void 0 && (i = l.onUncaughtError), l.onCaughtError !== void 0 && (c = l.onCaughtError), l.onRecoverableError !== void 0 && (o = l.onRecoverableError), l.unstable_transitionCallbacks !== void 0 && (p = l.unstable_transitionCallbacks), l.formState !== void 0 && (T = l.formState)), t = Ih(
       e,
       1,
       !0,
@@ -10202,15 +10202,15 @@ Error generating stack: ` + l.message + `
       i,
       c,
       o,
-      g,
+      p,
       T
-    ), t.context = Wh(null), l = t.current, a = os(), a = ce(a), n = ll(a), n.callback = null, al(l, n, a), l = a, t.current.lanes = l, ue(t, l), As(t), e[b] = t.current, qr(e), new Bi(t);
+    ), t.context = Ph(null), l = t.current, a = os(), a = oe(a), n = ll(a), n.callback = null, al(l, n, a), l = a, t.current.lanes = l, ue(t, l), As(t), e[j] = t.current, qr(e), new Li(t);
   }, Sn.version = "19.1.0", Sn;
 }
-var jf;
-function vj() {
-  if (jf) return lu.exports;
-  jf = 1;
+var gf;
+function yj() {
+  if (gf) return lu.exports;
+  gf = 1;
   function u() {
     if (!(typeof __REACT_DEVTOOLS_GLOBAL_HOOK__ > "u" || typeof __REACT_DEVTOOLS_GLOBAL_HOOK__.checkDCE != "function"))
       try {
@@ -10219,35 +10219,35 @@ function vj() {
         console.error(h);
       }
   }
-  return u(), lu.exports = jj(), lu.exports;
+  return u(), lu.exports = bj(), lu.exports;
 }
-var pj = vj(), r = _u();
+var _j = yj(), r = Su();
 const ru = [["task_started", "任务开始", "task"], ["inspection_recorded", "检查记录", "task"], ["issue_created", "问题记录", "issue"], ["rectification_submitted", "整改提交", "issue"], ["review_rejected", "复核退回", "issue"], ["review_accepted", "复核通过", "issue"], ["task_completed", "任务结束", "task"]];
-function gj({ api: u, projects: h }) {
-  var Ke;
-  const [S, d] = r.useState(((Ke = h[0]) == null ? void 0 : Ke.id) || ""), [R, B] = r.useState([]), [V, M] = r.useState("general_inspection"), [Q, p] = r.useState("现场质量安全检查"), [U, K] = r.useState("general,通用施工检查"), [k, le] = r.useState(ru.map((X) => X[0])), [xe, _e] = r.useState(!1), [ye, Ee] = r.useState(!1), [me, I] = r.useState(""), [oe, ne] = r.useState(""), [D, je] = r.useState(0), Re = h.find((X) => X.id === S), Be = Re != null && Re.permissions ? Re.permissions.includes("knowledge.process") : Re == null ? void 0 : Re.can_run, Xe = Re != null && Re.permissions ? Re.permissions.includes("knowledge.review") : Re == null ? void 0 : Re.can_manage;
+function Nj({ api: u, projects: h }) {
+  var Fe;
+  const [_, d] = r.useState(((Fe = h[0]) == null ? void 0 : Fe.id) || ""), [A, M] = r.useState([]), [V, z] = r.useState("general_inspection"), [Y, v] = r.useState("现场质量安全检查"), [U, K] = r.useState("general,通用施工检查"), [k, le] = r.useState(ru.map((Q) => Q[0])), [xe, Ne] = r.useState(!1), [Se, Te] = r.useState(!1), [fe, I] = r.useState(""), [de, ne] = r.useState(""), [q, ve] = r.useState(0), Me = h.find((Q) => Q.id === _), Ye = Me != null && Me.permissions ? Me.permissions.includes("knowledge.process") : Me == null ? void 0 : Me.can_run, Je = Me != null && Me.permissions ? Me.permissions.includes("knowledge.review") : Me == null ? void 0 : Me.can_manage;
   r.useEffect(() => {
-    let X = !1;
-    return B([]), I(""), S && u(`/scenes?project_id=${encodeURIComponent(S)}`).then((de) => {
-      X || B(de.items);
-    }).catch((de) => {
-      X || I(de.message);
+    let Q = !1;
+    return M([]), I(""), _ && u(`/scenes?project_id=${encodeURIComponent(_)}`).then((ce) => {
+      Q || M(ce.items);
+    }).catch((ce) => {
+      Q || I(ce.message);
     }), () => {
-      X = !0;
+      Q = !0;
     };
-  }, [S, D]);
-  const Ge = async (X) => {
-    Ee(!0), I(""), ne("");
+  }, [_, q]);
+  const Qe = async (Q) => {
+    Te(!0), I(""), ne("");
     try {
-      await X(), je((de) => de + 1);
-    } catch (de) {
-      I(de.message);
+      await Q(), ve((ce) => ce + 1);
+    } catch (ce) {
+      I(ce.message);
     } finally {
-      Ee(!1);
+      Te(!1);
     }
-  }, pe = (X) => {
-    M(X.code), p(X.payload.name), K(X.payload.categories.map((de) => de.code + "," + de.name).join(`
-`)), le(X.payload.steps.map((de) => de.event_type)), _e(X.payload.compare_deadline);
+  }, pe = (Q) => {
+    z(Q.code), v(Q.payload.name), K(Q.payload.categories.map((ce) => ce.code + "," + ce.name).join(`
+`)), le(Q.payload.steps.map((ce) => ce.event_type)), Ne(Q.payload.compare_deadline);
   };
   return /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
@@ -10255,107 +10255,107 @@ function gj({ api: u, projects: h }) {
       /* @__PURE__ */ s.jsx("span", { children: "保存新版本，经审核人员启用后用于后续复盘" })
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-      me && /* @__PURE__ */ s.jsx("p", { className: "feedback error", role: "alert", children: me }),
-      oe && /* @__PURE__ */ s.jsx("p", { className: "feedback success", role: "status", children: oe }),
+      fe && /* @__PURE__ */ s.jsx("p", { className: "feedback error", role: "alert", children: fe }),
+      de && /* @__PURE__ */ s.jsx("p", { className: "feedback success", role: "status", children: de }),
       /* @__PURE__ */ s.jsxs("label", { children: [
         "项目",
-        /* @__PURE__ */ s.jsx("select", { "aria-label": "场景项目", value: S, onChange: (X) => d(X.target.value), children: h.map((X) => /* @__PURE__ */ s.jsx("option", { value: X.id, children: X.name }, X.id)) })
+        /* @__PURE__ */ s.jsx("select", { "aria-label": "场景项目", value: _, onChange: (Q) => d(Q.target.value), children: h.map((Q) => /* @__PURE__ */ s.jsx("option", { value: Q.id, children: Q.name }, Q.id)) })
       ] }),
-      Be && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      Ye && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "场景编码",
-            /* @__PURE__ */ s.jsx("input", { "aria-label": "场景编码", value: V, onChange: (X) => M(X.target.value) })
+            /* @__PURE__ */ s.jsx("input", { "aria-label": "场景编码", value: V, onChange: (Q) => z(Q.target.value) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "场景名称",
-            /* @__PURE__ */ s.jsx("input", { "aria-label": "场景名称", value: Q, onChange: (X) => p(X.target.value) })
+            /* @__PURE__ */ s.jsx("input", { "aria-label": "场景名称", value: Y, onChange: (Q) => v(Q.target.value) })
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("label", { children: [
           "分类（每行：英文编码,中文名称）",
-          /* @__PURE__ */ s.jsx("textarea", { "aria-label": "场景分类", value: U, onChange: (X) => K(X.target.value) })
+          /* @__PURE__ */ s.jsx("textarea", { "aria-label": "场景分类", value: U, onChange: (Q) => K(Q.target.value) })
         ] }),
         /* @__PURE__ */ s.jsxs("fieldset", { children: [
           /* @__PURE__ */ s.jsx("legend", { children: "需要核对的过程记录" }),
-          ru.map((X) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: k.includes(X[0]), onChange: (de) => le((y) => de.target.checked ? [...y, X[0]] : y.filter((Y) => Y !== X[0])) }),
-            X[1]
-          ] }, X[0]))
+          ru.map((Q) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: k.includes(Q[0]), onChange: (ce) => le((b) => ce.target.checked ? [...b, Q[0]] : b.filter((G) => G !== Q[0])) }),
+            Q[1]
+          ] }, Q[0]))
         ] }),
         /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: xe, onChange: (X) => _e(X.target.checked) }),
+          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: xe, onChange: (Q) => Ne(Q.target.checked) }),
           "有明确期限、终态及复核时间时比较记录中的期限"
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: ye || !S || !k.length, onClick: () => void Ge(async () => {
-          const X = R.filter((y) => y.code === V).sort((y, Y) => Y.version - y.version)[0], de = U.split(`
-`).filter((y) => y.trim()).map((y) => {
-            const [Y, ee] = y.split(/[,，]/);
-            if (!(Y != null && Y.trim()) || !(ee != null && ee.trim())) throw new Error("分类须逐行填写英文编码和中文名称。");
-            const ke = X == null ? void 0 : X.payload.categories.find((m) => m.code === Y.trim());
-            return { code: Y.trim(), name: ee.trim(), focus: (ke == null ? void 0 : ke.focus) || "", keywords: (ke == null ? void 0 : ke.keywords) || [] };
+        /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Se || !_ || !k.length, onClick: () => void Qe(async () => {
+          const Q = A.filter((b) => b.code === V).sort((b, G) => G.version - b.version)[0], ce = U.split(`
+`).filter((b) => b.trim()).map((b) => {
+            const [G, ee] = b.split(/[,，]/);
+            if (!(G != null && G.trim()) || !(ee != null && ee.trim())) throw new Error("分类须逐行填写英文编码和中文名称。");
+            const Ee = Q == null ? void 0 : Q.payload.categories.find((f) => f.code === G.trim());
+            return { code: G.trim(), name: ee.trim(), focus: (Ee == null ? void 0 : Ee.focus) || "", keywords: (Ee == null ? void 0 : Ee.keywords) || [] };
           });
-          await u("/scenes", { method: "POST", body: JSON.stringify({ project_id: S, code: V, expected_version: (X == null ? void 0 : X.version) || 0, payload: { name: Q, categories: de, steps: ru.filter((y) => k.includes(y[0])).map((y) => ({ event_type: y[0], name: y[1], scope: y[2] })), compare_deadline: xe } }) }), ne("新场景版本已保存，原成果保持原配置。");
+          await u("/scenes", { method: "POST", body: JSON.stringify({ project_id: _, code: V, expected_version: (Q == null ? void 0 : Q.version) || 0, payload: { name: Y, categories: ce, steps: ru.filter((b) => k.includes(b[0])).map((b) => ({ event_type: b[0], name: b[1], scope: b[2] })), compare_deadline: xe } }) }), ne("新场景版本已保存，原成果保持原配置。");
         }), children: "保存新版本" })
       ] }),
-      R.map((X) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
+      A.map((Q) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
         /* @__PURE__ */ s.jsxs("h3", { children: [
-          X.payload.name,
+          Q.payload.name,
           " · v",
-          X.version,
-          X.active ? " · 已启用" : ""
+          Q.version,
+          Q.active ? " · 已启用" : ""
         ] }),
         /* @__PURE__ */ s.jsxs("p", { children: [
-          X.code,
+          Q.code,
           " · ",
-          X.payload.categories.length,
+          Q.payload.categories.length,
           "项分类 · ",
-          X.payload.steps.length,
+          Q.payload.steps.length,
           "项过程记录"
         ] }),
-        Be && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => pe(X), children: "以此版本编辑" }),
-        Xe && !X.active && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: ye, onClick: () => void Ge(async () => {
-          var de;
-          await u(`/scenes/${X.id}/activate`, { method: "POST", body: JSON.stringify({ expected_active_id: ((de = R.find((y) => y.code === X.code && y.active)) == null ? void 0 : de.id) || null }) }), ne("场景版本已启用。");
+        Ye && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => pe(Q), children: "以此版本编辑" }),
+        Je && !Q.active && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Se, onClick: () => void Qe(async () => {
+          var ce;
+          await u(`/scenes/${Q.id}/activate`, { method: "POST", body: JSON.stringify({ expected_active_id: ((ce = A.find((b) => b.code === Q.code && b.active)) == null ? void 0 : ce.id) || null }) }), ne("场景版本已启用。");
         }), children: "启用此版本" }),
-        Be && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: ye, onClick: () => void Ge(async () => {
-          var y;
-          const de = await u(`/knowledge/taxonomies?project_id=${encodeURIComponent(S)}`);
-          await u("/knowledge/taxonomies", { method: "POST", body: JSON.stringify({ project_id: S, expected_version: ((y = de.items[0]) == null ? void 0 : y.version) || 0, categories: X.payload.categories }) }), ne("分类已保存为新的知识萃取分类版本。");
+        Ye && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: Se, onClick: () => void Qe(async () => {
+          var b;
+          const ce = await u(`/knowledge/taxonomies?project_id=${encodeURIComponent(_)}`);
+          await u("/knowledge/taxonomies", { method: "POST", body: JSON.stringify({ project_id: _, expected_version: ((b = ce.items[0]) == null ? void 0 : b.version) || 0, categories: Q.payload.categories }) }), ne("分类已保存为新的知识萃取分类版本。");
         }), children: "用于知识萃取分类" })
-      ] }, X.id))
+      ] }, Q.id))
     ] })
   ] });
 }
-const uu = {}, Nu = window.location.pathname.startsWith("/quality/b/"), ka = window.location.pathname === "/quality/" && window.location.hash.startsWith("#/b/"), vf = uu == null ? void 0 : uu.VITE_B_PLATFORM_MODE, Tt = ka || Nu && (vf === "true" || vf !== "false" && !0);
-function Yi() {
-  if (!Nu && !ka) return window.location.pathname;
+const uu = {}, wu = window.location.pathname.startsWith("/quality/b/"), ka = window.location.pathname === "/quality/" && window.location.hash.startsWith("#/b/"), bf = uu == null ? void 0 : uu.VITE_B_PLATFORM_MODE, zt = ka || wu && (bf === "true" || bf !== "false" && !0);
+function Gi() {
+  if (!wu && !ka) return window.location.pathname;
   const u = ka ? window.location.hash.slice(3) : window.location.hash.slice(1) || "/knowledge";
   return u.split("?")[0] === "/knowledge" ? "/knowledge/library" : u.split("?")[0];
 }
-function bj(u) {
-  ka ? window.history.pushState({}, "", "/quality/#/b" + u) : Nu ? window.history.pushState({}, "", "/quality/b/#" + u) : window.history.pushState({}, "", u), ka && window.dispatchEvent(new Event("platform-route"));
+function Sj(u) {
+  ka ? window.history.pushState({}, "", "/quality/#/b" + u) : wu ? window.history.pushState({}, "", "/quality/b/#" + u) : window.history.pushState({}, "", u), ka && window.dispatchEvent(new Event("platform-route"));
 }
 async function Mt(u, h = {}) {
-  if (!Tt) return fetch(u, h);
+  if (!zt) return fetch(u, h);
   if (!u.startsWith("/api/v1/") && !u.startsWith("/integration/v1/"))
     throw new Error("请求地址不属于平台接口。");
-  const S = new Headers(h.headers);
-  S.delete("Authorization");
+  const _ = new Headers(h.headers);
+  _.delete("Authorization");
   const d = window.QaxcProjectId;
-  ka && d && S.set("X-Project-ID", d);
-  const R = (h.method || "GET").toUpperCase();
-  if (!["GET", "HEAD", "OPTIONS"].includes(R)) {
+  ka && d && _.set("X-Project-ID", d);
+  const A = (h.method || "GET").toUpperCase();
+  if (!["GET", "HEAD", "OPTIONS"].includes(A)) {
     const V = await fetch("/quality/api/csrf-token", { credentials: "same-origin", cache: "no-store" });
     if (V.status === 401 && window.dispatchEvent(new Event("b-session-expired")), !V.ok) throw new Error(V.status === 401 ? "登录已失效，请返回平台重新登录。" : "无法取得安全校验，请稍后重试。");
-    const M = await V.json(), Q = M.csrf_token ?? M.token;
-    if (typeof Q != "string" || !Q) throw new Error("安全校验返回格式不正确。");
-    S.set("X-CSRF-Token", Q);
+    const z = await V.json(), Y = z.csrf_token ?? z.token;
+    if (typeof Y != "string" || !Y) throw new Error("安全校验返回格式不正确。");
+    _.set("X-CSRF-Token", Y);
   }
-  const B = await fetch("/quality/b" + u, { ...h, headers: S, credentials: "same-origin" });
-  return B.status === 401 && window.dispatchEvent(new Event("b-session-expired")), B;
+  const M = await fetch("/quality/b" + u, { ...h, headers: _, credentials: "same-origin" });
+  return M.status === 401 && window.dispatchEvent(new Event("b-session-expired")), M;
 }
-const pf = { draft: "草稿", pending_review: "待审核", changes_requested: "已退回", approved: "已审核", published: "已发布", superseded: "已有修订版", withdrawn: "已撤回" }, gf = { created: "保存草稿", submit: "提交审核", approve: "审核通过", request_changes: "退回修改", publish: "发布", withdraw: "撤回", superseded: "被修订版替代" }, pu = () => ({ number: "", text: "", chapter: "", parent_number: null, page: null, locator: "", preconditions: [], exceptions: [], tables: [], notes: [], references: [] }), yj = (u) => ({
+const yf = { draft: "草稿", pending_review: "待审核", changes_requested: "已退回", approved: "已审核", published: "已发布", superseded: "已有修订版", withdrawn: "已撤回" }, _f = { created: "保存草稿", submit: "提交审核", approve: "审核通过", request_changes: "退回修改", publish: "发布", withdraw: "撤回", superseded: "被修订版替代" }, gu = () => ({ number: "", text: "", chapter: "", parent_number: null, page: null, locator: "", preconditions: [], exceptions: [], tables: [], notes: [], references: [] }), wj = (u) => ({
   project_id: u,
   code: "",
   edition: "",
@@ -10367,16 +10367,16 @@ const pf = { draft: "草稿", pending_review: "待审核", changes_requested: "�
   scope: { project_types: [], regions: [], object_types: [], stages: [] },
   maintainer: "",
   reason: "首次录入",
-  clauses: [pu()]
-}), ya = (u) => u.split(`
+  clauses: [gu()]
+}), _a = (u) => u.split(`
 `).map((h) => h.trim()).filter(Boolean);
 function du(u, h) {
-  var S;
-  return u != null && u.permissions ? u.permissions.includes(h) : h === "knowledge.process" ? !!(u != null && u.can_run) : !!(u != null && u.can_manage) || !!((S = u == null ? void 0 : u.roles) != null && S.includes("reviewer"));
+  var _;
+  return u != null && u.permissions ? u.permissions.includes(h) : h === "knowledge.process" ? !!(u != null && u.can_run) : !!(u != null && u.can_manage) || !!((_ = u == null ? void 0 : u.roles) != null && _.includes("reviewer"));
 }
-function _j({ api: u, projects: h, identity: S }) {
-  var he, et, Ue;
-  const [d, R] = r.useState(((he = h[0]) == null ? void 0 : he.id) || ""), [B, V] = r.useState([]), [M, Q] = r.useState(null), [p, U] = r.useState(null), [K, k] = r.useState(!1), [le, xe] = r.useState(!1), [_e, ye] = r.useState(!1), [Ee, me] = r.useState(""), [I, oe] = r.useState(""), [ne, D] = r.useState(""), [je, Re] = r.useState(null), [Be, Xe] = r.useState(0), [Ge, pe] = r.useState(""), [Ke, X] = r.useState(!1), [de, y] = r.useState(""), [Y, ee] = r.useState("current_rectification"), [ke, m] = r.useState(""), [H, te] = r.useState({ project_type: "", region: "", object_type: "", stage: "" }), [$, ae] = r.useState(null), Z = r.useRef(crypto.randomUUID()), P = r.useRef(0), Ce = h.find((E) => E.id === d), ie = du(Ce, "knowledge.process"), Se = du(Ce, "knowledge.review"), st = du(Ce, "knowledge.publish"), lt = ie || Se || st;
+function kj({ api: u, projects: h, identity: _ }) {
+  var je, Ke, ze;
+  const [d, A] = r.useState(((je = h[0]) == null ? void 0 : je.id) || ""), [M, V] = r.useState([]), [z, Y] = r.useState(null), [v, U] = r.useState(null), [K, k] = r.useState(!1), [le, xe] = r.useState(!1), [Ne, Se] = r.useState(!1), [Te, fe] = r.useState(""), [I, de] = r.useState(""), [ne, q] = r.useState(""), [ve, Me] = r.useState(null), [Ye, Je] = r.useState(0), [Qe, pe] = r.useState(""), [Fe, Q] = r.useState(!1), [ce, b] = r.useState(""), [G, ee] = r.useState("current_rectification"), [Ee, f] = r.useState(""), [B, te] = r.useState({ project_type: "", region: "", object_type: "", stage: "" }), [W, ae] = r.useState(null), Z = r.useRef(crypto.randomUUID()), P = r.useRef(0), Oe = h.find((E) => E.id === d), ie = du(Oe, "knowledge.process"), Ce = du(Oe, "knowledge.review"), lt = du(Oe, "knowledge.publish"), at = ie || Ce || lt;
   r.useEffect(() => {
     const E = (w) => {
       K && (w.preventDefault(), w.returnValue = "");
@@ -10384,106 +10384,106 @@ function _j({ api: u, projects: h, identity: S }) {
     return window.addEventListener("beforeunload", E), () => window.removeEventListener("beforeunload", E);
   }, [K]), r.useEffect(() => {
     let E = !1;
-    if (ye(!0), me(""), V([]), Re(null), !d) {
-      ye(!1);
+    if (Se(!0), fe(""), V([]), Me(null), !d) {
+      Se(!1);
       return;
     }
-    return u(`/standards?project_id=${encodeURIComponent(d)}&view=${lt ? "manage" : "published"}${ne ? "&cursor=" + encodeURIComponent(ne) : ""}`).then((w) => {
-      E || (V(w.items), Re(w.next_cursor));
+    return u(`/standards?project_id=${encodeURIComponent(d)}&view=${at ? "manage" : "published"}${ne ? "&cursor=" + encodeURIComponent(ne) : ""}`).then((w) => {
+      E || (V(w.items), Me(w.next_cursor));
     }).catch((w) => {
-      E || me(w.message);
+      E || fe(w.message);
     }).finally(() => {
-      E || ye(!1);
+      E || Se(!1);
     }), () => {
       E = !0;
     };
-  }, [d, lt, ne, Be]), r.useEffect(() => () => {
+  }, [d, at, ne, Ye]), r.useEffect(() => () => {
     P.current++;
   }, []);
-  const Pe = async (E) => {
-    xe(!0), me(""), oe("");
+  const et = async (E) => {
+    xe(!0), fe(""), de("");
     try {
       await E();
     } catch (w) {
-      me(w.message);
+      fe(w.message);
     } finally {
       xe(!1);
     }
-  }, Oe = () => {
+  }, Ae = () => {
     var E;
     k(!1), (E = window.QaxcClearPendingEdits) == null || E.call(window);
-  }, Te = () => !K || confirm("当前规范草稿尚未保存，确定放弃本次编辑？"), De = (E) => {
+  }, Re = () => !K || confirm("当前规范草稿尚未保存，确定放弃本次编辑？"), qe = (E) => {
     U((w) => w && { ...w, ...E }), k(!0), Z.current = crypto.randomUUID();
-  }, Ne = (E, w) => {
-    p && De({ clauses: p.clauses.map((W, ve) => ve === E ? { ...W, ...w } : W) });
-  }, Le = async (E) => {
-    if (!Te()) return;
+  }, ke = (E, w) => {
+    v && qe({ clauses: v.clauses.map(($, we) => we === E ? { ...$, ...w } : $) });
+  }, Be = async (E) => {
+    if (!Re()) return;
     const w = ++P.current;
-    await Pe(async () => {
-      const W = await u("/standards/" + E.id);
-      w === P.current && (Q(W), U(null), Oe(), ae(null), pe(""), X(!1));
+    await et(async () => {
+      const $ = await u("/standards/" + E.id);
+      w === P.current && (Y($), U(null), Ae(), ae(null), pe(""), Q(!1));
     });
-  }, We = () => {
-    if (!M || !Te()) return;
-    const { id: E, version: w, row_version: W, state: ve, source_available: He, verified_on: tt, history: dt, clauses: L, ...fe } = M;
+  }, tt = () => {
+    if (!z || !Re()) return;
+    const { id: E, version: w, row_version: $, state: we, source_available: Le, verified_on: Xe, history: ft, clauses: L, ...he } = z;
     U({
-      project_id: fe.project_id,
-      code: fe.code,
-      edition: fe.edition,
-      title: fe.title,
-      source_asset_id: fe.source_asset_id,
-      valid_from: fe.valid_from,
-      valid_until: fe.valid_until,
-      scope: fe.scope,
-      maintainer: fe.maintainer,
+      project_id: he.project_id,
+      code: he.code,
+      edition: he.edition,
+      title: he.title,
+      source_asset_id: he.source_asset_id,
+      valid_from: he.valid_from,
+      valid_until: he.valid_until,
+      scope: he.scope,
+      maintainer: he.maintainer,
       expected_version: w,
       reason: "修订说明待填写",
-      clauses: (L || []).map((re) => Object.fromEntries(Object.keys(pu()).map((Ve) => [Ve, re[Ve]])))
-    }), y("沿用已绑定原件；原文变化时请重新上传"), k(!0), Z.current = crypto.randomUUID();
-  }, Fe = (E) => void Pe(async () => {
-    if (!M) return;
-    const w = await u(`/standards/${M.id}/actions`, { method: "POST", body: JSON.stringify({ action: E, row_version: M.row_version, reason: Ge, evidence_checked: Ke }) });
-    Q({ ...M, ...w }), Oe(), Xe((W) => W + 1), oe(gf[E] + "成功。"), pe(""), X(!1), M.source_available !== !1 && Q(await u("/standards/" + M.id));
-  }), Ze = () => void Pe(async () => {
-    if (!M) return;
-    const E = await Mt(`/api/v1/standards/${M.id}/source`, { headers: { Authorization: `Bearer dev-${S}` } });
+      clauses: (L || []).map((re) => Object.fromEntries(Object.keys(gu()).map(($e) => [$e, re[$e]])))
+    }), b("沿用已绑定原件；原文变化时请重新上传"), k(!0), Z.current = crypto.randomUUID();
+  }, st = (E) => void et(async () => {
+    if (!z) return;
+    const w = await u(`/standards/${z.id}/actions`, { method: "POST", body: JSON.stringify({ action: E, row_version: z.row_version, reason: Qe, evidence_checked: Fe }) });
+    Y({ ...z, ...w }), Ae(), Je(($) => $ + 1), de(_f[E] + "成功。"), pe(""), Q(!1), z.source_available !== !1 && Y(await u("/standards/" + z.id));
+  }), rt = () => void et(async () => {
+    if (!z) return;
+    const E = await Mt(`/api/v1/standards/${z.id}/source`, { headers: { Authorization: `Bearer dev-${_}` } });
     if (!E.ok) {
-      const He = await E.json();
-      throw new Error(He.message || "原件不可用。");
+      const Le = await E.json();
+      throw new Error(Le.message || "原件不可用。");
     }
-    const w = await E.blob(), W = URL.createObjectURL(w), ve = document.createElement("a");
-    ve.href = W, ve.download = "规范原件" + (w.type.includes("pdf") ? ".pdf" : w.type.includes("wordprocessing") ? ".docx" : ".txt"), ve.click(), setTimeout(() => URL.revokeObjectURL(W), 1e3);
+    const w = await E.blob(), $ = URL.createObjectURL(w), we = document.createElement("a");
+    we.href = $, we.download = "规范原件" + (w.type.includes("pdf") ? ".pdf" : w.type.includes("wordprocessing") ? ".docx" : ".txt"), we.click(), setTimeout(() => URL.revokeObjectURL($), 1e3);
   });
   return /* @__PURE__ */ s.jsxs("div", { className: "knowledge-module training-module standards-module", children: [
     /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsxs("div", { children: [
       /* @__PURE__ */ s.jsx("h2", { children: "规范原文与版本" }),
       /* @__PURE__ */ s.jsx("p", { children: "绑定原件，保留条文上下文，经核验后发布。适用性核对仅检查已登记的日期和条件。" })
     ] }) }),
-    Ee && /* @__PURE__ */ s.jsxs("p", { className: "feedback error", role: "alert", children: [
-      Ee,
-      /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: le, onClick: () => Xe((E) => E + 1), children: "刷新列表" })
+    Te && /* @__PURE__ */ s.jsxs("p", { className: "feedback error", role: "alert", children: [
+      Te,
+      /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: le, onClick: () => Je((E) => E + 1), children: "刷新列表" })
     ] }),
     I && /* @__PURE__ */ s.jsx("p", { className: "feedback success", role: "status", children: I }),
     /* @__PURE__ */ s.jsxs("div", { className: "standards-toolbar", children: [
       /* @__PURE__ */ s.jsxs("label", { children: [
         "项目",
         /* @__PURE__ */ s.jsx("select", { "aria-label": "规范项目", disabled: le, value: d, onChange: (E) => {
-          Te() && (P.current++, R(E.target.value), Q(null), U(null), k(!1), D(""), ae(null));
+          Re() && (P.current++, A(E.target.value), Y(null), U(null), k(!1), q(""), ae(null));
         }, children: h.map((E) => /* @__PURE__ */ s.jsx("option", { value: E.id, children: E.name }, E.id)) })
       ] }),
       ie && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: le || !d, onClick: () => {
-        Te() && (U(yj(d)), Q(null), y(""), k(!1), Z.current = crypto.randomUUID());
+        Re() && (U(wj(d)), Y(null), b(""), k(!1), Z.current = crypto.randomUUID());
       }, children: "登记规范原文" }),
-      /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: le || _e, onClick: () => Xe((E) => E + 1), children: "刷新" })
+      /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: le || Ne, onClick: () => Je((E) => E + 1), children: "刷新" })
     ] }),
     !d && /* @__PURE__ */ s.jsx("p", { className: "panel empty", children: "没有可访问项目。" }),
-    _e ? /* @__PURE__ */ s.jsx("p", { role: "status", children: "正在读取规范版本…" }) : /* @__PURE__ */ s.jsx("section", { className: "panel", children: /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-      !B.length && /* @__PURE__ */ s.jsxs("p", { children: [
+    Ne ? /* @__PURE__ */ s.jsx("p", { role: "status", children: "正在读取规范版本…" }) : /* @__PURE__ */ s.jsx("section", { className: "panel", children: /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
+      !M.length && /* @__PURE__ */ s.jsxs("p", { children: [
         "当前页没有",
-        lt ? "已登记" : "已发布",
+        at ? "已登记" : "已发布",
         "的规范版本。"
       ] }),
-      B.map((E) => /* @__PURE__ */ s.jsxs("article", { className: "standard-entry", children: [
+      M.map((E) => /* @__PURE__ */ s.jsxs("article", { className: "standard-entry", children: [
         /* @__PURE__ */ s.jsxs("div", { children: [
           /* @__PURE__ */ s.jsx("strong", { children: E.title }),
           /* @__PURE__ */ s.jsxs("p", { children: [
@@ -10493,7 +10493,7 @@ function _j({ api: u, projects: h, identity: S }) {
             " · 修订 ",
             E.version,
             " · ",
-            pf[E.state]
+            yf[E.state]
           ] }),
           /* @__PURE__ */ s.jsxs("small", { children: [
             "生效 ",
@@ -10503,91 +10503,91 @@ function _j({ api: u, projects: h, identity: S }) {
             E.source_available === !1 ? " · 原件不可用" : ""
           ] })
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: le, onClick: () => void Le(E), children: "查看与核验" }),
-        st && E.source_available === !1 && ["published", "approved", "superseded"].includes(E.state) && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: le, onClick: () => {
-          Q(E), U(null), X(!1), pe("来源不可用，撤回规范");
+        /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: le, onClick: () => void Be(E), children: "查看与核验" }),
+        lt && E.source_available === !1 && ["published", "approved", "superseded"].includes(E.state) && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: le, onClick: () => {
+          Y(E), U(null), Q(!1), pe("来源不可用，撤回规范");
         }, children: "办理撤回" })
       ] }, E.id)),
       /* @__PURE__ */ s.jsxs("div", { className: "standards-toolbar", children: [
-        /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: !ne || le, onClick: () => D(""), children: "返回首页" }),
-        /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: !je || le, onClick: () => D(je || ""), children: "下一页" })
+        /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: !ne || le, onClick: () => q(""), children: "返回首页" }),
+        /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: !ve || le, onClick: () => q(ve || ""), children: "下一页" })
       ] })
     ] }) }),
-    p && /* @__PURE__ */ s.jsxs("form", { className: "panel", onSubmit: (E) => {
-      E.preventDefault(), Pe(async () => {
-        if (!p.source_asset_id) throw new Error("请先上传规范原件。");
-        const w = { ...p, scope: Object.fromEntries(Object.entries(p.scope).map(([ve, He]) => [ve, ya(He.join(`
-`))])), clauses: p.clauses.map((ve) => ({
-          ...ve,
-          preconditions: ya(ve.preconditions.join(`
+    v && /* @__PURE__ */ s.jsxs("form", { className: "panel", onSubmit: (E) => {
+      E.preventDefault(), et(async () => {
+        if (!v.source_asset_id) throw new Error("请先上传规范原件。");
+        const w = { ...v, scope: Object.fromEntries(Object.entries(v.scope).map(([we, Le]) => [we, _a(Le.join(`
+`))])), clauses: v.clauses.map((we) => ({
+          ...we,
+          preconditions: _a(we.preconditions.join(`
 `)),
-          exceptions: ya(ve.exceptions.join(`
+          exceptions: _a(we.exceptions.join(`
 `)),
-          tables: ya(ve.tables.join(`
+          tables: _a(we.tables.join(`
 `)),
-          notes: ya(ve.notes.join(`
+          notes: _a(we.notes.join(`
 `)),
-          references: ya(ve.references.join(`
+          references: _a(we.references.join(`
 `))
-        })) }, W = await u("/standards", { method: "POST", headers: { "Idempotency-Key": Z.current }, body: JSON.stringify(w) });
-        Oe(), U(null), Q(await u("/standards/" + W.id)), Xe((ve) => ve + 1), oe("规范草稿已保存，需核验后发布。");
+        })) }, $ = await u("/standards", { method: "POST", headers: { "Idempotency-Key": Z.current }, body: JSON.stringify(w) });
+        Ae(), U(null), Y(await u("/standards/" + $.id)), Je((we) => we + 1), de("规范草稿已保存，需核验后发布。");
       });
     }, children: [
       /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
-        /* @__PURE__ */ s.jsx("h3", { children: p.expected_version ? "修订规范" : "登记规范" }),
+        /* @__PURE__ */ s.jsx("h3", { children: v.expected_version ? "修订规范" : "登记规范" }),
         /* @__PURE__ */ s.jsx("span", { children: "原件和已保存版本保留不变" })
       ] }),
       /* @__PURE__ */ s.jsxs("fieldset", { className: "proof-body", disabled: le, children: [
         /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "规范名称",
-            /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 300, value: p.title, onChange: (E) => De({ title: E.target.value }) })
+            /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 300, value: v.title, onChange: (E) => qe({ title: E.target.value }) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "规范编号",
-            /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 128, value: p.code, readOnly: p.expected_version > 0, onChange: (E) => De({ code: E.target.value }) })
+            /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 128, value: v.code, readOnly: v.expected_version > 0, onChange: (E) => qe({ code: E.target.value }) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "版本标识",
-            /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 100, value: p.edition, readOnly: p.expected_version > 0, onChange: (E) => De({ edition: E.target.value }) })
+            /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 100, value: v.edition, readOnly: v.expected_version > 0, onChange: (E) => qe({ edition: E.target.value }) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "来源维护责任人",
-            /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 200, value: p.maintainer, onChange: (E) => De({ maintainer: E.target.value }) })
+            /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 200, value: v.maintainer, onChange: (E) => qe({ maintainer: E.target.value }) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "生效日期",
-            /* @__PURE__ */ s.jsx("input", { required: !0, type: "date", value: p.valid_from, onChange: (E) => De({ valid_from: E.target.value }) })
+            /* @__PURE__ */ s.jsx("input", { required: !0, type: "date", value: v.valid_from, onChange: (E) => qe({ valid_from: E.target.value }) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "废止日期（当天起不再适用，可留空）",
-            /* @__PURE__ */ s.jsx("input", { type: "date", value: p.valid_until || "", onChange: (E) => De({ valid_until: E.target.value || null }) })
+            /* @__PURE__ */ s.jsx("input", { type: "date", value: v.valid_until || "", onChange: (E) => qe({ valid_until: E.target.value || null }) })
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("label", { children: [
           "规范原件（PDF / DOCX / UTF-8 TXT，最多5MB）",
           /* @__PURE__ */ s.jsx("input", { type: "file", accept: ".pdf,.docx,.txt", onChange: (E) => {
-            var W;
-            const w = (W = E.target.files) == null ? void 0 : W[0];
-            w && Pe(async () => {
+            var $;
+            const w = ($ = E.target.files) == null ? void 0 : $[0];
+            w && et(async () => {
               if (w.size > 5e6) throw new Error("原件超过5MB，请先分卷整理。");
-              const ve = await u(`/standards/source-files?project_id=${encodeURIComponent(d)}&name=${encodeURIComponent(w.name)}`, { method: "POST", headers: { "Content-Type": "application/octet-stream" }, body: w });
-              De({ source_asset_id: ve.asset_id }), y(w.name), oe("原件已上传，请逐条核对原文。自动解析尚未接入。");
+              const we = await u(`/standards/source-files?project_id=${encodeURIComponent(d)}&name=${encodeURIComponent(w.name)}`, { method: "POST", headers: { "Content-Type": "application/octet-stream" }, body: w });
+              qe({ source_asset_id: we.asset_id }), b(w.name), de("原件已上传，请逐条核对原文。自动解析尚未接入。");
             });
           } })
         ] }),
-        /* @__PURE__ */ s.jsx("p", { children: de || "尚未选择原件" }),
+        /* @__PURE__ */ s.jsx("p", { children: ce || "尚未选择原件" }),
         /* @__PURE__ */ s.jsxs("details", { children: [
           /* @__PURE__ */ s.jsx("summary", { children: "适用范围（每行一项；空白表示未限定该维度）" }),
           /* @__PURE__ */ s.jsx("div", { className: "form-grid", children: [["project_types", "项目类型"], ["regions", "地域"], ["object_types", "作业对象"], ["stages", "作业阶段"]].map(([E, w]) => /* @__PURE__ */ s.jsxs("label", { children: [
             w,
-            /* @__PURE__ */ s.jsx("textarea", { value: p.scope[E].join(`
-`), onChange: (W) => De({ scope: { ...p.scope, [E]: W.target.value.split(`
+            /* @__PURE__ */ s.jsx("textarea", { value: v.scope[E].join(`
+`), onChange: ($) => qe({ scope: { ...v.scope, [E]: $.target.value.split(`
 `) } }) })
           ] }, E)) })
         ] }),
         /* @__PURE__ */ s.jsx("h3", { children: "条文与上下文" }),
-        p.clauses.map((E, w) => /* @__PURE__ */ s.jsxs("fieldset", { className: "standard-clause", children: [
+        v.clauses.map((E, w) => /* @__PURE__ */ s.jsxs("fieldset", { className: "standard-clause", children: [
           /* @__PURE__ */ s.jsxs("legend", { children: [
             "条文 ",
             w + 1
@@ -10595,81 +10595,81 @@ function _j({ api: u, projects: h, identity: S }) {
           /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "条号",
-              /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 100, value: E.number, onChange: (W) => Ne(w, { number: W.target.value }) })
+              /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 100, value: E.number, onChange: ($) => ke(w, { number: $.target.value }) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "所属章节",
-              /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 200, value: E.chapter, onChange: (W) => Ne(w, { chapter: W.target.value }) })
+              /* @__PURE__ */ s.jsx("input", { required: !0, maxLength: 200, value: E.chapter, onChange: ($) => ke(w, { chapter: $.target.value }) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "父条号（可留空）",
-              /* @__PURE__ */ s.jsx("input", { value: E.parent_number || "", onChange: (W) => Ne(w, { parent_number: W.target.value || null }) })
+              /* @__PURE__ */ s.jsx("input", { value: E.parent_number || "", onChange: ($) => ke(w, { parent_number: $.target.value || null }) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "原文页码",
-              /* @__PURE__ */ s.jsx("input", { type: "number", min: 1, max: 1e5, value: E.page || "", onChange: (W) => Ne(w, { page: W.target.value ? Number(W.target.value) : null }) })
+              /* @__PURE__ */ s.jsx("input", { type: "number", min: 1, max: 1e5, value: E.page || "", onChange: ($) => ke(w, { page: $.target.value ? Number($.target.value) : null }) })
             ] })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "原文位置（无页码时必填）",
-            /* @__PURE__ */ s.jsx("input", { value: E.locator, onChange: (W) => Ne(w, { locator: W.target.value }) })
+            /* @__PURE__ */ s.jsx("input", { value: E.locator, onChange: ($) => ke(w, { locator: $.target.value }) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "条文原文",
-            /* @__PURE__ */ s.jsx("textarea", { required: !0, maxLength: 12e3, value: E.text, onChange: (W) => Ne(w, { text: W.target.value }) })
+            /* @__PURE__ */ s.jsx("textarea", { required: !0, maxLength: 12e3, value: E.text, onChange: ($) => ke(w, { text: $.target.value }) })
           ] }),
           /* @__PURE__ */ s.jsxs("details", { children: [
             /* @__PURE__ */ s.jsx("summary", { children: "前置条件、例外、表格、注释与引用（每行一项）" }),
-            [["preconditions", "前置条件"], ["exceptions", "例外条件"], ["tables", "相关表格原文"], ["notes", "注释"], ["references", "引用条款"]].map(([W, ve]) => /* @__PURE__ */ s.jsxs("label", { children: [
-              ve,
-              /* @__PURE__ */ s.jsx("textarea", { value: E[W].join(`
-`), onChange: (He) => Ne(w, { [W]: He.target.value.split(`
+            [["preconditions", "前置条件"], ["exceptions", "例外条件"], ["tables", "相关表格原文"], ["notes", "注释"], ["references", "引用条款"]].map(([$, we]) => /* @__PURE__ */ s.jsxs("label", { children: [
+              we,
+              /* @__PURE__ */ s.jsx("textarea", { value: E[$].join(`
+`), onChange: (Le) => ke(w, { [$]: Le.target.value.split(`
 `) }) })
-            ] }, W))
+            ] }, $))
           ] }),
-          p.clauses.length > 1 && /* @__PURE__ */ s.jsx("button", { type: "button", className: "button ghost", onClick: () => De({ clauses: p.clauses.filter((W, ve) => ve !== w) }), children: "删除此条草稿" })
+          v.clauses.length > 1 && /* @__PURE__ */ s.jsx("button", { type: "button", className: "button ghost", onClick: () => qe({ clauses: v.clauses.filter(($, we) => we !== w) }), children: "删除此条草稿" })
         ] }, w)),
-        /* @__PURE__ */ s.jsx("button", { type: "button", className: "button secondary", disabled: p.clauses.length >= 200, onClick: () => De({ clauses: [...p.clauses, pu()] }), children: "添加条文" }),
+        /* @__PURE__ */ s.jsx("button", { type: "button", className: "button secondary", disabled: v.clauses.length >= 200, onClick: () => qe({ clauses: [...v.clauses, gu()] }), children: "添加条文" }),
         /* @__PURE__ */ s.jsxs("label", { children: [
           "录入或修订原因",
-          /* @__PURE__ */ s.jsx("textarea", { required: !0, maxLength: 200, value: p.reason, onChange: (E) => De({ reason: E.target.value }) })
+          /* @__PURE__ */ s.jsx("textarea", { required: !0, maxLength: 200, value: v.reason, onChange: (E) => qe({ reason: E.target.value }) })
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "button primary", type: "submit", disabled: !p.source_asset_id, children: "保存草稿" }),
+        /* @__PURE__ */ s.jsx("button", { className: "button primary", type: "submit", disabled: !v.source_asset_id, children: "保存草稿" }),
         /* @__PURE__ */ s.jsx("button", { className: "button ghost", type: "button", onClick: () => {
-          Te() && (U(null), k(!1));
+          Re() && (U(null), k(!1));
         }, children: "取消编辑" })
       ] })
     ] }),
-    M && !p && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+    z && !v && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
       /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsxs("div", { children: [
-        /* @__PURE__ */ s.jsx("h3", { children: M.title }),
+        /* @__PURE__ */ s.jsx("h3", { children: z.title }),
         /* @__PURE__ */ s.jsxs("p", { children: [
-          M.code,
+          z.code,
           " · ",
-          M.edition,
+          z.edition,
           " · 修订 ",
-          M.version,
+          z.version,
           " · ",
-          pf[M.state]
+          yf[z.state]
         ] })
       ] }) }),
       /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
         /* @__PURE__ */ s.jsxs("p", { children: [
           "维护人：",
-          M.maintainer,
+          z.maintainer,
           "；核验日期：",
-          M.verified_on || "尚未核验",
+          z.verified_on || "尚未核验",
           "。有效区间：",
-          M.valid_from,
+          z.valid_from,
           " 至 ",
-          M.valid_until || "未登记废止日期",
+          z.valid_until || "未登记废止日期",
           "。"
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "standards-toolbar", children: [
-          /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: le || M.source_available === !1, onClick: Ze, children: "下载核对原件" }),
-          ie && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: le || !M.clauses, onClick: We, children: "以此版本修订" })
+          /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: le || z.source_available === !1, onClick: rt, children: "下载核对原件" }),
+          ie && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: le || !z.clauses, onClick: tt, children: "以此版本修订" })
         ] }),
-        (et = M.clauses) == null ? void 0 : et.map((E) => /* @__PURE__ */ s.jsxs("article", { className: "standard-clause", children: [
+        (Ke = z.clauses) == null ? void 0 : Ke.map((E) => /* @__PURE__ */ s.jsxs("article", { className: "standard-clause", children: [
           /* @__PURE__ */ s.jsxs("h4", { children: [
             E.number,
             " · ",
@@ -10683,73 +10683,73 @@ function _j({ api: u, projects: h, identity: S }) {
             E.locator
           ] }),
           /* @__PURE__ */ s.jsx("p", { className: "standard-original", children: E.text }),
-          [["preconditions", "前置条件"], ["exceptions", "例外"], ["tables", "表格"], ["notes", "注释"], ["references", "引用条款"]].map(([w, W]) => E[w].length > 0 && /* @__PURE__ */ s.jsxs("div", { children: [
-            /* @__PURE__ */ s.jsx("strong", { children: W }),
-            E[w].map((ve, He) => /* @__PURE__ */ s.jsx("p", { className: "standard-original", children: ve }, He))
+          [["preconditions", "前置条件"], ["exceptions", "例外"], ["tables", "表格"], ["notes", "注释"], ["references", "引用条款"]].map(([w, $]) => E[w].length > 0 && /* @__PURE__ */ s.jsxs("div", { children: [
+            /* @__PURE__ */ s.jsx("strong", { children: $ }),
+            E[w].map((we, Le) => /* @__PURE__ */ s.jsx("p", { className: "standard-original", children: we }, Le))
           ] }, w))
         ] }, E.number)),
-        M.state === "published" && /* @__PURE__ */ s.jsxs("fieldset", { className: "standard-clause", children: [
+        z.state === "published" && /* @__PURE__ */ s.jsxs("fieldset", { className: "standard-clause", children: [
           /* @__PURE__ */ s.jsx("legend", { children: "核对版本及适用范围" }),
           /* @__PURE__ */ s.jsx("p", { children: "此处只核对已登记条件，具体条文前提和例外仍需专业判断。" }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "用途",
-            /* @__PURE__ */ s.jsxs("select", { value: Y, onChange: (E) => {
+            /* @__PURE__ */ s.jsxs("select", { value: G, onChange: (E) => {
               ee(E.target.value), ae(null);
             }, children: [
               /* @__PURE__ */ s.jsx("option", { value: "current_rectification", children: "当前整改" }),
               /* @__PURE__ */ s.jsx("option", { value: "historical_review", children: "历史复盘" })
             ] })
           ] }),
-          Y === "historical_review" && /* @__PURE__ */ s.jsxs("label", { children: [
+          G === "historical_review" && /* @__PURE__ */ s.jsxs("label", { children: [
             "事件日期",
-            /* @__PURE__ */ s.jsx("input", { type: "date", value: ke, onChange: (E) => {
-              m(E.target.value), ae(null);
+            /* @__PURE__ */ s.jsx("input", { type: "date", value: Ee, onChange: (E) => {
+              f(E.target.value), ae(null);
             } })
           ] }),
           /* @__PURE__ */ s.jsx("div", { className: "form-grid", children: [["project_type", "项目类型"], ["region", "地域"], ["object_type", "作业对象"], ["stage", "作业阶段"]].map(([E, w]) => /* @__PURE__ */ s.jsxs("label", { children: [
             w,
-            /* @__PURE__ */ s.jsx("input", { value: H[E], onChange: (W) => {
-              te({ ...H, [E]: W.target.value }), ae(null);
+            /* @__PURE__ */ s.jsx("input", { value: B[E], onChange: ($) => {
+              te({ ...B, [E]: $.target.value }), ae(null);
             } })
           ] }, E)) }),
-          /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: le, onClick: () => void Pe(async () => {
-            ae(await u(`/standards/${M.id}/applicability`, { method: "POST", body: JSON.stringify({ purpose: Y, event_date: ke || null, ...H }) }));
+          /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: le, onClick: () => void et(async () => {
+            ae(await u(`/standards/${z.id}/applicability`, { method: "POST", body: JSON.stringify({ purpose: G, event_date: Ee || null, ...B }) }));
           }), children: "核对条件" }),
-          $ && /* @__PURE__ */ s.jsxs("div", { role: "status", children: [
-            /* @__PURE__ */ s.jsx("p", { children: { candidate: "日期与登记范围符合，仍需核对具体条文", needs_information: "条件不全，请补充", not_applicable: "存在不适用条件", unavailable: "版本不可用" }[$.status] }),
-            $.missing.length > 0 && /* @__PURE__ */ s.jsxs("p", { children: [
+          W && /* @__PURE__ */ s.jsxs("div", { role: "status", children: [
+            /* @__PURE__ */ s.jsx("p", { children: { candidate: "日期与登记范围符合，仍需核对具体条文", needs_information: "条件不全，请补充", not_applicable: "存在不适用条件", unavailable: "版本不可用" }[W.status] }),
+            W.missing.length > 0 && /* @__PURE__ */ s.jsxs("p", { children: [
               "待补：",
-              $.missing.map((E) => ({ event_date: "事件日期", project_type: "项目类型", region: "地域", object_type: "作业对象", stage: "作业阶段" })[E] || E).join("、")
+              W.missing.map((E) => ({ event_date: "事件日期", project_type: "项目类型", region: "地域", object_type: "作业对象", stage: "作业阶段" })[E] || E).join("、")
             ] }),
-            $.reasons.map((E) => /* @__PURE__ */ s.jsx("p", { children: E }, E)),
-            /* @__PURE__ */ s.jsx("p", { children: $.note })
+            W.reasons.map((E) => /* @__PURE__ */ s.jsx("p", { children: E }, E)),
+            /* @__PURE__ */ s.jsx("p", { children: W.note })
           ] })
         ] }),
-        lt && /* @__PURE__ */ s.jsxs("fieldset", { className: "standard-clause", disabled: le, children: [
+        at && /* @__PURE__ */ s.jsxs("fieldset", { className: "standard-clause", disabled: le, children: [
           /* @__PURE__ */ s.jsx("legend", { children: "审核与发布" }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "操作说明",
-            /* @__PURE__ */ s.jsx("textarea", { value: Ge, maxLength: 2e3, onChange: (E) => pe(E.target.value) })
+            /* @__PURE__ */ s.jsx("textarea", { value: Qe, maxLength: 2e3, onChange: (E) => pe(E.target.value) })
           ] }),
-          M.state === "pending_review" && Se && /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Ke, onChange: (E) => X(E.target.checked) }),
+          z.state === "pending_review" && Ce && /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Fe, onChange: (E) => Q(E.target.checked) }),
             "已逐项核对条号、原文、上下文、适用范围及有效日期"
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "standards-toolbar", children: [
-            M.state === "draft" && ie && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: !Ge.trim(), onClick: () => Fe("submit"), children: "提交审核" }),
-            M.state === "pending_review" && Se && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-              /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: !Ge.trim() || !Ke, onClick: () => Fe("approve"), children: "审核通过" }),
-              /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: !Ge.trim(), onClick: () => Fe("request_changes"), children: "退回修改" })
+            z.state === "draft" && ie && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: !Qe.trim(), onClick: () => st("submit"), children: "提交审核" }),
+            z.state === "pending_review" && Ce && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+              /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: !Qe.trim() || !Fe, onClick: () => st("approve"), children: "审核通过" }),
+              /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: !Qe.trim(), onClick: () => st("request_changes"), children: "退回修改" })
             ] }),
-            M.state === "approved" && st && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: !Ge.trim(), onClick: () => Fe("publish"), children: "发布此版本" }),
-            ["published", "approved", "superseded"].includes(M.state) && st && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: !Ge.trim(), onClick: () => Fe("withdraw"), children: "撤回此版本" })
+            z.state === "approved" && lt && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: !Qe.trim(), onClick: () => st("publish"), children: "发布此版本" }),
+            ["published", "approved", "superseded"].includes(z.state) && lt && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: !Qe.trim(), onClick: () => st("withdraw"), children: "撤回此版本" })
           ] }),
-          M.state === "changes_requested" && /* @__PURE__ */ s.jsx("p", { children: "请使用“以此版本修订”保存新稿，再提交审核。" })
+          z.state === "changes_requested" && /* @__PURE__ */ s.jsx("p", { children: "请使用“以此版本修订”保存新稿，再提交审核。" })
         ] }),
         /* @__PURE__ */ s.jsxs("details", { children: [
           /* @__PURE__ */ s.jsx("summary", { children: "操作记录" }),
-          (Ue = M.history) == null ? void 0 : Ue.map((E, w) => /* @__PURE__ */ s.jsxs("p", { children: [
-            gf[E.action] || E.action,
+          (ze = z.history) == null ? void 0 : ze.map((E, w) => /* @__PURE__ */ s.jsxs("p", { children: [
+            _f[E.action] || E.action,
             " · ",
             E.reason,
             " · ",
@@ -10760,13 +10760,13 @@ function _j({ api: u, projects: h, identity: S }) {
     ] })
   ] });
 }
-const Ca = { kind: "asset", id: "", quote: "", locator: "" }, Qf = { record_key: "", kind: "inspection", date: "", text: "", evidence: [Ca] }, Xf = { code: "", name: "", parent: null, positive_examples: [""], negative_examples: [""] }, Zf = { text: "", nature: "fact", evidence: [Ca] }, Vf = { number: "", title: "", operation: "", risks: [""], measures: [""], checks: [""], evidence: [Ca] }, Nj = { name: "", value: null, evidence: [Ca] }, bf = {
-  taxonomy: { kind: "taxonomy", rule: "", categories: [Xf] },
-  hazard: { kind: "hazard", description: "", occurred_on: "", stage: "", object_name: "", taxonomy_id: "", category: "", subcategory: "", tags: [], classification_reason: "", original_risk: "待核实", reviewed_risk: "待核实", risk_reason: "", status: "unverified", nature: "observed_hazard", split_reason: "", relation: "independent", related_event_id: null, records: [Qf] },
-  compilation: { kind: "compilation", mode: "single", event_ids: [""], background: "", claims: [Zf], differences: "", limitations: [""], missing: [] },
-  guide: { kind: "guide", conditions: { 项目类型: "", 地域: "", 作业对象: "", 设备型号: "", 环境: "", 人员: "", 前置方案: "" }, required_conditions: ["项目类型", "作业对象", "人员", "前置方案"], preparation: "", implementation: "", risk_control: "", acceptance: "", emergency: "", steps: [Vf], parameters: [], missing: [], conflicts: [] },
+const Ca = { kind: "asset", id: "", quote: "", locator: "" }, Jf = { record_key: "", kind: "inspection", date: "", text: "", evidence: [Ca] }, Kf = { code: "", name: "", parent: null, positive_examples: [""], negative_examples: [""] }, $f = { text: "", nature: "fact", evidence: [Ca] }, Wf = { number: "", title: "", operation: "", risks: [""], measures: [""], checks: [""], evidence: [Ca] }, Cj = { name: "", value: null, evidence: [Ca] }, Nf = {
+  taxonomy: { kind: "taxonomy", rule: "", categories: [Kf] },
+  hazard: { kind: "hazard", description: "", occurred_on: "", stage: "", object_name: "", taxonomy_id: "", category: "", subcategory: "", tags: [], classification_reason: "", original_risk: "待核实", reviewed_risk: "待核实", risk_reason: "", status: "unverified", nature: "observed_hazard", split_reason: "", relation: "independent", related_event_id: null, records: [Jf] },
+  compilation: { kind: "compilation", mode: "single", event_ids: [""], background: "", claims: [$f], differences: "", limitations: [""], missing: [] },
+  guide: { kind: "guide", conditions: { 项目类型: "", 地域: "", 作业对象: "", 设备型号: "", 环境: "", 人员: "", 前置方案: "" }, required_conditions: ["项目类型", "作业对象", "人员", "前置方案"], preparation: "", implementation: "", risk_control: "", acceptance: "", emergency: "", steps: [Wf], parameters: [], missing: [], conflicts: [] },
   question: { kind: "question", guide_id: "", chapter: "", role: "", step: "", risk: "", point: "", cognitive_level: "recall", difficulty: "medium", type: "single", stem: "", options: { a: "", b: "", c: "", d: "" }, answer: ["a"], explanation: "", rubric: [], evidence: [{ ...Ca, kind: "work" }], historical_case_ids: [] }
-}, Sj = { evidence: Ca, records: Qf, categories: Xf, claims: Zf, steps: Vf, parameters: Nj }, Na = {
+}, Ej = { evidence: Ca, records: Jf, categories: Kf, claims: $f, steps: Wf, parameters: Cj }, Sa = {
   taxonomy: "分类字典",
   hazard: "隐患事件",
   compilation: "案例汇编",
@@ -10844,207 +10844,207 @@ const Ca = { kind: "asset", id: "", quote: "", locator: "" }, Qf = { record_key:
   explanation: "解析",
   rubric: "评分要点",
   historical_case_ids: "历史案例版本"
-}, wj = { status: [["unverified", "待核实"], ["open", "未整改"], ["rectifying", "整改中"], ["closed", "复查闭环"]], relation: [["independent", "独立事件"], ["recurrence", "同对象再次发生"], ["possible_duplicate", "疑似重复（不自动合并）"]], mode: [["single", "单案例"], ["category", "类别汇编"], ["project", "项目汇编"]], type: [["single", "单选"], ["multiple", "多选"], ["judgment", "判断"], ["case", "案例分析"]], cognitive_level: [["recall", "识记"], ["sequence", "操作顺序"], ["scenario", "情境判断"], ["case", "案例分析"]], difficulty: [["easy", "容易"], ["medium", "中等"], ["hard", "困难"]] };
-function Ki({ value: u, onChange: h, catalog: S, name: d = "", path: R = "content", readonly: B = !1 }) {
-  var p;
-  const V = Na[d] || d;
+}, Oj = { status: [["unverified", "待核实"], ["open", "未整改"], ["rectifying", "整改中"], ["closed", "复查闭环"]], relation: [["independent", "独立事件"], ["recurrence", "同对象再次发生"], ["possible_duplicate", "疑似重复（不自动合并）"]], mode: [["single", "单案例"], ["category", "类别汇编"], ["project", "项目汇编"]], type: [["single", "单选"], ["multiple", "多选"], ["judgment", "判断"], ["case", "案例分析"]], cognitive_level: [["recall", "识记"], ["sequence", "操作顺序"], ["scenario", "情境判断"], ["case", "案例分析"]], difficulty: [["easy", "容易"], ["medium", "中等"], ["hard", "困难"]] };
+function Ji({ value: u, onChange: h, catalog: _, name: d = "", path: A = "content", readonly: M = !1 }) {
+  var v;
+  const V = Sa[d] || d;
   if (Array.isArray(u)) return /* @__PURE__ */ s.jsxs("fieldset", { className: "wf-group", children: [
     /* @__PURE__ */ s.jsx("legend", { children: V }),
     u.map((U, K) => /* @__PURE__ */ s.jsxs("div", { className: "wf-array", children: [
-      /* @__PURE__ */ s.jsx(Ki, { value: U, name: d.endsWith("_ids") ? d.slice(0, -1) : "", path: R + "." + K, catalog: S, readonly: B, onChange: (k) => h(u.map((le, xe) => xe === K ? k : le)) }),
-      !B && /* @__PURE__ */ s.jsx("button", { type: "button", className: "button ghost", "aria-label": "删除" + V + String(K + 1), onClick: () => h(u.filter((k, le) => K !== le)), children: "移除" })
+      /* @__PURE__ */ s.jsx(Ji, { value: U, name: d.endsWith("_ids") ? d.slice(0, -1) : "", path: A + "." + K, catalog: _, readonly: M, onChange: (k) => h(u.map((le, xe) => xe === K ? k : le)) }),
+      !M && /* @__PURE__ */ s.jsx("button", { type: "button", className: "button ghost", "aria-label": "删除" + V + String(K + 1), onClick: () => h(u.filter((k, le) => K !== le)), children: "移除" })
     ] }, K)),
-    !B && /* @__PURE__ */ s.jsxs("button", { type: "button", className: "button ghost", onClick: () => h([...u, structuredClone(Sj[d] ?? "")]), children: [
+    !M && /* @__PURE__ */ s.jsxs("button", { type: "button", className: "button ghost", onClick: () => h([...u, structuredClone(Ej[d] ?? "")]), children: [
       "添加",
       V
     ] })
   ] });
-  if (u !== null && typeof u == "object") return /* @__PURE__ */ s.jsx("div", { className: "wf-fields", children: Object.entries(u).map(([U, K]) => U === "kind" && R === "content" ? null : /* @__PURE__ */ s.jsx(Ki, { name: U, value: K, path: R + "." + U, catalog: S, readonly: B, onChange: (k) => {
+  if (u !== null && typeof u == "object") return /* @__PURE__ */ s.jsx("div", { className: "wf-fields", children: Object.entries(u).map(([U, K]) => U === "kind" && A === "content" ? null : /* @__PURE__ */ s.jsx(Ji, { name: U, value: K, path: A + "." + U, catalog: _, readonly: M, onChange: (k) => {
     const le = { ...u, [U]: k };
     U === "type" && ["judgment", "case"].includes(String(k)) && (le.options = {}), U === "kind" && "id" in u && (le.id = ""), h(le);
   } }, U)) });
-  let M = wj[d];
-  d === "kind" && (M = R.includes(".records.") ? [["inspection", "检查"], ["rectification", "整改"], ["reinspection", "复查"]] : [["asset", "原件"], ["record", "历史记录"], ["standard", "规范版本"], ["work", "知识成果"]]), d === "nature" && (M = R.includes("claims") ? [["fact", "原始事实"], ["source_conclusion", "资料已有结论"], ["analysis", "系统分析"], ["hypothesis", "待核实假设"]] : [["observed_hazard", "已发现隐患"], ["potential_source", "潜在风险源"]]);
-  const Q = { taxonomy_id: "taxonomy", guide_id: "guide", related_event_id: "hazard", event_id: "hazard" };
-  return (d === "id" || d in Q || d === "historical_case_id") && (M = S.filter((U) => d in Q ? U.work_kind === Q[d] : d === "historical_case_id" ? ["hazard", "compilation"].includes(U.work_kind || "") : !0).map((U) => [U.id, U.label])), /* @__PURE__ */ s.jsxs("label", { className: "wf-field", htmlFor: R, children: [
+  let z = Oj[d];
+  d === "kind" && (z = A.includes(".records.") ? [["inspection", "检查"], ["rectification", "整改"], ["reinspection", "复查"]] : [["asset", "原件"], ["record", "历史记录"], ["standard", "规范版本"], ["work", "知识成果"]]), d === "nature" && (z = A.includes("claims") ? [["fact", "原始事实"], ["source_conclusion", "资料已有结论"], ["analysis", "系统分析"], ["hypothesis", "待核实假设"]] : [["observed_hazard", "已发现隐患"], ["potential_source", "潜在风险源"]]);
+  const Y = { taxonomy_id: "taxonomy", guide_id: "guide", related_event_id: "hazard", event_id: "hazard" };
+  return (d === "id" || d in Y || d === "historical_case_id") && (z = _.filter((U) => d in Y ? U.work_kind === Y[d] : d === "historical_case_id" ? ["hazard", "compilation"].includes(U.work_kind || "") : !0).map((U) => [U.id, U.label])), /* @__PURE__ */ s.jsxs("label", { className: "wf-field", htmlFor: A, children: [
     /* @__PURE__ */ s.jsx("span", { children: V || "内容" }),
-    B ? /* @__PURE__ */ s.jsx("div", { className: "wf-value", children: ((p = M == null ? void 0 : M.find((U) => U[0] === String(u))) == null ? void 0 : p[1]) || String(u ?? "待填") }) : M ? /* @__PURE__ */ s.jsxs("select", { id: R, value: String(u ?? ""), onChange: (U) => h(U.target.value || null), children: [
+    M ? /* @__PURE__ */ s.jsx("div", { className: "wf-value", children: ((v = z == null ? void 0 : z.find((U) => U[0] === String(u))) == null ? void 0 : v[1]) || String(u ?? "待填") }) : z ? /* @__PURE__ */ s.jsxs("select", { id: A, value: String(u ?? ""), onChange: (U) => h(U.target.value || null), children: [
       /* @__PURE__ */ s.jsx("option", { value: "", children: "请选择" }),
-      M.map(([U, K]) => /* @__PURE__ */ s.jsx("option", { value: U, children: K }, U))
-    ] }) : d === "date" || d === "occurred_on" ? /* @__PURE__ */ s.jsx("input", { id: R, type: "date", value: String(u ?? ""), onChange: (U) => h(U.target.value) }) : /* @__PURE__ */ s.jsx("textarea", { id: R, rows: ["description", "text", "quote", "operation", "rule", "stem"].includes(d) ? 3 : 2, value: String(u ?? ""), onChange: (U) => h(U.target.value === "" && ["parent", "value", "related_event_id"].includes(d) ? null : U.target.value) })
+      z.map(([U, K]) => /* @__PURE__ */ s.jsx("option", { value: U, children: K }, U))
+    ] }) : d === "date" || d === "occurred_on" ? /* @__PURE__ */ s.jsx("input", { id: A, type: "date", value: String(u ?? ""), onChange: (U) => h(U.target.value) }) : /* @__PURE__ */ s.jsx("textarea", { id: A, rows: ["description", "text", "quote", "operation", "rule", "stem"].includes(d) ? 3 : 2, value: String(u ?? ""), onChange: (U) => h(U.target.value === "" && ["parent", "value", "related_event_id"].includes(d) ? null : U.target.value) })
   ] });
 }
-const yf = { draft: "草稿", pending_review: "待审核", approved: "审核通过", published: "已发布", changes_requested: "退回修改", superseded: "已有新版本", withdrawn: "已撤回" }, _f = { submit: "提交审核", approve: "审核通过", request_changes: "退回修改", publish: "发布", withdraw: "撤回" };
-function kj({ api: u, projects: h, identity: S }) {
+const Sf = { draft: "草稿", pending_review: "待审核", approved: "审核通过", published: "已发布", changes_requested: "退回修改", superseded: "已有新版本", withdrawn: "已撤回" }, wf = { submit: "提交审核", approve: "审核通过", request_changes: "退回修改", publish: "发布", withdraw: "撤回" };
+function Tj({ api: u, projects: h, identity: _ }) {
   var E;
-  const [d, R] = r.useState(((E = h[0]) == null ? void 0 : E.id) || ""), [B, V] = r.useState("hazard"), [M, Q] = r.useState([]), [p, U] = r.useState([]), [K, k] = r.useState(null), [le, xe] = r.useState(null), [_e, ye] = r.useState(""), [Ee, me] = r.useState(!1), [I, oe] = r.useState(""), [ne, D] = r.useState(""), [je, Re] = r.useState(!1), [Be, Xe] = r.useState(!1), [Ge, pe] = r.useState(0), [Ke, X] = r.useState(null), [de, y] = r.useState(""), [Y, ee] = r.useState(null), [ke, m] = r.useState(null), [H, te] = r.useState(null), [$, ae] = r.useState(null), Z = r.useRef(crypto.randomUUID()), P = r.useRef(0), Ce = r.useRef(!1), ie = h.find((w) => w.id === d), Se = (w) => {
-    var W, ve;
-    return ie != null && ie.permissions ? ie.permissions.includes(w) : w.startsWith("training.") ? !!((W = ie == null ? void 0 : ie.roles) != null && W.some((He) => ["admin", "teacher"].includes(He))) : w === "knowledge.process" ? !!(ie != null && ie.can_run) : !!(ie != null && ie.can_manage) || !!((ve = ie == null ? void 0 : ie.roles) != null && ve.includes("reviewer"));
-  }, st = Se(B === "question" ? "training.manage" : "knowledge.process"), lt = Se(B === "question" ? "training.review" : "knowledge.review"), Pe = Se(B === "question" ? "training.review" : "knowledge.publish"), Oe = st || lt || Pe, Te = () => {
+  const [d, A] = r.useState(((E = h[0]) == null ? void 0 : E.id) || ""), [M, V] = r.useState("hazard"), [z, Y] = r.useState([]), [v, U] = r.useState([]), [K, k] = r.useState(null), [le, xe] = r.useState(null), [Ne, Se] = r.useState(""), [Te, fe] = r.useState(!1), [I, de] = r.useState(""), [ne, q] = r.useState(""), [ve, Me] = r.useState(!1), [Ye, Je] = r.useState(!1), [Qe, pe] = r.useState(0), [Fe, Q] = r.useState(null), [ce, b] = r.useState(""), [G, ee] = r.useState(null), [Ee, f] = r.useState(null), [B, te] = r.useState(null), [W, ae] = r.useState(null), Z = r.useRef(crypto.randomUUID()), P = r.useRef(0), Oe = r.useRef(!1), ie = h.find((w) => w.id === d), Ce = (w) => {
+    var $, we;
+    return ie != null && ie.permissions ? ie.permissions.includes(w) : w.startsWith("training.") ? !!(($ = ie == null ? void 0 : ie.roles) != null && $.some((Le) => ["admin", "teacher"].includes(Le))) : w === "knowledge.process" ? !!(ie != null && ie.can_run) : !!(ie != null && ie.can_manage) || !!((we = ie == null ? void 0 : ie.roles) != null && we.includes("reviewer"));
+  }, lt = Ce(M === "question" ? "training.manage" : "knowledge.process"), at = Ce(M === "question" ? "training.review" : "knowledge.review"), et = Ce(M === "question" ? "training.review" : "knowledge.publish"), Ae = lt || at || et, Re = () => {
     var w;
-    Ce.current = !1, (w = window.QaxcClearPendingEdits) == null || w.call(window);
-  }, De = () => !Ce.current || confirm("当前草稿尚未保存，确定放弃编辑？");
+    Oe.current = !1, (w = window.QaxcClearPendingEdits) == null || w.call(window);
+  }, qe = () => !Oe.current || confirm("当前草稿尚未保存，确定放弃编辑？");
   r.useEffect(() => {
-    const w = (W) => {
-      Ce.current && (W.preventDefault(), W.returnValue = "");
+    const w = ($) => {
+      Oe.current && ($.preventDefault(), $.returnValue = "");
     };
     return window.addEventListener("beforeunload", w), () => window.removeEventListener("beforeunload", w);
   }, []), r.useEffect(() => {
     let w = !1;
-    if (Xe(!0), Q([]), oe(""), !d) {
-      Xe(!1);
+    if (Je(!0), Y([]), de(""), !d) {
+      Je(!1);
       return;
     }
-    return u(`/workflows?project_id=${encodeURIComponent(d)}&kind=${B}&view=${Oe ? "manage" : "published"}${de ? "&cursor=" + encodeURIComponent(de) : ""}`).then((W) => {
-      w || (Q(W.items), X(W.next_cursor));
-    }).catch((W) => {
-      w || oe(W.message);
+    return u(`/workflows?project_id=${encodeURIComponent(d)}&kind=${M}&view=${Ae ? "manage" : "published"}${ce ? "&cursor=" + encodeURIComponent(ce) : ""}`).then(($) => {
+      w || (Y($.items), Q($.next_cursor));
+    }).catch(($) => {
+      w || de($.message);
     }).finally(() => {
-      w || Xe(!1);
-    }), Oe && u(`/workflows/catalog?project_id=${encodeURIComponent(d)}`).then((W) => {
-      w || U(W.items);
-    }).catch((W) => {
-      w || oe(W.message);
-    }), B === "hazard" && u(`/workflows/hazards/statistics?project_id=${encodeURIComponent(d)}`).then((W) => {
-      w || ee(W);
-    }).catch((W) => {
-      w || oe(W.message);
+      w || Je(!1);
+    }), Ae && u(`/workflows/catalog?project_id=${encodeURIComponent(d)}`).then(($) => {
+      w || U($.items);
+    }).catch(($) => {
+      w || de($.message);
+    }), M === "hazard" && u(`/workflows/hazards/statistics?project_id=${encodeURIComponent(d)}`).then(($) => {
+      w || ee($);
+    }).catch(($) => {
+      w || de($.message);
     }), () => {
       w = !0;
     };
-  }, [d, B, de, Oe, Ge]), r.useEffect(() => () => {
+  }, [d, M, ce, Ae, Qe]), r.useEffect(() => () => {
     P.current++;
   }, []);
-  const Ne = async (w) => {
-    Re(!0), oe(""), D("");
+  const ke = async (w) => {
+    Me(!0), de(""), q("");
     try {
       await w();
-    } catch (W) {
-      oe(W.message);
+    } catch ($) {
+      de($.message);
     } finally {
-      Re(!1);
+      Me(!1);
     }
-  }, Le = () => {
-    P.current++, k(null), xe(null), m(null), te(null), ae(null), y(""), ye(""), me(!1), Te();
-  }, We = async (w) => {
-    if (!De()) return;
-    const W = ++P.current;
-    await Ne(async () => {
-      const ve = await u("/workflows/" + w.id);
-      W === P.current && (k(ve), xe(null), ye(""), me(!1), te(null), ae(null), Te());
+  }, Be = () => {
+    P.current++, k(null), xe(null), f(null), te(null), ae(null), b(""), Se(""), fe(!1), Re();
+  }, tt = async (w) => {
+    if (!qe()) return;
+    const $ = ++P.current;
+    await ke(async () => {
+      const we = await u("/workflows/" + w.id);
+      $ === P.current && (k(we), xe(null), Se(""), fe(!1), te(null), ae(null), Re());
     });
-  }, Fe = (w) => {
-    xe((W) => W && { ...W, ...w }), Ce.current = !0, Z.current = crypto.randomUUID();
-  }, Ze = () => Ne(async () => {
+  }, st = (w) => {
+    xe(($) => $ && { ...$, ...w }), Oe.current = !0, Z.current = crypto.randomUUID();
+  }, rt = () => ke(async () => {
     if (!le) return;
-    const w = await u("/workflows", { method: "POST", headers: { "Idempotency-Key": Z.current }, body: JSON.stringify({ ...le, project_id: d, reason: _e }) });
-    k(w), xe(null), Te(), pe((W) => W + 1), D("已保存新版本，尚未审核发布。");
-  }), he = (w, W) => Ne(async () => {
-    const ve = await u(`/workflows/${w.id}/actions`, { method: "POST", body: JSON.stringify({ action: W, row_version: w.row_version, reason: _e, evidence_checked: Ee }) });
-    k(W === "withdraw" ? null : await u("/workflows/" + ve.id)), pe((He) => He + 1), Te(), D(_f[W] + "已完成");
-  }), et = (w) => Ne(async () => {
-    const W = await u(`/workflows/hazards/drilldown?project_id=${encodeURIComponent(d)}&category=${encodeURIComponent(w)}&limit=100`);
-    m(W.items);
-  }), Ue = () => Ne(async () => {
+    const w = await u("/workflows", { method: "POST", headers: { "Idempotency-Key": Z.current }, body: JSON.stringify({ ...le, project_id: d, reason: Ne }) });
+    k(w), xe(null), Re(), pe(($) => $ + 1), q("已保存新版本，尚未审核发布。");
+  }), je = (w, $) => ke(async () => {
+    const we = await u(`/workflows/${w.id}/actions`, { method: "POST", body: JSON.stringify({ action: $, row_version: w.row_version, reason: Ne, evidence_checked: Te }) });
+    k($ === "withdraw" ? null : await u("/workflows/" + we.id)), pe((Le) => Le + 1), Re(), q(wf[$] + "已完成");
+  }), Ke = (w) => ke(async () => {
+    const $ = await u(`/workflows/hazards/drilldown?project_id=${encodeURIComponent(d)}&category=${encodeURIComponent(w)}&limit=100`);
+    f($.items);
+  }), ze = () => ke(async () => {
     if (!K) return;
-    const w = await Mt("/api/v1/workflows/" + K.id + "/export", { headers: { Authorization: "Bearer dev-" + S } });
+    const w = await Mt("/api/v1/workflows/" + K.id + "/export", { headers: { Authorization: "Bearer dev-" + _ } });
     if (!w.ok) throw new Error("导出失败，请核对来源是否仍可用。");
-    const W = URL.createObjectURL(await w.blob()), ve = document.createElement("a");
-    ve.href = W, ve.download = K.title + ".docx", ve.click(), setTimeout(() => URL.revokeObjectURL(W), 1e3);
+    const $ = URL.createObjectURL(await w.blob()), we = document.createElement("a");
+    we.href = $, we.download = K.title + ".docx", we.click(), setTimeout(() => URL.revokeObjectURL($), 1e3);
   });
   return /* @__PURE__ */ s.jsxs("div", { className: "knowledge-module wf-module", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "heading-actions", children: [
       /* @__PURE__ */ s.jsxs("label", { children: [
         "项目 ",
-        /* @__PURE__ */ s.jsx("select", { value: d, disabled: je, onChange: (w) => {
-          De() && (Le(), R(w.target.value));
+        /* @__PURE__ */ s.jsx("select", { value: d, disabled: ve, onChange: (w) => {
+          qe() && (Be(), A(w.target.value));
         }, children: h.map((w) => /* @__PURE__ */ s.jsx("option", { value: w.id, children: w.name }, w.id)) })
       ] }),
-      /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: je, onClick: () => pe((w) => w + 1), children: "刷新" })
+      /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: ve, onClick: () => pe((w) => w + 1), children: "刷新" })
     ] }),
-    /* @__PURE__ */ s.jsx("nav", { className: "wf-tabs", "aria-label": "知识业务", children: Object.keys(bf).map((w) => /* @__PURE__ */ s.jsx("button", { disabled: je, className: "button " + (B === w ? "primary" : "ghost"), onClick: () => {
-      De() && (Le(), V(w));
-    }, children: Na[w] }, w)) }),
+    /* @__PURE__ */ s.jsx("nav", { className: "wf-tabs", "aria-label": "知识业务", children: Object.keys(Nf).map((w) => /* @__PURE__ */ s.jsx("button", { disabled: ve, className: "button " + (M === w ? "primary" : "ghost"), onClick: () => {
+      qe() && (Be(), V(w));
+    }, children: Sa[w] }, w)) }),
     I && /* @__PURE__ */ s.jsx("div", { role: "alert", className: "error-banner", children: I }),
     ne && /* @__PURE__ */ s.jsx("p", { role: "status", children: ne }),
-    B === "hazard" && Y && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+    M === "hazard" && G && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
       /* @__PURE__ */ s.jsx("h3", { children: "隐患分类分析" }),
       /* @__PURE__ */ s.jsxs("div", { className: "wf-counts", children: [
         /* @__PURE__ */ s.jsxs("span", { children: [
           "事件 ",
-          /* @__PURE__ */ s.jsx("strong", { children: Y.event_count })
+          /* @__PURE__ */ s.jsx("strong", { children: G.event_count })
         ] }),
         /* @__PURE__ */ s.jsxs("span", { children: [
           "检查记录 ",
-          /* @__PURE__ */ s.jsx("strong", { children: Y.inspection_record_count })
+          /* @__PURE__ */ s.jsx("strong", { children: G.inspection_record_count })
         ] }),
         /* @__PURE__ */ s.jsxs("span", { children: [
           "项目 ",
-          /* @__PURE__ */ s.jsx("strong", { children: Y.project_count })
+          /* @__PURE__ */ s.jsx("strong", { children: G.project_count })
         ] }),
         /* @__PURE__ */ s.jsxs("span", { children: [
           "来源待核实 ",
-          /* @__PURE__ */ s.jsx("strong", { children: Y.unavailable_count })
+          /* @__PURE__ */ s.jsx("strong", { children: G.unavailable_count })
         ] })
       ] }),
-      /* @__PURE__ */ s.jsx("p", { children: Y.definition }),
-      /* @__PURE__ */ s.jsx("div", { className: "wf-tabs", children: Y.categories.map((w) => /* @__PURE__ */ s.jsxs("button", { className: "button ghost", disabled: je, onClick: () => et(w.category), children: [
+      /* @__PURE__ */ s.jsx("p", { children: G.definition }),
+      /* @__PURE__ */ s.jsx("div", { className: "wf-tabs", children: G.categories.map((w) => /* @__PURE__ */ s.jsxs("button", { className: "button ghost", disabled: ve, onClick: () => Ke(w.category), children: [
         w.category,
         " · ",
         w.count,
         " 个事件 · 查看明细"
       ] }, w.category)) }),
-      ke && /* @__PURE__ */ s.jsxs("div", { children: [
+      Ee && /* @__PURE__ */ s.jsxs("div", { children: [
         /* @__PURE__ */ s.jsx("p", { children: "明细最多显示100条；数量口径与分类统计一致。" }),
-        ke.map((w) => /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => We(w), children: w.title }, w.id))
+        Ee.map((w) => /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => tt(w), children: w.title }, w.id))
       ] })
     ] }),
     /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "heading-actions", children: [
         /* @__PURE__ */ s.jsxs("h3", { children: [
-          Na[B],
+          Sa[M],
           "清单"
         ] }),
-        st && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: je, onClick: () => {
-          De() && (Le(), xe({ title: "", series: crypto.randomUUID(), expected_version: 0, content: structuredClone(bf[B]) }), Ce.current = !0, Z.current = crypto.randomUUID());
+        lt && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: ve, onClick: () => {
+          qe() && (Be(), xe({ title: "", series: crypto.randomUUID(), expected_version: 0, content: structuredClone(Nf[M]) }), Oe.current = !0, Z.current = crypto.randomUUID());
         }, children: [
           "新建",
-          Na[B]
+          Sa[M]
         ] })
       ] }),
-      Be ? /* @__PURE__ */ s.jsx("p", { role: "status", children: "正在读取…" }) : M.length === 0 ? /* @__PURE__ */ s.jsxs("p", { children: [
+      Ye ? /* @__PURE__ */ s.jsx("p", { role: "status", children: "正在读取…" }) : z.length === 0 ? /* @__PURE__ */ s.jsxs("p", { children: [
         "暂无",
-        Na[B],
+        Sa[M],
         "。",
-        st ? "可新建草稿，核对依据后提交审核。" : ""
-      ] }) : /* @__PURE__ */ s.jsx("div", { className: "wf-list", children: M.map((w) => /* @__PURE__ */ s.jsxs("article", { children: [
-        /* @__PURE__ */ s.jsx("button", { className: "wf-title", disabled: je || w.source_available === !1, onClick: () => We(w), children: w.title }),
+        lt ? "可新建草稿，核对依据后提交审核。" : ""
+      ] }) : /* @__PURE__ */ s.jsx("div", { className: "wf-list", children: z.map((w) => /* @__PURE__ */ s.jsxs("article", { children: [
+        /* @__PURE__ */ s.jsx("button", { className: "wf-title", disabled: ve || w.source_available === !1, onClick: () => tt(w), children: w.title }),
         /* @__PURE__ */ s.jsxs("span", { children: [
           "v",
           w.version,
           " · ",
-          yf[w.state],
+          Sf[w.state],
           w.source_available === !1 ? " · 来源失效，需重新核验" : ""
         ] }),
-        Pe && w.source_available === !1 && ["published", "approved", "superseded"].includes(w.state) && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: je || !_e.trim(), onClick: () => he(w, "withdraw"), children: "撤回此版本" })
+        et && w.source_available === !1 && ["published", "approved", "superseded"].includes(w.state) && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: ve || !Ne.trim(), onClick: () => je(w, "withdraw"), children: "撤回此版本" })
       ] }, w.id)) }),
       /* @__PURE__ */ s.jsxs("div", { className: "heading-actions", children: [
-        de && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => y(""), children: "首页" }),
-        Ke && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => y(Ke), children: "下一页" })
+        ce && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => b(""), children: "首页" }),
+        Fe && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => b(Fe), children: "下一页" })
       ] })
     ] }),
     le && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
       /* @__PURE__ */ s.jsxs("h3", { children: [
         "编辑",
-        Na[B],
+        Sa[M],
         " · 保存生成新版本"
       ] }),
-      /* @__PURE__ */ s.jsxs("fieldset", { disabled: je, className: "wf-editor", children: [
+      /* @__PURE__ */ s.jsxs("fieldset", { disabled: ve, className: "wf-editor", children: [
         /* @__PURE__ */ s.jsxs("label", { className: "wf-field", children: [
           "标题",
-          /* @__PURE__ */ s.jsx("input", { value: le.title, onChange: (w) => Fe({ title: w.target.value }) })
+          /* @__PURE__ */ s.jsx("input", { value: le.title, onChange: (w) => st({ title: w.target.value }) })
         ] }),
-        /* @__PURE__ */ s.jsx(Ki, { value: le.content, catalog: p, onChange: (w) => Fe({ content: w }) })
+        /* @__PURE__ */ s.jsx(Ji, { value: le.content, catalog: v, onChange: (w) => st({ content: w }) })
       ] })
     ] }),
     K && !le && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
@@ -11053,26 +11053,26 @@ function kj({ api: u, projects: h, identity: S }) {
         " · v",
         K.version,
         " · ",
-        yf[K.state]
+        Sf[K.state]
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "heading-actions", children: [
-        st && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: je, onClick: () => {
-          xe({ title: K.title, series: K.series, expected_version: K.version, content: structuredClone(K.content) }), Ce.current = !0, Z.current = crypto.randomUUID();
+        lt && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: ve, onClick: () => {
+          xe({ title: K.title, series: K.series, expected_version: K.version, content: structuredClone(K.content) }), Oe.current = !0, Z.current = crypto.randomUUID();
         }, children: "另存修订版" }),
-        /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: je, onClick: Ue, children: "导出Word" }),
-        Se("knowledge.process") && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => Ne(async () => {
+        /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: ve, onClick: ze, children: "导出Word" }),
+        Ce("knowledge.process") && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => ke(async () => {
           te((await u(`/workflows/impacts?project_id=${encodeURIComponent(d)}&source_kind=work&source_id=${K.id}`)).items);
         }), children: "查看下游影响" }),
-        B === "guide" && K.state === "published" && Se("training.manage") && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => Ne(async () => ae(await u("/workflows/" + K.id + "/blueprint"))), children: "考点覆盖" }),
-        B === "question" && K.state === "published" && st && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: je, onClick: () => Ne(async () => {
-          await u("/workflows/" + K.id + "/training-bank", { method: "POST" }), D("已加入现有培训题库，可在培训页面编入学习包。");
+        M === "guide" && K.state === "published" && Ce("training.manage") && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => ke(async () => ae(await u("/workflows/" + K.id + "/blueprint"))), children: "考点覆盖" }),
+        M === "question" && K.state === "published" && lt && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: ve, onClick: () => ke(async () => {
+          await u("/workflows/" + K.id + "/training-bank", { method: "POST" }), q("已加入现有培训题库，可在培训页面编入学习包。");
         }), children: "加入培训题库" })
       ] }),
-      H && /* @__PURE__ */ s.jsxs("p", { children: [
+      B && /* @__PURE__ */ s.jsxs("p", { children: [
         "关联下游：",
-        H.length ? H.map((w) => w.title + " v" + w.version).join("；") : "暂无下游成果"
+        B.length ? B.map((w) => w.title + " v" + w.version).join("；") : "暂无下游成果"
       ] }),
-      $ && /* @__PURE__ */ s.jsx("ul", { children: $.steps.map((w) => /* @__PURE__ */ s.jsxs("li", { children: [
+      W && /* @__PURE__ */ s.jsx("ul", { children: W.steps.map((w) => /* @__PURE__ */ s.jsxs("li", { children: [
         w.number,
         " ",
         w.title,
@@ -11080,162 +11080,162 @@ function kj({ api: u, projects: h, identity: S }) {
         w.question_count,
         " 道已发布题目"
       ] }, w.number)) }),
-      /* @__PURE__ */ s.jsx(Ki, { value: K.content, catalog: p, readonly: !0, onChange: () => {
+      /* @__PURE__ */ s.jsx(Ji, { value: K.content, catalog: v, readonly: !0, onChange: () => {
       } }),
       K.history && /* @__PURE__ */ s.jsxs("details", { children: [
         /* @__PURE__ */ s.jsx("summary", { children: "审核与版本记录" }),
-        K.history.map((w, W) => /* @__PURE__ */ s.jsxs("p", { children: [
-          _f[w.action] || w.action,
+        K.history.map((w, $) => /* @__PURE__ */ s.jsxs("p", { children: [
+          wf[w.action] || w.action,
           "：",
           w.reason
-        ] }, W))
+        ] }, $))
       ] })
     ] }),
-    Oe && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+    Ae && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
       /* @__PURE__ */ s.jsxs("label", { className: "wf-field", children: [
         "保存 / 审核 / 撤回说明",
-        /* @__PURE__ */ s.jsx("textarea", { value: _e, onChange: (w) => ye(w.target.value), placeholder: "说明依据、修改或撤回原因" })
+        /* @__PURE__ */ s.jsx("textarea", { value: Ne, onChange: (w) => Se(w.target.value), placeholder: "说明依据、修改或撤回原因" })
       ] }),
-      le ? /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: je || !_e.trim() || !le.title.trim(), onClick: Ze, children: "保存草稿" }) : K && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      le ? /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: ve || !Ne.trim() || !le.title.trim(), onClick: rt, children: "保存草稿" }) : K && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         /* @__PURE__ */ s.jsxs("label", { className: "wf-check", children: [
-          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Ee, onChange: (w) => me(w.target.checked) }),
+          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Te, onChange: (w) => fe(w.target.checked) }),
           "已核对原文、事实、分类与适用条件；缺项和冲突已处理"
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "heading-actions", children: [
-          K.state === "draft" && st && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: je || !_e.trim(), onClick: () => he(K, "submit"), children: "提交审核" }),
-          K.state === "pending_review" && lt && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-            /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: je || !Ee || !_e.trim(), onClick: () => he(K, "approve"), children: "审核通过" }),
-            /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: je || !_e.trim(), onClick: () => he(K, "request_changes"), children: "退回修改" })
+          K.state === "draft" && lt && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: ve || !Ne.trim(), onClick: () => je(K, "submit"), children: "提交审核" }),
+          K.state === "pending_review" && at && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+            /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: ve || !Te || !Ne.trim(), onClick: () => je(K, "approve"), children: "审核通过" }),
+            /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: ve || !Ne.trim(), onClick: () => je(K, "request_changes"), children: "退回修改" })
           ] }),
-          K.state === "approved" && Pe && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: je || !_e.trim(), onClick: () => he(K, "publish"), children: "发布" }),
-          ["published", "approved", "superseded"].includes(K.state) && Pe && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: je || !_e.trim(), onClick: () => he(K, "withdraw"), children: "撤回" })
+          K.state === "approved" && et && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: ve || !Ne.trim(), onClick: () => je(K, "publish"), children: "发布" }),
+          ["published", "approved", "superseded"].includes(K.state) && et && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: ve || !Ne.trim(), onClick: () => je(K, "withdraw"), children: "撤回" })
         ] })
       ] })
     ] })
   ] });
 }
-const Nf = { queued: "等待处理", fetching: "正在取件", validating: "正在校验", processing: "正在处理", ready: "已完成", failed: "处理失败", withdrawn: "已撤回", not_created: "尚未生成" };
-function Cj({ id: u, identity: h, projects: S, navigate: d }) {
-  const [R, B] = r.useState(null), [V, M] = r.useState(""), [Q, p] = r.useState(!1), [U, K] = r.useState(""), [k, le] = r.useState(0), xe = `a-import-action:${h}:${u}`;
-  async function _e(me, I) {
-    const oe = await Mt("/integration/v1/a-imports/" + u + me, I), ne = await oe.json().catch(() => ({}));
-    if (!oe.ok)
-      throw oe.status >= 400 && oe.status < 500 && sessionStorage.removeItem(xe), new Error(ne.message || `请求未完成（${oe.status}），请刷新查看最新状态。`);
+const kf = { queued: "等待处理", fetching: "正在取件", validating: "正在校验", processing: "正在处理", ready: "已完成", failed: "处理失败", withdrawn: "已撤回", not_created: "尚未生成" };
+function zj({ id: u, identity: h, projects: _, navigate: d }) {
+  const [A, M] = r.useState(null), [V, z] = r.useState(""), [Y, v] = r.useState(!1), [U, K] = r.useState(""), [k, le] = r.useState(0), xe = `a-import-action:${h}:${u}`;
+  async function Ne(fe, I) {
+    const de = await Mt("/integration/v1/a-imports/" + u + fe, I), ne = await de.json().catch(() => ({}));
+    if (!de.ok)
+      throw de.status >= 400 && de.status < 500 && sessionStorage.removeItem(xe), new Error(ne.message || `请求未完成（${de.status}），请刷新查看最新状态。`);
     return ne;
   }
   r.useEffect(() => {
-    let me = !1;
+    let fe = !1;
     async function I() {
       try {
-        const ne = await _e("");
-        me || (B(ne), M(""));
+        const ne = await Ne("");
+        fe || (M(ne), z(""));
       } catch (ne) {
-        me || (B(null), M(ne.message));
+        fe || (M(null), z(ne.message));
       }
     }
-    B(null), I();
-    const oe = window.setInterval(I, 3e3);
+    M(null), I();
+    const de = window.setInterval(I, 3e3);
     return () => {
-      me = !0, clearInterval(oe);
+      fe = !0, clearInterval(de);
     };
   }, [u, k, h]);
-  const ye = (me) => {
-    var I, oe;
-    return !!R && !!((oe = (I = S.find((ne) => ne.id === R.project_id)) == null ? void 0 : I.permissions) != null && oe.includes(me));
+  const Se = (fe) => {
+    var I, de;
+    return !!A && !!((de = (I = _.find((ne) => ne.id === A.project_id)) == null ? void 0 : I.permissions) != null && de.includes(fe));
   };
-  async function Ee(me) {
-    if (!(!R || Q)) {
-      p(!0), M("");
+  async function Te(fe) {
+    if (!(!A || Y)) {
+      v(!0), z("");
       try {
-        const I = sessionStorage.getItem(xe), oe = I ? JSON.parse(I) : { operation: me, key: crypto.randomUUID(), body: { expected_version: R.version, ...me === "withdraw" ? { reason: U.trim() } : {} } };
-        if (oe.operation !== me) throw new Error("上一次操作结果尚未确认，请先重试该操作或刷新核对状态。");
-        sessionStorage.setItem(xe, JSON.stringify(oe)), await _e("/" + me, { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": oe.key }, body: JSON.stringify(oe.body) }), sessionStorage.removeItem(xe), le((ne) => ne + 1);
+        const I = sessionStorage.getItem(xe), de = I ? JSON.parse(I) : { operation: fe, key: crypto.randomUUID(), body: { expected_version: A.version, ...fe === "withdraw" ? { reason: U.trim() } : {} } };
+        if (de.operation !== fe) throw new Error("上一次操作结果尚未确认，请先重试该操作或刷新核对状态。");
+        sessionStorage.setItem(xe, JSON.stringify(de)), await Ne("/" + fe, { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": de.key }, body: JSON.stringify(de.body) }), sessionStorage.removeItem(xe), le((ne) => ne + 1);
       } catch (I) {
-        M(I.message);
+        z(I.message);
       } finally {
-        p(!1);
+        v(!1);
       }
     }
   }
   return /* @__PURE__ */ s.jsxs("section", { className: "panel a-import-detail", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
       /* @__PURE__ */ s.jsx("h2", { children: "成果处理状态" }),
-      /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => le((me) => me + 1), disabled: Q, children: "刷新状态" })
+      /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => le((fe) => fe + 1), disabled: Y, children: "刷新状态" })
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "a-import-body", children: [
       /* @__PURE__ */ s.jsx("p", { children: "指定成果版本的接入与复盘进度。历史资料批次仍保留在“历史资料”中。" }),
       V && /* @__PURE__ */ s.jsx("p", { role: "alert", className: "feedback error", children: V }),
-      R ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      A ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         /* @__PURE__ */ s.jsxs("dl", { className: "a-import-status", children: [
           /* @__PURE__ */ s.jsxs("div", { children: [
             /* @__PURE__ */ s.jsx("dt", { children: "成果版本" }),
             /* @__PURE__ */ s.jsxs("dd", { children: [
               "v",
-              R.delivery_version
+              A.delivery_version
             ] })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { children: [
             /* @__PURE__ */ s.jsx("dt", { children: "接入状态" }),
-            /* @__PURE__ */ s.jsx("dd", { children: Nf[R.status] || R.status })
+            /* @__PURE__ */ s.jsx("dd", { children: kf[A.status] || A.status })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { children: [
             /* @__PURE__ */ s.jsx("dt", { children: "复盘状态" }),
-            /* @__PURE__ */ s.jsx("dd", { children: Nf[R.retrospective_status] || R.retrospective_status })
+            /* @__PURE__ */ s.jsx("dd", { children: kf[A.retrospective_status] || A.retrospective_status })
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("p", { children: [
           /* @__PURE__ */ s.jsx("strong", { children: "证据完整性：" }),
-          R.capabilities.evidence_complete ? "已通过附件校验" : "存在缺失或尚未完成校验"
+          A.capabilities.evidence_complete ? "已通过附件校验" : "存在缺失或尚未完成校验"
         ] }),
-        R.error && /* @__PURE__ */ s.jsx("p", { role: "alert", children: R.error.message }),
-        R.warnings.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+        A.error && /* @__PURE__ */ s.jsx("p", { role: "alert", children: A.error.message }),
+        A.warnings.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
           /* @__PURE__ */ s.jsx("h3", { children: "资料提示" }),
-          /* @__PURE__ */ s.jsx("ul", { children: R.warnings.map((me, I) => /* @__PURE__ */ s.jsx("li", { children: me.message }, me.code + ":" + I)) })
+          /* @__PURE__ */ s.jsx("ul", { children: A.warnings.map((fe, I) => /* @__PURE__ */ s.jsx("li", { children: fe.message }, fe.code + ":" + I)) })
         ] }),
-        R.missing_fields.length > 0 && /* @__PURE__ */ s.jsxs("p", { children: [
+        A.missing_fields.length > 0 && /* @__PURE__ */ s.jsxs("p", { children: [
           "存在 ",
-          R.missing_fields.length,
+          A.missing_fields.length,
           " 项资料缺失。未知实际时间保持未知，缺少照片不补造证据。"
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "a-import-actions", children: [
-          R.capabilities.can_view_materials && R.receipt_id && ye("imports.read") && /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => d("/task-packages/" + R.receipt_id), children: "查看原始资料" }),
-          R.capabilities.can_generate_retrospective && ye("retrospective.generate") && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Q, onClick: () => void Ee("retrospectives"), children: R.retrospective_status === "not_created" ? "生成复盘" : "确认复盘状态" }),
-          R.retrospective_id && R.status !== "withdrawn" && ye("retrospective.read") && /* @__PURE__ */ s.jsx("button", { className: "button primary", onClick: () => d("/retrospectives/" + R.retrospective_id), children: "查看复盘" }),
-          (R.status === "failed" || R.retrospective_status === "failed") && ye("imports.retry") && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Q, onClick: () => void Ee("retry"), children: "重试失败任务" })
+          A.capabilities.can_view_materials && A.receipt_id && Se("imports.read") && /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => d("/task-packages/" + A.receipt_id), children: "查看原始资料" }),
+          A.capabilities.can_generate_retrospective && Se("retrospective.generate") && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Y, onClick: () => void Te("retrospectives"), children: A.retrospective_status === "not_created" ? "生成复盘" : "确认复盘状态" }),
+          A.retrospective_id && A.status !== "withdrawn" && Se("retrospective.read") && /* @__PURE__ */ s.jsx("button", { className: "button primary", onClick: () => d("/retrospectives/" + A.retrospective_id), children: "查看复盘" }),
+          (A.status === "failed" || A.retrospective_status === "failed") && Se("imports.retry") && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Y, onClick: () => void Te("retry"), children: "重试失败任务" })
         ] }),
-        R.status !== "withdrawn" && ye("imports.withdraw") && /* @__PURE__ */ s.jsxs("div", { className: "a-import-withdraw", children: [
+        A.status !== "withdrawn" && Se("imports.withdraw") && /* @__PURE__ */ s.jsxs("div", { className: "a-import-withdraw", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "撤回原因",
-            /* @__PURE__ */ s.jsx("input", { value: U, placeholder: "填写需要停止使用本次接入的原因", maxLength: 2e3, onChange: (me) => K(me.target.value) })
+            /* @__PURE__ */ s.jsx("input", { value: U, placeholder: "填写需要停止使用本次接入的原因", maxLength: 2e3, onChange: (fe) => K(fe.target.value) })
           ] }),
-          /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: Q || !U.trim(), onClick: () => void Ee("withdraw"), children: "撤回 B 接入" }),
+          /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: Y || !U.trim(), onClick: () => void Te("withdraw"), children: "撤回 B 接入" }),
           /* @__PURE__ */ s.jsx("p", { children: "撤回后停止使用本次接入；A 原归档保留。" })
         ] })
       ] }) : /* @__PURE__ */ s.jsx("p", { children: V ? "当前接入暂不可读取，请根据提示处理后刷新。" : "正在读取成果接入状态…" })
     ] })
   ] });
 }
-function Ej({ navigate: u }) {
-  const [h, S] = r.useState([]), [d, R] = r.useState(""), [B, V] = r.useState(!1);
+function Aj({ navigate: u }) {
+  const [h, _] = r.useState([]), [d, A] = r.useState(""), [M, V] = r.useState(!1);
   return r.useEffect(() => {
-    let M = !1;
+    let z = !1;
     return (async () => {
       try {
-        const [Q, p, U] = await Promise.all([Mt("/api/v1/health"), Mt("/api/v1/audit-events?limit=50"), fetch("/quality/api/work/state", { credentials: "same-origin" })]);
-        if (!Q.ok || !p.ok || !U.ok) throw Error("无法读取运行记录，请确认登录及项目管理权限。");
-        const [K, k, le] = await Promise.all([Q.json(), p.json(), U.json()]), xe = window.QaxcProjectId, _e = le.tasks.filter((ye) => !xe || ye.projectId === xe).flatMap((ye) => (ye.events || []).map((Ee) => ({ id: Ee.id, action: ye.title + " · " + Ee.action, project_id: ye.projectId, created_at: Ee.uploadedAt, source: "现场作业" })));
-        M || (V(K.worker_online), S([..._e, ...k.items.map((ye) => ({ ...ye, source: "知识与学习" }))].sort((ye, Ee) => Date.parse(Ee.created_at) - Date.parse(ye.created_at)).slice(0, 100)));
-      } catch (Q) {
-        M || R(Q.message);
+        const [Y, v, U] = await Promise.all([Mt("/api/v1/health"), Mt("/api/v1/audit-events?limit=50"), fetch("/quality/api/work/state", { credentials: "same-origin" })]);
+        if (!Y.ok || !v.ok || !U.ok) throw Error("无法读取运行记录，请确认登录及项目管理权限。");
+        const [K, k, le] = await Promise.all([Y.json(), v.json(), U.json()]), xe = window.QaxcProjectId, Ne = le.tasks.filter((Se) => !xe || Se.projectId === xe).flatMap((Se) => (Se.events || []).map((Te) => ({ id: Te.id, action: Se.title + " · " + Te.action, project_id: Se.projectId, created_at: Te.uploadedAt, source: "现场作业" })));
+        z || (V(K.worker_online), _([...Ne, ...k.items.map((Se) => ({ ...Se, source: "知识与学习" }))].sort((Se, Te) => Date.parse(Te.created_at) - Date.parse(Se.created_at)).slice(0, 100)));
+      } catch (Y) {
+        z || A(Y.message);
       }
     })(), () => {
-      M = !0;
+      z = !0;
     };
   }, []), /* @__PURE__ */ s.jsxs("section", { className: "panel", style: { padding: 24 }, children: [
     /* @__PURE__ */ s.jsx("h2", { children: "平台运行与操作记录" }),
     /* @__PURE__ */ s.jsxs("p", { role: "status", children: [
       "后台处理：",
-      B ? "在线" : "未连接或正在读取",
+      M ? "在线" : "未连接或正在读取",
       "。成果接入、知识发布与资料处理共用后台任务队列。"
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "heading-actions", style: { margin: "20px 0", flexWrap: "wrap" }, children: [
@@ -11252,57 +11252,57 @@ function Ej({ navigate: u }) {
           /* @__PURE__ */ s.jsx("th", { children: "业务" }),
           /* @__PURE__ */ s.jsx("th", { children: "操作" })
         ] }) }),
-        /* @__PURE__ */ s.jsx("tbody", { children: h.map((M) => /* @__PURE__ */ s.jsxs("tr", { children: [
-          /* @__PURE__ */ s.jsx("td", { children: new Date(M.created_at).toLocaleString("zh-CN") }),
-          /* @__PURE__ */ s.jsx("td", { children: M.source }),
-          /* @__PURE__ */ s.jsx("td", { children: M.action })
-        ] }, M.source + M.id)) })
+        /* @__PURE__ */ s.jsx("tbody", { children: h.map((z) => /* @__PURE__ */ s.jsxs("tr", { children: [
+          /* @__PURE__ */ s.jsx("td", { children: new Date(z.created_at).toLocaleString("zh-CN") }),
+          /* @__PURE__ */ s.jsx("td", { children: z.source }),
+          /* @__PURE__ */ s.jsx("td", { children: z.action })
+        ] }, z.source + z.id)) })
       ] }) }) : /* @__PURE__ */ s.jsx("p", { children: "暂无操作记录。" })
     ] })
   ] });
 }
-function Oj({ deliveryId: u, navigate: h }) {
-  const [S, d] = r.useState(!1), [R, B] = r.useState("读取固定归档版本并校验证据后，生成待审核复盘。"), V = r.useRef(!0);
+function Rj({ deliveryId: u, navigate: h }) {
+  const [_, d] = r.useState(!1), [A, M] = r.useState("读取固定归档版本并校验证据后，生成待审核复盘。"), V = r.useRef(!0);
   r.useEffect(() => (V.current = !0, () => {
     V.current = !1;
   }), []);
-  async function M(p, U, K) {
-    const k = await Mt("/api/v1" + p, { method: U ? "POST" : "GET", headers: { "Content-Type": "application/json", ...K ? { "Idempotency-Key": K } : {} }, body: U ? JSON.stringify(U) : void 0 }), le = await k.json();
+  async function z(v, U, K) {
+    const k = await Mt("/api/v1" + v, { method: U ? "POST" : "GET", headers: { "Content-Type": "application/json", ...K ? { "Idempotency-Key": K } : {} }, body: U ? JSON.stringify(U) : void 0 }), le = await k.json();
     if (!k.ok) throw Error(le.message || "处理失败，请重试");
     return le;
   }
-  async function Q() {
-    if (S) return;
+  async function Y() {
+    if (_) return;
     d(!0);
-    const p = "archive-review:" + u, U = sessionStorage.getItem(p) || crypto.randomUUID();
-    sessionStorage.setItem(p, U);
+    const v = "archive-review:" + u, U = sessionStorage.getItem(v) || crypto.randomUUID();
+    sessionStorage.setItem(v, U);
     try {
-      B("正在核验归档成果…");
-      const K = await M("/platform-archives", { delivery_id: u }, U);
+      M("正在核验归档成果…");
+      const K = await z("/platform-archives", { delivery_id: u }, U);
       for (let k = 0; k < 60 && V.current; k++) {
-        const le = await M("/task-packages/" + K.receipt_id);
+        const le = await z("/task-packages/" + K.receipt_id);
         if (!V.current) return;
         if (le.status === "ready") {
-          B("证据已校验，正在生成复盘…");
-          const xe = await M("/retrospectives", { mode: "task_process", task_package_id: le.id });
+          M("证据已校验，正在生成复盘…");
+          const xe = await z("/retrospectives", { mode: "task_process", task_package_id: le.id });
           V.current && h("/retrospectives/" + xe.id);
           return;
         }
         if (["failed", "withdrawn"].includes(le.status)) throw Error("成果处理失败或已撤回，请在成果清单查看原因并重试。");
-        B("正在处理成果与证据，离开页面不会取消后台任务…"), await new Promise((xe) => setTimeout(xe, 1e3));
+        M("正在处理成果与证据，离开页面不会取消后台任务…"), await new Promise((xe) => setTimeout(xe, 1e3));
       }
-      V.current && B("成果仍在后台处理。可在成果清单查看进度，稍后再次生成会复用已有接入。");
+      V.current && M("成果仍在后台处理。可在成果清单查看进度，稍后再次生成会复用已有接入。");
     } catch (K) {
-      V.current && B(K.message);
+      V.current && M(K.message);
     } finally {
       V.current && d(!1);
     }
   }
   return /* @__PURE__ */ s.jsxs("section", { className: "panel", style: { padding: 24 }, children: [
     /* @__PURE__ */ s.jsx("h2", { children: "归档成果复盘" }),
-    /* @__PURE__ */ s.jsx("p", { role: "status", style: { margin: "20px 0" }, children: R }),
+    /* @__PURE__ */ s.jsx("p", { role: "status", style: { margin: "20px 0" }, children: A }),
     /* @__PURE__ */ s.jsxs("div", { className: "heading-actions", children: [
-      /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: S, onClick: () => void Q(), children: "生成 / 打开复盘" }),
+      /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: _, onClick: () => void Y(), children: "生成 / 打开复盘" }),
       /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => h("/task-packages"), children: "成果处理清单" })
     ] })
   ] });
@@ -11313,13 +11313,13 @@ function Oj({ deliveryId: u, navigate: h }) {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Tj = (u) => u.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(), zj = (u) => u.replace(
+const Uj = (u) => u.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(), Dj = (u) => u.replace(
   /^([A-Z])|[\s-_]+(\w)/g,
-  (h, S, d) => d ? d.toUpperCase() : S.toLowerCase()
-), Sf = (u) => {
-  const h = zj(u);
+  (h, _, d) => d ? d.toUpperCase() : _.toLowerCase()
+), Cf = (u) => {
+  const h = Dj(u);
   return h.charAt(0).toUpperCase() + h.slice(1);
-}, Jf = (...u) => u.filter((h, S, d) => !!h && h.trim() !== "" && d.indexOf(h) === S).join(" ").trim(), Aj = (u) => {
+}, Ff = (...u) => u.filter((h, _, d) => !!h && h.trim() !== "" && d.indexOf(h) === _).join(" ").trim(), Mj = (u) => {
   for (const h in u)
     if (h.startsWith("aria-") || h === "role" || h === "title")
       return !0;
@@ -11330,7 +11330,7 @@ const Tj = (u) => u.replace(/([a-z0-9])([A-Z])/g, "$1-$2").toLowerCase(), zj = (
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-var Rj = {
+var qj = {
   xmlns: "http://www.w3.org/2000/svg",
   width: 24,
   height: 24,
@@ -11347,32 +11347,32 @@ var Rj = {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Uj = r.forwardRef(
+const Hj = r.forwardRef(
   ({
     color: u = "currentColor",
     size: h = 24,
-    strokeWidth: S = 2,
+    strokeWidth: _ = 2,
     absoluteStrokeWidth: d,
-    className: R = "",
-    children: B,
+    className: A = "",
+    children: M,
     iconNode: V,
-    ...M
-  }, Q) => r.createElement(
+    ...z
+  }, Y) => r.createElement(
     "svg",
     {
-      ref: Q,
-      ...Rj,
+      ref: Y,
+      ...qj,
       width: h,
       height: h,
       stroke: u,
-      strokeWidth: d ? Number(S) * 24 / Number(h) : S,
-      className: Jf("lucide", R),
-      ...!B && !Aj(M) && { "aria-hidden": "true" },
-      ...M
+      strokeWidth: d ? Number(_) * 24 / Number(h) : _,
+      className: Ff("lucide", A),
+      ...!M && !Mj(z) && { "aria-hidden": "true" },
+      ...z
     },
     [
-      ...V.map(([p, U]) => r.createElement(p, U)),
-      ...Array.isArray(B) ? B : [B]
+      ...V.map(([v, U]) => r.createElement(v, U)),
+      ...Array.isArray(M) ? M : [M]
     ]
   )
 );
@@ -11382,20 +11382,20 @@ const Uj = r.forwardRef(
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Ct = (u, h) => {
-  const S = r.forwardRef(
-    ({ className: d, ...R }, B) => r.createElement(Uj, {
-      ref: B,
+const Ot = (u, h) => {
+  const _ = r.forwardRef(
+    ({ className: d, ...A }, M) => r.createElement(Hj, {
+      ref: M,
       iconNode: h,
-      className: Jf(
-        `lucide-${Tj(Sf(u))}`,
+      className: Ff(
+        `lucide-${Uj(Cf(u))}`,
         `lucide-${u}`,
         d
       ),
-      ...R
+      ...A
     })
   );
-  return S.displayName = Sf(u), S;
+  return _.displayName = Cf(u), _;
 };
 /**
  * @license lucide-react v0.511.0 - ISC
@@ -11403,7 +11403,7 @@ const Ct = (u, h) => {
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Dj = [
+const Bj = [
   [
     "path",
     {
@@ -11411,34 +11411,34 @@ const Dj = [
       key: "169zse"
     }
   ]
-], wf = Ct("activity", Dj);
+], Ef = Ot("activity", Bj);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Mj = [
+const Lj = [
   ["path", { d: "m12 19-7-7 7-7", key: "1l729n" }],
   ["path", { d: "M19 12H5", key: "x3x0zl" }]
-], kf = Ct("arrow-left", Mj);
+], Of = Ot("arrow-left", Lj);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const qj = [
+const Yj = [
   ["path", { d: "M5 12h14", key: "1ays0h" }],
   ["path", { d: "m12 5 7 7-7 7", key: "xquz4c" }]
-], _l = Ct("arrow-right", qj);
+], _l = Ot("arrow-right", Yj);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Hj = [
+const Gj = [
   ["path", { d: "M12 7v14", key: "1akyts" }],
   [
     "path",
@@ -11447,42 +11447,42 @@ const Hj = [
       key: "ruj8y"
     }
   ]
-], $i = Ct("book-open", Hj);
+], Ki = Ot("book-open", Gj);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Bj = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]], Ws = Ct("chevron-right", Bj);
+const Qj = [["path", { d: "m9 18 6-6-6-6", key: "mthhwq" }]], Ws = Ot("chevron-right", Qj);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Lj = [
+const Xj = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["line", { x1: "12", x2: "12", y1: "8", y2: "12", key: "1pkeuh" }],
   ["line", { x1: "12", x2: "12.01", y1: "16", y2: "16", key: "4dfq90" }]
-], Nl = Ct("circle-alert", Lj);
+], Nl = Ot("circle-alert", Xj);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Yj = [
+const Zj = [
   ["circle", { cx: "12", cy: "12", r: "10", key: "1mglay" }],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
-], Sl = Ct("circle-check", Yj);
+], Sl = Ot("circle-check", Zj);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Gj = [
+const Vj = [
   ["rect", { width: "8", height: "4", x: "8", y: "2", rx: "1", ry: "1", key: "tgr4d6" }],
   [
     "path",
@@ -11495,40 +11495,7 @@ const Gj = [
   ["path", { d: "M12 16h4", key: "n85exb" }],
   ["path", { d: "M8 11h.01", key: "1dfujw" }],
   ["path", { d: "M8 16h.01", key: "18s6g9" }]
-], Qj = Ct("clipboard-list", Gj);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const Xj = [
-  ["ellipse", { cx: "12", cy: "5", rx: "9", ry: "3", key: "msslwz" }],
-  ["path", { d: "M3 5V19A9 3 0 0 0 21 19V5", key: "1wlel7" }],
-  ["path", { d: "M3 12A9 3 0 0 0 21 12", key: "mv7ke4" }]
-], ou = Ct("database", Xj);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const Zj = [
-  ["path", { d: "M12 15V3", key: "m9g1x1" }],
-  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
-  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
-], Cf = Ct("download", Zj);
-/**
- * @license lucide-react v0.511.0 - ISC
- *
- * This source code is licensed under the ISC license.
- * See the LICENSE file in the root directory of this source tree.
- */
-const Vj = [
-  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
-  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
-  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
-], Jj = Ct("external-link", Vj);
+], Jj = Ot("clipboard-list", Vj);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -11536,10 +11503,10 @@ const Vj = [
  * See the LICENSE file in the root directory of this source tree.
  */
 const Kj = [
-  ["path", { d: "M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4", key: "1pf5j1" }],
-  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
-  ["path", { d: "m3 15 2 2 4-4", key: "1lhrkk" }]
-], En = Ct("file-check-2", Kj);
+  ["ellipse", { cx: "12", cy: "5", rx: "9", ry: "3", key: "msslwz" }],
+  ["path", { d: "M3 5V19A9 3 0 0 0 21 19V5", key: "1wlel7" }],
+  ["path", { d: "M3 12A9 3 0 0 0 21 12", key: "mv7ke4" }]
+], ou = Ot("database", Kj);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -11547,11 +11514,10 @@ const Kj = [
  * See the LICENSE file in the root directory of this source tree.
  */
 const $j = [
-  ["path", { d: "M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4", key: "1pf5j1" }],
-  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
-  ["path", { d: "M2 15h10", key: "jfw4w8" }],
-  ["path", { d: "m9 18 3-3-3-3", key: "112psh" }]
-], Ef = Ct("file-input", $j);
+  ["path", { d: "M12 15V3", key: "m9g1x1" }],
+  ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }],
+  ["path", { d: "m7 10 5 5 5-5", key: "brsn70" }]
+], Tf = Ot("download", $j);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
@@ -11559,6 +11525,40 @@ const $j = [
  * See the LICENSE file in the root directory of this source tree.
  */
 const Wj = [
+  ["path", { d: "M15 3h6v6", key: "1q9fwt" }],
+  ["path", { d: "M10 14 21 3", key: "gplh6r" }],
+  ["path", { d: "M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6", key: "a6xqqp" }]
+], Fj = Ot("external-link", Wj);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const Ij = [
+  ["path", { d: "M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4", key: "1pf5j1" }],
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  ["path", { d: "m3 15 2 2 4-4", key: "1lhrkk" }]
+], On = Ot("file-check-2", Ij);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const Pj = [
+  ["path", { d: "M4 22h14a2 2 0 0 0 2-2V7l-5-5H6a2 2 0 0 0-2 2v4", key: "1pf5j1" }],
+  ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
+  ["path", { d: "M2 15h10", key: "jfw4w8" }],
+  ["path", { d: "m9 18 3-3-3-3", key: "112psh" }]
+], zf = Ot("file-input", Pj);
+/**
+ * @license lucide-react v0.511.0 - ISC
+ *
+ * This source code is licensed under the ISC license.
+ * See the LICENSE file in the root directory of this source tree.
+ */
+const ev = [
   ["path", { d: "M14 2v4a2 2 0 0 0 2 2h4", key: "tnqrlb" }],
   [
     "path",
@@ -11566,14 +11566,14 @@ const Wj = [
   ],
   ["path", { d: "m9 18-1.5-1.5", key: "1j6qii" }],
   ["circle", { cx: "5", cy: "14", r: "3", key: "ufru5t" }]
-], hu = Ct("file-search", Wj);
+], hu = Ot("file-search", ev);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Fj = [
+const tv = [
   ["rect", { width: "8", height: "5", x: "14", y: "17", rx: "1", key: "19aais" }],
   [
     "path",
@@ -11583,83 +11583,83 @@ const Fj = [
     }
   ],
   ["path", { d: "M20 17v-2a2 2 0 1 0-4 0v2", key: "pwaxnr" }]
-], Gi = Ct("folder-lock", Fj);
+], Qi = Ot("folder-lock", tv);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const Ij = [
+const sv = [
   ["path", { d: "M3 12a9 9 0 1 0 9-9 9.75 9.75 0 0 0-6.74 2.74L3 8", key: "1357e3" }],
   ["path", { d: "M3 3v5h5", key: "1xhq8a" }],
   ["path", { d: "M12 7v5l4 2", key: "1fdv2h" }]
-], Pj = Ct("history", Ij);
+], lv = Ot("history", sv);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const ev = [
+const av = [
   ["rect", { width: "7", height: "9", x: "3", y: "3", rx: "1", key: "10lvy0" }],
   ["rect", { width: "7", height: "5", x: "14", y: "3", rx: "1", key: "16une8" }],
   ["rect", { width: "7", height: "9", x: "14", y: "12", rx: "1", key: "1hutg5" }],
   ["rect", { width: "7", height: "5", x: "3", y: "16", rx: "1", key: "ldoo1y" }]
-], Of = Ct("layout-dashboard", ev);
+], Af = Ot("layout-dashboard", av);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const tv = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]], Tf = Ct("loader-circle", tv);
+const nv = [["path", { d: "M21 12a9 9 0 1 1-6.219-8.56", key: "13zald" }]], Rf = Ot("loader-circle", nv);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const sv = [["polygon", { points: "6 3 20 12 6 21 6 3", key: "1oa8hb" }]], zf = Ct("play", sv);
+const iv = [["polygon", { points: "6 3 20 12 6 21 6 3", key: "1oa8hb" }]], Uf = Ot("play", iv);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const lv = [
+const cv = [
   ["path", { d: "M5 12h14", key: "1ays0h" }],
   ["path", { d: "M12 5v14", key: "s699le" }]
-], av = Ct("plus", lv);
+], rv = Ot("plus", cv);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const nv = [
+const uv = [
   ["path", { d: "M3 12a9 9 0 0 1 9-9 9.75 9.75 0 0 1 6.74 2.74L21 8", key: "v9h5vc" }],
   ["path", { d: "M21 3v5h-5", key: "1q7to0" }],
   ["path", { d: "M21 12a9 9 0 0 1-9 9 9.75 9.75 0 0 1-6.74-2.74L3 16", key: "3uifl3" }],
   ["path", { d: "M8 16H3v5", key: "1cv678" }]
-], Rs = Ct("refresh-cw", nv);
+], Rs = Ot("refresh-cw", uv);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const iv = [
+const dv = [
   ["path", { d: "m21 21-4.34-4.34", key: "14j7rj" }],
   ["circle", { cx: "11", cy: "11", r: "8", key: "4ej97u" }]
-], cv = Ct("search", iv);
+], ov = Ot("search", dv);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const rv = [
+const hv = [
   [
     "path",
     {
@@ -11668,265 +11668,265 @@ const rv = [
     }
   ],
   ["path", { d: "m9 12 2 2 4-4", key: "dzmm74" }]
-], Af = Ct("shield-check", rv);
+], Df = Ot("shield-check", hv);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const uv = [
+const fv = [
   ["path", { d: "M12 3v12", key: "1x0j5s" }],
   ["path", { d: "m17 8-5-5-5 5", key: "7q97r8" }],
   ["path", { d: "M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4", key: "ih7n3h" }]
-], Kf = Ct("upload", uv);
+], If = Ot("upload", fv);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const dv = [
+const mv = [
   ["path", { d: "M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2", key: "1yyitq" }],
   ["path", { d: "M16 3.128a4 4 0 0 1 0 7.744", key: "16gr8j" }],
   ["path", { d: "M22 21v-2a4 4 0 0 0-3-3.87", key: "kshegd" }],
   ["circle", { cx: "9", cy: "7", r: "4", key: "nufk8" }]
-], ov = Ct("users", dv);
+], xv = Ot("users", mv);
 /**
  * @license lucide-react v0.511.0 - ISC
  *
  * This source code is licensed under the ISC license.
  * See the LICENSE file in the root directory of this source tree.
  */
-const hv = [
+const jv = [
   ["path", { d: "M18 6 6 18", key: "1bl5f8" }],
   ["path", { d: "m6 6 12 12", key: "d8bk6v" }]
-], Zi = Ct("x", hv), ws = { csv: "CSV数据", excel: "Excel表格", governance_export: "治理结果导出", detail: "明细", review: "复查", summary: "汇总", source_row: "原始行", site_photo: "现场照片", text_screenshot: "文字截图" }, wn = { queued: "等待处理", running: "正在接入", failed: "接入中断", completed: "已完成", completed_with_errors: "完成 · 有异常", created: "新增", updated: "更新", skipped: "跳过", candidate: "待确认", confirmed: "已确认重复", rejected: "已排除", stale: "版本已变，需复核" }, Rf = (u) => u ? new Date(u).toLocaleString("zh-CN") : "尚未同步", Uf = (u) => {
-  const h = ["description", "隐患描述", "record_id", "来源记录ID", "report_id", "报告ID", "project_id", "项目ID", "record_kind", "记录类型", "inspection_date", "occurred_on", "检查日期", "images", "图片关系"], S = (d) => h.includes(d) ? h.indexOf(d) : 100;
-  return Object.entries(u).sort(([d], [R]) => S(d) - S(R));
+], Vi = Ot("x", jv), ws = { csv: "CSV数据", excel: "Excel表格", governance_export: "治理结果导出", detail: "明细", review: "复查", summary: "汇总", source_row: "原始行", site_photo: "现场照片", text_screenshot: "文字截图" }, wn = { queued: "等待处理", running: "正在接入", failed: "接入中断", completed: "已完成", completed_with_errors: "完成 · 有异常", created: "新增", updated: "更新", skipped: "跳过", candidate: "待确认", confirmed: "已确认重复", rejected: "已排除", stale: "版本已变，需复核" }, Mf = (u) => u ? new Date(u).toLocaleString("zh-CN") : "尚未同步", qf = (u) => {
+  const h = ["description", "隐患描述", "record_id", "来源记录ID", "report_id", "报告ID", "project_id", "项目ID", "record_kind", "记录类型", "inspection_date", "occurred_on", "检查日期", "images", "图片关系"], _ = (d) => h.includes(d) ? h.indexOf(d) : 100;
+  return Object.entries(u).sort(([d], [A]) => _(d) - _(A));
 }, fu = (u) => typeof u == "object" ? JSON.stringify(u, null, 2) : String(u ?? "—");
-function fv({ asset: u, identity: h }) {
-  const [S, d] = r.useState(""), [R, B] = r.useState("");
+function vv({ asset: u, identity: h }) {
+  const [_, d] = r.useState(""), [A, M] = r.useState("");
   return r.useEffect(() => {
-    let V = !1, M = "";
-    return Mt(`/api/v1/assets/${u}/content`, { headers: { Authorization: `Bearer dev-${h}` } }).then(async (Q) => {
-      if (!Q.ok) throw new Error("图片不可访问或已撤回");
-      return Q.blob();
-    }).then((Q) => {
-      M = URL.createObjectURL(Q), V ? URL.revokeObjectURL(M) : d(M);
-    }).catch((Q) => {
-      V || B(Q.message);
+    let V = !1, z = "";
+    return Mt(`/api/v1/assets/${u}/content`, { headers: { Authorization: `Bearer dev-${h}` } }).then(async (Y) => {
+      if (!Y.ok) throw new Error("图片不可访问或已撤回");
+      return Y.blob();
+    }).then((Y) => {
+      z = URL.createObjectURL(Y), V ? URL.revokeObjectURL(z) : d(z);
+    }).catch((Y) => {
+      V || M(Y.message);
     }), () => {
-      V = !0, M && URL.revokeObjectURL(M);
+      V = !0, z && URL.revokeObjectURL(z);
     };
-  }, [u, h]), R ? /* @__PURE__ */ s.jsx("p", { role: "alert", children: R }) : S ? /* @__PURE__ */ s.jsx("img", { className: "evidence-image", src: S, alt: "来源证据图片" }) : /* @__PURE__ */ s.jsx("p", { children: "正在读取图片…" });
+  }, [u, h]), A ? /* @__PURE__ */ s.jsx("p", { role: "alert", children: A }) : _ ? /* @__PURE__ */ s.jsx("img", { className: "evidence-image", src: _, alt: "来源证据图片" }) : /* @__PURE__ */ s.jsx("p", { children: "正在读取图片…" });
 }
-function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
-  var rt, St;
-  const [B, V] = r.useState([]), [M, Q] = r.useState([]), [p, U] = r.useState([]), [K, k] = r.useState([]), [le, xe] = r.useState("reports"), _e = r.useRef(0), [ye, Ee] = r.useState(""), [me, I] = r.useState([]), [oe, ne] = r.useState(null), [D, je] = r.useState(""), [Re, Be] = r.useState(!1), [Xe, Ge] = r.useState([]), [pe, Ke] = r.useState({}), [X, de] = r.useState(0), [y, Y] = r.useState(null), [ee, ke] = r.useState(null), [m, H] = r.useState(null), [te, $] = r.useState(new URLSearchParams(location.search).get("source") || ""), [ae, Z] = r.useState(""), [P, Ce] = r.useState(!1), [ie, Se] = r.useState(""), [st, lt] = r.useState(""), [Pe, Oe] = r.useState(!0), [Te, De] = r.useState(!1), [Ne, Le] = r.useState(0), [We, Fe] = r.useState({ project_id: "", source_id: "", record_kind: "", quality_status: "", from_date: "", to_date: "" }), [Ze, he] = r.useState(""), [et, Ue] = r.useState(null), [E, w] = r.useState([]), [W, ve] = r.useState(""), [He, tt] = r.useState(0), [dt, L] = r.useState(!1), [fe, re] = r.useState("csv"), [Ve, _] = r.useState(""), [be, ge] = r.useState(""), [Qe, xt] = r.useState(((rt = d.find((b) => b.can_run)) == null ? void 0 : rt.id) || (Tt ? "" : "demo-airport")), z = d.some((b) => b.can_run), v = h.startsWith("/records/"), ue = h.startsWith("/imports/") && h !== "/imports/new", f = B.find((b) => b.id === te), G = M.filter((b) => b.kind === (f == null ? void 0 : f.kind) && b.project_id === (f == null ? void 0 : f.project_id));
+function pv({ api: u, path: h, navigate: _, projects: d, identity: A }) {
+  var me, nt;
+  const [M, V] = r.useState([]), [z, Y] = r.useState([]), [v, U] = r.useState([]), [K, k] = r.useState([]), [le, xe] = r.useState("reports"), Ne = r.useRef(0), [Se, Te] = r.useState(""), [fe, I] = r.useState([]), [de, ne] = r.useState(null), [q, ve] = r.useState(""), [Me, Ye] = r.useState(!1), [Je, Qe] = r.useState([]), [pe, Fe] = r.useState({}), [Q, ce] = r.useState(0), [b, G] = r.useState(null), [ee, Ee] = r.useState(null), [f, B] = r.useState(null), [te, W] = r.useState(new URLSearchParams(location.search).get("source") || ""), [ae, Z] = r.useState(""), [P, Oe] = r.useState(!1), [ie, Ce] = r.useState(""), [lt, at] = r.useState(""), [et, Ae] = r.useState(!0), [Re, qe] = r.useState(!1), [ke, Be] = r.useState(0), [tt, st] = r.useState({ project_id: "", source_id: "", record_kind: "", quality_status: "", from_date: "", to_date: "" }), [rt, je] = r.useState(""), [Ke, ze] = r.useState(null), [E, w] = r.useState([]), [$, we] = r.useState(""), [Le, Xe] = r.useState(0), [ft, L] = r.useState(!1), [he, re] = r.useState("csv"), [$e, y] = r.useState(""), [ye, ge] = r.useState(""), [Ze, pt] = r.useState(((me = d.find((j) => j.can_run)) == null ? void 0 : me.id) || (zt ? "" : "demo-airport")), D = d.some((j) => j.can_run), x = h.startsWith("/records/"), ue = h.startsWith("/imports/") && h !== "/imports/new", be = M.find((j) => j.id === te), ut = z.filter((j) => j.kind === (be == null ? void 0 : be.kind) && j.project_id === (be == null ? void 0 : be.project_id));
   r.useEffect(() => {
-    he(""), w([]), ve(""), tt(0), Se(""), lt(""), H(null);
+    je(""), w([]), we(""), Xe(0), Ce(""), at(""), B(null);
   }, [h]), r.useEffect(() => {
-    let b = !1;
-    Oe(!0), Se(""), ke(null), Y(null);
-    const we = new URLSearchParams(Object.entries(We).filter(([, pt]) => !!pt));
-    we.set("limit", "15"), Ze && we.set("cursor", Ze);
-    async function nt() {
+    let j = !1;
+    Ae(!0), Ce(""), Ee(null), G(null);
+    const _e = new URLSearchParams(Object.entries(tt).filter(([, jt]) => !!jt));
+    _e.set("limit", "15"), rt && _e.set("cursor", rt);
+    async function it() {
       try {
-        const [pt, j] = await Promise.all([u("/sources?limit=100"), u("/input-files")]);
-        if (b) return;
-        if (V(pt.items), Q(j.items), h === "/sources" || h === "/imports") {
-          const ze = await u("/imports?limit=15" + (Ze ? "&cursor=" + encodeURIComponent(Ze) : ""));
-          if (b) return;
-          U(ze.items), Ue(ze.next_cursor);
+        const [jt, m] = await Promise.all([u("/sources?limit=100"), u("/input-files")]);
+        if (j) return;
+        if (V(jt.items), Y(m.items), h === "/sources" || h === "/imports") {
+          const Ue = await u("/imports?limit=15" + (rt ? "&cursor=" + encodeURIComponent(rt) : ""));
+          if (j) return;
+          U(Ue.items), ze(Ue.next_cursor);
         } else if (ue) {
-          const ze = await u(`${h}?after_row=${He}&only_issues=${dt}`);
-          b || Y(ze);
-        } else if (v) {
-          const ze = await u(h + (W ? "?version=" + W : ""));
-          b || ke(ze);
+          const Ue = await u(`${h}?after_row=${Le}&only_issues=${ft}`);
+          j || G(Ue);
+        } else if (x) {
+          const Ue = await u(h + ($ ? "?version=" + $ : ""));
+          j || Ee(Ue);
         } else if (h === "/records") {
-          const ze = await u("/records?" + we);
-          if (b) return;
-          if (Ge(ze.items), Ue(ze.next_cursor), Ke(ze.totals_by_kind), de(ze.detail_groups_after_confirmed_links), le === "reports") {
-            const Ae = new URLSearchParams(we);
-            Ae.delete("cursor"), Ze && Ae.set("after_id", Ze);
-            const at = await u("/reports?" + Ae);
-            if (b) return;
-            k(at.items), Ue(at.next_cursor);
+          const Ue = await u("/records?" + _e);
+          if (j) return;
+          if (Qe(Ue.items), ze(Ue.next_cursor), Fe(Ue.totals_by_kind), ce(Ue.detail_groups_after_confirmed_links), le === "reports") {
+            const De = new URLSearchParams(_e);
+            De.delete("cursor"), rt && De.set("after_id", rt);
+            const ct = await u("/reports?" + De);
+            if (j) return;
+            k(ct.items), ze(ct.next_cursor);
           }
         }
-      } catch (pt) {
-        b || Se(pt.message);
+      } catch (jt) {
+        j || Ce(jt.message);
       } finally {
-        b || Oe(!1);
+        j || Ae(!1);
       }
     }
-    return nt(), () => {
-      b = !0;
+    return it(), () => {
+      j = !0;
     };
-  }, [h, We, Ze, W, Ne, He, dt, le]), r.useEffect(() => {
-    if (!ue || !y || !["queued", "running"].includes(y.status)) return;
-    let b = !1;
-    const we = setInterval(() => {
-      u(`${h}?after_row=${He}&only_issues=${dt}`).then((nt) => {
-        b || Y(nt);
-      }).catch((nt) => {
-        b || Se(nt.message);
+  }, [h, tt, rt, $, ke, Le, ft, le]), r.useEffect(() => {
+    if (!ue || !b || !["queued", "running"].includes(b.status)) return;
+    let j = !1;
+    const _e = setInterval(() => {
+      u(`${h}?after_row=${Le}&only_issues=${ft}`).then((it) => {
+        j || G(it);
+      }).catch((it) => {
+        j || Ce(it.message);
       });
     }, 1500);
     return () => {
-      b = !0, clearInterval(we);
+      j = !0, clearInterval(_e);
     };
-  }, [h, y == null ? void 0 : y.status, He, dt]), r.useEffect(() => {
-    _e.current++, Ee(""), I([]), ne(null), je("");
-  }, [We, le, h]);
-  const x = async (b, we = !1) => {
-    const nt = ++_e.current;
-    if (!we && ye === b) {
-      Ee(""), Be(!1);
+  }, [h, b == null ? void 0 : b.status, Le, ft]), r.useEffect(() => {
+    Ne.current++, Te(""), I([]), ne(null), ve("");
+  }, [tt, le, h]);
+  const N = async (j, _e = !1) => {
+    const it = ++Ne.current;
+    if (!_e && Se === j) {
+      Te(""), Ye(!1);
       return;
     }
-    we || (I([]), ne(null)), Ee(b), Be(!0), je("");
-    const pt = new URLSearchParams(Object.entries(We).filter(([, j]) => !!j));
-    pt.set("document_id", b), pt.set("limit", "15"), we && oe && pt.set("cursor", oe);
+    _e || (I([]), ne(null)), Te(j), Ye(!0), ve("");
+    const jt = new URLSearchParams(Object.entries(tt).filter(([, m]) => !!m));
+    jt.set("document_id", j), jt.set("limit", "15"), _e && de && jt.set("cursor", de);
     try {
-      const j = await u("/records?" + pt);
-      if (nt !== _e.current) return;
-      I((ze) => we ? [...ze, ...j.items] : j.items), ne(j.next_cursor);
-    } catch (j) {
-      nt === _e.current && je(j.message);
+      const m = await u("/records?" + jt);
+      if (it !== Ne.current) return;
+      I((Ue) => _e ? [...Ue, ...m.items] : m.items), ne(m.next_cursor);
+    } catch (m) {
+      it === Ne.current && ve(m.message);
     } finally {
-      nt === _e.current && Be(!1);
+      it === Ne.current && Ye(!1);
     }
-  }, ce = async (b) => {
-    De(!0), Se(""), lt("");
+  }, oe = async (j) => {
+    qe(!0), Ce(""), at("");
     try {
-      await b();
-    } catch (we) {
-      Se(we.message);
+      await j();
+    } catch (_e) {
+      Ce(_e.message);
     } finally {
-      De(!1);
+      qe(!1);
     }
-  }, qe = () => ce(async () => {
-    for (const b of d.filter((we) => we.can_run))
-      for (const we of b.id === "demo-airport" ? ["csv", "excel", "governance_export"] : ["csv"]) {
-        const nt = `mock-${b.id}-${we}`;
-        B.some((pt) => pt.namespace === nt && pt.project_id === b.id) || await u("/sources", { method: "POST", body: JSON.stringify({ name: `${b.id === "demo-airport" ? "机场" : "地铁"} · ${ws[we]}（模拟）`, namespace: nt, kind: we, project_id: b.id, mapping_template: we === "governance_export" ? "governance-v1" : `${we}-v1` }) });
+  }, Ve = () => oe(async () => {
+    for (const j of d.filter((_e) => _e.can_run))
+      for (const _e of j.id === "demo-airport" ? ["csv", "excel", "governance_export"] : ["csv"]) {
+        const it = `mock-${j.id}-${_e}`;
+        M.some((jt) => jt.namespace === it && jt.project_id === j.id) || await u("/sources", { method: "POST", body: JSON.stringify({ name: `${j.id === "demo-airport" ? "机场" : "地铁"} · ${ws[_e]}（模拟）`, namespace: it, kind: _e, project_id: j.id, mapping_template: _e === "governance_export" ? "governance-v1" : `${_e}-v1` }) });
       }
-    lt("模拟来源已配置。选择“开始接入”，字段映射会自动带入。"), Le((b) => b + 1);
-  }), vt = /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
+    at("模拟来源已配置。选择“开始接入”，字段映射会自动带入。"), Be((j) => j + 1);
+  }), Nt = /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
     /* @__PURE__ */ s.jsx("span", { children: "按权限范围显示 · 使用稳定游标分页" }),
     /* @__PURE__ */ s.jsxs("div", { className: "pagination", children: [
       /* @__PURE__ */ s.jsx("button", { disabled: !E.length, onClick: () => {
-        he(E.at(-1) || ""), w(E.slice(0, -1));
+        je(E.at(-1) || ""), w(E.slice(0, -1));
       }, children: "上一页" }),
-      /* @__PURE__ */ s.jsx("button", { disabled: !et, onClick: () => {
-        w([...E, Ze]), he(et || "");
+      /* @__PURE__ */ s.jsx("button", { disabled: !Ke, onClick: () => {
+        w([...E, rt]), je(Ke || "");
       }, children: "下一页" })
     ] })
-  ] }), Rt = (b, we) => {
-    Fe({ ...We, [b]: we }), he(""), w([]);
-  }, Et = (b) => ce(async () => {
-    const we = await Mt(`/api/v1/assets/${b}/content`, { headers: { Authorization: `Bearer dev-${R}` } });
-    if (!we.ok) {
-      const j = await we.json();
-      throw new Error(j.message);
+  ] }), g = (j, _e) => {
+    st({ ...tt, [j]: _e }), je(""), w([]);
+  }, X = (j) => oe(async () => {
+    const _e = await Mt(`/api/v1/assets/${j}/content`, { headers: { Authorization: `Bearer dev-${A}` } });
+    if (!_e.ok) {
+      const m = await _e.json();
+      throw new Error(m.message);
     }
-    const nt = URL.createObjectURL(await we.blob()), pt = document.createElement("a");
-    pt.href = nt, pt.download = "来源文件", pt.click(), URL.revokeObjectURL(nt);
+    const it = URL.createObjectURL(await _e.blob()), jt = document.createElement("a");
+    jt.href = it, jt.download = "来源文件", jt.click(), URL.revokeObjectURL(it);
   });
   return /* @__PURE__ */ s.jsxs("div", { className: "ingestion", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-banner", children: [
       /* @__PURE__ */ s.jsx(ou, { size: 19 }),
       /* @__PURE__ */ s.jsxs("div", { children: [
-        /* @__PURE__ */ s.jsx("strong", { children: Tt ? "历史资料工作区" : "模拟数据工作区" }),
+        /* @__PURE__ */ s.jsx("strong", { children: zt ? "历史资料工作区" : "模拟数据工作区" }),
         /* @__PURE__ */ s.jsx("span", { children: "按项目上传CSV、Excel或治理导出文件。原文、人工生效值和来源版本分别保留。" })
       ] })
     ] }),
     ie && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
       /* @__PURE__ */ s.jsx(Nl, { size: 18 }),
       ie,
-      /* @__PURE__ */ s.jsx("button", { onClick: () => Le((b) => b + 1), children: "重新加载" })
+      /* @__PURE__ */ s.jsx("button", { onClick: () => Be((j) => j + 1), children: "重新加载" })
     ] }),
-    st && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
+    lt && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
       /* @__PURE__ */ s.jsx(Sl, { size: 18 }),
-      st
+      lt
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
-        /* @__PURE__ */ s.jsx("button", { className: h === "/sources" ? "selected" : "", onClick: () => S("/sources"), children: "来源管理" }),
-        /* @__PURE__ */ s.jsx("button", { className: h.startsWith("/imports") ? "selected" : "", onClick: () => S("/imports"), children: "历史项目" }),
-        /* @__PURE__ */ s.jsx("button", { className: h.startsWith("/records") ? "selected" : "", onClick: () => S("/records"), children: "风险数据" })
+        /* @__PURE__ */ s.jsx("button", { className: h === "/sources" ? "selected" : "", onClick: () => _("/sources"), children: "来源管理" }),
+        /* @__PURE__ */ s.jsx("button", { className: h.startsWith("/imports") ? "selected" : "", onClick: () => _("/imports"), children: "历史项目" }),
+        /* @__PURE__ */ s.jsx("button", { className: h.startsWith("/records") ? "selected" : "", onClick: () => _("/records"), children: "风险数据" })
       ] }),
-      /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => Le((b) => b + 1), disabled: Pe, children: [
+      /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => Be((j) => j + 1), disabled: et, children: [
         /* @__PURE__ */ s.jsx(Rs, { size: 15 }),
         "刷新"
       ] })
     ] }),
-    Pe ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取数据…" }) : h === "/sources" ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+    et ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取数据…" }) : h === "/sources" ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("section", { className: "panel ingest-intro", children: [
         /* @__PURE__ */ s.jsxs("div", { children: [
           /* @__PURE__ */ s.jsx("h2", { children: "配置一次，后续按变化接入" }),
           /* @__PURE__ */ s.jsx("p", { children: "使用来源命名空间保留身份，复用映射模板，无需逐条填写记录。" })
         ] }),
-        !Tt && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Te || !z, onClick: () => void qe(), children: [
+        !zt && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Re || !D, onClick: () => void Ve(), children: [
           /* @__PURE__ */ s.jsx(ou, { size: 16 }),
           "一键配置模拟来源"
         ] })
       ] }),
-      /* @__PURE__ */ s.jsx("div", { className: "source-grid", children: B.map((b) => {
-        var we, nt;
+      /* @__PURE__ */ s.jsx("div", { className: "source-grid", children: M.map((j) => {
+        var _e, it;
         return /* @__PURE__ */ s.jsxs("section", { className: "panel source-card", children: [
           /* @__PURE__ */ s.jsxs("div", { className: "source-top", children: [
             /* @__PURE__ */ s.jsx("span", { className: "source-icon", children: /* @__PURE__ */ s.jsx(ou, { size: 22 }) }),
-            /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: ws[b.kind] })
+            /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: ws[j.kind] })
           ] }),
-          /* @__PURE__ */ s.jsx("h2", { children: b.name }),
-          /* @__PURE__ */ s.jsx("p", { children: (we = d.find((pt) => pt.id === b.project_id)) == null ? void 0 : we.name }),
+          /* @__PURE__ */ s.jsx("h2", { children: j.name }),
+          /* @__PURE__ */ s.jsx("p", { children: (_e = d.find((jt) => jt.id === j.project_id)) == null ? void 0 : _e.name }),
           /* @__PURE__ */ s.jsxs("dl", { children: [
             /* @__PURE__ */ s.jsx("dt", { children: "映射模板" }),
-            /* @__PURE__ */ s.jsx("dd", { children: b.mapping_version }),
+            /* @__PURE__ */ s.jsx("dd", { children: j.mapping_version }),
             /* @__PURE__ */ s.jsx("dt", { children: "最近同步" }),
-            /* @__PURE__ */ s.jsx("dd", { children: Rf(b.cursor.synced_at) }),
+            /* @__PURE__ */ s.jsx("dd", { children: Mf(j.cursor.synced_at) }),
             /* @__PURE__ */ s.jsx("dt", { children: "稳定命名空间" }),
-            /* @__PURE__ */ s.jsx("dd", { children: b.namespace })
+            /* @__PURE__ */ s.jsx("dd", { children: j.namespace })
           ] }),
-          /* @__PURE__ */ s.jsxs("button", { className: "button secondary", disabled: !((nt = d.find((pt) => pt.id === b.project_id)) != null && nt.can_run), onClick: () => {
-            $(b.id), Z(""), S("/imports/new?source=" + b.id);
+          /* @__PURE__ */ s.jsxs("button", { className: "button secondary", disabled: !((it = d.find((jt) => jt.id === j.project_id)) != null && it.can_run), onClick: () => {
+            W(j.id), Z(""), _("/imports/new?source=" + j.id);
           }, children: [
             "开始接入",
             /* @__PURE__ */ s.jsx(_l, { size: 16 })
           ] })
-        ] }, b.id);
+        ] }, j.id);
       }) }),
-      !B.length && /* @__PURE__ */ s.jsxs("div", { className: "panel empty", children: [
+      !M.length && /* @__PURE__ */ s.jsxs("div", { className: "panel empty", children: [
         /* @__PURE__ */ s.jsx(hu, { size: 38 }),
         /* @__PURE__ */ s.jsx("h2", { children: "还没有配置来源" }),
         /* @__PURE__ */ s.jsx("p", { children: "请先配置来源，随后上传资料并预览字段。" })
       ] }),
-      z && /* @__PURE__ */ s.jsxs("details", { className: "panel custom-source", open: Tt || void 0, children: [
+      D && /* @__PURE__ */ s.jsxs("details", { className: "panel custom-source", open: zt || void 0, children: [
         /* @__PURE__ */ s.jsx("summary", { children: "配置资料来源" }),
         /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "来源名称",
-            /* @__PURE__ */ s.jsx("input", { value: Ve, onChange: (b) => _(b.target.value) })
+            /* @__PURE__ */ s.jsx("input", { value: $e, onChange: (j) => y(j.target.value) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "命名空间",
-            /* @__PURE__ */ s.jsx("input", { placeholder: "例如 mock-extra-csv", value: be, onChange: (b) => ge(b.target.value) })
+            /* @__PURE__ */ s.jsx("input", { placeholder: "例如 mock-extra-csv", value: ye, onChange: (j) => ge(j.target.value) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "类型",
-            /* @__PURE__ */ s.jsx("select", { value: fe, onChange: (b) => re(b.target.value), children: ["csv", "excel", "governance_export"].map((b) => /* @__PURE__ */ s.jsx("option", { value: b, children: ws[b] }, b)) })
+            /* @__PURE__ */ s.jsx("select", { value: he, onChange: (j) => re(j.target.value), children: ["csv", "excel", "governance_export"].map((j) => /* @__PURE__ */ s.jsx("option", { value: j, children: ws[j] }, j)) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "项目",
-            /* @__PURE__ */ s.jsx("select", { value: Qe, onChange: (b) => xt(b.target.value), children: d.filter((b) => b.can_run).map((b) => /* @__PURE__ */ s.jsx("option", { value: b.id, children: b.name }, b.id)) })
+            /* @__PURE__ */ s.jsx("select", { value: Ze, onChange: (j) => pt(j.target.value), children: d.filter((j) => j.can_run).map((j) => /* @__PURE__ */ s.jsx("option", { value: j.id, children: j.name }, j.id)) })
           ] })
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Te || !Ve || !be, onClick: () => void ce(async () => {
-          await u("/sources", { method: "POST", body: JSON.stringify({ name: Ve, namespace: be, kind: fe, project_id: Qe, mapping_template: fe === "governance_export" ? "governance-v1" : `${fe}-v1` }) }), Le((b) => b + 1), lt("来源已创建。");
+        /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Re || !$e || !ye, onClick: () => void oe(async () => {
+          await u("/sources", { method: "POST", body: JSON.stringify({ name: $e, namespace: ye, kind: he, project_id: Ze, mapping_template: he === "governance_export" ? "governance-v1" : `${he}-v1` }) }), Be((j) => j + 1), at("来源已创建。");
         }), children: "创建来源" })
       ] })
     ] }) : h === "/imports/new" ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
@@ -11939,81 +11939,81 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
           /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "数据来源",
-              /* @__PURE__ */ s.jsxs("select", { "aria-label": "数据来源", value: te, onChange: (b) => {
-                $(b.target.value), Z(""), H(null);
+              /* @__PURE__ */ s.jsxs("select", { "aria-label": "数据来源", value: te, onChange: (j) => {
+                W(j.target.value), Z(""), B(null);
               }, children: [
                 /* @__PURE__ */ s.jsx("option", { value: "", children: "请选择" }),
-                B.filter((b) => {
-                  var we;
-                  return (we = d.find((nt) => nt.id === b.project_id)) == null ? void 0 : we.can_run;
-                }).map((b) => /* @__PURE__ */ s.jsx("option", { value: b.id, children: b.name }, b.id))
+                M.filter((j) => {
+                  var _e;
+                  return (_e = d.find((it) => it.id === j.project_id)) == null ? void 0 : _e.can_run;
+                }).map((j) => /* @__PURE__ */ s.jsx("option", { value: j.id, children: j.name }, j.id))
               ] })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "输入文件",
-              /* @__PURE__ */ s.jsxs("select", { "aria-label": "输入文件", value: ae, onChange: (b) => {
-                Z(b.target.value), H(null);
+              /* @__PURE__ */ s.jsxs("select", { "aria-label": "输入文件", value: ae, onChange: (j) => {
+                Z(j.target.value), B(null);
               }, children: [
                 /* @__PURE__ */ s.jsx("option", { value: "", children: "请选择" }),
-                G.map((b) => /* @__PURE__ */ s.jsx("option", { value: b.asset_id, children: b.label }, b.asset_id))
+                ut.map((j) => /* @__PURE__ */ s.jsx("option", { value: j.asset_id, children: j.label }, j.asset_id))
               ] })
             ] })
           ] }),
-          !Tt && /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: P, onChange: (b) => Ce(b.target.checked) }),
+          !zt && /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: P, onChange: (j) => Oe(j.target.checked) }),
             "模拟接入2条后中断，用于验证继续处理"
           ] }),
-          Tt && f && /* @__PURE__ */ s.jsxs("section", { children: [
+          zt && be && /* @__PURE__ */ s.jsxs("section", { children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "上传资料（最大5MB）",
-              /* @__PURE__ */ s.jsx("input", { type: "file", disabled: Te, accept: f.kind === "csv" ? ".csv" : f.kind === "excel" ? ".xlsx" : ".json", onChange: (b) => {
-                var nt;
-                const we = (nt = b.target.files) == null ? void 0 : nt[0];
-                b.target.value = "", we && ce(async () => {
-                  if (we.size > 5e6) throw new Error("文件不能超过5MB");
-                  const pt = new Uint8Array(await we.arrayBuffer());
-                  let j = "";
-                  for (let Ae = 0; Ae < pt.length; Ae += 8192) j += String.fromCharCode(...pt.subarray(Ae, Ae + 8192));
-                  const ze = await u("/platform-inputs", { method: "POST", body: JSON.stringify({ project_id: f.project_id, kind: f.kind, name: we.name, base64: btoa(j) }) });
-                  Q((Ae) => [...Ae, ze]), Z(ze.asset_id), H(null), lt("文件已上传，请预览字段与异常后提交接入。");
+              /* @__PURE__ */ s.jsx("input", { type: "file", disabled: Re, accept: be.kind === "csv" ? ".csv" : be.kind === "excel" ? ".xlsx" : ".json", onChange: (j) => {
+                var it;
+                const _e = (it = j.target.files) == null ? void 0 : it[0];
+                j.target.value = "", _e && oe(async () => {
+                  if (_e.size > 5e6) throw new Error("文件不能超过5MB");
+                  const jt = new Uint8Array(await _e.arrayBuffer());
+                  let m = "";
+                  for (let De = 0; De < jt.length; De += 8192) m += String.fromCharCode(...jt.subarray(De, De + 8192));
+                  const Ue = await u("/platform-inputs", { method: "POST", body: JSON.stringify({ project_id: be.project_id, kind: be.kind, name: _e.name, base64: btoa(m) }) });
+                  Y((De) => [...De, Ue]), Z(Ue.asset_id), B(null), at("文件已上传，请预览字段与异常后提交接入。");
                 });
               } })
             ] }),
             /* @__PURE__ */ s.jsxs("p", { children: [
               "项目ID：",
-              f.project_id,
+              be.project_id,
               "。文件必须保留稳定记录ID、报告ID和项目ID；记录类型为detail、review或summary。"
             ] }),
             /* @__PURE__ */ s.jsxs("details", { children: [
               /* @__PURE__ */ s.jsx("summary", { children: "查看所需表头" }),
-              /* @__PURE__ */ s.jsx("p", { children: Object.values(f.mapping).join("、") })
+              /* @__PURE__ */ s.jsx("p", { children: Object.values(be.mapping).join("、") })
             ] })
           ] }),
-          /* @__PURE__ */ s.jsxs("button", { className: "button secondary", disabled: Te || !te || !ae, onClick: () => void ce(async () => {
-            H(await u("/imports/preview", { method: "POST", body: JSON.stringify({ source_id: te, input_asset_id: ae }) }));
+          /* @__PURE__ */ s.jsxs("button", { className: "button secondary", disabled: Re || !te || !ae, onClick: () => void oe(async () => {
+            B(await u("/imports/preview", { method: "POST", body: JSON.stringify({ source_id: te, input_asset_id: ae }) }));
           }), children: [
             /* @__PURE__ */ s.jsx(hu, { size: 16 }),
             "预览字段与异常"
           ] })
         ] })
       ] }),
-      m && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      f && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         /* @__PURE__ */ s.jsxs("section", { className: "metrics ingest-metrics", children: [
           /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
             /* @__PURE__ */ s.jsx("span", { children: "输入记录" }),
-            /* @__PURE__ */ s.jsx("strong", { children: m.total })
+            /* @__PURE__ */ s.jsx("strong", { children: f.total })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
             /* @__PURE__ */ s.jsx("span", { children: "原始字段" }),
-            /* @__PURE__ */ s.jsx("strong", { children: m.raw_columns.length })
+            /* @__PURE__ */ s.jsx("strong", { children: f.raw_columns.length })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
             /* @__PURE__ */ s.jsx("span", { children: "需核查行" }),
-            /* @__PURE__ */ s.jsx("strong", { children: m.warning_rows })
+            /* @__PURE__ */ s.jsx("strong", { children: f.warning_rows })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
             /* @__PURE__ */ s.jsx("span", { children: "不能接入行" }),
-            /* @__PURE__ */ s.jsx("strong", { children: m.failed_rows })
+            /* @__PURE__ */ s.jsx("strong", { children: f.failed_rows })
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
@@ -12021,11 +12021,11 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
             /* @__PURE__ */ s.jsx("h2", { children: "字段映射" }),
             /* @__PURE__ */ s.jsx("span", { children: "未映射字段仍完整保留在原始字段中" })
           ] }),
-          /* @__PURE__ */ s.jsx("div", { className: "mapping-grid", children: Object.entries(m.mapping).map(([b, we]) => /* @__PURE__ */ s.jsxs("div", { children: [
-            /* @__PURE__ */ s.jsx("code", { children: we }),
+          /* @__PURE__ */ s.jsx("div", { className: "mapping-grid", children: Object.entries(f.mapping).map(([j, _e]) => /* @__PURE__ */ s.jsxs("div", { children: [
+            /* @__PURE__ */ s.jsx("code", { children: _e }),
             /* @__PURE__ */ s.jsx(_l, { size: 13 }),
-            /* @__PURE__ */ s.jsx("strong", { children: b })
-          ] }, b)) })
+            /* @__PURE__ */ s.jsx("strong", { children: j })
+          ] }, j)) })
         ] }),
         /* @__PURE__ */ s.jsxs("section", { className: "panel preview-table", children: [
           /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
@@ -12039,24 +12039,24 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
               /* @__PURE__ */ s.jsx("th", { children: "类型" }),
               /* @__PURE__ */ s.jsx("th", { children: "异常" })
             ] }) }),
-            /* @__PURE__ */ s.jsx("tbody", { children: m.preview.map((b) => /* @__PURE__ */ s.jsxs("tr", { children: [
+            /* @__PURE__ */ s.jsx("tbody", { children: f.preview.map((j) => /* @__PURE__ */ s.jsxs("tr", { children: [
               /* @__PURE__ */ s.jsxs("td", { children: [
-                b.row_number,
-                /* @__PURE__ */ s.jsx("small", { children: b.external_id || "缺少身份" })
+                j.row_number,
+                /* @__PURE__ */ s.jsx("small", { children: j.external_id || "缺少身份" })
               ] }),
-              /* @__PURE__ */ s.jsx("td", { children: fu(b.effective_fields.description) }),
-              /* @__PURE__ */ s.jsx("td", { children: ws[String(b.effective_fields.record_kind)] || "—" }),
-              /* @__PURE__ */ s.jsx("td", { children: [...b.errors, ...b.issues].join("；") || "通过" })
-            ] }, b.row_number)) })
+              /* @__PURE__ */ s.jsx("td", { children: fu(j.effective_fields.description) }),
+              /* @__PURE__ */ s.jsx("td", { children: ws[String(j.effective_fields.record_kind)] || "—" }),
+              /* @__PURE__ */ s.jsx("td", { children: [...j.errors, ...j.issues].join("；") || "通过" })
+            ] }, j.row_number)) })
           ] }) }),
           /* @__PURE__ */ s.jsxs("div", { className: "submit-bar", children: [
             /* @__PURE__ */ s.jsx("span", { children: "坏值保留；不符合项目范围的行会被拒绝。" }),
-            /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Te, onClick: () => void ce(async () => {
-              const b = await u("/imports", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ source_id: te, input_asset_id: ae, input_hash: m.input_hash, fail_after: !Tt && P ? 2 : null }) });
-              S("/imports/" + b.id);
+            /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Re, onClick: () => void oe(async () => {
+              const j = await u("/imports", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ source_id: te, input_asset_id: ae, input_hash: f.input_hash, fail_after: !zt && P ? 2 : null }) });
+              _("/imports/" + j.id);
             }), children: [
-              /* @__PURE__ */ s.jsx(Kf, { size: 16 }),
-              Te ? "正在提交…" : "提交接入"
+              /* @__PURE__ */ s.jsx(If, { size: 16 }),
+              Re ? "正在提交…" : "提交接入"
             ] })
           ] })
         ] })
@@ -12064,12 +12064,12 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
     ] }) : h === "/imports" ? /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
         /* @__PURE__ */ s.jsx("h2", { children: "历史项目" }),
-        /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: !z, onClick: () => S("/imports/new"), children: [
+        /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: !D, onClick: () => _("/imports/new"), children: [
           "新建历史项目",
           /* @__PURE__ */ s.jsx(_l, { size: 15 })
         ] })
       ] }),
-      p.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
+      v.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
         /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsxs("tr", { children: [
           /* @__PURE__ */ s.jsx("th", { children: "来源 / 时间" }),
           /* @__PURE__ */ s.jsx("th", { children: "状态" }),
@@ -12079,63 +12079,63 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
           /* @__PURE__ */ s.jsx("th", { children: "失败" }),
           /* @__PURE__ */ s.jsx("th", { children: "操作" })
         ] }) }),
-        /* @__PURE__ */ s.jsx("tbody", { children: p.map((b) => /* @__PURE__ */ s.jsxs("tr", { children: [
+        /* @__PURE__ */ s.jsx("tbody", { children: v.map((j) => /* @__PURE__ */ s.jsxs("tr", { children: [
           /* @__PURE__ */ s.jsxs("td", { children: [
-            /* @__PURE__ */ s.jsx("strong", { children: b.source_name }),
-            /* @__PURE__ */ s.jsx("small", { children: Rf(b.created_at) })
+            /* @__PURE__ */ s.jsx("strong", { children: j.source_name }),
+            /* @__PURE__ */ s.jsx("small", { children: Mf(j.created_at) })
           ] }),
-          /* @__PURE__ */ s.jsx("td", { children: wn[b.status] }),
-          ["created", "updated", "skipped", "failed"].map((we) => /* @__PURE__ */ s.jsx("td", { children: b.counts[we] }, we)),
-          /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S("/imports/" + b.id), children: "查看历史项目" }) })
-        ] }, b.id)) })
+          /* @__PURE__ */ s.jsx("td", { children: wn[j.status] }),
+          ["created", "updated", "skipped", "failed"].map((_e) => /* @__PURE__ */ s.jsx("td", { children: j.counts[_e] }, _e)),
+          /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/imports/" + j.id), children: "查看历史项目" }) })
+        ] }, j.id)) })
       ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
         /* @__PURE__ */ s.jsx("h2", { children: "还没有历史项目" }),
         /* @__PURE__ */ s.jsx("p", { children: "先配置来源，再选择模拟文件进行预览和接入。" })
       ] }),
-      vt
-    ] }) : ue && y ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-      /* @__PURE__ */ s.jsxs("button", { className: "text-button back", onClick: () => S("/imports"), children: [
-        /* @__PURE__ */ s.jsx(kf, { size: 15 }),
+      Nt
+    ] }) : ue && b ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      /* @__PURE__ */ s.jsxs("button", { className: "text-button back", onClick: () => _("/imports"), children: [
+        /* @__PURE__ */ s.jsx(Of, { size: 15 }),
         "返回历史项目"
       ] }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel batch-header", children: [
         /* @__PURE__ */ s.jsxs("div", { children: [
-          /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: wn[y.status] }),
-          /* @__PURE__ */ s.jsx("h2", { children: y.source.name }),
+          /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: wn[b.status] }),
+          /* @__PURE__ */ s.jsx("h2", { children: b.source.name }),
           /* @__PURE__ */ s.jsxs("p", { children: [
             "已处理 ",
-            y.counts.processed,
+            b.counts.processed,
             " / ",
-            y.counts.total,
+            b.counts.total,
             " 条 · ",
-            y.progress,
+            b.progress,
             "%"
           ] })
         ] }),
-        y.job_status === "failed" && ((St = d.find((b) => b.id === y.source.project_id)) == null ? void 0 : St.can_run) && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Te, onClick: () => void ce(async () => {
-          await u(`/jobs/${y.job_id}/retry`, { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: y.row_version }) }), Le((b) => b + 1);
+        b.job_status === "failed" && ((nt = d.find((j) => j.id === b.source.project_id)) == null ? void 0 : nt.can_run) && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Re, onClick: () => void oe(async () => {
+          await u(`/jobs/${b.job_id}/retry`, { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: b.row_version }) }), Be((j) => j + 1);
         }), children: [
           /* @__PURE__ */ s.jsx(Rs, { size: 16 }),
           "继续未完成行"
         ] })
       ] }),
-      y.error && /* @__PURE__ */ s.jsx("div", { className: "feedback error", children: y.error }),
-      /* @__PURE__ */ s.jsx("section", { className: "metrics ingest-metrics", children: ["created", "updated", "skipped", "failed"].map((b) => /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
-        /* @__PURE__ */ s.jsx("span", { children: b === "failed" ? "失败行" : wn[b] }),
-        /* @__PURE__ */ s.jsx("strong", { children: y.counts[b] })
-      ] }, b)) }),
+      b.error && /* @__PURE__ */ s.jsx("div", { className: "feedback error", children: b.error }),
+      /* @__PURE__ */ s.jsx("section", { className: "metrics ingest-metrics", children: ["created", "updated", "skipped", "failed"].map((j) => /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
+        /* @__PURE__ */ s.jsx("span", { children: j === "failed" ? "失败行" : wn[j] }),
+        /* @__PURE__ */ s.jsx("strong", { children: b.counts[j] })
+      ] }, j)) }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel batch-meta", children: [
         /* @__PURE__ */ s.jsxs("div", { children: [
           /* @__PURE__ */ s.jsx("span", { children: "实际输入SHA-256" }),
-          /* @__PURE__ */ s.jsx("code", { children: y.input_hash })
+          /* @__PURE__ */ s.jsx("code", { children: b.input_hash })
         ] }),
         /* @__PURE__ */ s.jsxs("div", { children: [
           /* @__PURE__ */ s.jsx("span", { children: "规则版本" }),
-          /* @__PURE__ */ s.jsx("strong", { children: y.rule_version })
+          /* @__PURE__ */ s.jsx("strong", { children: b.rule_version })
         ] }),
         /* @__PURE__ */ s.jsxs("div", { children: [
           /* @__PURE__ */ s.jsx("span", { children: "记录类型" }),
-          /* @__PURE__ */ s.jsx("strong", { children: Object.entries(y.counts.kinds || {}).map(([b, we]) => `${ws[b]} ${we}`).join(" / ") || "尚未处理" })
+          /* @__PURE__ */ s.jsx("strong", { children: Object.entries(b.counts.kinds || {}).map(([j, _e]) => `${ws[j]} ${_e}`).join(" / ") || "尚未处理" })
         ] }),
         /* @__PURE__ */ s.jsx("p", { children: "新增 + 更新 + 跳过 + 失败 = 已处理。明细、复查与汇总不直接相加当独立隐患。" })
       ] }),
@@ -12143,8 +12143,8 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "行处理明细" }),
           /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: dt, onChange: (b) => {
-              L(b.target.checked), tt(0);
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: ft, onChange: (j) => {
+              L(j.target.checked), Xe(0);
             } }),
             "只看异常行"
           ] })
@@ -12156,30 +12156,30 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
             /* @__PURE__ */ s.jsx("th", { children: "说明" }),
             /* @__PURE__ */ s.jsx("th", { children: "记录" })
           ] }) }),
-          /* @__PURE__ */ s.jsx("tbody", { children: y.rows.map((b) => /* @__PURE__ */ s.jsxs("tr", { children: [
-            /* @__PURE__ */ s.jsx("td", { children: b.row_number }),
-            /* @__PURE__ */ s.jsx("td", { children: b.outcome === "failed" ? "失败" : wn[b.outcome] }),
-            /* @__PURE__ */ s.jsx("td", { children: b.issues.join("；") || "通过" }),
-            /* @__PURE__ */ s.jsx("td", { children: b.record_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S("/records/" + b.record_id), children: "查看证据" }) })
-          ] }, b.row_number)) })
+          /* @__PURE__ */ s.jsx("tbody", { children: b.rows.map((j) => /* @__PURE__ */ s.jsxs("tr", { children: [
+            /* @__PURE__ */ s.jsx("td", { children: j.row_number }),
+            /* @__PURE__ */ s.jsx("td", { children: j.outcome === "failed" ? "失败" : wn[j.outcome] }),
+            /* @__PURE__ */ s.jsx("td", { children: j.issues.join("；") || "通过" }),
+            /* @__PURE__ */ s.jsx("td", { children: j.record_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/records/" + j.record_id), children: "查看证据" }) })
+          ] }, j.row_number)) })
         ] }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
-          /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: !He, onClick: () => tt(0), children: "返回首段" }),
-          /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: !y.next_row, onClick: () => tt(y.next_row || 0), children: "下一段" })
+          /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: !Le, onClick: () => Xe(0), children: "返回首段" }),
+          /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: !b.next_row, onClick: () => Xe(b.next_row || 0), children: "下一段" })
         ] })
       ] })
     ] }) : h === "/records" ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("section", { className: "metrics ingest-metrics", children: [
-        ["detail", "review", "summary"].map((b) => /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
+        ["detail", "review", "summary"].map((j) => /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
           /* @__PURE__ */ s.jsxs("span", { children: [
-            ws[b],
+            ws[j],
             "记录"
           ] }),
-          /* @__PURE__ */ s.jsx("strong", { children: pe[b] || 0 })
-        ] }, b)),
+          /* @__PURE__ */ s.jsx("strong", { children: pe[j] || 0 })
+        ] }, j)),
         /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
           /* @__PURE__ */ s.jsx("span", { children: "确认关联后的明细组" }),
-          /* @__PURE__ */ s.jsx("strong", { children: X }),
+          /* @__PURE__ */ s.jsx("strong", { children: Q }),
           /* @__PURE__ */ s.jsx("small", { children: "仅合并已确认关系，非独立隐患结论" })
         ] })
       ] }),
@@ -12187,28 +12187,28 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
         /* @__PURE__ */ s.jsxs("div", { className: "record-filters", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "项目",
-            /* @__PURE__ */ s.jsxs("select", { "aria-label": "项目筛选", value: We.project_id, onChange: (b) => Rt("project_id", b.target.value), children: [
+            /* @__PURE__ */ s.jsxs("select", { "aria-label": "项目筛选", value: tt.project_id, onChange: (j) => g("project_id", j.target.value), children: [
               /* @__PURE__ */ s.jsx("option", { value: "", children: "全部项目" }),
-              d.map((b) => /* @__PURE__ */ s.jsx("option", { value: b.id, children: b.name }, b.id))
+              d.map((j) => /* @__PURE__ */ s.jsx("option", { value: j.id, children: j.name }, j.id))
             ] })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "来源",
-            /* @__PURE__ */ s.jsxs("select", { "aria-label": "来源筛选", value: We.source_id, onChange: (b) => Rt("source_id", b.target.value), children: [
+            /* @__PURE__ */ s.jsxs("select", { "aria-label": "来源筛选", value: tt.source_id, onChange: (j) => g("source_id", j.target.value), children: [
               /* @__PURE__ */ s.jsx("option", { value: "", children: "全部来源" }),
-              B.map((b) => /* @__PURE__ */ s.jsx("option", { value: b.id, children: b.name }, b.id))
+              M.map((j) => /* @__PURE__ */ s.jsx("option", { value: j.id, children: j.name }, j.id))
             ] })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "记录类型",
-            /* @__PURE__ */ s.jsxs("select", { "aria-label": "记录类型筛选", value: We.record_kind, onChange: (b) => Rt("record_kind", b.target.value), children: [
+            /* @__PURE__ */ s.jsxs("select", { "aria-label": "记录类型筛选", value: tt.record_kind, onChange: (j) => g("record_kind", j.target.value), children: [
               /* @__PURE__ */ s.jsx("option", { value: "", children: "全部类型" }),
-              ["detail", "review", "summary"].map((b) => /* @__PURE__ */ s.jsx("option", { value: b, children: ws[b] }, b))
+              ["detail", "review", "summary"].map((j) => /* @__PURE__ */ s.jsx("option", { value: j, children: ws[j] }, j))
             ] })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "质量状态",
-            /* @__PURE__ */ s.jsxs("select", { "aria-label": "质量状态筛选", value: We.quality_status, onChange: (b) => Rt("quality_status", b.target.value), children: [
+            /* @__PURE__ */ s.jsxs("select", { "aria-label": "质量状态筛选", value: tt.quality_status, onChange: (j) => g("quality_status", j.target.value), children: [
               /* @__PURE__ */ s.jsx("option", { value: "", children: "全部状态" }),
               /* @__PURE__ */ s.jsx("option", { value: "needs_review", children: "需核查" }),
               /* @__PURE__ */ s.jsx("option", { value: "valid", children: "通过" })
@@ -12216,54 +12216,54 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "开始日期",
-            /* @__PURE__ */ s.jsx("input", { type: "date", value: We.from_date, onChange: (b) => Rt("from_date", b.target.value) })
+            /* @__PURE__ */ s.jsx("input", { type: "date", value: tt.from_date, onChange: (j) => g("from_date", j.target.value) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "结束日期",
-            /* @__PURE__ */ s.jsx("input", { type: "date", value: We.to_date, onChange: (b) => Rt("to_date", b.target.value) })
+            /* @__PURE__ */ s.jsx("input", { type: "date", value: tt.to_date, onChange: (j) => g("to_date", j.target.value) })
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "view-switch", "aria-label": "风险数据展示方式", children: [
           /* @__PURE__ */ s.jsx("button", { "aria-pressed": le === "reports", onClick: () => {
-            xe("reports"), he(""), w([]), Ee("");
+            xe("reports"), je(""), w([]), Te("");
           }, children: "报告清单" }),
           /* @__PURE__ */ s.jsx("button", { "aria-pressed": le === "rows", onClick: () => {
-            xe("rows"), he(""), w([]);
+            xe("rows"), je(""), w([]);
           }, children: "逐条数据" })
         ] }),
-        le === "reports" ? /* @__PURE__ */ s.jsx("div", { className: "reports-list", children: K.length ? K.map((b) => /* @__PURE__ */ s.jsxs("article", { children: [
-          /* @__PURE__ */ s.jsxs("button", { className: "report-toggle", "aria-expanded": ye === b.id, onClick: () => void x(b.id), children: [
+        le === "reports" ? /* @__PURE__ */ s.jsx("div", { className: "reports-list", children: K.length ? K.map((j) => /* @__PURE__ */ s.jsxs("article", { children: [
+          /* @__PURE__ */ s.jsxs("button", { className: "report-toggle", "aria-expanded": Se === j.id, onClick: () => void N(j.id), children: [
             /* @__PURE__ */ s.jsx(hu, { size: 20 }),
             /* @__PURE__ */ s.jsxs("div", { children: [
-              /* @__PURE__ */ s.jsx("strong", { children: b.title }),
+              /* @__PURE__ */ s.jsx("strong", { children: j.title }),
               /* @__PURE__ */ s.jsxs("small", { children: [
-                b.source_name,
+                j.source_name,
                 " · ",
-                b.report_id
+                j.report_id
               ] })
             ] }),
             /* @__PURE__ */ s.jsxs("span", { children: [
-              b.count,
+              j.count,
               " 条风险数据"
             ] }),
             /* @__PURE__ */ s.jsx(_l, { size: 16 })
           ] }),
-          ye === b.id && /* @__PURE__ */ s.jsxs("div", { className: "report-records", children: [
-            D && /* @__PURE__ */ s.jsx("p", { role: "alert", children: D }),
-            Re ? /* @__PURE__ */ s.jsx("p", { children: "正在读取报告内风险数据…" }) : me.map((we) => /* @__PURE__ */ s.jsxs("div", { className: "report-record", children: [
-              /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => S("/records/" + we.id), children: we.description || "缺少描述" }),
+          Se === j.id && /* @__PURE__ */ s.jsxs("div", { className: "report-records", children: [
+            q && /* @__PURE__ */ s.jsx("p", { role: "alert", children: q }),
+            Me ? /* @__PURE__ */ s.jsx("p", { children: "正在读取报告内风险数据…" }) : fe.map((_e) => /* @__PURE__ */ s.jsxs("div", { className: "report-record", children: [
+              /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => _("/records/" + _e.id), children: _e.description || "缺少描述" }),
               /* @__PURE__ */ s.jsxs("span", { children: [
-                ws[we.record_kind],
+                ws[_e.record_kind],
                 " · v",
-                we.current_version
+                _e.current_version
               ] })
-            ] }, we.id)),
-            oe && /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: Re, onClick: () => void x(b.id, !0), children: "加载更多风险数据" })
+            ] }, _e.id)),
+            de && /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: Me, onClick: () => void N(j.id, !0), children: "加载更多风险数据" })
           ] })
-        ] }, b.id)) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
+        ] }, j.id)) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "没有符合条件的报告" }),
           /* @__PURE__ */ s.jsx("p", { children: "可切换筛选条件或先接入资料来源。" })
-        ] }) }) : Xe.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
+        ] }) }) : Je.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
           /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsxs("tr", { children: [
             /* @__PURE__ */ s.jsx("th", { children: "记录内容 / 来源" }),
             /* @__PURE__ */ s.jsx("th", { children: "类型" }),
@@ -12271,32 +12271,32 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
             /* @__PURE__ */ s.jsx("th", { children: "质量状态" }),
             /* @__PURE__ */ s.jsx("th", { children: "版本" })
           ] }) }),
-          /* @__PURE__ */ s.jsx("tbody", { children: Xe.map((b) => {
-            var we;
+          /* @__PURE__ */ s.jsx("tbody", { children: Je.map((j) => {
+            var _e;
             return /* @__PURE__ */ s.jsxs("tr", { children: [
               /* @__PURE__ */ s.jsxs("td", { children: [
-                /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => S("/records/" + b.id), children: b.description || "缺少描述" }),
-                /* @__PURE__ */ s.jsx("small", { children: (we = B.find((nt) => nt.id === b.source_id)) == null ? void 0 : we.name })
+                /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => _("/records/" + j.id), children: j.description || "缺少描述" }),
+                /* @__PURE__ */ s.jsx("small", { children: (_e = M.find((it) => it.id === j.source_id)) == null ? void 0 : _e.name })
               ] }),
-              /* @__PURE__ */ s.jsx("td", { children: ws[b.record_kind] }),
-              /* @__PURE__ */ s.jsx("td", { children: b.occurred_on || "未知" }),
-              /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("span", { className: `status ${b.quality_status === "valid" ? "succeeded" : "retrying"}`, children: b.quality_status === "valid" ? "通过" : "需核查" }) }),
+              /* @__PURE__ */ s.jsx("td", { children: ws[j.record_kind] }),
+              /* @__PURE__ */ s.jsx("td", { children: j.occurred_on || "未知" }),
+              /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("span", { className: `status ${j.quality_status === "valid" ? "succeeded" : "retrying"}`, children: j.quality_status === "valid" ? "通过" : "需核查" }) }),
               /* @__PURE__ */ s.jsxs("td", { children: [
                 "v",
-                b.current_version
+                j.current_version
               ] })
-            ] }, b.id);
+            ] }, j.id);
           }) })
         ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "没有符合条件的记录" }),
           /* @__PURE__ */ s.jsx("p", { children: "调整筛选条件，或先完成一批资料接入。" })
         ] }),
-        vt
+        Nt
       ] }),
       /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "概况统计覆盖当前身份的全部可访问项目；下方列表按所选条件筛选。所有记录保留来源身份，描述相同不会自动删除。" })
-    ] }) : v && ee ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-      /* @__PURE__ */ s.jsxs("button", { className: "text-button back", onClick: () => S("/records"), children: [
-        /* @__PURE__ */ s.jsx(kf, { size: 15 }),
+    ] }) : x && ee ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      /* @__PURE__ */ s.jsxs("button", { className: "text-button back", onClick: () => _("/records"), children: [
+        /* @__PURE__ */ s.jsx(Of, { size: 15 }),
         "返回风险数据"
       ] }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel record-heading", children: [
@@ -12304,7 +12304,7 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
           /* @__PURE__ */ s.jsxs("span", { className: "role-tag", children: [
             ws[ee.record_kind],
             " · ",
-            Tt ? "来源记录" : "模拟记录"
+            zt ? "来源记录" : "模拟记录"
           ] }),
           /* @__PURE__ */ s.jsx("h2", { children: ee.description || "缺少描述" }),
           /* @__PURE__ */ s.jsxs("p", { children: [
@@ -12315,11 +12315,11 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
         ] }),
         /* @__PURE__ */ s.jsxs("label", { children: [
           "查看版本",
-          /* @__PURE__ */ s.jsx("select", { "aria-label": "查看版本", value: ee.selected_version, onChange: (b) => ve(b.target.value), children: ee.versions.map((b) => /* @__PURE__ */ s.jsxs("option", { value: b.version, children: [
+          /* @__PURE__ */ s.jsx("select", { "aria-label": "查看版本", value: ee.selected_version, onChange: (j) => we(j.target.value), children: ee.versions.map((j) => /* @__PURE__ */ s.jsxs("option", { value: j.version, children: [
             "v",
-            b.version,
-            b.version === ee.current_version ? " · 当前" : ""
-          ] }, b.version)) })
+            j.version,
+            j.version === ee.current_version ? " · 当前" : ""
+          ] }, j.version)) })
         ] })
       ] }),
       ee.issues.length > 0 && /* @__PURE__ */ s.jsx("div", { className: "feedback error", children: ee.issues.join("；") }),
@@ -12332,20 +12332,20 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
               "个字段 · 完整保留"
             ] })
           ] }),
-          /* @__PURE__ */ s.jsx("div", { className: "field-list", children: Uf(ee.raw_fields).map(([b, we]) => /* @__PURE__ */ s.jsxs("div", { children: [
-            /* @__PURE__ */ s.jsx("dt", { children: b }),
-            /* @__PURE__ */ s.jsx("dd", { children: fu(we) })
-          ] }, b)) })
+          /* @__PURE__ */ s.jsx("div", { className: "field-list", children: qf(ee.raw_fields).map(([j, _e]) => /* @__PURE__ */ s.jsxs("div", { children: [
+            /* @__PURE__ */ s.jsx("dt", { children: j }),
+            /* @__PURE__ */ s.jsx("dd", { children: fu(_e) })
+          ] }, j)) })
         ] }),
         /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
           /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
             /* @__PURE__ */ s.jsx("h2", { children: "生效值与治理来源" }),
             /* @__PURE__ */ s.jsx("span", { children: "优先保留旧系统人工修订结果" })
           ] }),
-          /* @__PURE__ */ s.jsx("div", { className: "field-list", children: Uf(ee.effective_fields).map(([b, we]) => /* @__PURE__ */ s.jsxs("div", { children: [
-            /* @__PURE__ */ s.jsx("dt", { children: b }),
-            /* @__PURE__ */ s.jsx("dd", { children: fu(we) })
-          ] }, b)) }),
+          /* @__PURE__ */ s.jsx("div", { className: "field-list", children: qf(ee.effective_fields).map(([j, _e]) => /* @__PURE__ */ s.jsxs("div", { children: [
+            /* @__PURE__ */ s.jsx("dt", { children: j }),
+            /* @__PURE__ */ s.jsx("dd", { children: fu(_e) })
+          ] }, j)) }),
           /* @__PURE__ */ s.jsxs("details", { className: "provenance", children: [
             /* @__PURE__ */ s.jsx("summary", { children: "来源定位 / 人工修订 / 内容版本" }),
             /* @__PURE__ */ s.jsx("pre", { children: JSON.stringify(ee.provenance, null, 2) })
@@ -12364,17 +12364,17 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
           /* @__PURE__ */ s.jsx("h2", { children: "证据与图片关系" }),
           /* @__PURE__ */ s.jsx("span", { children: "确定锚点与候选关联分别标识" })
         ] }),
-        /* @__PURE__ */ s.jsx("div", { className: "evidence-grid", children: ee.evidence.map((b) => {
-          var we;
+        /* @__PURE__ */ s.jsx("div", { className: "evidence-grid", children: ee.evidence.map((j) => {
+          var _e;
           return /* @__PURE__ */ s.jsxs("article", { className: "evidence-card", children: [
             /* @__PURE__ */ s.jsxs("div", { children: [
-              /* @__PURE__ */ s.jsx("strong", { children: ws[b.type] }),
-              /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: b.relation_confidence === "anchored" ? "来源锚定" : "候选关联" })
+              /* @__PURE__ */ s.jsx("strong", { children: ws[j.type] }),
+              /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: j.relation_confidence === "anchored" ? "来源锚定" : "候选关联" })
             ] }),
-            /* @__PURE__ */ s.jsx("p", { children: JSON.stringify(b.locator) }),
-            b.type !== "source_row" && b.asset_id ? /* @__PURE__ */ s.jsx(fv, { asset: b.asset_id, identity: R }) : b.type === "source_row" ? /* @__PURE__ */ s.jsx("p", { children: "原始行定位已保留，可与上方原文核对。" }) : /* @__PURE__ */ s.jsx("div", { className: "missing-evidence", children: "附件缺失或不可用，无法预览" }),
-            b.asset_id && ((we = d.find((nt) => nt.id === ee.project_id)) == null ? void 0 : we.can_run) && /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: Te, onClick: () => void Et(b.asset_id), children: "下载对应来源文件" })
-          ] }, b.id);
+            /* @__PURE__ */ s.jsx("p", { children: JSON.stringify(j.locator) }),
+            j.type !== "source_row" && j.asset_id ? /* @__PURE__ */ s.jsx(vv, { asset: j.asset_id, identity: A }) : j.type === "source_row" ? /* @__PURE__ */ s.jsx("p", { children: "原始行定位已保留，可与上方原文核对。" }) : /* @__PURE__ */ s.jsx("div", { className: "missing-evidence", children: "附件缺失或不可用，无法预览" }),
+            j.asset_id && ((_e = d.find((it) => it.id === ee.project_id)) == null ? void 0 : _e.can_run) && /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: Re, onClick: () => void X(j.asset_id), children: "下载对应来源文件" })
+          ] }, j.id);
         }) })
       ] }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel links-section", children: [
@@ -12382,260 +12382,310 @@ function mv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
           /* @__PURE__ */ s.jsx("h2", { children: "跨来源重复候选" }),
           /* @__PURE__ */ s.jsx("span", { children: "仅同项目同类型生成候选，不自动删除原记录" })
         ] }),
-        ee.links.length ? ee.links.map((b) => {
-          var we;
+        ee.links.length ? ee.links.map((j) => {
+          var _e;
           return /* @__PURE__ */ s.jsxs("div", { className: "link-row", children: [
             /* @__PURE__ */ s.jsxs("div", { children: [
-              /* @__PURE__ */ s.jsx("strong", { children: wn[b.review_state] }),
+              /* @__PURE__ */ s.jsx("strong", { children: wn[j.review_state] }),
               /* @__PURE__ */ s.jsx("small", { children: "比较方法：同项目同类型的描述匹配；决策绑定具体版本" })
             ] }),
-            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S("/records/" + b.other_record_id), children: "打开另一条记录" }),
-            ((we = d.find((nt) => nt.id === ee.project_id)) == null ? void 0 : we.roles.some((nt) => ["admin", "reviewer"].includes(nt))) && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-              /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Te || b.review_state === "stale", onClick: () => void ce(async () => {
-                await u(`/record-links/${b.id}/confirm`, { method: "POST", body: JSON.stringify({ row_version: b.row_version, decision: "confirmed" }) }), Le((nt) => nt + 1);
+            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/records/" + j.other_record_id), children: "打开另一条记录" }),
+            ((_e = d.find((it) => it.id === ee.project_id)) == null ? void 0 : _e.roles.some((it) => ["admin", "reviewer"].includes(it))) && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+              /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Re || j.review_state === "stale", onClick: () => void oe(async () => {
+                await u(`/record-links/${j.id}/confirm`, { method: "POST", body: JSON.stringify({ row_version: j.row_version, decision: "confirmed" }) }), Be((it) => it + 1);
               }), children: "确认重复" }),
-              /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: Te || b.review_state === "stale", onClick: () => void ce(async () => {
-                await u(`/record-links/${b.id}/confirm`, { method: "POST", body: JSON.stringify({ row_version: b.row_version, decision: "rejected" }) }), Le((nt) => nt + 1);
+              /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: Re || j.review_state === "stale", onClick: () => void oe(async () => {
+                await u(`/record-links/${j.id}/confirm`, { method: "POST", body: JSON.stringify({ row_version: j.row_version, decision: "rejected" }) }), Be((it) => it + 1);
               }), children: "排除" })
             ] })
-          ] }, b.id);
+          ] }, j.id);
         }) : /* @__PURE__ */ s.jsx("p", { className: "empty-inline", children: "暂无候选。可再接入Excel或治理导出，验证跨来源比较。" })
       ] })
     ] }) : ie ? null : /* @__PURE__ */ s.jsx("div", { className: "empty", children: "请选择来源、批次或记录。" })
   ] });
 }
-const Fs = "/history-review", Vi = "/history-reader", $f = "historyReview.visibleFields", Wf = "historyReview.columnOrder", Tn = ["engineering_project_name", "inspection_date", "problem_description", "source_category", "rectification_requirement", "reported_response"], mu = ["project_name", "engineering_project_name", "inspection_date", "inspection_location", "problem_description", "source_category", "source_grade", "hazard_category", "basis_or_clause", "rectification_requirement", "rectification_advice", "rectification_deadline", "reported_response", "reinspection_conclusion"], Ff = { _actions: "操作", _source: "来源报告", _status: "状态" }, Ji = Object.keys(Ff), If = [...Tn, "_source", "_status", "_actions"], xv = { save_draft: "保存草稿", confirm: "批量确认", discard: "放弃修改", conflict: "值冲突" };
-function jv() {
+const Fs = "/history-review", zn = "/history-reader", Pf = "historyReview.visibleColumnsV2", em = "historyReview.columnOrder", tm = ["engineering_project_name", "inspection_date", "problem_description", "source_category", "rectification_requirement", "reported_response"], kn = ["_photos", "_source", "_status", "_actions"], mu = ["project_name", "engineering_project_name", "inspection_date", "inspection_location", "problem_description", "source_category", "source_grade", "hazard_category", "basis_or_clause", "rectification_requirement", "rectification_advice", "rectification_deadline", "reported_response", "reinspection_conclusion"], ku = { _actions: "操作", _photos: "照片", _source: "来源报告", _status: "状态" }, xu = Object.keys(ku), sm = [...tm, "_photos", "_source", "_status", "_actions"], $i = [...tm, "_photos", "_source", "_actions"], Hf = {
+  problem_description: 340,
+  project_name: 170,
+  engineering_project_name: 170,
+  inspection_location: 140,
+  basis_or_clause: 170,
+  rectification_requirement: 190,
+  rectification_advice: 190,
+  rectification_deadline: 110,
+  reported_response: 190,
+  reinspection_conclusion: 140,
+  inspection_date: 104,
+  source_category: 120,
+  hazard_category: 110,
+  source_grade: 90,
+  _photos: 104,
+  _source: 160,
+  _status: 92,
+  _actions: 176
+}, gv = { save_draft: "保存草稿", confirm: "批量确认", discard: "放弃修改", conflict: "值冲突" };
+function bv() {
   try {
-    const u = localStorage.getItem($f), h = u ? JSON.parse(u) : null;
-    return Array.isArray(h) && h.length ? h.filter((S) => typeof S == "string") : Tn;
+    const u = localStorage.getItem(Pf), h = u ? JSON.parse(u) : null;
+    return Array.isArray(h) && h.length ? h.filter((_) => typeof _ == "string") : $i;
   } catch {
-    return Tn;
+    return $i;
   }
 }
-function vv() {
+function yv() {
   try {
-    const u = localStorage.getItem(Wf), h = u ? JSON.parse(u) : null;
-    if (Array.isArray(h) && h.length) return h.filter((S) => typeof S == "string");
+    const u = localStorage.getItem(em), h = u ? JSON.parse(u) : null;
+    if (Array.isArray(h) && h.length) return h.filter((_) => typeof _ == "string");
   } catch {
   }
-  return If;
+  return sm;
 }
-function pv(u, h) {
-  const S = u.filter((R) => h.includes(R) || Ji.includes(R));
-  let d = S.findIndex((R) => Ji.includes(R));
-  d < 0 && (d = S.length);
-  for (const R of h)
-    S.includes(R) || (S.splice(d, 0, R), d += 1);
-  for (const R of Ji) S.includes(R) || S.push(R);
-  return S;
+function _v(u, h) {
+  const _ = u.filter((A) => h.includes(A) || xu.includes(A));
+  let d = _.findIndex((A) => xu.includes(A));
+  d < 0 && (d = _.length);
+  for (const A of h)
+    _.includes(A) || (_.splice(d, 0, A), d += 1);
+  for (const A of xu) {
+    if (_.includes(A)) continue;
+    const M = _.indexOf("_actions");
+    M >= 0 ? _.splice(M, 0, A) : _.push(A);
+  }
+  return _;
 }
-function Ft(u, h = 120) {
-  const S = (u || "").replace(/\s+/g, " ").trim();
-  return S.length > h ? S.slice(0, h) + "…" : S || "—";
+function Gt(u, h = 120) {
+  const _ = (u || "").replace(/\s+/g, " ").trim();
+  return _.length > h ? _.slice(0, h) + "…" : _ || "—";
 }
-function Sa(u, h) {
-  var S;
-  return Ff[h] || ((S = u.find((d) => d.key === h)) == null ? void 0 : S.label) || h;
+function Yl(u, h) {
+  var _;
+  return ku[h] || ((_ = u.find((d) => d.key === h)) == null ? void 0 : _.label) || h;
 }
-function Df(u, h) {
-  return u ? Object.entries(u).map(([S, d]) => `${Sa(h, S)}：${Ft(d, 30)}`).join("；") : "—";
+function Bf(u, h) {
+  return u ? Object.entries(u).map(([_, d]) => `${Yl(h, _)}：${Gt(d, 30)}`).join("；") : "—";
 }
-function Mf({ id: u }) {
-  const [h, S] = r.useState(""), [d, R] = r.useState("");
+function bu({ id: u }) {
+  const [h, _] = r.useState(""), [d, A] = r.useState("");
   return r.useEffect(() => {
-    let B = !1, V = "";
-    return Mt("/api/v1" + Vi + "/images/" + encodeURIComponent(u)).then(async (M) => {
-      if (!M.ok) throw Error("图片暂不可用");
-      return M.blob();
-    }).then((M) => {
-      V = URL.createObjectURL(M), B ? URL.revokeObjectURL(V) : S(V);
-    }).catch((M) => {
-      B || R(M.message);
+    let M = !1, V = "";
+    return Mt("/api/v1" + zn + "/images/" + encodeURIComponent(u)).then(async (z) => {
+      if (!z.ok) throw Error("图片暂不可用");
+      return z.blob();
+    }).then((z) => {
+      V = URL.createObjectURL(z), M ? URL.revokeObjectURL(V) : _(V);
+    }).catch((z) => {
+      M || A(z.message);
     }), () => {
-      B = !0, V && URL.revokeObjectURL(V);
+      M = !0, V && URL.revokeObjectURL(V);
     };
   }, [u]), d ? /* @__PURE__ */ s.jsx("p", { role: "alert", children: d }) : h ? /* @__PURE__ */ s.jsx("a", { href: h, target: "_blank", rel: "noreferrer", children: /* @__PURE__ */ s.jsx("img", { src: h, alt: "原报告关联图片，点击查看大图" }) }) : /* @__PURE__ */ s.jsx("p", { children: "读取图片…" });
 }
-function gv({ api: u }) {
-  const [h, S] = r.useState(null), [d, R] = r.useState([]), [B, V] = r.useState("findings"), [M, Q] = r.useState([]), [p, U] = r.useState([]), [K, k] = r.useState([]), [le, xe] = r.useState([]), [_e, ye] = r.useState(jv), [Ee, me] = r.useState(vv), [I, oe] = r.useState(""), [ne, D] = r.useState(""), [je, Re] = r.useState(!1), [Be, Xe] = r.useState(""), [Ge, pe] = r.useState(""), [Ke, X] = r.useState(""), [de, y] = r.useState(""), [Y, ee] = r.useState(0), [ke, m] = r.useState(!1), [H, te] = r.useState(!1), [$, ae] = r.useState([]), [Z, P] = r.useState(/* @__PURE__ */ new Set()), [Ce, ie] = r.useState(!1), [Se, st] = r.useState(null), [lt, Pe] = r.useState({}), [Oe, Te] = r.useState(null), [De, Ne] = r.useState(""), [Le, We] = r.useState(""), [Fe, Ze] = r.useState(""), [he, et] = r.useState(!0), [Ue, E] = r.useState(!1), [w, W] = r.useState(0), ve = (h == null ? void 0 : h.editable_fields) || (h == null ? void 0 : h.fields) || [], He = (h == null ? void 0 : h.fields) || ve, tt = r.useMemo(() => Ee.filter((f) => Ji.includes(f) || _e.includes(f)), [Ee, _e]);
+function Lf({ api: u, findingId: h, large: _ = !1 }) {
+  const [d, A] = r.useState(null), [M, V] = r.useState("");
+  return r.useEffect(() => {
+    let z = !1;
+    return A(null), V(""), u(zn + "/findings/" + encodeURIComponent(h)).then((Y) => {
+      z || A(Y.images);
+    }).catch((Y) => {
+      z || (V(Y.message), A([]));
+    }), () => {
+      z = !0;
+    };
+  }, [u, h]), M ? /* @__PURE__ */ s.jsx("p", { role: "alert", children: M }) : d ? d.length ? /* @__PURE__ */ s.jsx("div", { className: _ ? "history-images history-images-large" : "history-images", children: d.map((z, Y) => /* @__PURE__ */ s.jsxs("figure", { children: [
+    /* @__PURE__ */ s.jsx(bu, { id: z.id }),
+    /* @__PURE__ */ s.jsxs("figcaption", { children: [
+      Gt(z.relation, 24),
+      "｜",
+      JSON.stringify(z.locator)
+    ] })
+  ] }, z.id + ":" + Y)) }) : /* @__PURE__ */ s.jsx("p", { className: "muted", children: "该条目没有已关联的照片（无照片不代表原报告没有照片）。" }) : /* @__PURE__ */ s.jsx("p", { className: "muted", children: "读取关联照片…" });
+}
+function Nv({ api: u }) {
+  const [h, _] = r.useState(null), [d, A] = r.useState([]), [M, V] = r.useState("findings"), [z, Y] = r.useState([]), [v, U] = r.useState([]), [K, k] = r.useState([]), [le, xe] = r.useState([]), [Ne, Se] = r.useState(bv), [Te, fe] = r.useState(yv), [I, de] = r.useState(""), [ne, q] = r.useState(""), [ve, Me] = r.useState(!1), [Ye, Je] = r.useState(""), [Qe, pe] = r.useState(""), [Fe, Q] = r.useState(""), [ce, b] = r.useState(""), [G, ee] = r.useState(0), [Ee, f] = r.useState(!1), [B, te] = r.useState(!1), [W, ae] = r.useState([]), [Z, P] = r.useState(/* @__PURE__ */ new Set()), [Oe, ie] = r.useState(!1), [Ce, lt] = r.useState(null), [at, et] = r.useState({}), [Ae, Re] = r.useState(null), [qe, ke] = r.useState(""), [Be, tt] = r.useState(null), [st, rt] = r.useState(""), [je, Ke] = r.useState(""), [ze, E] = r.useState(!0), [w, $] = r.useState(!1), [we, Le] = r.useState(0), Xe = (h == null ? void 0 : h.editable_fields) || (h == null ? void 0 : h.fields) || [], ft = (h == null ? void 0 : h.fields) || Xe, L = r.useMemo(() => Te.filter((g) => Ne.includes(g)), [Te, Ne]), he = Xe.length + kn.length, re = Ne.filter((g) => Xe.some((X) => X.key === g) || kn.includes(g)).length;
   r.useEffect(() => {
-    if (!Oe || Se) return;
-    const f = document.body.style.overflow;
+    if ((!Ae || Ce) && !Be) return;
+    const g = document.body.style.overflow;
     document.body.style.overflow = "hidden";
-    const G = (x) => {
-      x.key === "Escape" && Te(null);
+    const X = (me) => {
+      me.key === "Escape" && (Re(null), tt(null));
     };
-    return window.addEventListener("keydown", G), () => {
-      document.body.style.overflow = f, window.removeEventListener("keydown", G);
+    return window.addEventListener("keydown", X), () => {
+      document.body.style.overflow = g, window.removeEventListener("keydown", X);
     };
-  }, [Oe, Se]), r.useEffect(() => {
-    let f = !1;
-    return et(!0), Ze(""), Promise.all([
+  }, [Ae, Ce, Be]), r.useEffect(() => {
+    let g = !1;
+    return E(!0), Ke(""), Promise.all([
       u(Fs + "/summary"),
       u(Fs + "/projects?limit=800"),
       u(Fs + "/drafts?limit=100")
-    ]).then(([G, x, ce]) => {
-      f || (S(G), R(x.items), k(ce.items), ye((qe) => {
-        const vt = new Set(G.editable_fields.map((Et) => Et.key)), Rt = qe.filter((Et) => vt.has(Et));
-        return Rt.length ? Rt : Tn.filter((Et) => vt.has(Et));
-      }), me((qe) => pv(qe, G.editable_fields.map((vt) => vt.key))));
-    }).catch((G) => {
-      f || Ze(G.message);
+    ]).then(([X, me, nt]) => {
+      g || (_(X), A(me.items), k(nt.items), Se((j) => {
+        const _e = /* @__PURE__ */ new Set([...X.editable_fields.map((jt) => jt.key), ...kn]), it = j.filter((jt) => _e.has(jt));
+        return it.length ? it : $i.filter((jt) => _e.has(jt));
+      }), fe((j) => _v(j, X.editable_fields.map((_e) => _e.key))));
+    }).catch((X) => {
+      g || Ke(X.message);
     }).finally(() => {
-      f || et(!1);
+      g || E(!1);
     }), () => {
-      f = !0;
+      g = !0;
     };
-  }, [u, w]), r.useEffect(() => {
-    if (B !== "findings") return;
-    let f = !1;
-    return et(!0), Ze(""), u(Fs + "/findings?" + new URLSearchParams({
-      q: de,
-      project: Be,
-      document_id: Ge,
-      offset: String(Y),
+  }, [u, we]), r.useEffect(() => {
+    if (M !== "findings") return;
+    let g = !1;
+    return E(!0), Ke(""), u(Fs + "/findings?" + new URLSearchParams({
+      q: ce,
+      project: Ye,
+      document_id: Qe,
+      offset: String(G),
       limit: "30"
-    })).then((G) => {
-      f || (Q(H ? G.items.filter((x) => x.draft_id) : G.items), m(G.has_more));
-    }).catch((G) => {
-      f || Ze(G.message);
+    })).then((X) => {
+      g || (Y(B ? X.items.filter((me) => me.draft_id) : X.items), f(X.has_more));
+    }).catch((X) => {
+      g || Ke(X.message);
     }).finally(() => {
-      f || et(!1);
+      g || E(!1);
     }), () => {
-      f = !0;
+      g = !0;
     };
-  }, [u, B, de, Be, Ge, Y, H, w]), r.useEffect(() => {
-    if (B !== "reports") return;
-    let f = !1;
-    return et(!0), Ze(""), u(Fs + "/reports?" + new URLSearchParams({ q: de, project: Be, offset: "0", limit: "100" })).then((G) => {
-      f || (U(G.items), m(!1));
-    }).catch((G) => {
-      f || Ze(G.message);
+  }, [u, M, ce, Ye, Qe, G, B, we]), r.useEffect(() => {
+    if (M !== "reports") return;
+    let g = !1;
+    return E(!0), Ke(""), u(Fs + "/reports?" + new URLSearchParams({ q: ce, project: Ye, offset: "0", limit: "100" })).then((X) => {
+      g || (U(X.items), f(!1));
+    }).catch((X) => {
+      g || Ke(X.message);
     }).finally(() => {
-      f || et(!1);
+      g || E(!1);
     }), () => {
-      f = !0;
+      g = !0;
     };
-  }, [u, B, de, Be, w]), r.useEffect(() => {
-    if (B !== "logs") return;
-    let f = !1;
-    return et(!0), Ze(""), u(Fs + "/logs?limit=100").then((G) => {
-      f || xe(G.items);
-    }).catch((G) => {
-      f || Ze(G.message);
+  }, [u, M, ce, Ye, we]), r.useEffect(() => {
+    if (M !== "logs") return;
+    let g = !1;
+    return E(!0), Ke(""), u(Fs + "/logs?limit=100").then((X) => {
+      g || xe(X.items);
+    }).catch((X) => {
+      g || Ke(X.message);
     }).finally(() => {
-      f || et(!1);
+      g || E(!1);
     }), () => {
-      f = !0;
+      g = !0;
     };
-  }, [u, B, w]), r.useEffect(() => {
-    Ce && P(new Set(M.map((f) => f.id)));
-  }, [M, Ce]);
-  function dt(f) {
-    ye(f);
+  }, [u, M, we]), r.useEffect(() => {
+    Oe && P(new Set(z.map((g) => g.id)));
+  }, [z, Oe]);
+  function $e(g) {
+    Se(g);
     try {
-      localStorage.setItem($f, JSON.stringify(f));
+      localStorage.setItem(Pf, JSON.stringify(g));
     } catch {
     }
   }
-  function L(f) {
-    me(f);
+  function y(g) {
+    $e(Ne.filter((X) => X !== g));
+  }
+  function ye(g, X) {
+    const me = X ? [...Ne, g] : Ne.filter((nt) => nt !== g);
+    $e(me);
+  }
+  function ge(g) {
+    fe(g);
     try {
-      localStorage.setItem(Wf, JSON.stringify(f));
+      localStorage.setItem(em, JSON.stringify(g));
     } catch {
     }
   }
-  function fe(f, G) {
-    if (!f || !G || f === G) return;
-    const x = Ee.filter((qe) => qe !== f), ce = x.indexOf(G);
-    x.splice(ce < 0 ? x.length : ce, 0, f), L(x);
+  function Ze(g, X) {
+    if (!g || !X || g === X) return;
+    const me = Te.filter((j) => j !== g), nt = me.indexOf(X);
+    me.splice(nt < 0 ? me.length : nt, 0, g), ge(me);
   }
-  function re(f) {
-    P((G) => {
-      const x = new Set(G);
-      return x.has(f) ? x.delete(f) : x.add(f), x;
+  function pt(g) {
+    P((X) => {
+      const me = new Set(X);
+      return me.has(g) ? me.delete(g) : me.add(g), me;
     });
   }
-  function Ve() {
-    Ce ? (ie(!1), P(/* @__PURE__ */ new Set())) : (ie(!0), P(new Set(M.map((f) => f.id))));
+  function D() {
+    Oe ? (ie(!1), P(/* @__PURE__ */ new Set())) : (ie(!0), P(new Set(z.map((g) => g.id))));
   }
-  function _(f) {
-    st(f);
-    const G = {};
-    for (const x of mu) G[x] = f[x] || "";
-    Pe(G), We(""), Te(null), Ne("");
+  function x(g) {
+    lt(g);
+    const X = {};
+    for (const me of mu) X[me] = g[me] || "";
+    et(X), rt(""), Re(null), ke("");
   }
-  async function be() {
-    if (!Se) return;
-    const f = {};
-    for (const G of mu) {
-      const x = Se[G] || "";
-      lt[G] !== x && (f[G] = lt[G] || null);
+  async function ue() {
+    if (!Ce) return;
+    const g = {};
+    for (const X of mu) {
+      const me = Ce[X] || "";
+      at[X] !== me && (g[X] = at[X] || null);
     }
-    if (!Object.keys(f).length) {
-      We("没有修改任何字段。");
+    if (!Object.keys(g).length) {
+      rt("没有修改任何字段。");
       return;
     }
-    E(!0), Ze("");
+    $(!0), Ke("");
     try {
-      await u(Fs + "/drafts", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ finding_id: Se.id, changes: f }) }), We(`已保存草稿（${Object.keys(f).map((G) => Sa(ve, G)).join("、")}），批量确认后覆盖数据库。`), st(null), W((G) => G + 1);
-    } catch (G) {
-      Ze(G.message);
+      await u(Fs + "/drafts", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ finding_id: Ce.id, changes: g }) }), rt(`已保存草稿（${Object.keys(g).map((X) => Yl(Xe, X)).join("、")}），批量确认后覆盖数据库。`), lt(null), Le((X) => X + 1);
+    } catch (X) {
+      Ke(X.message);
     } finally {
-      E(!1);
+      $(!1);
     }
   }
-  async function ge(f) {
-    if (!f.length) {
-      We("请先勾选要确认的修改。");
+  async function be(g) {
+    if (!g.length) {
+      rt("请先勾选要确认的修改。");
       return;
     }
-    if (window.confirm(`确认将 ${f.length} 条修改直接覆盖数据库中的对应数据？该操作会写入修改日志。`)) {
-      E(!0), Ze(""), We("");
+    if (window.confirm(`确认将 ${g.length} 条修改直接覆盖数据库中的对应数据？该操作会写入修改日志。`)) {
+      $(!0), Ke(""), rt("");
       try {
-        const G = await u(Fs + "/drafts/confirm", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ids: f }) });
-        We(`已确认写入 ${G.applied.length} 条${G.conflicts.length ? `；${G.conflicts.length} 条存在值冲突` : ""}。`), ae([]), W((x) => x + 1);
-      } catch (G) {
-        Ze(G.message);
+        const X = await u(Fs + "/drafts/confirm", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ids: g }) });
+        rt(`已确认写入 ${X.applied.length} 条${X.conflicts.length ? `；${X.conflicts.length} 条存在值冲突` : ""}。`), ae([]), Le((me) => me + 1);
+      } catch (X) {
+        Ke(X.message);
       } finally {
-        E(!1);
+        $(!1);
       }
     }
   }
-  async function Qe(f) {
-    if (f.length) {
-      E(!0), Ze("");
+  async function ut(g) {
+    if (g.length) {
+      $(!0), Ke("");
       try {
-        await u(Fs + "/drafts/discard", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ids: f }) }), ae([]), W((G) => G + 1);
-      } catch (G) {
-        Ze(G.message);
+        await u(Fs + "/drafts/discard", { method: "POST", headers: { "content-type": "application/json" }, body: JSON.stringify({ ids: g }) }), ae([]), Le((X) => X + 1);
+      } catch (X) {
+        Ke(X.message);
       } finally {
-        E(!1);
+        $(!1);
       }
     }
   }
-  async function xt(f) {
-    Te(null), Ne("");
+  async function N(g) {
+    Re(null), ke("");
     try {
-      const G = await u(Vi + "/findings/" + encodeURIComponent(f.id));
-      Te(G);
-    } catch (G) {
-      Ne(G.message);
+      const X = await u(zn + "/findings/" + encodeURIComponent(g.id));
+      Re(X);
+    } catch (X) {
+      ke(X.message);
     }
   }
-  async function z(f) {
-    if (Oe)
+  async function oe(g) {
+    if (Ae)
       try {
-        const G = f || Oe, x = await Mt("/api/v1" + Vi + "/documents/" + encodeURIComponent(G.document_id) + "/original");
-        if (!x.ok) throw Error("原件暂不可用，请稍后重试。");
-        const ce = URL.createObjectURL(await x.blob()), qe = document.createElement("a");
-        qe.href = ce, qe.download = G.original_name, qe.click(), setTimeout(() => URL.revokeObjectURL(ce), 1e3);
-      } catch (G) {
-        Ne(G.message);
+        const X = g || Ae, me = await Mt("/api/v1" + zn + "/documents/" + encodeURIComponent(X.document_id) + "/original");
+        if (!me.ok) throw Error("原件暂不可用，请稍后重试。");
+        const nt = URL.createObjectURL(await me.blob()), j = document.createElement("a");
+        j.href = nt, j.download = X.original_name, j.click(), setTimeout(() => URL.revokeObjectURL(nt), 1e3);
+      } catch (X) {
+        ke(X.message);
       }
   }
-  const v = r.useMemo(() => p, [p]), ue = r.useMemo(() => K.map((f) => f.id), [K]);
+  const Ve = r.useMemo(() => v, [v]), Nt = r.useMemo(() => K.map((g) => g.id), [K]);
   return /* @__PURE__ */ s.jsxs("div", { className: "risk-data", children: [
     /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
@@ -12646,7 +12696,7 @@ function gv({ api: u }) {
           ] }),
           /* @__PURE__ */ s.jsx("p", { children: "历史报告解析成果与人工核验修改入口。" })
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: he, onClick: () => W((f) => f + 1), children: "刷新数据" })
+        /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: ze, onClick: () => Le((g) => g + 1), children: "刷新数据" })
       ] }),
       /* @__PURE__ */ s.jsx("p", { children: (h == null ? void 0 : h.notice) || "正在读取历史报告数据…" }),
       /* @__PURE__ */ s.jsxs("div", { className: "history-stats", children: [
@@ -12667,72 +12717,77 @@ function gv({ api: u }) {
           /* @__PURE__ */ s.jsx("b", { children: (h == null ? void 0 : h.pending_drafts) ?? "—" })
         ] })
       ] }),
-      Fe && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
-        Fe,
-        /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => W((f) => f + 1), children: "重试" })
+      je && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
+        je,
+        /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => Le((g) => g + 1), children: "重试" })
       ] }),
-      Le && /* @__PURE__ */ s.jsx("p", { role: "status", className: "history-message", children: Le }),
-      /* @__PURE__ */ s.jsx("nav", { "aria-label": "历史报告视图", className: "history-tabs", children: [["findings", "问题条目"], ["reports", "历史报告"], ["logs", "修改日志"]].map(([f, G]) => /* @__PURE__ */ s.jsx("button", { className: B === f ? "button primary" : "button ghost", onClick: () => {
-        V(f), ee(0);
-      }, children: G }, f)) })
+      st && /* @__PURE__ */ s.jsx("p", { role: "status", className: "history-message", children: st }),
+      /* @__PURE__ */ s.jsx("nav", { "aria-label": "历史报告视图", className: "history-tabs", children: [["findings", "问题条目"], ["reports", "历史报告"], ["logs", "修改日志"]].map(([g, X]) => /* @__PURE__ */ s.jsx("button", { className: M === g ? "button primary" : "button ghost", onClick: () => {
+        V(g), ee(0);
+      }, children: X }, g)) })
     ] }),
     /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "history-toolbar", children: [
-        /* @__PURE__ */ s.jsxs("form", { className: "history-search", onSubmit: (f) => {
-          f.preventDefault(), y(Ke.trim()), ee(0);
+        /* @__PURE__ */ s.jsxs("form", { className: "history-search", onSubmit: (g) => {
+          g.preventDefault(), b(Fe.trim()), ee(0);
         }, children: [
           /* @__PURE__ */ s.jsx("label", { htmlFor: "history-query", children: "搜索" }),
           /* @__PURE__ */ s.jsxs("div", { children: [
-            /* @__PURE__ */ s.jsx("input", { id: "history-query", value: Ke, onChange: (f) => X(f.target.value), maxLength: 100, placeholder: B === "reports" ? "报告名称或项目" : "问题描述、项目或报告" }),
-            /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: he, children: "搜索" })
+            /* @__PURE__ */ s.jsx("input", { id: "history-query", value: Fe, onChange: (g) => Q(g.target.value), maxLength: 100, placeholder: M === "reports" ? "报告名称或项目" : "问题描述、项目或报告" }),
+            /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: ze, children: "搜索" })
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("label", { className: "history-inline", children: [
           "项目筛选",
-          /* @__PURE__ */ s.jsxs("select", { value: Be, onChange: (f) => {
-            Xe(f.target.value), ee(0);
+          /* @__PURE__ */ s.jsxs("select", { value: Ye, onChange: (g) => {
+            Je(g.target.value), ee(0);
           }, children: [
             /* @__PURE__ */ s.jsxs("option", { value: "", children: [
               "全部项目（",
               (h == null ? void 0 : h.projects) ?? "—",
               "）"
             ] }),
-            d.map((f) => /* @__PURE__ */ s.jsxs("option", { value: f.name, children: [
-              f.name,
+            d.map((g) => /* @__PURE__ */ s.jsxs("option", { value: g.name, children: [
+              g.name,
               "（",
-              f.findings,
+              g.findings,
               "）"
-            ] }, f.name))
+            ] }, g.name))
           ] })
         ] }),
-        Ge && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => {
+        Qe && /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => {
           pe(""), ee(0);
         }, children: "清除报告筛选" }),
-        B === "findings" && /* @__PURE__ */ s.jsxs("label", { className: "history-inline", children: [
-          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: H, onChange: (f) => te(f.target.checked) }),
+        M === "findings" && /* @__PURE__ */ s.jsxs("label", { className: "history-inline", children: [
+          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: B, onChange: (g) => te(g.target.checked) }),
           "只看待确认修改"
         ] }),
-        B === "findings" && /* @__PURE__ */ s.jsxs("button", { className: "button secondary", onClick: () => Re((f) => !f), children: [
+        M === "findings" && /* @__PURE__ */ s.jsxs("button", { className: "button secondary", onClick: () => Me((g) => !g), children: [
           "显示字段（",
-          _e.length,
+          re,
           "/",
-          ve.length,
+          he,
           "）"
         ] }),
-        B === "findings" && /* @__PURE__ */ s.jsx("button", { className: Ce ? "button primary" : "button secondary", onClick: Ve, children: Ce ? "收起全部字段" : "展开全部字段" })
+        M === "findings" && /* @__PURE__ */ s.jsx("button", { className: Oe ? "button primary" : "button secondary", onClick: D, children: Oe ? "收起全部字段" : "展开全部字段" })
       ] }),
-      je && B === "findings" && /* @__PURE__ */ s.jsxs("div", { className: "history-fieldpicker", role: "group", "aria-label": "选择显示字段", children: [
-        ve.map((f) => /* @__PURE__ */ s.jsxs("label", { children: [
-          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: _e.includes(f.key), onChange: (G) => dt(G.target.checked ? [..._e, f.key] : _e.filter((x) => x !== f.key)) }),
-          f.label
-        ] }, f.key)),
-        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => dt(Tn.filter((f) => ve.some((G) => G.key === f))), children: "恢复默认" }),
-        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => L(If), children: "恢复列顺序" })
+      ve && M === "findings" && /* @__PURE__ */ s.jsxs("div", { className: "history-fieldpicker", role: "group", "aria-label": "选择显示字段", children: [
+        Xe.map((g) => /* @__PURE__ */ s.jsxs("label", { children: [
+          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Ne.includes(g.key), onChange: (X) => ye(g.key, X.target.checked) }),
+          g.label
+        ] }, g.key)),
+        /* @__PURE__ */ s.jsx("span", { className: "history-fieldsep", children: "其他列" }),
+        kn.map((g) => /* @__PURE__ */ s.jsxs("label", { children: [
+          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Ne.includes(g), onChange: (X) => ye(g, X.target.checked) }),
+          ku[g]
+        ] }, g)),
+        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => $e($i.filter((g) => Xe.some((X) => X.key === g) || kn.includes(g))), children: "恢复默认" }),
+        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => ge(sm), children: "恢复列顺序" })
       ] }),
-      B === "findings" && /* @__PURE__ */ s.jsx("p", { className: "muted history-drag-tip", children: "提示：拖动表头可调整列顺序（列为“操作”默认在最后）；点击任意行可展开该条的全部字段。" })
+      M === "findings" && /* @__PURE__ */ s.jsx("p", { className: "muted history-drag-tip", children: "提示：拖动表头调整列顺序；点击表头右侧 × 可隐藏该列（全部列均可隐藏，在“显示字段”中恢复）；点击任意行展开该条全部字段与关联照片。" })
     ] }),
     /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
-      B === "findings" && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      M === "findings" && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         K.length > 0 && /* @__PURE__ */ s.jsxs("div", { className: "history-drafts", children: [
           /* @__PURE__ */ s.jsxs("div", { className: "history-drafts-head", children: [
             /* @__PURE__ */ s.jsxs("h3", { children: [
@@ -12741,13 +12796,13 @@ function gv({ api: u }) {
               "）"
             ] }),
             /* @__PURE__ */ s.jsxs("div", { children: [
-              /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Ue, onClick: () => ae($.length === ue.length ? [] : ue), children: $.length === ue.length ? "全不选" : "全选" }),
-              /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Ue || !$.length, onClick: () => void ge($), children: [
+              /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: w, onClick: () => ae(W.length === Nt.length ? [] : Nt), children: W.length === Nt.length ? "全不选" : "全选" }),
+              /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: w || !W.length, onClick: () => void be(W), children: [
                 "批量确认所选（",
-                $.length,
+                W.length,
                 "）"
               ] }),
-              /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: Ue || !$.length, onClick: () => void Qe($), children: "放弃所选" })
+              /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: w || !W.length, onClick: () => void ut(W), children: "放弃所选" })
             ] })
           ] }),
           /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
@@ -12758,84 +12813,107 @@ function gv({ api: u }) {
               /* @__PURE__ */ s.jsx("th", { children: "修改内容" }),
               /* @__PURE__ */ s.jsx("th", { children: "更新时间" })
             ] }) }),
-            /* @__PURE__ */ s.jsx("tbody", { children: K.map((f) => /* @__PURE__ */ s.jsxs("tr", { children: [
-              /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: $.includes(f.id), onChange: (G) => ae(G.target.checked ? [...$, f.id] : $.filter((x) => x !== f.id)) }) }),
-              /* @__PURE__ */ s.jsx("td", { children: Ft(f.original_name, 24) }),
-              /* @__PURE__ */ s.jsx("td", { className: "history-description", children: Ft(f.current_problem_description, 100) }),
-              /* @__PURE__ */ s.jsx("td", { children: Df(f.changes, ve) }),
-              /* @__PURE__ */ s.jsx("td", { children: f.updated_at ? new Date(f.updated_at).toLocaleString("zh-CN") : "—" })
-            ] }, f.id)) })
+            /* @__PURE__ */ s.jsx("tbody", { children: K.map((g) => /* @__PURE__ */ s.jsxs("tr", { children: [
+              /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: W.includes(g.id), onChange: (X) => ae(X.target.checked ? [...W, g.id] : W.filter((me) => me !== g.id)) }) }),
+              /* @__PURE__ */ s.jsx("td", { children: Gt(g.original_name, 24) }),
+              /* @__PURE__ */ s.jsx("td", { className: "history-description", children: Gt(g.current_problem_description, 100) }),
+              /* @__PURE__ */ s.jsx("td", { children: Bf(g.changes, Xe) }),
+              /* @__PURE__ */ s.jsx("td", { children: g.updated_at ? new Date(g.updated_at).toLocaleString("zh-CN") : "—" })
+            ] }, g.id)) })
           ] }) })
         ] }),
-        /* @__PURE__ */ s.jsx("div", { className: "table-wrap", "aria-busy": he, children: /* @__PURE__ */ s.jsxs("table", { children: [
-          /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsx("tr", { children: tt.map((f) => /* @__PURE__ */ s.jsxs(
+        /* @__PURE__ */ s.jsx("div", { className: "table-wrap", "aria-busy": ze, children: /* @__PURE__ */ s.jsxs("table", { className: "history-table", children: [
+          /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsx("tr", { children: L.map((g) => /* @__PURE__ */ s.jsx(
             "th",
             {
               draggable: !0,
-              className: "history-col-head" + (I === f ? " history-col-dragging" : "") + (ne === f ? " history-col-dragover" : ""),
+              style: { width: Hf[g], minWidth: Hf[g] },
+              className: "history-col-head" + (I === g ? " history-col-dragging" : "") + (ne === g ? " history-col-dragover" : ""),
               title: "拖动调整列顺序",
-              onDragStart: (G) => {
-                oe(f), G.dataTransfer.effectAllowed = "move", G.dataTransfer.setData("text/plain", f);
+              onDragStart: (X) => {
+                de(g), X.dataTransfer.effectAllowed = "move", X.dataTransfer.setData("text/plain", g);
               },
-              onDragOver: (G) => {
-                G.preventDefault(), G.dataTransfer.dropEffect = "move", ne !== f && D(f);
+              onDragOver: (X) => {
+                X.preventDefault(), X.dataTransfer.dropEffect = "move", ne !== g && q(g);
               },
-              onDragLeave: () => D(""),
-              onDrop: (G) => {
-                G.preventDefault(), fe(I || G.dataTransfer.getData("text/plain"), f), oe(""), D("");
+              onDragLeave: () => q(""),
+              onDrop: (X) => {
+                X.preventDefault(), Ze(I || X.dataTransfer.getData("text/plain"), g), de(""), q("");
               },
               onDragEnd: () => {
-                oe(""), D("");
+                de(""), q("");
               },
-              children: [
-                Sa(ve, f),
+              children: /* @__PURE__ */ s.jsxs("span", { className: "history-th", children: [
+                /* @__PURE__ */ s.jsx("span", { className: "history-th-label", children: Yl(Xe, g) }),
+                /* @__PURE__ */ s.jsx("button", { type: "button", className: "history-col-hide", title: "点击隐藏该列（可在“显示字段”中恢复）", "aria-label": `隐藏${Yl(Xe, g)}列`, draggable: !1, onMouseDown: (X) => X.stopPropagation(), onDragStart: (X) => X.preventDefault(), onClick: (X) => {
+                  X.stopPropagation(), y(g);
+                }, children: "×" }),
                 /* @__PURE__ */ s.jsx("span", { className: "history-drag-mark", "aria-hidden": "true", children: "⋮⋮" })
-              ]
+              ] })
             },
-            f
+            g
           )) }) }),
           /* @__PURE__ */ s.jsxs("tbody", { children: [
-            M.map((f) => {
-              const G = Z.has(f.id);
+            z.map((g) => {
+              const X = Z.has(g.id);
               return /* @__PURE__ */ s.jsxs(r.Fragment, { children: [
-                /* @__PURE__ */ s.jsx("tr", { className: (f.draft_id ? "history-dirty" : "") + " history-row", onClick: (x) => {
-                  x.target.closest("button, a, input, textarea, select, summary") || re(f.id);
-                }, children: tt.map((x) => x === "_actions" ? /* @__PURE__ */ s.jsxs("td", { className: "history-actions", children: [
-                  /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => _(f), children: "编辑" }),
-                  /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => void xt(f), children: "证据" }),
-                  /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => re(f.id), children: G ? "收起" : "展开" })
-                ] }, x) : x === "_source" ? /* @__PURE__ */ s.jsx("td", { children: Ft(f.original_name, 24) }, x) : x === "_status" ? /* @__PURE__ */ s.jsx("td", { children: f.draft_id ? /* @__PURE__ */ s.jsx("span", { className: "history-badge", children: "待确认" }) : Ft(f.review_state, 14) }, x) : /* @__PURE__ */ s.jsx("td", { className: x === "problem_description" ? "history-description" : "", children: Ft(f[x], x === "problem_description" ? 220 : 80) }, x)) }),
-                G && /* @__PURE__ */ s.jsx("tr", { className: "history-expanded", children: /* @__PURE__ */ s.jsxs("td", { colSpan: tt.length, children: [
-                  /* @__PURE__ */ s.jsx("dl", { className: "history-fields history-fields-all", children: ve.map((x) => /* @__PURE__ */ s.jsxs("div", { children: [
-                    /* @__PURE__ */ s.jsx("dt", { children: x.label }),
-                    /* @__PURE__ */ s.jsx("dd", { children: f[x.key] || "—" })
-                  ] }, x.key)) }),
+                /* @__PURE__ */ s.jsx("tr", { className: (g.draft_id ? "history-dirty" : "") + " history-row", onClick: (me) => {
+                  me.target.closest("button, a, input, textarea, select, summary") || pt(g.id);
+                }, children: L.map((me) => {
+                  if (me === "_actions") return /* @__PURE__ */ s.jsxs("td", { className: "history-actions", children: [
+                    /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => x(g), children: "编辑" }),
+                    /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => void N(g), children: "证据" }),
+                    /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => pt(g.id), children: X ? "收起" : "展开" })
+                  ] }, me);
+                  if (me === "_photos") return /* @__PURE__ */ s.jsx("td", { className: "history-cell history-cell-nowrap", children: g.image_count ? /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => tt(g), children: [
+                    "查看 ",
+                    g.image_count,
+                    " 张"
+                  ] }) : /* @__PURE__ */ s.jsx("span", { className: "muted", children: "—" }) }, me);
+                  if (me === "_source") return /* @__PURE__ */ s.jsx("td", { className: "history-cell history-cell-nowrap", title: g.original_name || "", children: Gt(g.original_name, 22) }, me);
+                  if (me === "_status") return /* @__PURE__ */ s.jsx("td", { className: "history-cell history-cell-nowrap", children: g.draft_id ? /* @__PURE__ */ s.jsx("span", { className: "history-badge", children: "待确认" }) : Gt(g.review_state, 14) }, me);
+                  const nt = g[me], j = me === "problem_description", _e = ["project_name", "engineering_project_name", "inspection_date", "inspection_location", "source_category", "source_grade", "hazard_category"].includes(me);
+                  return /* @__PURE__ */ s.jsx("td", { title: nt || "", className: j ? "history-cell history-cell-clamp" : _e ? "history-cell history-cell-nowrap" : "history-cell", children: j ? nt || "—" : Gt(nt, 80) }, me);
+                }) }),
+                X && /* @__PURE__ */ s.jsx("tr", { className: "history-expanded", children: /* @__PURE__ */ s.jsxs("td", { colSpan: L.length, children: [
+                  /* @__PURE__ */ s.jsx("dl", { className: "history-fields history-fields-all", children: Xe.map((me) => /* @__PURE__ */ s.jsxs("div", { children: [
+                    /* @__PURE__ */ s.jsx("dt", { children: me.label }),
+                    /* @__PURE__ */ s.jsx("dd", { children: g[me.key] || "—" })
+                  ] }, me.key)) }),
                   /* @__PURE__ */ s.jsxs("p", { className: "muted", children: [
                     "来源报告：",
-                    Ft(f.original_name, 100),
+                    Gt(g.original_name, 100),
                     "｜状态：",
-                    Ft(f.review_state, 20),
-                    f.draft_id ? "｜有待确认修改" : ""
+                    Gt(g.review_state, 20),
+                    g.draft_id ? "｜有待确认修改" : ""
+                  ] }),
+                  /* @__PURE__ */ s.jsxs("div", { className: "history-expanded-photos", children: [
+                    /* @__PURE__ */ s.jsxs("h4", { children: [
+                      "关联照片（",
+                      g.image_count ?? 0,
+                      "）"
+                    ] }),
+                    /* @__PURE__ */ s.jsx(Lf, { api: u, findingId: g.id })
                   ] })
                 ] }) })
-              ] }, f.id);
+              ] }, g.id);
             }),
-            !M.length && !he && !Fe && /* @__PURE__ */ s.jsx("tr", { children: /* @__PURE__ */ s.jsx("td", { colSpan: tt.length, children: "没有匹配的问题条目。" }) })
+            !z.length && !ze && !je && /* @__PURE__ */ s.jsx("tr", { children: /* @__PURE__ */ s.jsx("td", { colSpan: L.length, children: "没有匹配的问题条目。" }) })
           ] })
         ] }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "history-pagination", children: [
-          /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Y === 0, onClick: () => ee(Math.max(0, Y - 30)), children: "上一页" }),
+          /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: G === 0, onClick: () => ee(Math.max(0, G - 30)), children: "上一页" }),
           /* @__PURE__ */ s.jsxs("span", { children: [
             "第 ",
-            Y / 30 + 1,
+            G / 30 + 1,
             " 页 · 本页 ",
-            M.length,
+            z.length,
             " 条"
           ] }),
-          /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: !ke, onClick: () => ee(Y + 30), children: "下一页" })
+          /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: !Ee, onClick: () => ee(G + 30), children: "下一页" })
         ] })
       ] }),
-      B === "reports" && /* @__PURE__ */ s.jsx("div", { className: "table-wrap", "aria-busy": he, children: /* @__PURE__ */ s.jsxs("table", { children: [
+      M === "reports" && /* @__PURE__ */ s.jsx("div", { className: "table-wrap", "aria-busy": ze, children: /* @__PURE__ */ s.jsxs("table", { className: "history-table", children: [
         /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsxs("tr", { children: [
           /* @__PURE__ */ s.jsx("th", { children: "历史报告" }),
           /* @__PURE__ */ s.jsx("th", { children: "项目" }),
@@ -12844,28 +12922,28 @@ function gv({ api: u }) {
           /* @__PURE__ */ s.jsx("th", { children: "操作" })
         ] }) }),
         /* @__PURE__ */ s.jsxs("tbody", { children: [
-          v.map((f) => /* @__PURE__ */ s.jsxs("tr", { children: [
-            /* @__PURE__ */ s.jsx("td", { children: Ft(f.original_name, 60) }),
-            /* @__PURE__ */ s.jsx("td", { children: Ft(f.project_name, 30) }),
-            /* @__PURE__ */ s.jsx("td", { children: Ft(f.inspection_date, 20) }),
-            /* @__PURE__ */ s.jsx("td", { children: f.findings }),
+          Ve.map((g) => /* @__PURE__ */ s.jsxs("tr", { children: [
+            /* @__PURE__ */ s.jsx("td", { children: Gt(g.original_name, 60) }),
+            /* @__PURE__ */ s.jsx("td", { children: Gt(g.project_name, 30) }),
+            /* @__PURE__ */ s.jsx("td", { children: Gt(g.inspection_date, 20) }),
+            /* @__PURE__ */ s.jsx("td", { children: g.findings }),
             /* @__PURE__ */ s.jsxs("td", { className: "history-actions", children: [
               /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => {
-                pe(f.document_id), V("findings"), ee(0);
+                pe(g.document_id), V("findings"), ee(0);
               }, children: "查看问题" }),
               /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => {
-                Mt("/api/v1" + Vi + "/documents/" + encodeURIComponent(f.document_id) + "/original").then(async (G) => {
-                  if (!G.ok) throw Error("原件暂不可用");
-                  const x = URL.createObjectURL(await G.blob()), ce = document.createElement("a");
-                  ce.href = x, ce.download = f.original_name, ce.click(), setTimeout(() => URL.revokeObjectURL(x), 1e3);
-                }).catch((G) => Ze(G.message));
+                Mt("/api/v1" + zn + "/documents/" + encodeURIComponent(g.document_id) + "/original").then(async (X) => {
+                  if (!X.ok) throw Error("原件暂不可用");
+                  const me = URL.createObjectURL(await X.blob()), nt = document.createElement("a");
+                  nt.href = me, nt.download = g.original_name, nt.click(), setTimeout(() => URL.revokeObjectURL(me), 1e3);
+                }).catch((X) => Ke(X.message));
               }, children: "原件" })
             ] })
-          ] }, f.document_id)),
-          !v.length && !he && !Fe && /* @__PURE__ */ s.jsx("tr", { children: /* @__PURE__ */ s.jsx("td", { colSpan: 5, children: "没有匹配的历史报告。" }) })
+          ] }, g.document_id)),
+          !Ve.length && !ze && !je && /* @__PURE__ */ s.jsx("tr", { children: /* @__PURE__ */ s.jsx("td", { colSpan: 5, children: "没有匹配的历史报告。" }) })
         ] })
       ] }) }),
-      B === "logs" && /* @__PURE__ */ s.jsx("div", { className: "table-wrap", "aria-busy": he, children: /* @__PURE__ */ s.jsxs("table", { children: [
+      M === "logs" && /* @__PURE__ */ s.jsx("div", { className: "table-wrap", "aria-busy": ze, children: /* @__PURE__ */ s.jsxs("table", { className: "history-table", children: [
         /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsxs("tr", { children: [
           /* @__PURE__ */ s.jsx("th", { children: "时间" }),
           /* @__PURE__ */ s.jsx("th", { children: "操作" }),
@@ -12874,225 +12952,240 @@ function gv({ api: u }) {
           /* @__PURE__ */ s.jsx("th", { children: "操作人" })
         ] }) }),
         /* @__PURE__ */ s.jsxs("tbody", { children: [
-          le.map((f) => /* @__PURE__ */ s.jsxs("tr", { children: [
-            /* @__PURE__ */ s.jsx("td", { children: new Date(f.created_at).toLocaleString("zh-CN") }),
-            /* @__PURE__ */ s.jsx("td", { children: xv[f.action] || f.action }),
-            /* @__PURE__ */ s.jsx("td", { children: Ft(f.original_name, 28) || Ft(f.document_id, 8) }),
-            /* @__PURE__ */ s.jsx("td", { children: Df(f.changes, ve) }),
-            /* @__PURE__ */ s.jsx("td", { children: Ft(f.actor, 30) })
-          ] }, f.id)),
-          !le.length && !he && !Fe && /* @__PURE__ */ s.jsx("tr", { children: /* @__PURE__ */ s.jsx("td", { colSpan: 5, children: "暂无修改日志。" }) })
+          le.map((g) => /* @__PURE__ */ s.jsxs("tr", { children: [
+            /* @__PURE__ */ s.jsx("td", { children: new Date(g.created_at).toLocaleString("zh-CN") }),
+            /* @__PURE__ */ s.jsx("td", { children: gv[g.action] || g.action }),
+            /* @__PURE__ */ s.jsx("td", { children: Gt(g.original_name, 28) || Gt(g.document_id, 8) }),
+            /* @__PURE__ */ s.jsx("td", { children: Bf(g.changes, Xe) }),
+            /* @__PURE__ */ s.jsx("td", { children: Gt(g.actor, 30) })
+          ] }, g.id)),
+          !le.length && !ze && !je && /* @__PURE__ */ s.jsx("tr", { children: /* @__PURE__ */ s.jsx("td", { colSpan: 5, children: "暂无修改日志。" }) })
         ] })
       ] }) })
     ] }),
-    Se && /* @__PURE__ */ s.jsxs("section", { className: "panel history-editor", "aria-label": "编辑问题条目", children: [
+    Ce && /* @__PURE__ */ s.jsxs("section", { className: "panel history-editor", "aria-label": "编辑问题条目", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
         /* @__PURE__ */ s.jsx("h2", { children: "编辑问题条目" }),
         /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => {
-          st(null), Te(null);
+          lt(null), Re(null);
         }, children: "关闭" })
       ] }),
       /* @__PURE__ */ s.jsxs("p", { className: "muted", children: [
         "修改先保存为待确认草稿；批量确认后直接覆盖数据库对应记录，并写入修改日志。来源报告：",
-        Ft(Se.original_name, 80)
+        Gt(Ce.original_name, 80)
       ] }),
-      /* @__PURE__ */ s.jsx("div", { className: "history-editor-grid", children: mu.map((f) => /* @__PURE__ */ s.jsxs("label", { className: f === "problem_description" ? "history-editor-wide" : "", children: [
-        /* @__PURE__ */ s.jsx("span", { children: Sa(ve, f) }),
-        /* @__PURE__ */ s.jsx("textarea", { rows: f === "problem_description" ? 3 : 2, value: lt[f] || "", onChange: (G) => Pe({ ...lt, [f]: G.target.value }) })
-      ] }, f)) }),
+      /* @__PURE__ */ s.jsx("div", { className: "history-editor-grid", children: mu.map((g) => /* @__PURE__ */ s.jsxs("label", { className: g === "problem_description" ? "history-editor-wide" : "", children: [
+        /* @__PURE__ */ s.jsx("span", { children: Yl(Xe, g) }),
+        /* @__PURE__ */ s.jsx("textarea", { rows: g === "problem_description" ? 3 : 2, value: at[g] || "", onChange: (X) => et({ ...at, [g]: X.target.value }) })
+      ] }, g)) }),
       /* @__PURE__ */ s.jsxs("div", { className: "history-actions", children: [
-        /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Ue, onClick: () => void be(), children: "保存草稿" }),
-        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => st(null), children: "取消" })
+        /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: w, onClick: () => void ue(), children: "保存草稿" }),
+        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => lt(null), children: "取消" })
       ] }),
-      Oe && /* @__PURE__ */ s.jsxs("details", { className: "history-detail", children: [
+      Ae && /* @__PURE__ */ s.jsxs("details", { className: "history-detail", children: [
         /* @__PURE__ */ s.jsx("summary", { children: "查看原文证据与关联图片" }),
-        /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => void z(), children: "下载原报告" }),
-        /* @__PURE__ */ s.jsx("dl", { className: "history-fields", children: He.map((f) => /* @__PURE__ */ s.jsxs("div", { children: [
-          /* @__PURE__ */ s.jsx("dt", { children: f.label }),
-          /* @__PURE__ */ s.jsx("dd", { children: Oe.fields[f.key] || "—" })
-        ] }, f.key)) }),
-        Oe.evidence.map((f, G) => /* @__PURE__ */ s.jsxs("details", { children: [
+        /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => void oe(), children: "下载原报告" }),
+        /* @__PURE__ */ s.jsx("dl", { className: "history-fields", children: ft.map((g) => /* @__PURE__ */ s.jsxs("div", { children: [
+          /* @__PURE__ */ s.jsx("dt", { children: g.label }),
+          /* @__PURE__ */ s.jsx("dd", { children: Ae.fields[g.key] || "—" })
+        ] }, g.key)) }),
+        Ae.evidence.map((g, X) => /* @__PURE__ */ s.jsxs("details", { children: [
           /* @__PURE__ */ s.jsxs("summary", { children: [
-            Sa(ve, f.field_key),
+            Yl(Xe, g.field_key),
             "：",
-            Ft(f.quote, 80)
+            Gt(g.quote, 80)
           ] }),
-          /* @__PURE__ */ s.jsx("p", { className: "history-quote", children: f.quote }),
+          /* @__PURE__ */ s.jsx("p", { className: "history-quote", children: g.quote }),
           /* @__PURE__ */ s.jsxs("p", { className: "muted", children: [
             "来源位置：",
-            JSON.stringify(f.locator)
+            JSON.stringify(g.locator)
           ] })
-        ] }, G)),
-        Oe.images.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+        ] }, X)),
+        Ae.images.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
           /* @__PURE__ */ s.jsxs("h3", { children: [
             "关联图片（",
-            Oe.images.length,
+            Ae.images.length,
             "）"
           ] }),
-          /* @__PURE__ */ s.jsx("div", { className: "history-images", children: Oe.images.map((f, G) => /* @__PURE__ */ s.jsxs("figure", { children: [
-            /* @__PURE__ */ s.jsx(Mf, { id: f.id }),
-            /* @__PURE__ */ s.jsx("figcaption", { children: JSON.stringify(f.locator) })
-          ] }, f.id + ":" + G)) })
+          /* @__PURE__ */ s.jsx("div", { className: "history-images", children: Ae.images.map((g, X) => /* @__PURE__ */ s.jsxs("figure", { children: [
+            /* @__PURE__ */ s.jsx(bu, { id: g.id }),
+            /* @__PURE__ */ s.jsx("figcaption", { children: JSON.stringify(g.locator) })
+          ] }, g.id + ":" + X)) })
         ] })
       ] })
     ] }),
-    Oe && !Se && /* @__PURE__ */ s.jsx("div", { className: "history-modal-backdrop", role: "dialog", "aria-modal": "true", "aria-label": "字段与来源证据", onClick: () => Te(null), children: /* @__PURE__ */ s.jsxs("section", { className: "history-modal", onClick: (f) => f.stopPropagation(), children: [
+    Ae && !Ce && /* @__PURE__ */ s.jsx("div", { className: "history-modal-backdrop", role: "dialog", "aria-modal": "true", "aria-label": "字段与来源证据", onClick: () => Re(null), children: /* @__PURE__ */ s.jsxs("section", { className: "history-modal", onClick: (g) => g.stopPropagation(), children: [
       /* @__PURE__ */ s.jsxs("div", { className: "history-modal-head", children: [
         /* @__PURE__ */ s.jsxs("div", { children: [
           /* @__PURE__ */ s.jsx("h2", { children: "字段与来源证据" }),
           /* @__PURE__ */ s.jsxs("p", { className: "muted", children: [
             "来源报告：",
-            /* @__PURE__ */ s.jsx("strong", { children: Oe.original_name }),
+            /* @__PURE__ */ s.jsx("strong", { children: Ae.original_name }),
             "｜解析版本时间：",
-            new Date(Oe.parsed_at).toLocaleString("zh-CN")
+            new Date(Ae.parsed_at).toLocaleString("zh-CN")
           ] })
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => Te(null), children: "关闭" })
+        /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => Re(null), children: "关闭" })
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "history-modal-body", children: [
-        /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => void z(), children: "下载原报告" }),
-        Oe.consolidation_id && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+        /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => void oe(), children: "下载原报告" }),
+        Ae.consolidation_id && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
           /* @__PURE__ */ s.jsx("p", { children: "同一隐患的重复出处已合并，以下字段与图片保留原报告来源。" }),
-          /* @__PURE__ */ s.jsx("ul", { children: Oe.sources.map((f) => /* @__PURE__ */ s.jsx("li", { children: /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => void z(f), children: f.original_name }) }, f.document_id)) })
+          /* @__PURE__ */ s.jsx("ul", { children: Ae.sources.map((g) => /* @__PURE__ */ s.jsx("li", { children: /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => void oe(g), children: g.original_name }) }, g.document_id)) })
         ] }),
-        De && /* @__PURE__ */ s.jsx("p", { role: "alert", className: "loginerror", children: De }),
-        /* @__PURE__ */ s.jsx("dl", { className: "history-fields", children: He.map((f) => /* @__PURE__ */ s.jsxs("div", { children: [
-          /* @__PURE__ */ s.jsx("dt", { children: f.label }),
-          /* @__PURE__ */ s.jsx("dd", { children: Oe.fields[f.key] || "—" })
-        ] }, f.key)) }),
+        qe && /* @__PURE__ */ s.jsx("p", { role: "alert", className: "loginerror", children: qe }),
+        /* @__PURE__ */ s.jsx("dl", { className: "history-fields", children: ft.map((g) => /* @__PURE__ */ s.jsxs("div", { children: [
+          /* @__PURE__ */ s.jsx("dt", { children: g.label }),
+          /* @__PURE__ */ s.jsx("dd", { children: Ae.fields[g.key] || "—" })
+        ] }, g.key)) }),
         /* @__PURE__ */ s.jsx("h3", { children: "原文证据" }),
-        Oe.evidence.map((f, G) => /* @__PURE__ */ s.jsxs("details", { children: [
+        Ae.evidence.map((g, X) => /* @__PURE__ */ s.jsxs("details", { children: [
           /* @__PURE__ */ s.jsxs("summary", { children: [
-            Sa(ve, f.field_key),
+            Yl(Xe, g.field_key),
             "：",
-            Ft(f.quote, 100)
+            Gt(g.quote, 100)
           ] }),
-          /* @__PURE__ */ s.jsx("p", { className: "history-quote", children: f.quote }),
+          /* @__PURE__ */ s.jsx("p", { className: "history-quote", children: g.quote }),
           /* @__PURE__ */ s.jsxs("p", { className: "muted", children: [
             "来源位置：",
-            JSON.stringify(f.locator)
+            JSON.stringify(g.locator)
           ] })
-        ] }, G)),
+        ] }, X)),
         /* @__PURE__ */ s.jsxs("h3", { children: [
           "关联图片（",
-          Oe.images.length,
+          Ae.images.length,
           "）"
         ] }),
         /* @__PURE__ */ s.jsx("p", { className: "muted", children: "展示已建立关联的图片；无图片不代表原报告没有照片。" }),
-        /* @__PURE__ */ s.jsx("div", { className: "history-images", children: Oe.images.map((f, G) => /* @__PURE__ */ s.jsxs("figure", { children: [
-          /* @__PURE__ */ s.jsx(Mf, { id: f.id }),
-          /* @__PURE__ */ s.jsx("figcaption", { children: JSON.stringify(f.locator) })
-        ] }, f.id + ":" + G)) })
+        /* @__PURE__ */ s.jsx("div", { className: "history-images", children: Ae.images.map((g, X) => /* @__PURE__ */ s.jsxs("figure", { children: [
+          /* @__PURE__ */ s.jsx(bu, { id: g.id }),
+          /* @__PURE__ */ s.jsx("figcaption", { children: JSON.stringify(g.locator) })
+        ] }, g.id + ":" + X)) })
       ] })
+    ] }) }),
+    Be && /* @__PURE__ */ s.jsx("div", { className: "history-modal-backdrop", role: "dialog", "aria-modal": "true", "aria-label": "关联照片", onClick: () => tt(null), children: /* @__PURE__ */ s.jsxs("section", { className: "history-modal history-photo-modal", onClick: (g) => g.stopPropagation(), children: [
+      /* @__PURE__ */ s.jsxs("div", { className: "history-modal-head", children: [
+        /* @__PURE__ */ s.jsxs("div", { children: [
+          /* @__PURE__ */ s.jsx("h2", { children: "关联照片" }),
+          /* @__PURE__ */ s.jsxs("p", { className: "muted", children: [
+            "来源报告：",
+            /* @__PURE__ */ s.jsx("strong", { children: Gt(Be.original_name, 90) }),
+            "｜问题：",
+            Gt(Be.problem_description, 90)
+          ] })
+        ] }),
+        /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => tt(null), children: "关闭" })
+      ] }),
+      /* @__PURE__ */ s.jsx("div", { className: "history-modal-body", children: /* @__PURE__ */ s.jsx(Lf, { api: u, findingId: Be.id, large: !0 }) })
     ] }) })
   ] });
 }
-function At(u, h) {
-  return u ? u.permissions != null ? u.permissions.includes(h) : ["knowledge.process", "retrospective.generate", "retrospective.edit", "imports.create", "imports.retry"].includes(h) ? !!u.can_run : ["knowledge.review", "knowledge.publish", "retrospective.review", "imports.withdraw"].includes(h) ? u.roles.some((S) => ["admin", "reviewer"].includes(S)) : h === "training.manage" ? u.roles.some((S) => ["admin", "teacher"].includes(S)) : h === "training.review" ? u.roles.some((S) => ["admin", "teacher", "reviewer"].includes(S)) : !0 : !1;
+function Rt(u, h) {
+  return u ? u.permissions != null ? u.permissions.includes(h) : ["knowledge.process", "retrospective.generate", "retrospective.edit", "imports.create", "imports.retry"].includes(h) ? !!u.can_run : ["knowledge.review", "knowledge.publish", "retrospective.review", "imports.withdraw"].includes(h) ? u.roles.some((_) => ["admin", "reviewer"].includes(_)) : h === "training.manage" ? u.roles.some((_) => ["admin", "teacher"].includes(_)) : h === "training.review" ? u.roles.some((_) => ["admin", "teacher", "reviewer"].includes(_)) : !0 : !1;
 }
-const Is = { draft: "草稿", pending_review: "待审核", changes_requested: "已退回", approved: "已审核", open: "待核查", resolved: "已处理", ignored: "暂不处理", submitted: "提交审核", edited: "人工修订", created: "新增", skipped: "复用已有", failed: "失败" }, qf = { INVALID_DATE: "日期异常", INVALID_IMAGES: "图片字段异常", FALLBACK_ID: "来源身份待核查", MISSING_DESCRIPTION: "缺少描述", UNVERIFIED_STANDARD: "依据待核验" }, Hf = { case_card: "案例卡", checkpoint_card: "检查要点卡", retrospective_revision: "过程复盘", question_revision: "培训题目" };
-function xu(u, h) {
+const Is = { draft: "草稿", pending_review: "待审核", changes_requested: "已退回", approved: "已审核", open: "待核查", resolved: "已处理", ignored: "暂不处理", submitted: "提交审核", edited: "人工修订", created: "新增", skipped: "复用已有", failed: "失败" }, Yf = { INVALID_DATE: "日期异常", INVALID_IMAGES: "图片字段异常", FALLBACK_ID: "来源身份待核查", MISSING_DESCRIPTION: "缺少描述", UNVERIFIED_STANDARD: "依据待核验" }, Gf = { case_card: "案例卡", checkpoint_card: "检查要点卡", retrospective_revision: "过程复盘", question_revision: "培训题目" };
+function ju(u, h) {
   return [["标题", u.title, h.title], ["事实", u.facts.map((d) => d.text).join(`
 `), h.facts.map((d) => d.text).join(`
 `)], ["建议", u.suggestions.join(`
 `), h.suggestions.join(`
-`)], ["引用证据", u.facts.flatMap((d) => d.evidence_ids).join("、"), h.facts.flatMap((d) => d.evidence_ids).join("、")], ["标准依据", JSON.stringify(u.standards), JSON.stringify(h.standards)], ["施工要点", JSON.stringify(u.construction_points || []), JSON.stringify(h.construction_points || [])]].filter(([, d, R]) => d !== R);
+`)], ["引用证据", u.facts.flatMap((d) => d.evidence_ids).join("、"), h.facts.flatMap((d) => d.evidence_ids).join("、")], ["标准依据", JSON.stringify(u.standards), JSON.stringify(h.standards)], ["施工要点", JSON.stringify(u.construction_points || []), JSON.stringify(h.construction_points || [])]].filter(([, d, A]) => d !== A);
 }
-function bv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
-  var z;
-  const [B, V] = r.useState(!0), [M, Q] = r.useState(!1), [p, U] = r.useState(""), [K, k] = r.useState(""), [le, xe] = r.useState(0), [_e, ye] = r.useState([]), [Ee, me] = r.useState([]), [I, oe] = r.useState([]), [ne, D] = r.useState("knowledge_revision"), [je, Re] = r.useState(""), [Be, Xe] = r.useState(""), [Ge, pe] = r.useState(""), [Ke, X] = r.useState(null), [de, y] = r.useState([]), [Y, ee] = r.useState(null), [ke, m] = r.useState("resolved"), [H, te] = r.useState(""), [$, ae] = r.useState(""), [Z, P] = r.useState(((z = d.find((v) => At(v, "knowledge.process"))) == null ? void 0 : z.id) || ""), [Ce, ie] = r.useState([]), [Se, st] = r.useState([]), [lt, Pe] = r.useState("case_card"), [Oe, Te] = r.useState("normal"), [De, Ne] = r.useState(null), [Le, We] = r.useState(sessionStorage.getItem("b03-last-job-" + R) || ""), [Fe, Ze] = r.useState(null), [he, et] = r.useState(null), [Ue, E] = r.useState(null), [w, W] = r.useState(""), [ve, He] = r.useState(!1), tt = /^\/knowledge\/[^/]+\/edit$/.test(h), dt = d.some((v) => At(v, "knowledge.process")), L = d.some((v) => At(v, "knowledge.review")), fe = h.startsWith("/quality"), re = h === "/reviews";
+function Sv({ api: u, path: h, navigate: _, projects: d, identity: A }) {
+  var D;
+  const [M, V] = r.useState(!0), [z, Y] = r.useState(!1), [v, U] = r.useState(""), [K, k] = r.useState(""), [le, xe] = r.useState(0), [Ne, Se] = r.useState([]), [Te, fe] = r.useState([]), [I, de] = r.useState([]), [ne, q] = r.useState("knowledge_revision"), [ve, Me] = r.useState(""), [Ye, Je] = r.useState(""), [Qe, pe] = r.useState(""), [Fe, Q] = r.useState(null), [ce, b] = r.useState([]), [G, ee] = r.useState(null), [Ee, f] = r.useState("resolved"), [B, te] = r.useState(""), [W, ae] = r.useState(""), [Z, P] = r.useState(((D = d.find((x) => Rt(x, "knowledge.process"))) == null ? void 0 : D.id) || ""), [Oe, ie] = r.useState([]), [Ce, lt] = r.useState([]), [at, et] = r.useState("case_card"), [Ae, Re] = r.useState("normal"), [qe, ke] = r.useState(null), [Be, tt] = r.useState(sessionStorage.getItem("b03-last-job-" + A) || ""), [st, rt] = r.useState(null), [je, Ke] = r.useState(null), [ze, E] = r.useState(null), [w, $] = r.useState(""), [we, Le] = r.useState(!1), Xe = /^\/knowledge\/[^/]+\/edit$/.test(h), ft = d.some((x) => Rt(x, "knowledge.process")), L = d.some((x) => Rt(x, "knowledge.review")), he = h.startsWith("/quality"), re = h === "/reviews";
   r.useEffect(() => {
-    pe(""), y([]), Xe(""), Re(""), U(""), k(""), He(!1), W("");
+    pe(""), b([]), Je(""), Me(""), U(""), k(""), Le(!1), $("");
   }, [h]), r.useEffect(() => {
-    let v = !1;
-    V(!0), U(""), et(null), E(null);
+    let x = !1;
+    V(!0), U(""), Ke(null), E(null);
     async function ue() {
       try {
-        if (fe) {
-          const f = await u(`/quality/issues?limit=20${je ? "&rule_code=" + je : ""}${Be ? "&status=" + Be : ""}${Ge ? "&cursor=" + encodeURIComponent(Ge) : ""}`);
-          if (v) return;
-          me(f.items), oe(f.summary), X(f.next_cursor);
-        } else if (tt) {
-          const f = await u(h.replace("/edit", ""));
-          if (v) return;
-          et(f), E(structuredClone(f.content));
+        if (he) {
+          const be = await u(`/quality/issues?limit=20${ve ? "&rule_code=" + ve : ""}${Ye ? "&status=" + Ye : ""}${Qe ? "&cursor=" + encodeURIComponent(Qe) : ""}`);
+          if (x) return;
+          fe(be.items), de(be.summary), Q(be.next_cursor);
+        } else if (Xe) {
+          const be = await u(h.replace("/edit", ""));
+          if (x) return;
+          Ke(be), E(structuredClone(be.content));
         } else if (re) {
-          const f = await u(`/reviews?object_type=${ne}&state=${Be || "pending_review"}${Ge ? "&cursor=" + encodeURIComponent(Ge) : ""}`);
-          if (v) return;
-          ye(f.items), X(f.next_cursor);
+          const be = await u(`/reviews?object_type=${ne}&state=${Ye || "pending_review"}${Qe ? "&cursor=" + encodeURIComponent(Qe) : ""}`);
+          if (x) return;
+          Se(be.items), Q(be.next_cursor);
         } else {
-          const f = await u(`/knowledge?limit=20${Be ? "&state=" + Be : ""}${Ge ? "&cursor=" + encodeURIComponent(Ge) : ""}`);
-          if (v) return;
-          if (ye(f.items), X(f.next_cursor), dt && Z) {
-            const G = await u("/knowledge/source-options?project_id=" + Z);
-            v || ie(G.items);
+          const be = await u(`/knowledge?limit=20${Ye ? "&state=" + Ye : ""}${Qe ? "&cursor=" + encodeURIComponent(Qe) : ""}`);
+          if (x) return;
+          if (Se(be.items), Q(be.next_cursor), ft && Z) {
+            const ut = await u("/knowledge/source-options?project_id=" + Z);
+            x || ie(ut.items);
           }
         }
-      } catch (f) {
-        v || U(f.message);
+      } catch (be) {
+        x || U(be.message);
       } finally {
-        v || V(!1);
+        x || V(!1);
       }
     }
     return ue(), () => {
-      v = !0;
+      x = !0;
     };
-  }, [h, Be, je, Ge, le, Z, ne]), r.useEffect(() => {
-    st([]), Ne(null);
-  }, [Z, lt, Oe]), r.useEffect(() => {
-    if (!Le || fe || tt || re || !dt) return;
-    let v = !1;
+  }, [h, Ye, ve, Qe, le, Z, ne]), r.useEffect(() => {
+    lt([]), ke(null);
+  }, [Z, at, Ae]), r.useEffect(() => {
+    if (!Be || he || Xe || re || !ft) return;
+    let x = !1;
     const ue = () => {
-      u("/knowledge/generation-jobs/" + Le).then((G) => {
-        v || (Ze(G), G.status === "succeeded" && xe((x) => x + 1));
-      }).catch((G) => {
-        v || U(G.message);
+      u("/knowledge/generation-jobs/" + Be).then((ut) => {
+        x || (rt(ut), ut.status === "succeeded" && xe((N) => N + 1));
+      }).catch((ut) => {
+        x || U(ut.message);
       });
     };
     ue();
-    const f = setInterval(() => {
-      (!Fe || ["queued", "running", "retrying"].includes(Fe.status)) && ue();
+    const be = setInterval(() => {
+      (!st || ["queued", "running", "retrying"].includes(st.status)) && ue();
     }, 1800);
     return () => {
-      v = !0, clearInterval(f);
+      x = !0, clearInterval(be);
     };
-  }, [Le, h, Fe == null ? void 0 : Fe.status]);
-  const Ve = async (v) => {
-    Q(!0), U(""), k("");
+  }, [Be, h, st == null ? void 0 : st.status]);
+  const $e = async (x) => {
+    Y(!0), U(""), k("");
     try {
-      await v();
+      await x();
     } catch (ue) {
       U(ue.message);
     } finally {
-      Q(!1);
+      Y(!1);
     }
-  }, _ = () => ({ record_version_ids: Se, type: lt, template_version: "mock-v1", mock_scenario: Oe }), be = /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
+  }, y = () => ({ record_version_ids: Ce, type: at, template_version: "mock-v1", mock_scenario: Ae }), ye = /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
     /* @__PURE__ */ s.jsx("span", { children: "仅显示当前身份可访问范围" }),
     /* @__PURE__ */ s.jsxs("div", { className: "pagination", children: [
-      /* @__PURE__ */ s.jsx("button", { disabled: !de.length, onClick: () => {
-        pe(de.at(-1) || ""), y(de.slice(0, -1));
+      /* @__PURE__ */ s.jsx("button", { disabled: !ce.length, onClick: () => {
+        pe(ce.at(-1) || ""), b(ce.slice(0, -1));
       }, children: "上一页" }),
-      /* @__PURE__ */ s.jsx("button", { disabled: !Ke, onClick: () => {
-        y([...de, Ge]), pe(Ke || "");
+      /* @__PURE__ */ s.jsx("button", { disabled: !Fe, onClick: () => {
+        b([...ce, Qe]), pe(Fe || "");
       }, children: "下一页" })
     ] })
-  ] }), ge = he && At(d.find((v) => v.id === he.project_id), "knowledge.process"), Qe = he && At(d.find((v) => v.id === he.project_id), "knowledge.review"), xt = (v) => Ve(async () => {
-    if (!he) return;
-    const ue = v === "submit" ? `/knowledge/${he.id}/submit-review` : `/reviews/${he.revision_id}/${v}`;
-    await u(ue, { method: "POST", body: JSON.stringify({ row_version: he.row_version, revision_id: he.revision_id, reason: w, evidence_checked: ve }) }), k(v === "approve" ? "此版本已审核，请到发布管理构建并启用。" : "状态已更新，审核意见已保留。"), xe((f) => f + 1), He(!1);
+  ] }), ge = je && Rt(d.find((x) => x.id === je.project_id), "knowledge.process"), Ze = je && Rt(d.find((x) => x.id === je.project_id), "knowledge.review"), pt = (x) => $e(async () => {
+    if (!je) return;
+    const ue = x === "submit" ? `/knowledge/${je.id}/submit-review` : `/reviews/${je.revision_id}/${x}`;
+    await u(ue, { method: "POST", body: JSON.stringify({ row_version: je.row_version, revision_id: je.revision_id, reason: w, evidence_checked: we }) }), k(x === "approve" ? "此版本已审核，请到发布管理构建并启用。" : "状态已更新，审核意见已保留。"), xe((be) => be + 1), Le(!1);
   });
   return /* @__PURE__ */ s.jsxs("div", { className: "knowledge-module", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-banner", children: [
-      /* @__PURE__ */ s.jsx(En, { size: 19 }),
+      /* @__PURE__ */ s.jsx(On, { size: 19 }),
       /* @__PURE__ */ s.jsxs("div", { children: [
         /* @__PURE__ */ s.jsx("strong", { children: "质量核查与知识加工" }),
         /* @__PURE__ */ s.jsx("span", { children: "已有字段自动带入。来源事实、人工补充、生成建议和待核验依据分别标记；审核通过后可到发布管理构建并启用。" })
       ] })
     ] }),
-    p && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
+    v && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
       /* @__PURE__ */ s.jsx(Nl, { size: 18 }),
-      p,
-      /* @__PURE__ */ s.jsx("button", { onClick: () => xe((v) => v + 1), children: "重新加载" })
+      v,
+      /* @__PURE__ */ s.jsx("button", { onClick: () => xe((x) => x + 1), children: "重新加载" })
     ] }),
     K && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
       /* @__PURE__ */ s.jsx(Sl, { size: 18 }),
@@ -13100,137 +13193,137 @@ function bv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
-        /* @__PURE__ */ s.jsx("button", { onClick: () => S("/extraction"), children: "施工要点萃取" }),
-        /* @__PURE__ */ s.jsx("button", { className: fe ? "selected" : "", onClick: () => S("/quality"), children: "质量核查" }),
-        /* @__PURE__ */ s.jsx("button", { className: !fe && !re ? "selected" : "", onClick: () => S("/knowledge/drafts"), children: "知识候选" }),
-        /* @__PURE__ */ s.jsx("button", { className: re ? "selected" : "", onClick: () => S("/reviews"), children: "审核待办" })
+        /* @__PURE__ */ s.jsx("button", { onClick: () => _("/extraction"), children: "施工要点萃取" }),
+        /* @__PURE__ */ s.jsx("button", { className: he ? "selected" : "", onClick: () => _("/quality"), children: "质量核查" }),
+        /* @__PURE__ */ s.jsx("button", { className: !he && !re ? "selected" : "", onClick: () => _("/knowledge/drafts"), children: "知识候选" }),
+        /* @__PURE__ */ s.jsx("button", { className: re ? "selected" : "", onClick: () => _("/reviews"), children: "审核待办" })
       ] }),
-      /* @__PURE__ */ s.jsxs("button", { className: "button ghost", disabled: B, onClick: () => xe((v) => v + 1), children: [
+      /* @__PURE__ */ s.jsxs("button", { className: "button ghost", disabled: M, onClick: () => xe((x) => x + 1), children: [
         /* @__PURE__ */ s.jsx(Rs, { size: 15 }),
         "刷新"
       ] })
     ] }),
-    B ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取工作区…" }) : fe ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-      /* @__PURE__ */ s.jsx("section", { className: "quality-summary", children: Object.entries(qf).map(([v, ue]) => /* @__PURE__ */ s.jsxs("button", { className: je === v ? "panel selected-quality" : "panel", "aria-pressed": je === v, onClick: () => {
-        Re(je === v ? "" : v), Xe("open"), pe(""), y([]);
+    M ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取工作区…" }) : he ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      /* @__PURE__ */ s.jsx("section", { className: "quality-summary", children: Object.entries(Yf).map(([x, ue]) => /* @__PURE__ */ s.jsxs("button", { className: ve === x ? "panel selected-quality" : "panel", "aria-pressed": ve === x, onClick: () => {
+        Me(ve === x ? "" : x), Je("open"), pe(""), b([]);
       }, children: [
         /* @__PURE__ */ s.jsx("span", { children: ue }),
-        /* @__PURE__ */ s.jsx("strong", { children: I.filter((f) => f.rule_code === v && f.status === "open").reduce((f, G) => f + G.count, 0) }),
+        /* @__PURE__ */ s.jsx("strong", { children: I.filter((be) => be.rule_code === x && be.status === "open").reduce((be, ut) => be + ut.count, 0) }),
         /* @__PURE__ */ s.jsx("small", { children: "待核查" })
-      ] }, v)) }),
+      ] }, x)) }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "质量问题" }),
-          /* @__PURE__ */ s.jsxs("select", { "aria-label": "质量处理状态", value: Be, onChange: (v) => {
-            Xe(v.target.value), pe(""), y([]);
+          /* @__PURE__ */ s.jsxs("select", { "aria-label": "质量处理状态", value: Ye, onChange: (x) => {
+            Je(x.target.value), pe(""), b([]);
           }, children: [
             /* @__PURE__ */ s.jsx("option", { value: "", children: "全部状态" }),
-            ["open", "resolved", "ignored"].map((v) => /* @__PURE__ */ s.jsx("option", { value: v, children: Is[v] }, v))
+            ["open", "resolved", "ignored"].map((x) => /* @__PURE__ */ s.jsx("option", { value: x, children: Is[x] }, x))
           ] })
         ] }),
-        Ee.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
+        Te.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
           /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsxs("tr", { children: [
             /* @__PURE__ */ s.jsx("th", { children: "来源内容 / 规则" }),
             /* @__PURE__ */ s.jsx("th", { children: "问题" }),
             /* @__PURE__ */ s.jsx("th", { children: "状态" }),
             /* @__PURE__ */ s.jsx("th", { children: "操作" })
           ] }) }),
-          /* @__PURE__ */ s.jsx("tbody", { children: Ee.map((v) => {
-            var ue, f;
+          /* @__PURE__ */ s.jsx("tbody", { children: Te.map((x) => {
+            var ue, be;
             return /* @__PURE__ */ s.jsxs("tr", { children: [
               /* @__PURE__ */ s.jsxs("td", { children: [
-                /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => S("/records/" + v.record_id), children: v.description || "缺少描述" }),
-                /* @__PURE__ */ s.jsx("small", { children: qf[v.rule_code] || v.rule_code })
+                /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => _("/records/" + x.record_id), children: x.description || "缺少描述" }),
+                /* @__PURE__ */ s.jsx("small", { children: Yf[x.rule_code] || x.rule_code })
               ] }),
               /* @__PURE__ */ s.jsxs("td", { children: [
-                v.message,
-                v.annotations.length > 0 && /* @__PURE__ */ s.jsxs("small", { children: [
+                x.message,
+                x.annotations.length > 0 && /* @__PURE__ */ s.jsxs("small", { children: [
                   "最近说明：",
-                  (ue = v.annotations.at(-1)) == null ? void 0 : ue.reason
+                  (ue = x.annotations.at(-1)) == null ? void 0 : ue.reason
                 ] })
               ] }),
-              /* @__PURE__ */ s.jsx("td", { children: Is[v.status] }),
-              /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: !((f = d.find((G) => G.id === v.project_id)) != null && f.can_run), onClick: () => {
-                ee(v), te(""), ae("");
+              /* @__PURE__ */ s.jsx("td", { children: Is[x.status] }),
+              /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: !((be = d.find((ut) => ut.id === x.project_id)) != null && be.can_run), onClick: () => {
+                ee(x), te(""), ae("");
               }, children: "核查处理" }) })
-            ] }, v.id);
+            ] }, x.id);
           }) })
         ] }) }) : /* @__PURE__ */ s.jsx("div", { className: "empty", children: /* @__PURE__ */ s.jsx("h2", { children: "当前范围没有对应质量问题" }) }),
-        be
+        ye
       ] })
-    ] }) : tt && he && Ue ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+    ] }) : Xe && je && ze ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("div", { className: "knowledge-heading", children: [
         /* @__PURE__ */ s.jsxs("div", { children: [
           /* @__PURE__ */ s.jsxs("h2", { children: [
-            Hf[he.type],
+            Gf[je.type],
             " · v",
-            he.version
+            je.version
           ] }),
           /* @__PURE__ */ s.jsxs("p", { children: [
-            Is[he.state],
+            Is[je.state],
             " · 生成适配器：",
-            he.model_ref
+            je.model_ref
           ] })
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => S("/knowledge/drafts"), children: "返回候选列表" })
+        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => _("/knowledge/drafts"), children: "返回候选列表" })
       ] }),
-      he.source.version !== he.source.current_version && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", children: [
+      je.source.version !== je.source.current_version && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", children: [
         "来源已从v",
-        he.source.version,
+        je.source.version,
         "更新到v",
-        he.source.current_version,
+        je.source.current_version,
         "，请基于当前来源重新生成。"
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "knowledge-editor", children: [
         /* @__PURE__ */ s.jsxs("section", { className: "panel source-proof", children: [
           /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
             /* @__PURE__ */ s.jsx("h2", { children: "来源与证据" }),
-            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S((he.source.kind === "retrospective" ? "/retrospectives/" : "/records/") + he.source.record_id), children: he.source.kind === "retrospective" ? "打开来源复盘" : "打开风险数据" })
+            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _((je.source.kind === "retrospective" ? "/retrospectives/" : "/records/") + je.source.record_id), children: je.source.kind === "retrospective" ? "打开来源复盘" : "打开风险数据" })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
             /* @__PURE__ */ s.jsxs("span", { className: "role-tag", children: [
               "固定来源 v",
-              he.source.version
+              je.source.version
             ] }),
             /* @__PURE__ */ s.jsx("h3", { children: "原始描述" }),
-            /* @__PURE__ */ s.jsx("p", { children: String(he.source.raw_fields.description || he.source.raw_fields.隐患描述 || "见来源字段") }),
+            /* @__PURE__ */ s.jsx("p", { children: String(je.source.raw_fields.description || je.source.raw_fields.隐患描述 || "见来源字段") }),
             /* @__PURE__ */ s.jsx("h3", { children: "治理生效描述" }),
-            /* @__PURE__ */ s.jsx("p", { children: String(he.source.effective_fields.description || "缺失") }),
-            he.source.versions && he.source.versions.length > 1 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+            /* @__PURE__ */ s.jsx("p", { children: String(je.source.effective_fields.description || "缺失") }),
+            je.source.versions && je.source.versions.length > 1 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
               /* @__PURE__ */ s.jsxs("h3", { children: [
                 "跨记录固定来源（",
-                he.source.versions.length,
+                je.source.versions.length,
                 "条）"
               ] }),
-              he.source.versions.map((v) => /* @__PURE__ */ s.jsxs("details", { children: [
+              je.source.versions.map((x) => /* @__PURE__ */ s.jsxs("details", { children: [
                 /* @__PURE__ */ s.jsxs("summary", { children: [
                   "来源 v",
-                  v.version,
+                  x.version,
                   " · ",
-                  v.effective_fields.description || "查看生效字段"
+                  x.effective_fields.description || "查看生效字段"
                 ] }),
-                /* @__PURE__ */ s.jsx("p", { children: JSON.stringify(v.effective_fields, null, 2) }),
-                /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S("/records/" + v.record_id), children: "打开风险记录" })
-              ] }, v.record_version_id))
+                /* @__PURE__ */ s.jsx("p", { children: JSON.stringify(x.effective_fields, null, 2) }),
+                /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/records/" + x.record_id), children: "打开风险记录" })
+              ] }, x.record_version_id))
             ] }),
             /* @__PURE__ */ s.jsx("h3", { children: "项目 / 日期" }),
             /* @__PURE__ */ s.jsxs("p", { children: [
-              Ue.project_name,
+              ze.project_name,
               " · ",
-              Ue.occurred_on || "日期未知"
+              ze.occurred_on || "日期未知"
             ] }),
             /* @__PURE__ */ s.jsx("h3", { children: "证据定位" }),
-            he.source.evidence.map((v) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
-              /* @__PURE__ */ s.jsx("strong", { children: { source_row: "来源原始行", site_photo: "现场照片类型", process_event: "过程事件记录", historical_row: "复盘历史来源行", task_snapshot: "固定任务快照", task_attachment: "复盘附件" }[v.type] || "来源证据" }),
-              /* @__PURE__ */ s.jsx("p", { children: JSON.stringify(v.locator) }),
-              /* @__PURE__ */ s.jsx("code", { children: v.id })
-            ] }, v.id)),
-            he.source.annotations.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+            je.source.evidence.map((x) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
+              /* @__PURE__ */ s.jsx("strong", { children: { source_row: "来源原始行", site_photo: "现场照片类型", process_event: "过程事件记录", historical_row: "复盘历史来源行", task_snapshot: "固定任务快照", task_attachment: "复盘附件" }[x.type] || "来源证据" }),
+              /* @__PURE__ */ s.jsx("p", { children: JSON.stringify(x.locator) }),
+              /* @__PURE__ */ s.jsx("code", { children: x.id })
+            ] }, x.id)),
+            je.source.annotations.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
               /* @__PURE__ */ s.jsx("h3", { children: "人工补充（独立保存）" }),
-              he.source.annotations.map((v, ue) => /* @__PURE__ */ s.jsxs("p", { children: [
-                v.reason,
+              je.source.annotations.map((x, ue) => /* @__PURE__ */ s.jsxs("p", { children: [
+                x.reason,
                 " · ",
-                JSON.stringify(v.value)
+                JSON.stringify(x.value)
               ] }, ue))
             ] })
           ] })
@@ -13243,118 +13336,118 @@ function bv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
           /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "标题",
-              /* @__PURE__ */ s.jsx("input", { value: Ue.title, disabled: !ge, onChange: (v) => E({ ...Ue, title: v.target.value }) })
+              /* @__PURE__ */ s.jsx("input", { value: ze.title, disabled: !ge, onChange: (x) => E({ ...ze, title: x.target.value }) })
             ] }),
             /* @__PURE__ */ s.jsx("h3", { children: "来源事实 / 人工补充" }),
-            Ue.facts.map((v, ue) => /* @__PURE__ */ s.jsxs("label", { children: [
-              v.source_kind === "human_annotation" ? "人工补充，需核查" : "来源生效值",
-              /* @__PURE__ */ s.jsx("textarea", { disabled: !ge, value: v.text, onChange: (f) => E({ ...Ue, facts: Ue.facts.map((G, x) => x === ue ? { ...G, text: f.target.value, source_kind: "human_annotation" } : G) }) }),
+            ze.facts.map((x, ue) => /* @__PURE__ */ s.jsxs("label", { children: [
+              x.source_kind === "human_annotation" ? "人工补充，需核查" : "来源生效值",
+              /* @__PURE__ */ s.jsx("textarea", { disabled: !ge, value: x.text, onChange: (be) => E({ ...ze, facts: ze.facts.map((ut, N) => N === ue ? { ...ut, text: be.target.value, source_kind: "human_annotation" } : ut) }) }),
               /* @__PURE__ */ s.jsxs("small", { children: [
                 "引用：",
-                v.evidence_ids.join("、")
+                x.evidence_ids.join("、")
               ] })
             ] }, ue)),
-            Ue.construction_points && Ue.construction_points.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+            ze.construction_points && ze.construction_points.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
               /* @__PURE__ */ s.jsxs("h3", { children: [
                 "施工要点 · ",
-                Ue.category_name || "待分类"
+                ze.category_name || "待分类"
               ] }),
-              /* @__PURE__ */ s.jsx("p", { className: "small-note", children: Ue.generation_mode === "llm" ? "云端模型自主归纳；来源事实与新增建议仍需核查。" : "本地模板演示，尚不能代表模型归纳效果。" }),
-              Ue.construction_points.map((v, ue) => {
-                var f;
+              /* @__PURE__ */ s.jsx("p", { className: "small-note", children: ze.generation_mode === "llm" ? "云端模型自主归纳；来源事实与新增建议仍需核查。" : "本地模板演示，尚不能代表模型归纳效果。" }),
+              ze.construction_points.map((x, ue) => {
+                var be;
                 return /* @__PURE__ */ s.jsxs("div", { className: "standard-card", children: [
                   /* @__PURE__ */ s.jsxs("strong", { children: [
-                    v.title,
+                    x.title,
                     " · ",
-                    v.stage === "preparation" ? "施工准备" : v.stage === "execution" ? "现场实施" : "验收复核"
+                    x.stage === "preparation" ? "施工准备" : x.stage === "execution" ? "现场实施" : "验收复核"
                   ] }),
                   /* @__PURE__ */ s.jsxs("label", { children: [
                     "施工要点",
-                    /* @__PURE__ */ s.jsx("textarea", { disabled: !ge, value: v.content, onChange: (G) => {
-                      var x;
-                      return E({ ...Ue, construction_points: (x = Ue.construction_points) == null ? void 0 : x.map((ce, qe) => qe === ue ? { ...ce, content: G.target.value } : ce) });
+                    /* @__PURE__ */ s.jsx("textarea", { disabled: !ge, value: x.content, onChange: (ut) => {
+                      var N;
+                      return E({ ...ze, construction_points: (N = ze.construction_points) == null ? void 0 : N.map((oe, Ve) => Ve === ue ? { ...oe, content: ut.target.value } : oe) });
                     } })
                   ] }),
                   /* @__PURE__ */ s.jsxs("label", { children: [
                     "检查方法",
-                    /* @__PURE__ */ s.jsx("textarea", { disabled: !ge, value: v.inspection_method, onChange: (G) => {
-                      var x;
-                      return E({ ...Ue, construction_points: (x = Ue.construction_points) == null ? void 0 : x.map((ce, qe) => qe === ue ? { ...ce, inspection_method: G.target.value } : ce) });
+                    /* @__PURE__ */ s.jsx("textarea", { disabled: !ge, value: x.inspection_method, onChange: (ut) => {
+                      var N;
+                      return E({ ...ze, construction_points: (N = ze.construction_points) == null ? void 0 : N.map((oe, Ve) => Ve === ue ? { ...oe, inspection_method: ut.target.value } : oe) });
                     } })
                   ] }),
                   /* @__PURE__ */ s.jsxs("label", { children: [
                     "常见问题",
-                    /* @__PURE__ */ s.jsx("textarea", { disabled: !ge, value: v.common_mistakes, onChange: (G) => {
-                      var x;
-                      return E({ ...Ue, construction_points: (x = Ue.construction_points) == null ? void 0 : x.map((ce, qe) => qe === ue ? { ...ce, common_mistakes: G.target.value } : ce) });
+                    /* @__PURE__ */ s.jsx("textarea", { disabled: !ge, value: x.common_mistakes, onChange: (ut) => {
+                      var N;
+                      return E({ ...ze, construction_points: (N = ze.construction_points) == null ? void 0 : N.map((oe, Ve) => Ve === ue ? { ...oe, common_mistakes: ut.target.value } : oe) });
                     } })
                   ] }),
-                  /* @__PURE__ */ s.jsx("p", { children: v.claim_kind === "source_summary" ? "来源归纳，待核查" : "新增建议，不代表已执行或有效标准" }),
+                  /* @__PURE__ */ s.jsx("p", { children: x.claim_kind === "source_summary" ? "来源归纳，待核查" : "新增建议，不代表已执行或有效标准" }),
                   /* @__PURE__ */ s.jsxs("small", { children: [
                     "证据：",
-                    v.evidence_ids.join("、")
+                    x.evidence_ids.join("、")
                   ] }),
-                  (f = v.source_quotes) == null ? void 0 : f.map((G, x) => /* @__PURE__ */ s.jsxs("details", { children: [
+                  (be = x.source_quotes) == null ? void 0 : be.map((ut, N) => /* @__PURE__ */ s.jsxs("details", { children: [
                     /* @__PURE__ */ s.jsx("summary", { children: "核对原文摘录" }),
-                    /* @__PURE__ */ s.jsx("p", { children: G.text })
-                  ] }, x))
+                    /* @__PURE__ */ s.jsx("p", { children: ut.text })
+                  ] }, N))
                 ] }, ue);
               })
             ] }),
             /* @__PURE__ */ s.jsx("h3", { children: "生成建议 · 不作为来源事实" }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "建议（每行一项）",
-              /* @__PURE__ */ s.jsx("textarea", { disabled: !ge, value: Ue.suggestions.join(`
-`), onChange: (v) => E({ ...Ue, suggestions: v.target.value.split(`
+              /* @__PURE__ */ s.jsx("textarea", { disabled: !ge, value: ze.suggestions.join(`
+`), onChange: (x) => E({ ...ze, suggestions: x.target.value.split(`
 `).filter(Boolean) }) })
             ] }),
             /* @__PURE__ */ s.jsx("h3", { children: "标准依据" }),
-            Ue.standards.length ? Ue.standards.map((v, ue) => /* @__PURE__ */ s.jsxs("div", { className: "standard-card", children: [
-              /* @__PURE__ */ s.jsx("strong", { children: v.name }),
+            ze.standards.length ? ze.standards.map((x, ue) => /* @__PURE__ */ s.jsxs("div", { className: "standard-card", children: [
+              /* @__PURE__ */ s.jsx("strong", { children: x.name }),
               /* @__PURE__ */ s.jsxs("p", { children: [
                 "条款：",
-                v.clause || "未提供",
+                x.clause || "未提供",
                 " · 版本：",
-                v.edition || "未提供"
+                x.edition || "未提供"
               ] }),
-              /* @__PURE__ */ s.jsx("span", { children: v.verification_status === "pending_verification" ? "待核验 · 不能作为有效标准" : "不采用" }),
+              /* @__PURE__ */ s.jsx("span", { children: x.verification_status === "pending_verification" ? "待核验 · 不能作为有效标准" : "不采用" }),
               /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-                /* @__PURE__ */ s.jsx("input", { type: "checkbox", disabled: !ge, checked: v.verification_status === "not_used", onChange: (f) => E({ ...Ue, standards: Ue.standards.map((G, x) => x === ue ? { ...G, verification_status: f.target.checked ? "not_used" : "pending_verification" } : G) }) }),
+                /* @__PURE__ */ s.jsx("input", { type: "checkbox", disabled: !ge, checked: x.verification_status === "not_used", onChange: (be) => E({ ...ze, standards: ze.standards.map((ut, N) => N === ue ? { ...ut, verification_status: be.target.checked ? "not_used" : "pending_verification" } : ut) }) }),
                 "明确不采用该依据"
               ] })
             ] }, ue)) : /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "没有已核验标准，不自动补造标准名称或条款。" }),
-            xu(he.content, Ue).length > 0 && /* @__PURE__ */ s.jsxs("div", { className: "draft-diff", children: [
+            ju(je.content, ze).length > 0 && /* @__PURE__ */ s.jsxs("div", { className: "draft-diff", children: [
               /* @__PURE__ */ s.jsx("h3", { children: "本次未保存修改" }),
-              xu(he.content, Ue).map(([v, ue, f]) => /* @__PURE__ */ s.jsxs("div", { children: [
-                /* @__PURE__ */ s.jsx("strong", { children: v }),
+              ju(je.content, ze).map(([x, ue, be]) => /* @__PURE__ */ s.jsxs("div", { children: [
+                /* @__PURE__ */ s.jsx("strong", { children: x }),
                 /* @__PURE__ */ s.jsxs("p", { className: "diff-before", children: [
                   "原：",
                   ue
                 ] }),
                 /* @__PURE__ */ s.jsxs("p", { className: "diff-after", children: [
                   "新：",
-                  f
+                  be
                 ] })
-              ] }, v))
+              ] }, x))
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "本次修改 / 审核说明",
-              /* @__PURE__ */ s.jsx("textarea", { value: w, onChange: (v) => W(v.target.value), placeholder: "说明核查结果、修改理由或退回原因" })
+              /* @__PURE__ */ s.jsx("textarea", { value: w, onChange: (x) => $(x.target.value), placeholder: "说明核查结果、修改理由或退回原因" })
             ] }),
             /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-              ge && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: M || !w.trim(), onClick: () => void Ve(async () => {
-                await u(`/knowledge/${he.id}/draft`, { method: "PATCH", body: JSON.stringify({ row_version: he.row_version, revision_id: he.revision_id, content: Ue, reason: w }) }), k("已创建新草稿版本；原版本和审核意见保留。"), xe((v) => v + 1);
+              ge && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: z || !w.trim(), onClick: () => void $e(async () => {
+                await u(`/knowledge/${je.id}/draft`, { method: "PATCH", body: JSON.stringify({ row_version: je.row_version, revision_id: je.revision_id, content: ze, reason: w }) }), k("已创建新草稿版本；原版本和审核意见保留。"), xe((x) => x + 1);
               }), children: "保存新草稿版本" }),
-              ge && ["draft", "changes_requested"].includes(he.state) && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: M || !w.trim() || JSON.stringify(Ue) !== JSON.stringify(he.content), onClick: () => void xt("submit"), children: "提交当前已保存版本审核" })
+              ge && ["draft", "changes_requested"].includes(je.state) && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: z || !w.trim() || JSON.stringify(ze) !== JSON.stringify(je.content), onClick: () => void pt("submit"), children: "提交当前已保存版本审核" })
             ] }),
-            Qe && he.state === "pending_review" && /* @__PURE__ */ s.jsxs("div", { className: "review-controls", children: [
+            Ze && je.state === "pending_review" && /* @__PURE__ */ s.jsxs("div", { className: "review-controls", children: [
               /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-                /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: ve, onChange: (v) => He(v.target.checked) }),
+                /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: we, onChange: (x) => Le(x.target.checked) }),
                 "已逐条核对事实及来源证据"
               ] }),
               /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-                /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: M || !ve || !w.trim() || JSON.stringify(Ue) !== JSON.stringify(he.content), onClick: () => void xt("approve"), children: "批准此版本" }),
-                /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: M || !w.trim(), onClick: () => void xt("request-changes"), children: "退回修改" })
+                /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: z || !we || !w.trim() || JSON.stringify(ze) !== JSON.stringify(je.content), onClick: () => void pt("approve"), children: "批准此版本" }),
+                /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: z || !w.trim(), onClick: () => void pt("request-changes"), children: "退回修改" })
               ] })
             ] })
           ] })
@@ -13365,54 +13458,54 @@ function bv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
           /* @__PURE__ */ s.jsx("h2", { children: "版本与审核轨迹" }),
           /* @__PURE__ */ s.jsx("span", { children: "审核准确关联到具体版本" })
         ] }),
-        he.revisions.map((v, ue) => /* @__PURE__ */ s.jsxs("details", { children: [
+        je.revisions.map((x, ue) => /* @__PURE__ */ s.jsxs("details", { children: [
           /* @__PURE__ */ s.jsxs("summary", { children: [
             "v",
-            v.version,
+            x.version,
             " · ",
-            Is[v.state]
+            Is[x.state]
           ] }),
-          /* @__PURE__ */ s.jsx("p", { children: v.content.title }),
+          /* @__PURE__ */ s.jsx("p", { children: x.content.title }),
           /* @__PURE__ */ s.jsxs("p", { children: [
             "事实：",
-            v.content.facts.map((f) => f.text).join("；")
+            x.content.facts.map((be) => be.text).join("；")
           ] }),
-          he.revisions[ue + 1] && /* @__PURE__ */ s.jsxs("div", { className: "draft-diff", children: [
+          je.revisions[ue + 1] && /* @__PURE__ */ s.jsxs("div", { className: "draft-diff", children: [
             /* @__PURE__ */ s.jsxs("p", { children: [
               "相较v",
-              he.revisions[ue + 1].version,
+              je.revisions[ue + 1].version,
               "的修改："
             ] }),
-            xu(he.revisions[ue + 1].content, v.content).map(([f, G, x]) => /* @__PURE__ */ s.jsxs("div", { children: [
-              /* @__PURE__ */ s.jsx("strong", { children: f }),
+            ju(je.revisions[ue + 1].content, x.content).map(([be, ut, N]) => /* @__PURE__ */ s.jsxs("div", { children: [
+              /* @__PURE__ */ s.jsx("strong", { children: be }),
               /* @__PURE__ */ s.jsxs("p", { className: "diff-before", children: [
                 "原：",
-                G
+                ut
               ] }),
               /* @__PURE__ */ s.jsxs("p", { className: "diff-after", children: [
                 "新：",
-                x
+                N
               ] })
-            ] }, f))
+            ] }, be))
           ] })
-        ] }, v.id)),
-        he.review_actions.map((v, ue) => /* @__PURE__ */ s.jsxs("div", { className: "review-history", children: [
+        ] }, x.id)),
+        je.review_actions.map((x, ue) => /* @__PURE__ */ s.jsxs("div", { className: "review-history", children: [
           /* @__PURE__ */ s.jsxs("strong", { children: [
             "v",
-            v.version,
+            x.version,
             " · ",
-            Is[v.action] || v.action
+            Is[x.action] || x.action
           ] }),
-          /* @__PURE__ */ s.jsx("p", { children: v.reason }),
+          /* @__PURE__ */ s.jsx("p", { children: x.reason }),
           /* @__PURE__ */ s.jsxs("small", { children: [
-            new Date(v.created_at).toLocaleString("zh-CN"),
+            new Date(x.created_at).toLocaleString("zh-CN"),
             " · 操作者 ",
-            v.reviewer.slice(0, 8)
+            x.reviewer.slice(0, 8)
           ] })
         ] }, ue))
       ] })
     ] }) : /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-      !re && dt && /* @__PURE__ */ s.jsxs("section", { className: "panel generation-panel", children: [
+      !re && ft && /* @__PURE__ */ s.jsxs("section", { className: "panel generation-panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "从风险数据生成知识候选" }),
           /* @__PURE__ */ s.jsx("span", { children: "先选择明确范围，核对后提交；每次最多20条同项目来源" })
@@ -13421,38 +13514,38 @@ function bv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
           /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "项目",
-              /* @__PURE__ */ s.jsx("select", { value: Z, onChange: (v) => P(v.target.value), children: d.filter((v) => At(v, "knowledge.process")).map((v) => /* @__PURE__ */ s.jsx("option", { value: v.id, children: v.name }, v.id)) })
+              /* @__PURE__ */ s.jsx("select", { value: Z, onChange: (x) => P(x.target.value), children: d.filter((x) => Rt(x, "knowledge.process")).map((x) => /* @__PURE__ */ s.jsx("option", { value: x.id, children: x.name }, x.id)) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "知识类型",
-              /* @__PURE__ */ s.jsxs("select", { value: lt, onChange: (v) => Pe(v.target.value), children: [
+              /* @__PURE__ */ s.jsxs("select", { value: at, onChange: (x) => et(x.target.value), children: [
                 /* @__PURE__ */ s.jsx("option", { value: "case_card", children: "案例卡" }),
                 /* @__PURE__ */ s.jsx("option", { value: "checkpoint_card", children: "检查要点卡" })
               ] })
             ] })
           ] }),
           /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => {
-            st(Ce.slice(0, 20).map((v) => v.record_version_id)), Ne(null);
+            lt(Oe.slice(0, 20).map((x) => x.record_version_id)), ke(null);
           }, children: "选择当前显示范围" }),
-          /* @__PURE__ */ s.jsx("div", { className: "source-options", children: Ce.length ? Ce.map((v) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Se.includes(v.record_version_id), onChange: (ue) => {
-              st(ue.target.checked ? [...Se, v.record_version_id] : Se.filter((f) => f !== v.record_version_id)), Ne(null);
+          /* @__PURE__ */ s.jsx("div", { className: "source-options", children: Oe.length ? Oe.map((x) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Ce.includes(x.record_version_id), onChange: (ue) => {
+              lt(ue.target.checked ? [...Ce, x.record_version_id] : Ce.filter((be) => be !== x.record_version_id)), ke(null);
             } }),
             /* @__PURE__ */ s.jsxs("span", { children: [
-              v.description || "缺少描述",
+              x.description || "缺少描述",
               /* @__PURE__ */ s.jsxs("small", { children: [
                 "来源v",
-                v.current_version,
+                x.current_version,
                 " · ",
-                { detail: "明细", review: "复查", summary: "汇总" }[v.record_kind] || v.record_kind
+                { detail: "明细", review: "复查", summary: "汇总" }[x.record_kind] || x.record_kind
               ] })
             ] })
-          ] }, v.id)) : /* @__PURE__ */ s.jsx("p", { children: "当前项目尚无可用风险数据，请先完成历史数据接入。" }) }),
+          ] }, x.id)) : /* @__PURE__ */ s.jsx("p", { children: "当前项目尚无可用风险数据，请先完成历史数据接入。" }) }),
           /* @__PURE__ */ s.jsxs("details", { children: [
             /* @__PURE__ */ s.jsx("summary", { children: "模拟校验场景（可选）" }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "结构验证",
-              /* @__PURE__ */ s.jsxs("select", { value: Oe, onChange: (v) => Te(v.target.value), children: [
+              /* @__PURE__ */ s.jsxs("select", { value: Ae, onChange: (x) => Re(x.target.value), children: [
                 /* @__PURE__ */ s.jsx("option", { value: "normal", children: "正常候选" }),
                 /* @__PURE__ */ s.jsx("option", { value: "bad_evidence", children: "返回错误证据ID，验证拒绝" }),
                 /* @__PURE__ */ s.jsx("option", { value: "unverified_standard", children: "附带待核验依据，验证审核阻断" })
@@ -13460,51 +13553,51 @@ function bv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
             ] })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-            /* @__PURE__ */ s.jsxs("button", { className: "button secondary", disabled: M || !Se.length || Se.length > 20, onClick: () => void Ve(async () => {
-              Ne(await u("/knowledge/generation-preview", { method: "POST", body: JSON.stringify(_()) }));
+            /* @__PURE__ */ s.jsxs("button", { className: "button secondary", disabled: z || !Ce.length || Ce.length > 20, onClick: () => void $e(async () => {
+              ke(await u("/knowledge/generation-preview", { method: "POST", body: JSON.stringify(y()) }));
             }), children: [
               "预览生成范围（",
-              Se.length,
+              Ce.length,
               "条）"
             ] }),
-            De && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: M, onClick: () => void Ve(async () => {
-              const v = await u("/knowledge/generation-jobs", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify(_()) });
-              Ze(null), We(v.job_id), sessionStorage.setItem("b03-last-job-" + R, v.job_id), k("生成任务已提交，字段和来源证据将自动带入。");
+            qe && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: z, onClick: () => void $e(async () => {
+              const x = await u("/knowledge/generation-jobs", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify(y()) });
+              rt(null), tt(x.job_id), sessionStorage.setItem("b03-last-job-" + A, x.job_id), k("生成任务已提交，字段和来源证据将自动带入。");
             }), children: [
               "确认生成 ",
-              De.count,
+              qe.count,
               " 张候选卡",
               /* @__PURE__ */ s.jsx(_l, { size: 15 })
             ] })
           ] }),
-          De && /* @__PURE__ */ s.jsx("div", { className: "generation-preview", children: De.items.map((v, ue) => /* @__PURE__ */ s.jsxs("p", { children: [
-            v.description,
+          qe && /* @__PURE__ */ s.jsx("div", { className: "generation-preview", children: qe.items.map((x, ue) => /* @__PURE__ */ s.jsxs("p", { children: [
+            x.description,
             " · 来源问题 ",
-            v.quality_issue_count,
+            x.quality_issue_count,
             "项"
           ] }, ue)) }),
-          Fe && /* @__PURE__ */ s.jsxs("div", { className: "generation-result", children: [
+          st && /* @__PURE__ */ s.jsxs("div", { className: "generation-result", children: [
             /* @__PURE__ */ s.jsxs("h3", { children: [
               "最近生成任务 · ",
-              Fe.progress,
+              st.progress,
               "%"
             ] }),
             /* @__PURE__ */ s.jsxs("p", { children: [
               "新增 ",
-              Fe.counts.created,
+              st.counts.created,
               " · 复用 ",
-              Fe.counts.skipped,
+              st.counts.skipped,
               " · 单项失败 ",
-              Fe.counts.failed
+              st.counts.failed
             ] }),
-            Fe.error && /* @__PURE__ */ s.jsx("p", { role: "alert", children: Fe.error }),
-            Fe.items.map((v, ue) => /* @__PURE__ */ s.jsxs("p", { children: [
-              v.error || Is[v.outcome],
+            st.error && /* @__PURE__ */ s.jsx("p", { role: "alert", children: st.error }),
+            st.items.map((x, ue) => /* @__PURE__ */ s.jsxs("p", { children: [
+              x.error || Is[x.outcome],
               " ",
-              v.item_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S("/knowledge/" + v.item_id + "/edit"), children: "打开知识卡" })
+              x.item_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/knowledge/" + x.item_id + "/edit"), children: "打开知识卡" })
             ] }, ue)),
-            Fe.status === "failed" && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: M, onClick: () => void Ve(async () => {
-              await u("/jobs/" + Fe.job_id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: Fe.row_version }) }), Ze(null);
+            st.status === "failed" && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: z, onClick: () => void $e(async () => {
+              await u("/jobs/" + st.job_id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: st.row_version }) }), rt(null);
             }), children: "重试生成任务" })
           ] })
         ] })
@@ -13512,21 +13605,21 @@ function bv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: re ? "审核待办" : "知识候选列表" }),
-          re && /* @__PURE__ */ s.jsxs("select", { "aria-label": "审核对象类型", value: ne, onChange: (v) => {
-            D(v.target.value), pe(""), y([]);
+          re && /* @__PURE__ */ s.jsxs("select", { "aria-label": "审核对象类型", value: ne, onChange: (x) => {
+            q(x.target.value), pe(""), b([]);
           }, children: [
             /* @__PURE__ */ s.jsx("option", { value: "knowledge_revision", children: "知识候选" }),
             /* @__PURE__ */ s.jsx("option", { value: "retrospective_revision", children: "过程复盘" }),
             /* @__PURE__ */ s.jsx("option", { value: "question_revision", children: "培训题目" })
           ] }),
-          /* @__PURE__ */ s.jsxs("select", { "aria-label": "知识状态", value: Be, onChange: (v) => {
-            Xe(v.target.value), pe(""), y([]);
+          /* @__PURE__ */ s.jsxs("select", { "aria-label": "知识状态", value: Ye, onChange: (x) => {
+            Je(x.target.value), pe(""), b([]);
           }, children: [
             !re && /* @__PURE__ */ s.jsx("option", { value: "", children: "全部状态" }),
-            (re ? ["pending_review", "changes_requested", "approved"] : ["draft", "pending_review", "changes_requested", "approved"]).map((v) => /* @__PURE__ */ s.jsx("option", { value: v, children: Is[v] }, v))
+            (re ? ["pending_review", "changes_requested", "approved"] : ["draft", "pending_review", "changes_requested", "approved"]).map((x) => /* @__PURE__ */ s.jsx("option", { value: x, children: Is[x] }, x))
           ] })
         ] }),
-        re && !L ? /* @__PURE__ */ s.jsx("div", { className: "empty", children: /* @__PURE__ */ s.jsx("h2", { children: "当前身份没有审核权限" }) }) : _e.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
+        re && !L ? /* @__PURE__ */ s.jsx("div", { className: "empty", children: /* @__PURE__ */ s.jsx("h2", { children: "当前身份没有审核权限" }) }) : Ne.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
           /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsxs("tr", { children: [
             /* @__PURE__ */ s.jsx("th", { children: "知识卡" }),
             /* @__PURE__ */ s.jsx("th", { children: "类型" }),
@@ -13534,134 +13627,134 @@ function bv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
             /* @__PURE__ */ s.jsx("th", { children: "版本" }),
             /* @__PURE__ */ s.jsx("th", { children: "操作" })
           ] }) }),
-          /* @__PURE__ */ s.jsx("tbody", { children: _e.map((v) => /* @__PURE__ */ s.jsxs("tr", { children: [
-            /* @__PURE__ */ s.jsx("td", { children: v.title }),
-            /* @__PURE__ */ s.jsx("td", { children: Hf[v.type] }),
-            /* @__PURE__ */ s.jsx("td", { children: Is[v.state] }),
+          /* @__PURE__ */ s.jsx("tbody", { children: Ne.map((x) => /* @__PURE__ */ s.jsxs("tr", { children: [
+            /* @__PURE__ */ s.jsx("td", { children: x.title }),
+            /* @__PURE__ */ s.jsx("td", { children: Gf[x.type] }),
+            /* @__PURE__ */ s.jsx("td", { children: Is[x.state] }),
             /* @__PURE__ */ s.jsxs("td", { children: [
               "v",
-              v.version
+              x.version
             ] }),
-            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S(v.object_type === "question_revision" ? "/training/questions/" + v.id : v.object_type === "retrospective_revision" ? "/retrospectives/" + v.id + "/review" : "/knowledge/" + v.id + "/edit"), children: re ? "打开审核" : "核查与编辑" }) })
-          ] }, v.id)) })
+            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _(x.object_type === "question_revision" ? "/training/questions/" + x.id : x.object_type === "retrospective_revision" ? "/retrospectives/" + x.id + "/review" : "/knowledge/" + x.id + "/edit"), children: re ? "打开审核" : "核查与编辑" }) })
+          ] }, x.id)) })
         ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
           /* @__PURE__ */ s.jsx("h2", { children: re ? "暂无对应审核待办" : "还没有知识候选" }),
           /* @__PURE__ */ s.jsx("p", { children: "先从明确来源范围生成，再核查并提交审核。" })
         ] }),
-        be
+        ye
       ] })
     ] }),
-    Y && /* @__PURE__ */ s.jsx("div", { className: "modal-backdrop", children: /* @__PURE__ */ s.jsxs("section", { className: "modal", role: "dialog", "aria-modal": "true", "aria-labelledby": "quality-dialog", children: [
+    G && /* @__PURE__ */ s.jsx("div", { className: "modal-backdrop", children: /* @__PURE__ */ s.jsxs("section", { className: "modal", role: "dialog", "aria-modal": "true", "aria-labelledby": "quality-dialog", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "modal-heading", children: [
         /* @__PURE__ */ s.jsx("h2", { id: "quality-dialog", children: "核查质量问题" }),
         /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => ee(null), children: "关闭" })
       ] }),
-      /* @__PURE__ */ s.jsx("p", { children: Y.message }),
+      /* @__PURE__ */ s.jsx("p", { children: G.message }),
       /* @__PURE__ */ s.jsxs("label", { children: [
         "处理状态",
-        /* @__PURE__ */ s.jsx("select", { value: ke, onChange: (v) => m(v.target.value), children: ["resolved", "ignored", "open"].map((v) => /* @__PURE__ */ s.jsx("option", { value: v, children: Is[v] }, v)) })
+        /* @__PURE__ */ s.jsx("select", { value: Ee, onChange: (x) => f(x.target.value), children: ["resolved", "ignored", "open"].map((x) => /* @__PURE__ */ s.jsx("option", { value: x, children: Is[x] }, x)) })
       ] }),
       /* @__PURE__ */ s.jsxs("label", { children: [
         "处理理由",
-        /* @__PURE__ */ s.jsx("textarea", { value: H, onChange: (v) => te(v.target.value) })
+        /* @__PURE__ */ s.jsx("textarea", { value: B, onChange: (x) => te(x.target.value) })
       ] }),
       /* @__PURE__ */ s.jsxs("label", { children: [
         "人工补充（可选，独立保存）",
-        /* @__PURE__ */ s.jsx("textarea", { value: $, onChange: (v) => ae(v.target.value) })
+        /* @__PURE__ */ s.jsx("textarea", { value: W, onChange: (x) => ae(x.target.value) })
       ] }),
       /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "只保存核查说明，不覆盖原始字段或旧治理生效值。" }),
-      /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: M || !H.trim(), onClick: () => void Ve(async () => {
-        await u("/quality/issues/" + Y.id, { method: "PATCH", body: JSON.stringify({ row_version: Y.row_version, status: ke, reason: H, annotation: $ || null }) }), ee(null), xe((v) => v + 1), k("处理状态及人工说明已保存。");
+      /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: z || !B.trim(), onClick: () => void $e(async () => {
+        await u("/quality/issues/" + G.id, { method: "PATCH", body: JSON.stringify({ row_version: G.row_version, status: Ee, reason: B, annotation: W || null }) }), ee(null), xe((x) => x + 1), k("处理状态及人工说明已保存。");
       }), children: "保存处理" })
     ] }) })
   ] });
 }
-const Bf = { queued: "等待构建", building: "索引构建中", ready: "待启用", active: "当前启用", inactive: "历史发布", failed: "构建失败", pending: "等待处理" }, yv = (u) => ({ generic: "通用工程风险", lifting_supervision: "吊装监护", fire_inspection: "消防巡查", structural_inspection: "结构检查", mep_inspection: "机电检查" })[u] || "其他已配置场景", _v = (u) => [u.section, typeof u.row == "number" ? `第${u.row}行` : null, u.cell ? `单元格 ${u.cell}` : null].filter(Boolean).join(" · ") || "已关联来源记录", ju = (u) => u === "case_card" ? "案例卡" : "检查要点卡";
-function Nv({ identity: u, path: h, projects: S, navigate: d }) {
-  var fe, re, Ve, _, be, ge, Qe, xt;
-  const [R, B] = r.useState(((fe = S[0]) == null ? void 0 : fe.id) || ""), [V, M] = r.useState("generic"), [Q, p] = r.useState(""), [U, K] = r.useState([]), [k, le] = r.useState({}), [xe, _e] = r.useState([]), [ye, Ee] = r.useState([]), [me, I] = r.useState("mock-hash-64"), [oe, ne] = r.useState([]), [D, je] = r.useState(null), [Re, Be] = r.useState(""), [Xe, Ge] = r.useState("extractive"), [pe, Ke] = r.useState(null), [X, de] = r.useState(null), [y, Y] = r.useState(null);
+const Qf = { queued: "等待构建", building: "索引构建中", ready: "待启用", active: "当前启用", inactive: "历史发布", failed: "构建失败", pending: "等待处理" }, wv = (u) => ({ generic: "通用工程风险", lifting_supervision: "吊装监护", fire_inspection: "消防巡查", structural_inspection: "结构检查", mep_inspection: "机电检查" })[u] || "其他已配置场景", kv = (u) => [u.section, typeof u.row == "number" ? `第${u.row}行` : null, u.cell ? `单元格 ${u.cell}` : null].filter(Boolean).join(" · ") || "已关联来源记录", vu = (u) => u === "case_card" ? "案例卡" : "检查要点卡";
+function Cv({ identity: u, path: h, projects: _, navigate: d }) {
+  var he, re, $e, y, ye, ge, Ze, pt;
+  const [A, M] = r.useState(((he = _[0]) == null ? void 0 : he.id) || ""), [V, z] = r.useState("generic"), [Y, v] = r.useState(""), [U, K] = r.useState([]), [k, le] = r.useState({}), [xe, Ne] = r.useState([]), [Se, Te] = r.useState([]), [fe, I] = r.useState("mock-hash-64"), [de, ne] = r.useState([]), [q, ve] = r.useState(null), [Me, Ye] = r.useState(""), [Je, Qe] = r.useState("extractive"), [pe, Fe] = r.useState(null), [Q, ce] = r.useState(null), [b, G] = r.useState(null);
   r.useEffect(() => () => {
-    y && URL.revokeObjectURL(y);
-  }, [y]), r.useEffect(() => {
-    Y(null);
-  }, [R, h]);
-  const [ee, ke] = r.useState(null);
+    b && URL.revokeObjectURL(b);
+  }, [b]), r.useEffect(() => {
+    G(null);
+  }, [A, h]);
+  const [ee, Ee] = r.useState(null);
   r.useEffect(() => {
-    ke(null);
+    Ee(null);
   }, [h]);
-  const [m, H] = r.useState(""), [te, $] = r.useState("useful"), [ae, Z] = r.useState(""), [P, Ce] = r.useState(!1), [ie, Se] = r.useState(!0), [st, lt] = r.useState(""), [Pe, Oe] = r.useState(""), [Te, De] = r.useState(0), [Ne, Le] = r.useState(""), [We, Fe] = r.useState(null), [Ze, he] = r.useState([]), et = r.useRef("");
-  et.current = [u, h, R, V, Q, Re, Xe, ee].join("|");
-  const Ue = h === "/releases", E = h === "/search", w = h === "/knowledge/library", W = At(S.find((z) => z.id === R), "knowledge.publish"), ve = !Ue && !E && !w ? h.split("/")[2] : null;
-  async function He(z, v = {}) {
-    const ue = await Mt("/api/v1" + z, { ...v, headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${u}`, ...v.headers } }), f = await ue.json();
-    if (!ue.ok) throw new Error(f.message || "请求失败，请重试。");
-    return f;
+  const [f, B] = r.useState(""), [te, W] = r.useState("useful"), [ae, Z] = r.useState(""), [P, Oe] = r.useState(!1), [ie, Ce] = r.useState(!0), [lt, at] = r.useState(""), [et, Ae] = r.useState(""), [Re, qe] = r.useState(0), [ke, Be] = r.useState(""), [tt, st] = r.useState(null), [rt, je] = r.useState([]), Ke = r.useRef("");
+  Ke.current = [u, h, A, V, Y, Me, Je, ee].join("|");
+  const ze = h === "/releases", E = h === "/search", w = h === "/knowledge/library", $ = Rt(_.find((D) => D.id === A), "knowledge.publish"), we = !ze && !E && !w ? h.split("/")[2] : null;
+  async function Le(D, x = {}) {
+    const ue = await Mt("/api/v1" + D, { ...x, headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${u}`, ...x.headers } }), be = await ue.json();
+    if (!ue.ok) throw new Error(be.message || "请求失败，请重试。");
+    return be;
   }
   r.useEffect(() => {
-    Ee([]), Ke(null), de(null), lt(""), Oe(""), Le(""), he([]);
-  }, [R, h, V, Q]), r.useEffect(() => {
-    let z = !1;
-    return Se(!0), lt(""), je(null), (async () => {
+    Te([]), Fe(null), ce(null), at(""), Ae(""), Be(""), je([]);
+  }, [A, h, V, Y]), r.useEffect(() => {
+    let D = !1;
+    return Ce(!0), at(""), ve(null), (async () => {
       try {
-        if (Ue) {
-          const ue = await He(`/releases?project_id=${R}${Ne ? "&cursor=" + encodeURIComponent(Ne) : ""}`);
-          if (z) return;
-          K(ue.items), le(ue.active_ids), Fe(ue.next_cursor);
-          const f = await He("/releases/options?project_id=" + R);
-          z || _e(f.items);
+        if (ze) {
+          const ue = await Le(`/releases?project_id=${A}${ke ? "&cursor=" + encodeURIComponent(ke) : ""}`);
+          if (D) return;
+          K(ue.items), le(ue.active_ids), st(ue.next_cursor);
+          const be = await Le("/releases/options?project_id=" + A);
+          D || Ne(be.items);
         } else if (w) {
-          const ue = await He(`/knowledge/library?project_id=${R}${V ? "&scene_code=" + V : ""}${Q ? "&card_type=" + Q : ""}${Ne ? "&after_id=" + Ne : ""}`);
-          z || (ne(ue.items), Fe(ue.next_cursor));
-        } else if (ve) {
-          const ue = await He("/published/knowledge/" + ve + (ee ? "?revision_id=" + ee : ""));
-          z || je(ue);
+          const ue = await Le(`/knowledge/library?project_id=${A}${V ? "&scene_code=" + V : ""}${Y ? "&card_type=" + Y : ""}${ke ? "&after_id=" + ke : ""}`);
+          D || (ne(ue.items), st(ue.next_cursor));
+        } else if (we) {
+          const ue = await Le("/published/knowledge/" + we + (ee ? "?revision_id=" + ee : ""));
+          D || ve(ue);
         }
       } catch (ue) {
-        z || lt(ue.message);
+        D || at(ue.message);
       } finally {
-        z || Se(!1);
+        D || Ce(!1);
       }
     })(), () => {
-      z = !0;
+      D = !0;
     };
-  }, [R, h, V, Q, Te, Ne, ee]), r.useEffect(() => {
-    if (!Ue || !U.some((v) => ["queued", "building"].includes(v.state))) return;
-    const z = setInterval(() => De((v) => v + 1), 1800);
-    return () => clearInterval(z);
-  }, [Ue, U]);
-  const tt = async (z) => {
-    Ce(!0), lt(""), Oe("");
+  }, [A, h, V, Y, Re, ke, ee]), r.useEffect(() => {
+    if (!ze || !U.some((x) => ["queued", "building"].includes(x.state))) return;
+    const D = setInterval(() => qe((x) => x + 1), 1800);
+    return () => clearInterval(D);
+  }, [ze, U]);
+  const Xe = async (D) => {
+    Oe(!0), at(""), Ae("");
     try {
-      await z();
-    } catch (v) {
-      lt(v.message);
+      await D();
+    } catch (x) {
+      at(x.message);
     } finally {
-      Ce(!1);
+      Oe(!1);
     }
-  }, dt = (z, v, ue = !1) => tt(async () => {
-    const f = et.current;
-    Y(null), de(null);
-    const G = await He("/published/evidence/" + z + "?revision_id=" + v + (ue ? "&historical=true" : ""));
-    if (f === et.current && (de(G), G.has_image)) {
-      const x = await Mt("/api/v1/published/evidence/" + z + "/content?revision_id=" + v + (ue ? "&historical=true" : ""), { headers: { Authorization: `Bearer dev-${u}` } });
-      if (!x.ok) throw new Error("证据图片已不可用，请刷新后重试。");
-      const ce = await x.blob();
-      f === et.current && Y(URL.createObjectURL(ce));
+  }, ft = (D, x, ue = !1) => Xe(async () => {
+    const be = Ke.current;
+    G(null), ce(null);
+    const ut = await Le("/published/evidence/" + D + "?revision_id=" + x + (ue ? "&historical=true" : ""));
+    if (be === Ke.current && (ce(ut), ut.has_image)) {
+      const N = await Mt("/api/v1/published/evidence/" + D + "/content?revision_id=" + x + (ue ? "&historical=true" : ""), { headers: { Authorization: `Bearer dev-${u}` } });
+      if (!N.ok) throw new Error("证据图片已不可用，请刷新后重试。");
+      const oe = await N.blob();
+      be === Ke.current && G(URL.createObjectURL(oe));
     }
   }), L = /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
     /* @__PURE__ */ s.jsx("span", { children: "按当前授权范围展示" }),
     /* @__PURE__ */ s.jsxs("div", { className: "pagination", children: [
-      /* @__PURE__ */ s.jsx("button", { disabled: !Ze.length || ie, onClick: () => {
-        Le(Ze.at(-1) || ""), he(Ze.slice(0, -1));
+      /* @__PURE__ */ s.jsx("button", { disabled: !rt.length || ie, onClick: () => {
+        Be(rt.at(-1) || ""), je(rt.slice(0, -1));
       }, children: "上一页" }),
-      /* @__PURE__ */ s.jsx("button", { disabled: !We || ie, onClick: () => {
-        he([...Ze, Ne]), Le(We || "");
+      /* @__PURE__ */ s.jsx("button", { disabled: !tt || ie, onClick: () => {
+        je([...rt, ke]), Be(tt || "");
       }, children: "下一页" })
     ] })
   ] });
   return /* @__PURE__ */ s.jsxs("div", { className: "retrieval-module", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-banner", children: [
-      /* @__PURE__ */ s.jsx($i, { size: 20 }),
+      /* @__PURE__ */ s.jsx(Ki, { size: 20 }),
       /* @__PURE__ */ s.jsxs("div", { children: [
         /* @__PURE__ */ s.jsx("strong", { children: "审核成果发布与证据检索" }),
         /* @__PURE__ */ s.jsx("span", { children: "按项目权限读取已发布资料。检索使用本地特征哈希向量，回答直接摘录已审核事实。" })
@@ -13669,34 +13762,34 @@ function Nv({ identity: u, path: h, projects: S, navigate: d }) {
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
-        /* @__PURE__ */ s.jsx("button", { className: w || ve ? "selected" : "", onClick: () => d("/knowledge/library"), children: "已发布知识" }),
+        /* @__PURE__ */ s.jsx("button", { className: w || we ? "selected" : "", onClick: () => d("/knowledge/library"), children: "已发布知识" }),
         /* @__PURE__ */ s.jsx("button", { className: E ? "selected" : "", onClick: () => d("/search"), children: "知识检索" }),
-        S.some((z) => At(z, "knowledge.publish")) && /* @__PURE__ */ s.jsx("button", { className: Ue ? "selected" : "", onClick: () => d("/releases"), children: "发布管理" })
+        _.some((D) => Rt(D, "knowledge.publish")) && /* @__PURE__ */ s.jsx("button", { className: ze ? "selected" : "", onClick: () => d("/releases"), children: "发布管理" })
       ] }),
       /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => {
-        de(null), Ke(null), De((z) => z + 1);
+        ce(null), Fe(null), qe((D) => D + 1);
       }, children: [
         /* @__PURE__ */ s.jsx(Rs, { size: 15 }),
         "刷新"
       ] })
     ] }),
-    st && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
+    lt && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
       /* @__PURE__ */ s.jsx(Nl, { size: 18 }),
-      st
+      lt
     ] }),
-    Pe && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
+    et && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
       /* @__PURE__ */ s.jsx(Sl, { size: 18 }),
-      Pe
+      et
     ] }),
-    !ve && /* @__PURE__ */ s.jsxs("div", { className: "retrieval-filters", children: [
+    !we && /* @__PURE__ */ s.jsxs("div", { className: "retrieval-filters", children: [
       /* @__PURE__ */ s.jsxs("label", { children: [
         "项目范围",
-        /* @__PURE__ */ s.jsx("select", { "aria-label": "发布检索项目", value: R, onChange: (z) => B(z.target.value), children: S.map((z) => /* @__PURE__ */ s.jsx("option", { value: z.id, children: z.name }, z.id)) })
+        /* @__PURE__ */ s.jsx("select", { "aria-label": "发布检索项目", value: A, onChange: (D) => M(D.target.value), children: _.map((D) => /* @__PURE__ */ s.jsx("option", { value: D.id, children: D.name }, D.id)) })
       ] }),
-      !Ue && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      !ze && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         /* @__PURE__ */ s.jsxs("label", { children: [
           "场景",
-          /* @__PURE__ */ s.jsxs("select", { "aria-label": "检索场景", value: V, onChange: (z) => M(z.target.value), children: [
+          /* @__PURE__ */ s.jsxs("select", { "aria-label": "检索场景", value: V, onChange: (D) => z(D.target.value), children: [
             w && /* @__PURE__ */ s.jsx("option", { value: "", children: "全部场景" }),
             /* @__PURE__ */ s.jsx("option", { value: "generic", children: "通用工程风险" }),
             /* @__PURE__ */ s.jsx("option", { value: "lifting_supervision", children: "吊装监护" }),
@@ -13705,7 +13798,7 @@ function Nv({ identity: u, path: h, projects: S, navigate: d }) {
         ] }),
         /* @__PURE__ */ s.jsxs("label", { children: [
           "知识类型",
-          /* @__PURE__ */ s.jsxs("select", { "aria-label": "知识类型", value: Q, onChange: (z) => p(z.target.value), children: [
+          /* @__PURE__ */ s.jsxs("select", { "aria-label": "知识类型", value: Y, onChange: (D) => v(D.target.value), children: [
             /* @__PURE__ */ s.jsx("option", { value: "", children: "全部类型" }),
             /* @__PURE__ */ s.jsx("option", { value: "case_card", children: "案例卡" }),
             /* @__PURE__ */ s.jsx("option", { value: "checkpoint_card", children: "检查要点卡" })
@@ -13713,38 +13806,38 @@ function Nv({ identity: u, path: h, projects: S, navigate: d }) {
         ] })
       ] })
     ] }),
-    ie ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在加载…" }) : Ue ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-      W && /* @__PURE__ */ s.jsxs("section", { className: "panel release-compose", children: [
+    ie ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在加载…" }) : ze ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      $ && /* @__PURE__ */ s.jsxs("section", { className: "panel release-compose", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "建立发布批次" }),
           /* @__PURE__ */ s.jsx("span", { children: "已有内容自动带入，仅选择审核版本" })
         ] }),
         /* @__PURE__ */ s.jsx("p", { children: "每个批次是此项目的完整发布集合，启用时会替换上一批。构建成功后仍需点击“启用发布”。" }),
-        /* @__PURE__ */ s.jsx("div", { className: "release-choices", children: xe.length ? xe.map((z) => /* @__PURE__ */ s.jsxs("label", { className: "release-choice", children: [
-          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: ye.includes(z.revision_id), onChange: (v) => Ee(v.target.checked ? [...ye, z.revision_id] : ye.filter((ue) => ue !== z.revision_id)) }),
+        /* @__PURE__ */ s.jsx("div", { className: "release-choices", children: xe.length ? xe.map((D) => /* @__PURE__ */ s.jsxs("label", { className: "release-choice", children: [
+          /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Se.includes(D.revision_id), onChange: (x) => Te(x.target.checked ? [...Se, D.revision_id] : Se.filter((ue) => ue !== D.revision_id)) }),
           /* @__PURE__ */ s.jsxs("span", { children: [
-            /* @__PURE__ */ s.jsx("strong", { children: z.title }),
+            /* @__PURE__ */ s.jsx("strong", { children: D.title }),
             /* @__PURE__ */ s.jsxs("small", { children: [
-              ju(z.type),
+              vu(D.type),
               " · 审核版本 v",
-              z.version
+              D.version
             ] })
           ] })
-        ] }, z.revision_id)) : /* @__PURE__ */ s.jsx("p", { children: "暂无可发布的审核版本。请先到知识加工区完成审核。" }) }),
+        ] }, D.revision_id)) : /* @__PURE__ */ s.jsx("p", { children: "暂无可发布的审核版本。请先到知识加工区完成审核。" }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "release-submit", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "向量配置",
-            /* @__PURE__ */ s.jsxs("select", { "aria-label": "向量配置", value: me, onChange: (z) => I(z.target.value), children: [
+            /* @__PURE__ */ s.jsxs("select", { "aria-label": "向量配置", value: fe, onChange: (D) => I(D.target.value), children: [
               /* @__PURE__ */ s.jsx("option", { value: "openai-text-embedding-3-small", children: "OpenAI 语义向量 · 1536维" }),
               /* @__PURE__ */ s.jsx("option", { value: "mock-hash-64", children: "模拟特征向量 · 64维" }),
               /* @__PURE__ */ s.jsx("option", { value: "mock-hash-96", children: "模拟特征向量 · 96维（重建新集合）" })
             ] })
           ] }),
-          /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: P || !ye.length, onClick: () => void tt(async () => {
-            await He("/releases", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ project_id: R, revision_ids: ye, embedding_model: me }) }), Ee([]), Oe("发布集合已固定，处理服务正在构建索引。"), De((z) => z + 1);
+          /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: P || !Se.length, onClick: () => void Xe(async () => {
+            await Le("/releases", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ project_id: A, revision_ids: Se, embedding_model: fe }) }), Te([]), Ae("发布集合已固定，处理服务正在构建索引。"), qe((D) => D + 1);
           }), children: [
             "构建发布 · ",
-            ye.length,
+            Se.length,
             " 张"
           ] })
         ] })
@@ -13754,48 +13847,48 @@ function Nv({ identity: u, path: h, projects: S, navigate: d }) {
           /* @__PURE__ */ s.jsx("h2", { children: "发布批次" }),
           /* @__PURE__ */ s.jsx("span", { children: "构建失败不会替换当前启用版本" })
         ] }),
-        U.length ? /* @__PURE__ */ s.jsx("div", { className: "release-list", children: U.map((z) => /* @__PURE__ */ s.jsxs("article", { children: [
+        U.length ? /* @__PURE__ */ s.jsx("div", { className: "release-list", children: U.map((D) => /* @__PURE__ */ s.jsxs("article", { children: [
           /* @__PURE__ */ s.jsxs("div", { className: "release-row", children: [
             /* @__PURE__ */ s.jsxs("div", { children: [
-              /* @__PURE__ */ s.jsx("strong", { children: Bf[z.state] || z.state }),
+              /* @__PURE__ */ s.jsx("strong", { children: Qf[D.state] || D.state }),
               /* @__PURE__ */ s.jsxs("small", { children: [
-                new Date(z.created_at).toLocaleString("zh-CN"),
+                new Date(D.created_at).toLocaleString("zh-CN"),
                 " · ",
-                z.entries.length,
+                D.entries.length,
                 " 张卡片 · ",
-                z.index_config.dimension,
+                D.index_config.dimension,
                 " 维"
               ] }),
               /* @__PURE__ */ s.jsxs("small", { children: [
                 "批次 ",
-                z.id.slice(0, 8),
-                z.build_ms !== null ? ` · 构建 ${z.build_ms} ms` : ""
+                D.id.slice(0, 8),
+                D.build_ms !== null ? ` · 构建 ${D.build_ms} ms` : ""
               ] })
             ] }),
             /* @__PURE__ */ s.jsxs("div", { children: [
               /* @__PURE__ */ s.jsxs("span", { children: [
-                z.progress,
+                D.progress,
                 "%"
               ] }),
-              ["ready", "inactive"].includes(z.state) && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: P, onClick: () => void tt(async () => {
-                await He("/releases/" + z.id + "/activate", { method: "POST", body: JSON.stringify({ row_version: z.row_version, expected_active_id: k[R] || null }) }), Oe("发布已启用，知识库与检索使用同一发布集合。"), De((v) => v + 1);
+              ["ready", "inactive"].includes(D.state) && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: P, onClick: () => void Xe(async () => {
+                await Le("/releases/" + D.id + "/activate", { method: "POST", body: JSON.stringify({ row_version: D.row_version, expected_active_id: k[A] || null }) }), Ae("发布已启用，知识库与检索使用同一发布集合。"), qe((x) => x + 1);
               }), children: "启用发布" }),
-              z.state === "failed" && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: P, onClick: () => void tt(async () => {
-                await He("/jobs/" + z.job_id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: z.job_row_version }) }), De((v) => v + 1);
+              D.state === "failed" && /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: P, onClick: () => void Xe(async () => {
+                await Le("/jobs/" + D.job_id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: D.job_row_version }) }), qe((x) => x + 1);
               }), children: "重试构建" })
             ] })
           ] }),
-          z.error && /* @__PURE__ */ s.jsx("p", { className: "release-error", children: z.error }),
+          D.error && /* @__PURE__ */ s.jsx("p", { className: "release-error", children: D.error }),
           /* @__PURE__ */ s.jsxs("details", { children: [
             /* @__PURE__ */ s.jsx("summary", { children: "查看构建项" }),
-            z.entries.map((v) => /* @__PURE__ */ s.jsxs("p", { children: [
-              v.revision_id.slice(0, 8),
+            D.entries.map((x) => /* @__PURE__ */ s.jsxs("p", { children: [
+              x.revision_id.slice(0, 8),
               " · ",
-              Bf[v.state] || v.state,
-              v.error ? " · " + v.error : ""
-            ] }, v.revision_id))
+              Qf[x.state] || x.state,
+              x.error ? " · " + x.error : ""
+            ] }, x.revision_id))
           ] })
-        ] }, z.id)) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
+        ] }, D.id)) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "暂无发布批次" }),
           /* @__PURE__ */ s.jsx("p", { children: "选择已审核知识建立第一个发布。" })
         ] }),
@@ -13806,49 +13899,49 @@ function Nv({ identity: u, path: h, projects: S, navigate: d }) {
         /* @__PURE__ */ s.jsx("h2", { children: "当前可用知识" }),
         /* @__PURE__ */ s.jsx("span", { children: "仅显示已启用、未撤回的审核版本" })
       ] }),
-      oe.length ? /* @__PURE__ */ s.jsx("div", { className: "library-grid", children: oe.map((z) => /* @__PURE__ */ s.jsxs("article", { children: [
+      de.length ? /* @__PURE__ */ s.jsx("div", { className: "library-grid", children: de.map((D) => /* @__PURE__ */ s.jsxs("article", { children: [
         /* @__PURE__ */ s.jsxs("span", { className: "role-tag", children: [
-          ju(z.type),
+          vu(D.type),
           " · v",
-          z.version
+          D.version
         ] }),
-        /* @__PURE__ */ s.jsx("h2", { children: z.title }),
+        /* @__PURE__ */ s.jsx("h2", { children: D.title }),
         /* @__PURE__ */ s.jsx("p", { children: "通用工程风险 · 已审核版本" }),
-        /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => d("/knowledge/" + z.id), children: [
+        /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => d("/knowledge/" + D.id), children: [
           "查看内容与来源",
-          /* @__PURE__ */ s.jsx(Jj, { size: 15 })
+          /* @__PURE__ */ s.jsx(Fj, { size: 15 })
         ] })
-      ] }, z.revision_id)) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
-        /* @__PURE__ */ s.jsx($i, { size: 32 }),
+      ] }, D.revision_id)) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
+        /* @__PURE__ */ s.jsx(Ki, { size: 32 }),
         /* @__PURE__ */ s.jsx("h2", { children: "此范围暂无已发布知识" }),
         /* @__PURE__ */ s.jsx("p", { children: "审核通过后，还需构建并启用发布；也可调整场景或类型筛选。" })
       ] }),
       L
     ] }) : E ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-      /* @__PURE__ */ s.jsxs("form", { className: "panel search-form", onSubmit: (z) => {
-        z.preventDefault(), tt(async () => {
-          const v = et.current;
-          Ke(null), de(null);
-          const ue = await He("/search", { method: "POST", body: JSON.stringify({ project_id: R, question: Re, scene_code: V, card_type: Q || null, answer_mode: Xe }) });
-          v === et.current && Ke(ue);
+      /* @__PURE__ */ s.jsxs("form", { className: "panel search-form", onSubmit: (D) => {
+        D.preventDefault(), Xe(async () => {
+          const x = Ke.current;
+          Fe(null), ce(null);
+          const ue = await Le("/search", { method: "POST", body: JSON.stringify({ project_id: A, question: Me, scene_code: V, card_type: Y || null, answer_mode: Je }) });
+          x === Ke.current && Fe(ue);
         });
       }, children: [
         /* @__PURE__ */ s.jsx("label", { htmlFor: "knowledge-question", children: "希望查找什么风险或案例？" }),
-        /* @__PURE__ */ s.jsx("textarea", { id: "knowledge-question", required: !0, maxLength: 4e3, rows: 3, value: Re, onChange: (z) => {
-          Be(z.target.value), Ke(null), de(null);
+        /* @__PURE__ */ s.jsx("textarea", { id: "knowledge-question", required: !0, maxLength: 4e3, rows: 3, value: Me, onChange: (D) => {
+          Ye(D.target.value), Fe(null), ce(null);
         }, placeholder: "例如：疏散通道被材料堵住，有哪些历史检查记录？" }),
         /* @__PURE__ */ s.jsxs("div", { children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "回答方式",
-            /* @__PURE__ */ s.jsxs("select", { "aria-label": "回答方式", value: Xe, onChange: (z) => {
-              Ge(z.target.value), Ke(null);
+            /* @__PURE__ */ s.jsxs("select", { "aria-label": "回答方式", value: Je, onChange: (D) => {
+              Qe(D.target.value), Fe(null);
             }, children: [
               /* @__PURE__ */ s.jsx("option", { value: "extractive", children: "摘录审核事实并附引用" }),
-              !Tt && /* @__PURE__ */ s.jsx("option", { value: "simulate_timeout", children: "验证超时回退（模拟）" })
+              !zt && /* @__PURE__ */ s.jsx("option", { value: "simulate_timeout", children: "验证超时回退（模拟）" })
             ] })
           ] }),
-          /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: P || !Re.trim(), children: [
-            /* @__PURE__ */ s.jsx(cv, { size: 17 }),
+          /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: P || !Me.trim(), children: [
+            /* @__PURE__ */ s.jsx(ov, { size: 17 }),
             P ? "正在检索…" : "查找知识"
           ] })
         ] })
@@ -13864,32 +13957,32 @@ function Nv({ identity: u, path: h, projects: S, navigate: d }) {
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "search-answer", children: [
-          pe.answer_blocks.map((z, v) => /* @__PURE__ */ s.jsx("p", { children: z.text }, v)),
-          pe.missing_conditions.map((z) => /* @__PURE__ */ s.jsx("p", { children: z }, z)),
-          pe.warnings.map((z) => /* @__PURE__ */ s.jsx("p", { className: "small-note", children: z.message }, z.code))
+          pe.answer_blocks.map((D, x) => /* @__PURE__ */ s.jsx("p", { children: D.text }, x)),
+          pe.missing_conditions.map((D) => /* @__PURE__ */ s.jsx("p", { children: D }, D)),
+          pe.warnings.map((D) => /* @__PURE__ */ s.jsx("p", { className: "small-note", children: D.message }, D.code))
         ] }),
-        pe.results.map((z, v) => /* @__PURE__ */ s.jsxs("article", { className: "search-hit", children: [
+        pe.results.map((D, x) => /* @__PURE__ */ s.jsxs("article", { className: "search-hit", children: [
           /* @__PURE__ */ s.jsxs("span", { className: "eyebrow", children: [
             "结果 ",
-            v + 1,
+            x + 1,
             " · ",
-            z.match === "exact_standard" ? "标准编号精确匹配" : "关键词与模拟向量合并"
+            D.match === "exact_standard" ? "标准编号精确匹配" : "关键词与模拟向量合并"
           ] }),
-          /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => d("/knowledge/" + z.id), children: z.title }),
-          /* @__PURE__ */ s.jsx("p", { children: z.text }),
-          /* @__PURE__ */ s.jsx("div", { children: pe.citations.filter((ue) => z.citation_ids.includes(ue.citation_id)).map((ue) => /* @__PURE__ */ s.jsxs("button", { className: "citation-button", disabled: P, onClick: () => void dt(ue.evidence_id, ue.knowledge_revision_id), children: [
+          /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => d("/knowledge/" + D.id), children: D.title }),
+          /* @__PURE__ */ s.jsx("p", { children: D.text }),
+          /* @__PURE__ */ s.jsx("div", { children: pe.citations.filter((ue) => D.citation_ids.includes(ue.citation_id)).map((ue) => /* @__PURE__ */ s.jsxs("button", { className: "citation-button", disabled: P, onClick: () => void ft(ue.evidence_id, ue.knowledge_revision_id), children: [
             "打开来源：",
             ue.source_title
           ] }, ue.citation_id)) })
-        ] }, z.revision_id)),
-        /* @__PURE__ */ s.jsxs("form", { className: "search-feedback", onSubmit: (z) => {
-          z.preventDefault(), tt(async () => {
-            await He("/search/" + pe.query_id + "/feedback", { method: "POST", body: JSON.stringify({ rating: te, comment: ae }) }), Oe("检索反馈已保存。");
+        ] }, D.revision_id)),
+        /* @__PURE__ */ s.jsxs("form", { className: "search-feedback", onSubmit: (D) => {
+          D.preventDefault(), Xe(async () => {
+            await Le("/search/" + pe.query_id + "/feedback", { method: "POST", body: JSON.stringify({ rating: te, comment: ae }) }), Ae("检索反馈已保存。");
           });
         }, children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "此次检索反馈",
-            /* @__PURE__ */ s.jsxs("select", { value: te, onChange: (z) => $(z.target.value), children: [
+            /* @__PURE__ */ s.jsxs("select", { value: te, onChange: (D) => W(D.target.value), children: [
               /* @__PURE__ */ s.jsx("option", { value: "useful", children: "有帮助" }),
               /* @__PURE__ */ s.jsx("option", { value: "irrelevant", children: "结果不相关" }),
               /* @__PURE__ */ s.jsx("option", { value: "incorrect", children: "内容需核查" })
@@ -13897,313 +13990,313 @@ function Nv({ identity: u, path: h, projects: S, navigate: d }) {
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "补充说明（选填）",
-            /* @__PURE__ */ s.jsx("input", { value: ae, maxLength: 1e3, onChange: (z) => Z(z.target.value) })
+            /* @__PURE__ */ s.jsx("input", { value: ae, maxLength: 1e3, onChange: (D) => Z(D.target.value) })
           ] }),
           /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: P, children: "保存反馈" })
         ] })
       ] })
-    ] }) : D && /* @__PURE__ */ s.jsxs("section", { className: "panel published-detail", children: [
+    ] }) : q && /* @__PURE__ */ s.jsxs("section", { className: "panel published-detail", children: [
       /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => d("/knowledge/library"), children: "返回知识库" }),
       /* @__PURE__ */ s.jsxs("span", { className: "role-tag", children: [
-        D.is_current_release === !1 ? "历史发布" : "已发布",
+        q.is_current_release === !1 ? "历史发布" : "已发布",
         " · ",
-        ju(D.type),
+        vu(q.type),
         " · v",
-        D.version
+        q.version
       ] }),
-      /* @__PURE__ */ s.jsx("h2", { children: D.title }),
+      /* @__PURE__ */ s.jsx("h2", { children: q.title }),
       /* @__PURE__ */ s.jsxs("p", { children: [
         "适用范围：",
-        ((re = S.find((z) => z.id === D.project_id)) == null ? void 0 : re.name) || D.project_id,
+        ((re = _.find((D) => D.id === q.project_id)) == null ? void 0 : re.name) || q.project_id,
         " · ",
-        yv(D.scene_code),
+        wv(q.scene_code),
         "；需结合具体作业条件核对。"
       ] }),
       /* @__PURE__ */ s.jsx("h3", { children: "已审核事实" }),
-      (Ve = D.content) == null ? void 0 : Ve.facts.map((z, v) => /* @__PURE__ */ s.jsxs("div", { className: "published-fact", children: [
-        /* @__PURE__ */ s.jsx("p", { children: z.text }),
-        /* @__PURE__ */ s.jsx("small", { children: z.source_kind === "human_annotation" ? "人工修订并经审核" : "来源生效值" }),
-        /* @__PURE__ */ s.jsx("div", { children: z.evidence_ids.map((ue) => /* @__PURE__ */ s.jsx("button", { disabled: P, className: "citation-button", onClick: () => void dt(ue, D.revision_id, D.is_current_release === !1), children: "打开来源证据" }, ue)) })
-      ] }, v)),
-      ((_ = D.content) == null ? void 0 : _.construction_points) && D.content.construction_points.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+      ($e = q.content) == null ? void 0 : $e.facts.map((D, x) => /* @__PURE__ */ s.jsxs("div", { className: "published-fact", children: [
+        /* @__PURE__ */ s.jsx("p", { children: D.text }),
+        /* @__PURE__ */ s.jsx("small", { children: D.source_kind === "human_annotation" ? "人工修订并经审核" : "来源生效值" }),
+        /* @__PURE__ */ s.jsx("div", { children: D.evidence_ids.map((ue) => /* @__PURE__ */ s.jsx("button", { disabled: P, className: "citation-button", onClick: () => void ft(ue, q.revision_id, q.is_current_release === !1), children: "打开来源证据" }, ue)) })
+      ] }, x)),
+      ((y = q.content) == null ? void 0 : y.construction_points) && q.content.construction_points.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         /* @__PURE__ */ s.jsxs("h3", { children: [
           "施工要点 · ",
-          D.content.category_name || "通用"
+          q.content.category_name || "通用"
         ] }),
-        D.content.construction_points.map((z, v) => /* @__PURE__ */ s.jsxs("div", { className: "published-fact", children: [
+        q.content.construction_points.map((D, x) => /* @__PURE__ */ s.jsxs("div", { className: "published-fact", children: [
           /* @__PURE__ */ s.jsxs("strong", { children: [
-            z.title,
+            D.title,
             " · ",
-            z.stage === "preparation" ? "施工准备" : z.stage === "execution" ? "现场实施" : "验收复核"
+            D.stage === "preparation" ? "施工准备" : D.stage === "execution" ? "现场实施" : "验收复核"
           ] }),
-          /* @__PURE__ */ s.jsx("p", { children: z.content }),
+          /* @__PURE__ */ s.jsx("p", { children: D.content }),
           /* @__PURE__ */ s.jsxs("p", { children: [
             "检查方法：",
-            z.inspection_method || "来源未明确，请结合具体条件核查"
+            D.inspection_method || "来源未明确，请结合具体条件核查"
           ] }),
           /* @__PURE__ */ s.jsxs("p", { children: [
             "常见问题：",
-            z.common_mistakes || "未明确"
+            D.common_mistakes || "未明确"
           ] }),
-          /* @__PURE__ */ s.jsx("small", { children: z.claim_kind === "source_summary" ? "已审核的来源归纳" : "经审核保留的建议，不等同已执行或有效规范" }),
-          /* @__PURE__ */ s.jsx("div", { children: z.evidence_ids.map((ue) => /* @__PURE__ */ s.jsx("button", { className: "citation-button", onClick: () => void dt(ue, D.revision_id, D.is_current_release === !1), children: "核对要点来源" }, ue)) })
-        ] }, v))
+          /* @__PURE__ */ s.jsx("small", { children: D.claim_kind === "source_summary" ? "已审核的来源归纳" : "经审核保留的建议，不等同已执行或有效规范" }),
+          /* @__PURE__ */ s.jsx("div", { children: D.evidence_ids.map((ue) => /* @__PURE__ */ s.jsx("button", { className: "citation-button", onClick: () => void ft(ue, q.revision_id, q.is_current_release === !1), children: "核对要点来源" }, ue)) })
+        ] }, x))
       ] }),
       /* @__PURE__ */ s.jsx("h3", { children: "建议与依据状态" }),
-      /* @__PURE__ */ s.jsx("p", { children: ((be = D.content) == null ? void 0 : be.generation_mode) === "llm" ? "下列建议由模型提出并经人工审核，仍需核对现场适用条件。" : "下列建议来自本地演示模板，不能作为自动处置指令。" }),
-      (ge = D.content) == null ? void 0 : ge.suggestions.map((z, v) => /* @__PURE__ */ s.jsx("p", { children: z }, v)),
-      (Qe = D.content) != null && Qe.standards.length ? D.content.standards.map((z, v) => /* @__PURE__ */ s.jsxs("p", { children: [
-        z.name,
+      /* @__PURE__ */ s.jsx("p", { children: ((ye = q.content) == null ? void 0 : ye.generation_mode) === "llm" ? "下列建议由模型提出并经人工审核，仍需核对现场适用条件。" : "下列建议来自本地演示模板，不能作为自动处置指令。" }),
+      (ge = q.content) == null ? void 0 : ge.suggestions.map((D, x) => /* @__PURE__ */ s.jsx("p", { children: D }, x)),
+      (Ze = q.content) != null && Ze.standards.length ? q.content.standards.map((D, x) => /* @__PURE__ */ s.jsxs("p", { children: [
+        D.name,
         " ",
-        z.clause,
+        D.clause,
         " · ",
-        z.verification_status === "not_used" ? "未采用" : "待核验"
-      ] }, v)) : /* @__PURE__ */ s.jsx("p", { children: "没有已独立核验的标准依据。" }),
+        D.verification_status === "not_used" ? "未采用" : "待核验"
+      ] }, x)) : /* @__PURE__ */ s.jsx("p", { children: "没有已独立核验的标准依据。" }),
       /* @__PURE__ */ s.jsxs("details", { children: [
         /* @__PURE__ */ s.jsx("summary", { children: "版本信息" }),
         /* @__PURE__ */ s.jsxs("p", { children: [
           "发布批次：",
-          D.release_id
+          q.release_id
         ] }),
-        (xt = D.versions) == null ? void 0 : xt.map((z) => /* @__PURE__ */ s.jsxs("button", { className: "citation-button", onClick: () => {
-          ke(z.id), de(null);
+        (pt = q.versions) == null ? void 0 : pt.map((D) => /* @__PURE__ */ s.jsxs("button", { className: "citation-button", onClick: () => {
+          Ee(D.id), ce(null);
         }, children: [
           "查看已发布 v",
-          z.version
-        ] }, z.id)),
-        /* @__PURE__ */ s.jsx("p", { children: D.history_note })
+          D.version
+        ] }, D.id)),
+        /* @__PURE__ */ s.jsx("p", { children: q.history_note })
       ] }),
-      At(S.find((z) => z.id === D.project_id), "knowledge.publish") && /* @__PURE__ */ s.jsxs("div", { className: "withdraw-form", children: [
+      Rt(_.find((D) => D.id === q.project_id), "knowledge.publish") && /* @__PURE__ */ s.jsxs("div", { className: "withdraw-form", children: [
         /* @__PURE__ */ s.jsxs("label", { children: [
           "撤回原因",
-          /* @__PURE__ */ s.jsx("input", { value: m, maxLength: 2e3, onChange: (z) => H(z.target.value) })
+          /* @__PURE__ */ s.jsx("input", { value: f, maxLength: 2e3, onChange: (D) => B(D.target.value) })
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "button ghost danger", disabled: P || !m.trim(), onClick: () => void tt(async () => {
-          await He("/knowledge/" + D.id + "/withdraw", { method: "POST", body: JSON.stringify({ row_version: D.row_version, reason: m }) }), je(null), de(null), Oe("知识已撤回，新的检索和证据访问已阻断。"), d("/knowledge/library");
+        /* @__PURE__ */ s.jsx("button", { className: "button ghost danger", disabled: P || !f.trim(), onClick: () => void Xe(async () => {
+          await Le("/knowledge/" + q.id + "/withdraw", { method: "POST", body: JSON.stringify({ row_version: q.row_version, reason: f }) }), ve(null), ce(null), Ae("知识已撤回，新的检索和证据访问已阻断。"), d("/knowledge/library");
         }), children: "撤回知识" })
       ] })
     ] }),
-    X && /* @__PURE__ */ s.jsxs("section", { className: "panel opened-evidence", "aria-label": "来源证据", children: [
+    Q && /* @__PURE__ */ s.jsxs("section", { className: "panel opened-evidence", "aria-label": "来源证据", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
         /* @__PURE__ */ s.jsxs("h2", { children: [
           "来源证据 · v",
-          X.source_version
+          Q.source_version
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => de(null), children: "关闭" })
+        /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => ce(null), children: "关闭" })
       ] }),
       /* @__PURE__ */ s.jsxs("div", { children: [
-        /* @__PURE__ */ s.jsx("strong", { children: X.source_title }),
-        /* @__PURE__ */ s.jsx("p", { children: X.description || "来源描述缺失" }),
-        y && /* @__PURE__ */ s.jsx("img", { className: "published-evidence-image", src: y, alt: "模拟证据示意图，非真实现场照片" }),
+        /* @__PURE__ */ s.jsx("strong", { children: Q.source_title }),
+        /* @__PURE__ */ s.jsx("p", { children: Q.description || "来源描述缺失" }),
+        b && /* @__PURE__ */ s.jsx("img", { className: "published-evidence-image", src: b, alt: "模拟证据示意图，非真实现场照片" }),
         /* @__PURE__ */ s.jsxs("p", { children: [
           "位置：",
-          _v(X.locator)
+          kv(Q.locator)
         ] }),
-        /* @__PURE__ */ s.jsx("p", { className: "small-note", children: X.note })
+        /* @__PURE__ */ s.jsx("p", { className: "small-note", children: Q.note })
       ] })
     ] })
   ] });
 }
-const kn = { received: "已接收", validating: "校验中", processing: "处理中", ready: "处理完成", failed: "处理失败", withdrawn: "已撤回", verified: "校验通过", pending: "待校验", unavailable: "当前不可用" }, Pf = { task_started: "任务开始", inspection_recorded: "现场检查记录", issue_created: "提出问题", rectification_submitted: "提交整改", review_rejected: "复核退回", review_accepted: "复核通过", task_completed: "任务完成" }, gu = { task: "任务资料", participants: "参与人员", events: "过程事件", issues: "问题与整改", attachments: "证据附件", event_times: "实际时间", data_completeness: "资料完整性", scene_code: "作业场景", extensions: "扩展资料" }, Sv = { historical_summary: "可供历史资料复盘", partial_timeline: "只能还原部分过程", complete_timeline: "具备完整时间线输入条件" }, bu = { site_photo: "现场照片", text_screenshot: "文字截图", source_document: "原始文档", video: "视频", other: "其他资料", unknown: "类型未确认" }, yu = (u) => ({ supervisor: "监护人员", contractor: "整改责任方", inspector: "检查人员", reviewer: "复核人员" })[u] || u, On = (u) => u ? new Date(u).toLocaleString("zh-CN") : "实际时间未提供", wv = (u) => JSON.stringify(u, null, 2), kv = { due_at: "整改期限", status: "状态", issue_id: "问题编号", description: "问题描述", evidence_refs: "证据编号", rectification: "整改说明", review_conclusion: "复核结论", responsible_actor_id: "责任方", event_type: "事件类型", occurred_at: "实际时间", actor_id: "人员编号", actor_role: "人员角色", payload: "补充信息", note: "说明", related_object_id: "对应对象", event_id: "事件编号", name: "任务名称", started_at: "开始时间", completed_at: "结束时间", attachment_id: "附件编号", mime_type: "文件类型", size: "文件字节数", evidence_type: "证据类型", sha256: "内容校验值" };
+const Cn = { received: "已接收", validating: "校验中", processing: "处理中", ready: "处理完成", failed: "处理失败", withdrawn: "已撤回", verified: "校验通过", pending: "待校验", unavailable: "当前不可用" }, lm = { task_started: "任务开始", inspection_recorded: "现场检查记录", issue_created: "提出问题", rectification_submitted: "提交整改", review_rejected: "复核退回", review_accepted: "复核通过", task_completed: "任务完成" }, yu = { task: "任务资料", participants: "参与人员", events: "过程事件", issues: "问题与整改", attachments: "证据附件", event_times: "实际时间", data_completeness: "资料完整性", scene_code: "作业场景", extensions: "扩展资料" }, Ev = { historical_summary: "可供历史资料复盘", partial_timeline: "只能还原部分过程", complete_timeline: "具备完整时间线输入条件" }, _u = { site_photo: "现场照片", text_screenshot: "文字截图", source_document: "原始文档", video: "视频", other: "其他资料", unknown: "类型未确认" }, Nu = (u) => ({ supervisor: "监护人员", contractor: "整改责任方", inspector: "检查人员", reviewer: "复核人员" })[u] || u, Tn = (u) => u ? new Date(u).toLocaleString("zh-CN") : "实际时间未提供", Ov = (u) => JSON.stringify(u, null, 2), Tv = { due_at: "整改期限", status: "状态", issue_id: "问题编号", description: "问题描述", evidence_refs: "证据编号", rectification: "整改说明", review_conclusion: "复核结论", responsible_actor_id: "责任方", event_type: "事件类型", occurred_at: "实际时间", actor_id: "人员编号", actor_role: "人员角色", payload: "补充信息", note: "说明", related_object_id: "对应对象", event_id: "事件编号", name: "任务名称", started_at: "开始时间", completed_at: "结束时间", attachment_id: "附件编号", mime_type: "文件类型", size: "文件字节数", evidence_type: "证据类型", sha256: "内容校验值" };
 function wa(u, h = "") {
   if (u == null) return "未提供";
-  if (Array.isArray(u)) return u.every((S) => typeof S != "object") ? u.join("、") : u.map((S, d) => `第${d + 1}条
-${wa(S)}`).join(`
+  if (Array.isArray(u)) return u.every((_) => typeof _ != "object") ? u.join("、") : u.map((_, d) => `第${d + 1}条
+${wa(_)}`).join(`
 
 `);
-  if (typeof u == "object") return Object.entries(u).map(([S, d]) => `${kv[S] || gu[S] || S}：${wa(d, S)}`).join(`
+  if (typeof u == "object") return Object.entries(u).map(([_, d]) => `${Tv[_] || yu[_] || _}：${wa(d, _)}`).join(`
 `);
   if (typeof u == "string") {
-    if (["due_at", "occurred_at", "started_at", "completed_at"].includes(h)) return On(u);
-    if (h === "actor_role" || h === "role") return yu(u);
-    if (h === "event_type") return Pf[u] || u;
-    if (h === "evidence_type") return bu[u] || u;
+    if (["due_at", "occurred_at", "started_at", "completed_at"].includes(h)) return Tn(u);
+    if (h === "actor_role" || h === "role") return Nu(u);
+    if (h === "event_type") return lm[u] || u;
+    if (h === "evidence_type") return _u[u] || u;
     if (h === "status") return { closed: "已闭环", open: "未整改", rectifying: "整改中", pending_review: "待复核", completed: "已完成", cancelled: "已取消", archived: "已归档" }[u] || u;
   }
   return String(u);
 }
-const Cv = (u) => {
+const zv = (u) => {
   const h = u.note;
-  return typeof h == "string" ? h : Object.keys(u).length ? wv(u) : "未补充说明";
+  return typeof h == "string" ? h : Object.keys(u).length ? Ov(u) : "未补充说明";
 };
-function Ev({ identity: u, path: h, projects: S, navigate: d }) {
-  var Ue, E, w, W, ve, He, tt, dt, L, fe, re, Ve;
-  const R = h === "/task-packages/import", B = !R && h !== "/task-packages" ? h.split("/")[2] : null, [V, M] = r.useState(((Ue = S[0]) == null ? void 0 : Ue.id) || ""), [Q, p] = r.useState(""), [U, K] = r.useState([]), [k, le] = r.useState(null), [xe, _e] = r.useState(""), [ye, Ee] = r.useState(null), [me, I] = r.useState([]), [oe, ne] = r.useState([]), [D, je] = r.useState([]), [Re, Be] = r.useState("complete"), [Xe, Ge] = r.useState(() => sessionStorage.getItem("b05-demo-task:" + u) || "demo-task-" + crypto.randomUUID().slice(0, 8)), [pe, Ke] = r.useState(""), [X, de] = r.useState(null), [y, Y] = r.useState(""), [ee, ke] = r.useState(""), [m, H] = r.useState(!0), [te, $] = r.useState(!1), [ae, Z] = r.useState(0), [P, Ce] = r.useState(""), [ie, Se] = r.useState(null), st = r.useRef(null), lt = r.useRef(null), Pe = r.useRef("");
-  Pe.current = [u, h, V, Re, Xe, pe].join("|");
-  const Oe = S.some((_) => _.permissions != null), Te = !Oe && At(S.find((_) => _.id === V), "imports.create"), De = k && !Oe && At(S.find((_) => _.id === k.project_id), "imports.withdraw"), Ne = k && !Oe && At(S.find((_) => _.id === k.project_id), "imports.create");
-  async function Le(_, be = {}) {
-    const ge = await Mt("/api/v1/task-packages" + _, {
-      ...be,
-      headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${u}`, ...be.headers }
-    }), Qe = await ge.json().catch(() => ({}));
-    if (!ge.ok) throw new Error(Qe.message || "接入服务暂未就绪，请稍后刷新。");
-    return Qe;
+function Av({ identity: u, path: h, projects: _, navigate: d }) {
+  var ze, E, w, $, we, Le, Xe, ft, L, he, re, $e;
+  const A = h === "/task-packages/import", M = !A && h !== "/task-packages" ? h.split("/")[2] : null, [V, z] = r.useState(((ze = _[0]) == null ? void 0 : ze.id) || ""), [Y, v] = r.useState(""), [U, K] = r.useState([]), [k, le] = r.useState(null), [xe, Ne] = r.useState(""), [Se, Te] = r.useState(null), [fe, I] = r.useState([]), [de, ne] = r.useState([]), [q, ve] = r.useState([]), [Me, Ye] = r.useState("complete"), [Je, Qe] = r.useState(() => sessionStorage.getItem("b05-demo-task:" + u) || "demo-task-" + crypto.randomUUID().slice(0, 8)), [pe, Fe] = r.useState(""), [Q, ce] = r.useState(null), [b, G] = r.useState(""), [ee, Ee] = r.useState(""), [f, B] = r.useState(!0), [te, W] = r.useState(!1), [ae, Z] = r.useState(0), [P, Oe] = r.useState(""), [ie, Ce] = r.useState(null), lt = r.useRef(null), at = r.useRef(null), et = r.useRef("");
+  et.current = [u, h, V, Me, Je, pe].join("|");
+  const Ae = _.some((y) => y.permissions != null), Re = !Ae && Rt(_.find((y) => y.id === V), "imports.create"), qe = k && !Ae && Rt(_.find((y) => y.id === k.project_id), "imports.withdraw"), ke = k && !Ae && Rt(_.find((y) => y.id === k.project_id), "imports.create");
+  async function Be(y, ye = {}) {
+    const ge = await Mt("/api/v1/task-packages" + y, {
+      ...ye,
+      headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${u}`, ...ye.headers }
+    }), Ze = await ge.json().catch(() => ({}));
+    if (!ge.ok) throw new Error(Ze.message || "接入服务暂未就绪，请稍后刷新。");
+    return Ze;
   }
-  const We = async (_) => {
-    $(!0), Y(""), ke("");
+  const tt = async (y) => {
+    W(!0), G(""), Ee("");
     try {
-      await _();
-    } catch (be) {
-      Y(be.message);
+      await y();
+    } catch (ye) {
+      G(ye.message);
     } finally {
-      $(!1);
+      W(!1);
     }
   };
   r.useEffect(() => {
-    sessionStorage.setItem("b05-demo-task:" + u, Xe);
-  }, [Xe, u]), r.useEffect(() => () => {
+    sessionStorage.setItem("b05-demo-task:" + u, Je);
+  }, [Je, u]), r.useEffect(() => () => {
     ie != null && ie.url && URL.revokeObjectURL(ie.url);
   }, [ie == null ? void 0 : ie.url]), r.useEffect(() => {
-    _e(""), I([]), Y(""), ke(""), Se(null), Ce(""), de(null);
-  }, [h, V, Q]), r.useEffect(() => {
-    let _ = !1;
-    return H(!0), le(null), Y(""), (async () => {
+    Ne(""), I([]), G(""), Ee(""), Ce(null), Oe(""), ce(null);
+  }, [h, V, Y]), r.useEffect(() => {
+    let y = !1;
+    return B(!0), le(null), G(""), (async () => {
       try {
-        if (R && Tt) {
-          const ge = await Mt("/api/v1/platform-archives"), Qe = await ge.json();
-          if (!ge.ok) throw new Error(Qe.message);
-          _ || ne(Qe.items);
-        } else if (R) {
-          const ge = await Le("/samples");
-          _ || je(ge.items);
-        } else if (B) {
-          const ge = await Le("/" + B);
-          _ || le(ge);
+        if (A && zt) {
+          const ge = await Mt("/api/v1/platform-archives"), Ze = await ge.json();
+          if (!ge.ok) throw new Error(Ze.message);
+          y || ne(Ze.items);
+        } else if (A) {
+          const ge = await Be("/samples");
+          y || ve(ge.items);
+        } else if (M) {
+          const ge = await Be("/" + M);
+          y || le(ge);
         } else {
-          const ge = await Le(`?project_id=${V}${Q ? "&state=" + Q : ""}${xe ? "&cursor=" + encodeURIComponent(xe) : ""}`);
-          _ || (K(ge.items), Ee(ge.next_cursor));
+          const ge = await Be(`?project_id=${V}${Y ? "&state=" + Y : ""}${xe ? "&cursor=" + encodeURIComponent(xe) : ""}`);
+          y || (K(ge.items), Te(ge.next_cursor));
         }
       } catch (ge) {
-        _ || Y(ge.message);
+        y || G(ge.message);
       } finally {
-        _ || H(!1);
+        y || B(!1);
       }
     })(), () => {
-      _ = !0;
+      y = !0;
     };
-  }, [h, V, Q, xe, ae]), r.useEffect(() => {
-    if (Tt || !R || !Te) return;
-    let _ = !1;
-    de(null), Ke("");
-    const be = Xe + "." + (Re === "v2" ? "complete" : Re);
-    return Le(`/samples/${Re}?project_id=${V}&task_id=${be}`).then((ge) => {
-      _ || Ke(JSON.stringify(ge, null, 2));
+  }, [h, V, Y, xe, ae]), r.useEffect(() => {
+    if (zt || !A || !Re) return;
+    let y = !1;
+    ce(null), Fe("");
+    const ye = Je + "." + (Me === "v2" ? "complete" : Me);
+    return Be(`/samples/${Me}?project_id=${V}&task_id=${ye}`).then((ge) => {
+      y || Fe(JSON.stringify(ge, null, 2));
     }).catch((ge) => {
-      _ || Y(ge.message);
+      y || G(ge.message);
     }), () => {
-      _ = !0;
+      y = !0;
     };
-  }, [R, V, Re, Xe]), r.useEffect(() => {
-    if (!(k && ["received", "validating", "processing"].includes(k.status) || !B && U.some((ge) => ["received", "validating", "processing"].includes(ge.status))) || R) return;
-    const be = setInterval(() => Z((ge) => ge + 1), 1800);
-    return () => clearInterval(be);
+  }, [A, V, Me, Je]), r.useEffect(() => {
+    if (!(k && ["received", "validating", "processing"].includes(k.status) || !M && U.some((ge) => ["received", "validating", "processing"].includes(ge.status))) || A) return;
+    const ye = setInterval(() => Z((ge) => ge + 1), 1800);
+    return () => clearInterval(ye);
   }, [k == null ? void 0 : k.status, U, h]);
-  const Fe = () => We(async () => {
-    const _ = Pe.current;
-    de(null);
-    const be = await Le("/preview", { method: "POST", body: pe });
-    Pe.current === _ && de(be);
-  }), Ze = () => We(async () => {
-    var be;
-    if (!X) return;
-    ((be = st.current) == null ? void 0 : be.hash) !== X.content_hash && (st.current = { hash: X.content_hash, key: crypto.randomUUID() });
-    const _ = await Le("", { method: "POST", headers: { "Idempotency-Key": st.current.key }, body: pe });
-    ke(_.replayed ? "已找到相同任务包，复用原接收记录。" : "任务包已接收，后台将自动校验附件。"), d("/task-packages/" + _.receipt_id);
-  }), he = (_) => We(async () => {
-    const be = Pe.current;
-    Se(null);
-    const ge = await Mt(`/api/v1/task-packages/${B}/assets/${_.attachment_id}/content`, { headers: { Authorization: `Bearer dev-${u}` } });
+  const st = () => tt(async () => {
+    const y = et.current;
+    ce(null);
+    const ye = await Be("/preview", { method: "POST", body: pe });
+    et.current === y && ce(ye);
+  }), rt = () => tt(async () => {
+    var ye;
+    if (!Q) return;
+    ((ye = lt.current) == null ? void 0 : ye.hash) !== Q.content_hash && (lt.current = { hash: Q.content_hash, key: crypto.randomUUID() });
+    const y = await Be("", { method: "POST", headers: { "Idempotency-Key": lt.current.key }, body: pe });
+    Ee(y.replayed ? "已找到相同任务包，复用原接收记录。" : "任务包已接收，后台将自动校验附件。"), d("/task-packages/" + y.receipt_id);
+  }), je = (y) => tt(async () => {
+    const ye = et.current;
+    Ce(null);
+    const ge = await Mt(`/api/v1/task-packages/${M}/assets/${y.attachment_id}/content`, { headers: { Authorization: `Bearer dev-${u}` } });
     if (!ge.ok) {
-      const xt = await ge.json().catch(() => ({}));
-      throw new Error(xt.message || "附件服务暂不可用，请稍后重试。");
+      const pt = await ge.json().catch(() => ({}));
+      throw new Error(pt.message || "附件服务暂不可用，请稍后重试。");
     }
-    const Qe = await ge.blob();
-    if (be === Pe.current)
-      if (_.mime_type.startsWith("text/")) {
-        const xt = await Qe.slice(0, 1e6).text();
-        be === Pe.current && Se({ id: _.attachment_id, url: null, text: xt });
-      } else if (_.mime_type.startsWith("image/")) Se({ id: _.attachment_id, url: URL.createObjectURL(Qe), text: null });
+    const Ze = await ge.blob();
+    if (ye === et.current)
+      if (y.mime_type.startsWith("text/")) {
+        const pt = await Ze.slice(0, 1e6).text();
+        ye === et.current && Ce({ id: y.attachment_id, url: null, text: pt });
+      } else if (y.mime_type.startsWith("image/")) Ce({ id: y.attachment_id, url: URL.createObjectURL(Ze), text: null });
       else {
-        const xt = URL.createObjectURL(Qe), z = document.createElement("a");
-        z.href = xt, z.download = "任务附件", z.click(), URL.revokeObjectURL(xt);
+        const pt = URL.createObjectURL(Ze), D = document.createElement("a");
+        D.href = pt, D.download = "任务附件", D.click(), URL.revokeObjectURL(pt);
       }
-  }), et = /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
+  }), Ke = /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
     /* @__PURE__ */ s.jsx("span", { children: "仅展示当前授权项目" }),
     /* @__PURE__ */ s.jsxs("div", { className: "pagination", children: [
-      /* @__PURE__ */ s.jsx("button", { disabled: !me.length || m, onClick: () => {
-        _e(me.at(-1) || ""), I(me.slice(0, -1));
+      /* @__PURE__ */ s.jsx("button", { disabled: !fe.length || f, onClick: () => {
+        Ne(fe.at(-1) || ""), I(fe.slice(0, -1));
       }, children: "上一页" }),
-      /* @__PURE__ */ s.jsx("button", { disabled: !ye || m, onClick: () => {
-        I([...me, xe]), _e(ye || "");
+      /* @__PURE__ */ s.jsx("button", { disabled: !Se || f, onClick: () => {
+        I([...fe, xe]), Ne(Se || "");
       }, children: "下一页" })
     ] })
   ] });
-  return S.length ? Oe && R ? /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+  return _.length ? Ae && A ? /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
     /* @__PURE__ */ s.jsx("h2", { children: "A 成果接入" }),
     /* @__PURE__ */ s.jsx("p", { children: "请在 A 的成果归档中选择指定版本并点击“接入知识中心”。已有资料可继续查看。" }),
     /* @__PURE__ */ s.jsx("a", { href: "/quality/#archives", children: "打开成果归档" })
   ] }) : /* @__PURE__ */ s.jsxs("div", { className: "task-packages-module", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-banner", children: [
-      /* @__PURE__ */ s.jsx(Ef, { size: 21 }),
+      /* @__PURE__ */ s.jsx(zf, { size: 21 }),
       /* @__PURE__ */ s.jsxs("div", { children: [
-        /* @__PURE__ */ s.jsx("strong", { children: Tt ? "小察归档成果接入" : "A任务包接入 · 模拟数据" }),
-        /* @__PURE__ */ s.jsx("span", { children: Oe ? "保留指定成果版本；新版本产生后旧版本仍可使用，明确撤回才停止引用。缺失信息不会自动补全。" : "保留任务、事件、问题和附件的归档版本。补正或更新后的旧成果停止使用；缺失信息不会自动补全。" })
+        /* @__PURE__ */ s.jsx("strong", { children: zt ? "小察归档成果接入" : "A任务包接入 · 模拟数据" }),
+        /* @__PURE__ */ s.jsx("span", { children: Ae ? "保留指定成果版本；新版本产生后旧版本仍可使用，明确撤回才停止引用。缺失信息不会自动补全。" : "保留任务、事件、问题和附件的归档版本。补正或更新后的旧成果停止使用；缺失信息不会自动补全。" })
       ] })
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
-        /* @__PURE__ */ s.jsx("button", { className: R ? "" : "selected", onClick: () => d("/task-packages"), children: "任务包清单" }),
-        !Oe && S.some((_) => At(_, "imports.create")) && /* @__PURE__ */ s.jsx("button", { className: R ? "selected" : "", onClick: () => d("/task-packages/import"), children: "接入归档成果" })
+        /* @__PURE__ */ s.jsx("button", { className: A ? "" : "selected", onClick: () => d("/task-packages"), children: "任务包清单" }),
+        !Ae && _.some((y) => Rt(y, "imports.create")) && /* @__PURE__ */ s.jsx("button", { className: A ? "selected" : "", onClick: () => d("/task-packages/import"), children: "接入归档成果" })
       ] }),
       /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => {
-        Se(null), Z((_) => _ + 1);
+        Ce(null), Z((y) => y + 1);
       }, children: [
         /* @__PURE__ */ s.jsx(Rs, { size: 15 }),
         "刷新"
       ] })
     ] }),
     (k == null ? void 0 : k.a_import_id) && /* @__PURE__ */ s.jsx("button", { className: "button primary", onClick: () => d("/imports/" + k.a_import_id), children: "接入与复盘状态" }),
-    y && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
+    b && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
       /* @__PURE__ */ s.jsx(Nl, { size: 18 }),
-      y
+      b
     ] }),
     ee && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
       /* @__PURE__ */ s.jsx(Sl, { size: 18 }),
       ee
     ] }),
-    !B && /* @__PURE__ */ s.jsxs("div", { className: "package-filters", children: [
+    !M && /* @__PURE__ */ s.jsxs("div", { className: "package-filters", children: [
       /* @__PURE__ */ s.jsxs("label", { children: [
         "项目范围",
-        /* @__PURE__ */ s.jsx("select", { "aria-label": "任务包项目", value: V, onChange: (_) => M(_.target.value), children: S.map((_) => /* @__PURE__ */ s.jsx("option", { value: _.id, children: _.name }, _.id)) })
+        /* @__PURE__ */ s.jsx("select", { "aria-label": "任务包项目", value: V, onChange: (y) => z(y.target.value), children: _.map((y) => /* @__PURE__ */ s.jsx("option", { value: y.id, children: y.name }, y.id)) })
       ] }),
-      !R && /* @__PURE__ */ s.jsxs("label", { children: [
+      !A && /* @__PURE__ */ s.jsxs("label", { children: [
         "接入状态",
-        /* @__PURE__ */ s.jsxs("select", { "aria-label": "任务包状态", value: Q, onChange: (_) => p(_.target.value), children: [
+        /* @__PURE__ */ s.jsxs("select", { "aria-label": "任务包状态", value: Y, onChange: (y) => v(y.target.value), children: [
           /* @__PURE__ */ s.jsx("option", { value: "", children: "全部状态" }),
-          ["received", "validating", "processing", "ready", "failed", "withdrawn"].map((_) => /* @__PURE__ */ s.jsx("option", { value: _, children: kn[_] }, _))
+          ["received", "validating", "processing", "ready", "failed", "withdrawn"].map((y) => /* @__PURE__ */ s.jsx("option", { value: y, children: Cn[y] }, y))
         ] })
       ] })
     ] }),
-    m ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取任务包…" }) : R ? Te ? Tt ? /* @__PURE__ */ s.jsxs("section", { className: "panel package-import", children: [
+    f ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取任务包…" }) : A ? Re ? zt ? /* @__PURE__ */ s.jsxs("section", { className: "panel package-import", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
         /* @__PURE__ */ s.jsx("h2", { children: "选择当前项目已归档成果" }),
         /* @__PURE__ */ s.jsx("span", { children: "自动接入已有记录和附件，无需重复填写" })
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "package-import-inner", children: [
-        oe.filter((_) => _.project_id === V).map((_) => /* @__PURE__ */ s.jsxs("article", { children: [
+        de.filter((y) => y.project_id === V).map((y) => /* @__PURE__ */ s.jsxs("article", { children: [
           /* @__PURE__ */ s.jsxs("h3", { children: [
-            _.title,
+            y.title,
             " · 第",
-            _.version,
+            y.version,
             "版"
           ] }),
-          /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: te, onClick: () => void We(async () => {
-            const be = await Mt("/api/v1/platform-archives", { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ delivery_id: _.id }) }), ge = await be.json();
-            if (!be.ok) throw new Error(ge.message);
+          /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: te, onClick: () => void tt(async () => {
+            const ye = await Mt("/api/v1/platform-archives", { method: "POST", headers: { "Content-Type": "application/json", "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ delivery_id: y.id }) }), ge = await ye.json();
+            if (!ye.ok) throw new Error(ge.message);
             d("/task-packages/" + ge.receipt_id);
           }), children: "接入此成果" })
-        ] }, _.id)),
-        !oe.some((_) => _.project_id === V) && /* @__PURE__ */ s.jsx("p", { children: "当前项目没有已归档成果，请先在小察任务工作台完成接收与归档。" })
+        ] }, y.id)),
+        !de.some((y) => y.project_id === V) && /* @__PURE__ */ s.jsx("p", { children: "当前项目没有已归档成果，请先在小察任务工作台完成接收与归档。" })
       ] })
     ] }) : /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("section", { className: "panel package-import", children: [
@@ -14214,72 +14307,72 @@ function Ev({ identity: u, path: h, projects: S, navigate: d }) {
         /* @__PURE__ */ s.jsxs("div", { className: "package-import-inner", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "模拟场景",
-            /* @__PURE__ */ s.jsx("select", { "aria-label": "模拟任务场景", value: Re, onChange: (_) => Be(_.target.value), children: D.map((_) => /* @__PURE__ */ s.jsx("option", { value: _.id, children: _.label }, _.id)) })
+            /* @__PURE__ */ s.jsx("select", { "aria-label": "模拟任务场景", value: Me, onChange: (y) => Ye(y.target.value), children: q.map((y) => /* @__PURE__ */ s.jsx("option", { value: y.id, children: y.label }, y.id)) })
           ] }),
           /* @__PURE__ */ s.jsx("p", { children: "完整包与第2版属于同一模拟任务，便于验证版本更新；其他异常场景分别保存。重复导入相同内容会复用原记录。" }),
-          /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: te, onClick: () => Ge("demo-task-" + crypto.randomUUID().slice(0, 8)), children: "换一组新的模拟任务" }),
+          /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: te, onClick: () => Qe("demo-task-" + crypto.randomUUID().slice(0, 8)), children: "换一组新的模拟任务" }),
           /* @__PURE__ */ s.jsxs("label", { className: "package-file", children: [
             "或选择本地JSON任务包",
-            /* @__PURE__ */ s.jsx("input", { type: "file", accept: ".json,application/json", disabled: te, onChange: (_) => {
+            /* @__PURE__ */ s.jsx("input", { type: "file", accept: ".json,application/json", disabled: te, onChange: (y) => {
               var ge;
-              const be = (ge = _.target.files) == null ? void 0 : ge[0];
-              if (be) {
-                if (be.size > 5242880) {
-                  Y("文件超过5MiB上限。");
+              const ye = (ge = y.target.files) == null ? void 0 : ge[0];
+              if (ye) {
+                if (ye.size > 5242880) {
+                  G("文件超过5MiB上限。");
                   return;
                 }
-                be.text().then((Qe) => {
-                  Ke(Qe), de(null), Y("");
+                ye.text().then((Ze) => {
+                  Fe(Ze), ce(null), G("");
                 });
               }
             } })
           ] }),
           /* @__PURE__ */ s.jsxs("details", { children: [
             /* @__PURE__ */ s.jsx("summary", { children: "查看或调整原始任务包（开发用）" }),
-            /* @__PURE__ */ s.jsx("textarea", { "aria-label": "任务包JSON", rows: 15, value: pe, onChange: (_) => {
-              Ke(_.target.value), de(null);
+            /* @__PURE__ */ s.jsx("textarea", { "aria-label": "任务包JSON", rows: 15, value: pe, onChange: (y) => {
+              Fe(y.target.value), ce(null);
             }, spellCheck: !1 })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "package-actions", children: [
-            /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: te || !pe, onClick: () => void Fe(), children: "预检查" }),
-            /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: te || !X, onClick: () => void Ze(), children: [
-              /* @__PURE__ */ s.jsx(Kf, { size: 16 }),
+            /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: te || !pe, onClick: () => void st(), children: "预检查" }),
+            /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: te || !Q, onClick: () => void rt(), children: [
+              /* @__PURE__ */ s.jsx(If, { size: 16 }),
               te ? "正在处理…" : "确认接入归档成果"
             ] })
           ] })
         ] })
       ] }),
-      X && /* @__PURE__ */ s.jsxs("section", { className: "panel package-preview", children: [
+      Q && /* @__PURE__ */ s.jsxs("section", { className: "panel package-preview", children: [
         /* @__PURE__ */ s.jsxs("h2", { children: [
-          X.name,
+          Q.name,
           " · 第",
-          X.package_version,
+          Q.package_version,
           "版"
         ] }),
         /* @__PURE__ */ s.jsxs("p", { children: [
           "归属项目：",
-          ((E = S.find((_) => _.id === X.project_id)) == null ? void 0 : E.name) || X.project_id
+          ((E = _.find((y) => y.id === Q.project_id)) == null ? void 0 : E.name) || Q.project_id
         ] }),
-        /* @__PURE__ */ s.jsx("div", { children: Object.entries(X.counts).map(([_, be]) => /* @__PURE__ */ s.jsxs("span", { children: [
-          gu[_],
+        /* @__PURE__ */ s.jsx("div", { children: Object.entries(Q.counts).map(([y, ye]) => /* @__PURE__ */ s.jsxs("span", { children: [
+          yu[y],
           " ",
-          /* @__PURE__ */ s.jsx("strong", { children: be })
-        ] }, _)) }),
-        /* @__PURE__ */ s.jsx("p", { children: X.note }),
-        X.warnings.length > 0 && /* @__PURE__ */ s.jsx("p", { children: "检测到缺少时间、资料或兼容性提示；接收后会保留并限制使用范围。" })
+          /* @__PURE__ */ s.jsx("strong", { children: ye })
+        ] }, y)) }),
+        /* @__PURE__ */ s.jsx("p", { children: Q.note }),
+        Q.warnings.length > 0 && /* @__PURE__ */ s.jsx("p", { children: "检测到缺少时间、资料或兼容性提示；接收后会保留并限制使用范围。" })
       ] })
-    ] }) : /* @__PURE__ */ s.jsx("section", { className: "panel empty", children: /* @__PURE__ */ s.jsx("h2", { children: "当前项目没有导入权限" }) }) : B ? k && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+    ] }) : /* @__PURE__ */ s.jsx("section", { className: "panel empty", children: /* @__PURE__ */ s.jsx("h2", { children: "当前项目没有导入权限" }) }) : M ? k && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("section", { className: "panel package-overview", children: [
         /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => d("/task-packages"), children: "返回任务包清单" }),
         /* @__PURE__ */ s.jsxs("div", { className: "package-title", children: [
           /* @__PURE__ */ s.jsxs("div", { children: [
             /* @__PURE__ */ s.jsx("h2", { children: k.name }),
             /* @__PURE__ */ s.jsxs("p", { children: [
-              ((w = S.find((_) => _.id === k.project_id)) == null ? void 0 : w.name) || k.project_id,
+              ((w = _.find((y) => y.id === k.project_id)) == null ? void 0 : w.name) || k.project_id,
               " · 第",
               k.package_version,
               "版 · ",
-              kn[k.status],
+              Cn[k.status],
               k.is_current ? " · 当前可用版本" : ""
             ] })
           ] }),
@@ -14299,27 +14392,27 @@ function Ev({ identity: u, path: h, projects: S, navigate: d }) {
             /* @__PURE__ */ s.jsx("strong", { children: k.current_package_id ? "第" + k.current_ready_version + "版" : "暂无（不会自动恢复旧版）" })
           ] })
         ] }),
-        k.capabilities.map((_) => /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: Sv[_] }, _)),
+        k.capabilities.map((y) => /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: Ev[y] }, y)),
         k.status !== "withdrawn" && /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "上述为输入资料可用程度；复盘需单独生成、核查和审核，发布后可用于培训学习。" }),
         k.retrospective_id && /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => d("/retrospectives/" + k.retrospective_id), children: "打开已有复盘" }),
-        Ne && k.status === "ready" && k.is_current && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: te, onClick: () => void We(async () => {
-          const _ = await Mt("/api/v1/retrospectives", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${u}` }, body: JSON.stringify({ mode: "task_process", task_package_id: k.id }) }), be = await _.json();
-          if (!_.ok) throw new Error(be.message);
-          d("/retrospectives/" + be.id);
+        ke && k.status === "ready" && k.is_current && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: te, onClick: () => void tt(async () => {
+          const y = await Mt("/api/v1/retrospectives", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${u}` }, body: JSON.stringify({ mode: "task_process", task_package_id: k.id }) }), ye = await y.json();
+          if (!y.ok) throw new Error(ye.message);
+          d("/retrospectives/" + ye.id);
         }), children: "自动生成 / 更新复盘" })
       ] }),
       k.status === "withdrawn" ? /* @__PURE__ */ s.jsxs("section", { className: "panel package-warning", children: [
         /* @__PURE__ */ s.jsx("h2", { children: "此任务包已撤回" }),
         /* @__PURE__ */ s.jsx("p", { children: "正文、事件、问题和附件已停止在线使用。" }),
-        k.invalidations.map((_) => /* @__PURE__ */ s.jsxs("p", { children: [
+        k.invalidations.map((y) => /* @__PURE__ */ s.jsxs("p", { children: [
           "下游失效通知：",
-          _.state === "handled" ? "复盘、培训实时来源保护已生效" : _.state === "pending" ? "历史通知待标记；当前在线访问仍受来源保护" : _.state
-        ] }, _.id))
+          y.state === "handled" ? "复盘、培训实时来源保护已生效" : y.state === "pending" ? "历史通知待标记；当前在线访问仍受来源保护" : y.state
+        ] }, y.id))
       ] }) : /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         (k.warnings.length > 0 || k.validation_errors.length > 0) && /* @__PURE__ */ s.jsxs("section", { className: "panel package-warning", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "校验结果与资料限制" }),
-          k.validation_errors.map((_, be) => /* @__PURE__ */ s.jsx("p", { children: _.message }, "e" + be)),
-          k.warnings.map((_, be) => /* @__PURE__ */ s.jsx("p", { children: _.message }, "w" + be))
+          k.validation_errors.map((y, ye) => /* @__PURE__ */ s.jsx("p", { children: y.message }, "e" + ye)),
+          k.warnings.map((y, ye) => /* @__PURE__ */ s.jsx("p", { children: y.message }, "w" + ye))
         ] }),
         ["received", "validating", "processing"].includes(k.status) && /* @__PURE__ */ s.jsxs("div", { className: "feedback", children: [
           "后台处理中 · ",
@@ -14330,68 +14423,68 @@ function Ev({ identity: u, path: h, projects: S, navigate: d }) {
           /* @__PURE__ */ s.jsx("h2", { children: "任务快照" }),
           /* @__PURE__ */ s.jsxs("p", { children: [
             "开始：",
-            On((W = k.task) == null ? void 0 : W.started_at),
+            Tn(($ = k.task) == null ? void 0 : $.started_at),
             "　结束：",
-            On((ve = k.task) == null ? void 0 : ve.completed_at)
+            Tn((we = k.task) == null ? void 0 : we.completed_at)
           ] }),
           /* @__PURE__ */ s.jsxs("p", { children: [
             "参与人员：",
-            ((He = k.participants) == null ? void 0 : He.map((_) => yu(_.role) + "（" + _.actor_id + "）").join("、")) || "未提供"
+            ((Le = k.participants) == null ? void 0 : Le.map((y) => Nu(y.role) + "（" + y.actor_id + "）").join("、")) || "未提供"
           ] }),
-          (tt = k.issues) == null ? void 0 : tt.map((_) => /* @__PURE__ */ s.jsxs("div", { children: [
-            /* @__PURE__ */ s.jsx("h3", { children: _.description }),
+          (Xe = k.issues) == null ? void 0 : Xe.map((y) => /* @__PURE__ */ s.jsxs("div", { children: [
+            /* @__PURE__ */ s.jsx("h3", { children: y.description }),
             /* @__PURE__ */ s.jsxs("p", { children: [
               "责任方：",
-              _.responsible_actor_id || "未提供",
+              y.responsible_actor_id || "未提供",
               "　期限：",
-              On(_.due_at)
+              Tn(y.due_at)
             ] }),
             /* @__PURE__ */ s.jsxs("p", { children: [
               "整改：",
-              _.rectification || "未提供"
+              y.rectification || "未提供"
             ] }),
             /* @__PURE__ */ s.jsxs("p", { children: [
               "复核：",
-              _.review_conclusion || "未提供"
+              y.review_conclusion || "未提供"
             ] })
-          ] }, _.issue_id))
+          ] }, y.issue_id))
         ] }),
         /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
           /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
             /* @__PURE__ */ s.jsx("h2", { children: "过程事件与证据" }),
             /* @__PURE__ */ s.jsx("span", { children: "按A提供顺序展示，未知时间保持为空" })
           ] }),
-          /* @__PURE__ */ s.jsx("div", { className: "package-timeline", children: (dt = k.events) != null && dt.length ? k.events.map((_) => /* @__PURE__ */ s.jsxs("article", { children: [
-            /* @__PURE__ */ s.jsx("time", { children: On(_.occurred_at) }),
+          /* @__PURE__ */ s.jsx("div", { className: "package-timeline", children: (ft = k.events) != null && ft.length ? k.events.map((y) => /* @__PURE__ */ s.jsxs("article", { children: [
+            /* @__PURE__ */ s.jsx("time", { children: Tn(y.occurred_at) }),
             /* @__PURE__ */ s.jsxs("div", { children: [
-              /* @__PURE__ */ s.jsx("h3", { children: _.is_known ? Pf[_.event_type] || _.event_type : "未知事件 · " + _.event_type }),
-              /* @__PURE__ */ s.jsx("p", { children: Cv(_.payload) }),
-              _.related_object_id && /* @__PURE__ */ s.jsxs("p", { children: [
+              /* @__PURE__ */ s.jsx("h3", { children: y.is_known ? lm[y.event_type] || y.event_type : "未知事件 · " + y.event_type }),
+              /* @__PURE__ */ s.jsx("p", { children: zv(y.payload) }),
+              y.related_object_id && /* @__PURE__ */ s.jsxs("p", { children: [
                 "对应：",
-                _.related_object_id === k.task_id ? "本次任务" : "问题 " + _.related_object_id
+                y.related_object_id === k.task_id ? "本次任务" : "问题 " + y.related_object_id
               ] }),
               /* @__PURE__ */ s.jsxs("small", { children: [
-                yu(_.actor.actor_role),
+                Nu(y.actor.actor_role),
                 " · ",
-                _.actor.actor_id || "未提供人员"
+                y.actor.actor_id || "未提供人员"
               ] }),
-              _.evidence_refs.length > 0 && /* @__PURE__ */ s.jsxs("div", { className: "package-event-evidence", children: [
+              y.evidence_refs.length > 0 && /* @__PURE__ */ s.jsxs("div", { className: "package-event-evidence", children: [
                 "关联证据：",
-                _.evidence_refs.map((be) => {
-                  var Qe;
-                  const ge = (Qe = k.attachments) == null ? void 0 : Qe.find((xt) => xt.attachment_id === be);
-                  return /* @__PURE__ */ s.jsxs("button", { className: "text-button", disabled: te || !ge || ge.state !== "verified", onClick: () => ge && void he(ge), children: [
-                    ge ? bu[ge.evidence_type] || "证据附件" : "证据缺失",
+                y.evidence_refs.map((ye) => {
+                  var Ze;
+                  const ge = (Ze = k.attachments) == null ? void 0 : Ze.find((pt) => pt.attachment_id === ye);
+                  return /* @__PURE__ */ s.jsxs("button", { className: "text-button", disabled: te || !ge || ge.state !== "verified", onClick: () => ge && void je(ge), children: [
+                    ge ? _u[ge.evidence_type] || "证据附件" : "证据缺失",
                     " · ",
-                    be
-                  ] }, be);
+                    ye
+                  ] }, ye);
                 })
               ] })
             ] })
-          ] }, _.event_id)) : /* @__PURE__ */ s.jsx("p", { children: "没有已接入的过程事件；后台处理未完成或此包仅提供历史资料。" }) }),
-          k.event_next !== null && k.event_next !== void 0 && /* @__PURE__ */ s.jsx("button", { className: "button ghost package-more", disabled: te, onClick: () => void We(async () => {
-            const _ = await Le("/" + B + "?event_after=" + k.event_next);
-            le({ ..._, events: [...k.events || [], ..._.events || []] });
+          ] }, y.event_id)) : /* @__PURE__ */ s.jsx("p", { children: "没有已接入的过程事件；后台处理未完成或此包仅提供历史资料。" }) }),
+          k.event_next !== null && k.event_next !== void 0 && /* @__PURE__ */ s.jsx("button", { className: "button ghost package-more", disabled: te, onClick: () => void tt(async () => {
+            const y = await Be("/" + M + "?event_after=" + k.event_next);
+            le({ ...y, events: [...k.events || [], ...y.events || []] });
           }), children: "加载后续事件" })
         ] }),
         /* @__PURE__ */ s.jsxs("section", { className: "panel package-attachments", children: [
@@ -14399,27 +14492,27 @@ function Ev({ identity: u, path: h, projects: S, navigate: d }) {
             /* @__PURE__ */ s.jsx("h2", { children: "证据附件" }),
             /* @__PURE__ */ s.jsx("span", { children: "校验通过后才可打开" })
           ] }),
-          (L = k.attachments) != null && L.length ? k.attachments.map((_) => /* @__PURE__ */ s.jsxs("article", { children: [
+          (L = k.attachments) != null && L.length ? k.attachments.map((y) => /* @__PURE__ */ s.jsxs("article", { children: [
             /* @__PURE__ */ s.jsxs("div", { children: [
               /* @__PURE__ */ s.jsxs("strong", { children: [
-                bu[_.evidence_type] || "未知类型",
+                _u[y.evidence_type] || "未知类型",
                 " · ",
-                _.attachment_id
+                y.attachment_id
               ] }),
               /* @__PURE__ */ s.jsxs("small", { children: [
-                kn[_.state],
+                Cn[y.state],
                 " · ",
-                _.size,
+                y.size,
                 " 字节 · 关联",
-                _.event_ids.length,
+                y.event_ids.length,
                 "个事件"
               ] }),
-              _.error && /* @__PURE__ */ s.jsx("p", { children: _.error })
+              y.error && /* @__PURE__ */ s.jsx("p", { children: y.error })
             ] }),
-            /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: te || _.state !== "verified", onClick: () => void he(_), children: "打开附件" })
-          ] }, _.attachment_id)) : /* @__PURE__ */ s.jsx("p", { className: "package-pad", children: "未提供附件，不能据此声称证据完整。" }),
+            /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: te || y.state !== "verified", onClick: () => void je(y), children: "打开附件" })
+          ] }, y.attachment_id)) : /* @__PURE__ */ s.jsx("p", { className: "package-pad", children: "未提供附件，不能据此声称证据完整。" }),
           ie && /* @__PURE__ */ s.jsxs("div", { className: "package-opened", children: [
-            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => Se(null), children: "关闭预览" }),
+            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => Ce(null), children: "关闭预览" }),
             /* @__PURE__ */ s.jsxs("p", { children: [
               "证据附件 · ",
               ie.id
@@ -14430,48 +14523,48 @@ function Ev({ identity: u, path: h, projects: S, navigate: d }) {
         ] }),
         /* @__PURE__ */ s.jsxs("section", { className: "panel package-history", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "版本与变化" }),
-          /* @__PURE__ */ s.jsx("div", { className: "package-version-links", children: (fe = k.versions) == null ? void 0 : fe.map((_) => /* @__PURE__ */ s.jsxs("button", { className: "button ghost", disabled: _.id === k.id, onClick: () => d("/task-packages/" + _.id), children: [
+          /* @__PURE__ */ s.jsx("div", { className: "package-version-links", children: (he = k.versions) == null ? void 0 : he.map((y) => /* @__PURE__ */ s.jsxs("button", { className: "button ghost", disabled: y.id === k.id, onClick: () => d("/task-packages/" + y.id), children: [
             "第",
-            _.package_version,
+            y.package_version,
             "版 · ",
-            kn[_.state],
-            _.is_current ? " · 当前使用" : ""
-          ] }, _.id)) }),
+            Cn[y.state],
+            y.is_current ? " · 当前使用" : ""
+          ] }, y.id)) }),
           (re = k.diff) != null && re.previous_version ? /* @__PURE__ */ s.jsxs("p", { children: [
             "与上一可查看版本（第",
             k.diff.previous_version,
             "版）比较："
           ] }) : /* @__PURE__ */ s.jsx("p", { children: "暂无更早可查看版本。" }),
-          (Ve = k.diff) == null ? void 0 : Ve.changes.map((_, be) => {
-            var ge, Qe, xt, z, v;
+          ($e = k.diff) == null ? void 0 : $e.changes.map((y, ye) => {
+            var ge, Ze, pt, D, x;
             return /* @__PURE__ */ s.jsxs("details", { children: [
               /* @__PURE__ */ s.jsxs("summary", { children: [
-                gu[_.section] || _.section,
+                yu[y.section] || y.section,
                 "有变化"
               ] }),
-              "before" in _ ? /* @__PURE__ */ s.jsxs("div", { className: "package-diff", children: [
+              "before" in y ? /* @__PURE__ */ s.jsxs("div", { className: "package-diff", children: [
                 /* @__PURE__ */ s.jsxs("div", { children: [
                   /* @__PURE__ */ s.jsx("strong", { children: "上一版" }),
-                  /* @__PURE__ */ s.jsx("pre", { children: wa(_.before) })
+                  /* @__PURE__ */ s.jsx("pre", { children: wa(y.before) })
                 ] }),
                 /* @__PURE__ */ s.jsxs("div", { children: [
                   /* @__PURE__ */ s.jsx("strong", { children: "本版" }),
-                  /* @__PURE__ */ s.jsx("pre", { children: wa(_.after) })
+                  /* @__PURE__ */ s.jsx("pre", { children: wa(y.after) })
                 ] })
               ] }) : /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
                 /* @__PURE__ */ s.jsxs("p", { children: [
                   "新增：",
-                  ((ge = _.added) == null ? void 0 : ge.join("、")) || "无",
+                  ((ge = y.added) == null ? void 0 : ge.join("、")) || "无",
                   "；移除：",
-                  ((Qe = _.removed) == null ? void 0 : Qe.join("、")) || "无"
+                  ((Ze = y.removed) == null ? void 0 : Ze.join("、")) || "无"
                 ] }),
-                _.order_changed && /* @__PURE__ */ s.jsxs("p", { children: [
+                y.order_changed && /* @__PURE__ */ s.jsxs("p", { children: [
                   "来源记录顺序有变化：",
-                  (xt = _.before_order) == null ? void 0 : xt.join(" → "),
+                  (pt = y.before_order) == null ? void 0 : pt.join(" → "),
                   "　调整为　",
-                  (z = _.after_order) == null ? void 0 : z.join(" → ")
+                  (D = y.after_order) == null ? void 0 : D.join(" → ")
                 ] }),
-                (v = _.changed) == null ? void 0 : v.map((ue) => /* @__PURE__ */ s.jsxs("div", { className: "package-diff", children: [
+                (x = y.changed) == null ? void 0 : x.map((ue) => /* @__PURE__ */ s.jsxs("div", { className: "package-diff", children: [
                   /* @__PURE__ */ s.jsxs("div", { children: [
                     /* @__PURE__ */ s.jsxs("strong", { children: [
                       ue.id,
@@ -14485,24 +14578,24 @@ function Ev({ identity: u, path: h, projects: S, navigate: d }) {
                   ] })
                 ] }, ue.id))
               ] })
-            ] }, be);
+            ] }, ye);
           })
         ] }),
-        (De || Ne && k.status === "failed") && /* @__PURE__ */ s.jsxs("section", { className: "panel package-controls", children: [
-          Ne && k.status === "failed" && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: te, onClick: () => void We(async () => {
-            const _ = await Mt("/api/v1/jobs/" + k.job_id + "/retry", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${u}`, "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: k.job_row_version }) });
-            if (!_.ok) throw new Error((await _.json()).message);
-            ke("已提交重试，已保存事件与附件不会重复新增。"), Z((be) => be + 1);
+        (qe || ke && k.status === "failed") && /* @__PURE__ */ s.jsxs("section", { className: "panel package-controls", children: [
+          ke && k.status === "failed" && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: te, onClick: () => void tt(async () => {
+            const y = await Mt("/api/v1/jobs/" + k.job_id + "/retry", { method: "POST", headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${u}`, "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: k.job_row_version }) });
+            if (!y.ok) throw new Error((await y.json()).message);
+            Ee("已提交重试，已保存事件与附件不会重复新增。"), Z((ye) => ye + 1);
           }), children: "重试接入" }),
-          De && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+          qe && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "撤回原因",
-              /* @__PURE__ */ s.jsx("input", { value: P, maxLength: 2e3, onChange: (_) => Ce(_.target.value), placeholder: "请填写撤回原因" })
+              /* @__PURE__ */ s.jsx("input", { value: P, maxLength: 2e3, onChange: (y) => Oe(y.target.value), placeholder: "请填写撤回原因" })
             ] }),
-            /* @__PURE__ */ s.jsx("button", { className: "button ghost danger", disabled: te || !P.trim(), onClick: () => void We(async () => {
+            /* @__PURE__ */ s.jsx("button", { className: "button ghost danger", disabled: te || !P.trim(), onClick: () => void tt(async () => {
               var ge;
-              const _ = JSON.stringify({ reason: P }), be = k.id + _;
-              ((ge = lt.current) == null ? void 0 : ge.body) !== be && (lt.current = { body: be, key: crypto.randomUUID() }), await Le("/" + k.id + "/withdraw", { method: "POST", headers: { "Idempotency-Key": lt.current.key }, body: _ }), Se(null), Z((Qe) => Qe + 1);
+              const y = JSON.stringify({ reason: P }), ye = k.id + y;
+              ((ge = at.current) == null ? void 0 : ge.body) !== ye && (at.current = { body: ye, key: crypto.randomUUID() }), await Be("/" + k.id + "/withdraw", { method: "POST", headers: { "Idempotency-Key": at.current.key }, body: y }), Ce(null), Z((Ze) => Ze + 1);
             }), children: "撤回此任务包" })
           ] })
         ] })
@@ -14520,221 +14613,221 @@ function Ev({ identity: u, path: h, projects: S, navigate: d }) {
           /* @__PURE__ */ s.jsx("th", { children: "当前可用" }),
           /* @__PURE__ */ s.jsx("th", { children: "资料提示" })
         ] }) }),
-        /* @__PURE__ */ s.jsx("tbody", { children: U.map((_) => /* @__PURE__ */ s.jsxs("tr", { children: [
+        /* @__PURE__ */ s.jsx("tbody", { children: U.map((y) => /* @__PURE__ */ s.jsxs("tr", { children: [
           /* @__PURE__ */ s.jsxs("td", { children: [
-            /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => d("/task-packages/" + _.id), children: _.name }),
+            /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => d("/task-packages/" + y.id), children: y.name }),
             /* @__PURE__ */ s.jsxs("small", { children: [
-              _.producer,
+              y.producer,
               " · ",
-              _.task_id
+              y.task_id
             ] })
           ] }),
           /* @__PURE__ */ s.jsxs("td", { children: [
             "第",
-            _.package_version,
+            y.package_version,
             "版",
             /* @__PURE__ */ s.jsxs("small", { children: [
               "最新接收：第",
-              _.latest_received_version,
+              y.latest_received_version,
               "版"
             ] })
           ] }),
-          /* @__PURE__ */ s.jsx("td", { children: kn[_.status] }),
-          /* @__PURE__ */ s.jsx("td", { children: _.is_current ? /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: "当前使用" }) : _.current_package_id ? "其他版本" : "暂无可用包" }),
-          /* @__PURE__ */ s.jsx("td", { children: _.status === "withdrawn" ? "正文与附件已停止使用" : _.missing_fields.length ? `${_.missing_fields.length} 项资料限制` : _.status === "ready" ? "暂未发现缺失" : "等待校验结果" })
-        ] }, _.id)) })
+          /* @__PURE__ */ s.jsx("td", { children: Cn[y.status] }),
+          /* @__PURE__ */ s.jsx("td", { children: y.is_current ? /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: "当前使用" }) : y.current_package_id ? "其他版本" : "暂无可用包" }),
+          /* @__PURE__ */ s.jsx("td", { children: y.status === "withdrawn" ? "正文与附件已停止使用" : y.missing_fields.length ? `${y.missing_fields.length} 项资料限制` : y.status === "ready" ? "暂未发现缺失" : "等待校验结果" })
+        ] }, y.id)) })
       ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
-        /* @__PURE__ */ s.jsx(Ef, { size: 35 }),
+        /* @__PURE__ */ s.jsx(zf, { size: 35 }),
         /* @__PURE__ */ s.jsx("h2", { children: "暂无任务包" }),
         /* @__PURE__ */ s.jsx("p", { children: "接入归档成果，即可查看任务过程、附件校验和版本变化。" })
       ] }),
-      et
+      Ke
     ] })
   ] }) : /* @__PURE__ */ s.jsxs("section", { className: "panel empty", children: [
     /* @__PURE__ */ s.jsx("h2", { children: "当前没有可用项目" }),
     /* @__PURE__ */ s.jsx("p", { children: "请刷新以重新加载授权范围，或核对当前身份权限。" })
   ] });
 }
-async function em(u, h, S, d) {
-  const R = await u(h, { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify(S) });
+async function am(u, h, _, d) {
+  const A = await u(h, { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify(_) });
   d();
-  const B = Date.now() + 1200 * 1e3;
-  for (; Date.now() < B; ) {
-    const V = await u("/model-generation-jobs/" + R.job_id);
+  const M = Date.now() + 1200 * 1e3;
+  for (; Date.now() < M; ) {
+    const V = await u("/model-generation-jobs/" + A.job_id);
     if (V.status === "succeeded") return V.result;
     if (V.status === "failed") throw new Error(V.error || "后台生成失败，请从任务工作台查看或重试。");
-    await new Promise((M) => setTimeout(M, 2e3));
+    await new Promise((z) => setTimeout(z, 2e3));
   }
   throw new Error("任务仍在后台处理，请从任务工作台查看进度；无需重复提交。");
 }
-const Cn = { draft: "草稿", pending_review: "待审核", approved: "已批准", changes_requested: "已退回", submitted: "提交审核", edited: "人工修订" }, Ov = { fact: "事实记录", inference: "记录对照 / 推断", suggestion: "改进建议" }, Tv = { task_started: "任务开始", inspection_recorded: "检查记录", issue_created: "提出问题", rectification_submitted: "整改提交", review_rejected: "复核退回", review_accepted: "复核通过", task_completed: "任务结束" }, Qi = (u) => u ? new Date(u).toLocaleString("zh-CN", { hour12: !1 }) : "实际时间未知";
-function zv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
-  var dt;
-  const B = h.split("/")[2], V = h.endsWith("/review"), [M, Q] = r.useState([]), [p, U] = r.useState(null), [K, k] = r.useState(null), [le, xe] = r.useState(!1), [_e, ye] = r.useState(!0), [Ee, me] = r.useState(""), [I, oe] = r.useState(""), [ne, D] = r.useState(0), [je, Re] = r.useState("llm"), [Be, Xe] = r.useState("task_process"), [Ge, pe] = r.useState(((dt = d.find((L) => At(L, "retrospective.generate"))) == null ? void 0 : dt.id) || ""), [Ke, X] = r.useState([]), [de, y] = r.useState(""), [Y, ee] = r.useState([]), [ke, m] = r.useState([]), [H, te] = r.useState(""), [$, ae] = r.useState(!1), [Z, P] = r.useState(""), [Ce, ie] = r.useState(""), [Se, st] = r.useState(""), [lt, Pe] = r.useState(null), [Oe, Te] = r.useState([]), [De, Ne] = r.useState(null), [Le, We] = r.useState(""), [Fe, Ze] = r.useState(""), he = d.some((L) => At(L, "retrospective.generate")), et = !!(p != null && p.is_current) && !!At(d.find((L) => L.id === p.project_id), "retrospective.edit"), Ue = !!(p != null && p.is_current) && !!At(d.find((L) => L.id === p.project_id), "retrospective.review");
+const En = { draft: "草稿", pending_review: "待审核", approved: "已批准", changes_requested: "已退回", submitted: "提交审核", edited: "人工修订" }, Rv = { fact: "事实记录", inference: "记录对照 / 推断", suggestion: "改进建议" }, Uv = { task_started: "任务开始", inspection_recorded: "检查记录", issue_created: "提出问题", rectification_submitted: "整改提交", review_rejected: "复核退回", review_accepted: "复核通过", task_completed: "任务结束" }, Xi = (u) => u ? new Date(u).toLocaleString("zh-CN", { hour12: !1 }) : "实际时间未知";
+function Dv({ api: u, path: h, navigate: _, projects: d, identity: A }) {
+  var ft;
+  const M = h.split("/")[2], V = h.endsWith("/review"), [z, Y] = r.useState([]), [v, U] = r.useState(null), [K, k] = r.useState(null), [le, xe] = r.useState(!1), [Ne, Se] = r.useState(!0), [Te, fe] = r.useState(""), [I, de] = r.useState(""), [ne, q] = r.useState(0), [ve, Me] = r.useState("llm"), [Ye, Je] = r.useState("task_process"), [Qe, pe] = r.useState(((ft = d.find((L) => Rt(L, "retrospective.generate"))) == null ? void 0 : ft.id) || ""), [Fe, Q] = r.useState([]), [ce, b] = r.useState(""), [G, ee] = r.useState([]), [Ee, f] = r.useState([]), [B, te] = r.useState(""), [W, ae] = r.useState(!1), [Z, P] = r.useState(""), [Oe, ie] = r.useState(""), [Ce, lt] = r.useState(""), [at, et] = r.useState(null), [Ae, Re] = r.useState([]), [qe, ke] = r.useState(null), [Be, tt] = r.useState(""), [st, rt] = r.useState(""), je = d.some((L) => Rt(L, "retrospective.generate")), Ke = !!(v != null && v.is_current) && !!Rt(d.find((L) => L.id === v.project_id), "retrospective.edit"), ze = !!(v != null && v.is_current) && !!Rt(d.find((L) => L.id === v.project_id), "retrospective.review");
   r.useEffect(() => {
-    P(""), te(""), ae(!1), me(""), oe(""), st(""), Te([]), Ne(null);
+    P(""), te(""), ae(!1), fe(""), de(""), lt(""), Re([]), ke(null);
   }, [h]), r.useEffect(() => {
     let L = !1;
-    return ye(!0), U(null), me(""), (async () => {
+    return Se(!0), U(null), fe(""), (async () => {
       try {
-        if (B) {
-          const re = await u(`/retrospectives/${B}${Z ? "?revision_id=" + Z : ""}`);
+        if (M) {
+          const re = await u(`/retrospectives/${M}${Z ? "?revision_id=" + Z : ""}`);
           L || (U(re), k({ summary: re.summary, findings: structuredClone(re.findings), suggestions: structuredClone(re.suggestions) }), ae(!1));
         } else {
-          const re = await u(`/retrospectives?limit=20${Ce ? "&state=" + Ce : ""}${Se ? "&cursor=" + encodeURIComponent(Se) : ""}`);
-          L || (Q(re.items), Pe(re.next_cursor));
+          const re = await u(`/retrospectives?limit=20${Oe ? "&state=" + Oe : ""}${Ce ? "&cursor=" + encodeURIComponent(Ce) : ""}`);
+          L || (Y(re.items), et(re.next_cursor));
         }
       } catch (re) {
-        L || me(re.message);
+        L || fe(re.message);
       } finally {
-        L || ye(!1);
+        L || Se(!1);
       }
     })(), () => {
       L = !0;
     };
-  }, [B, h, Z, Ce, Se, ne]), r.useEffect(() => {
-    if (B || !Ge || !he) return;
+  }, [M, h, Z, Oe, Ce, ne]), r.useEffect(() => {
+    if (M || !Qe || !je) return;
     let L = !1;
-    return m([]), X([]), ee([]), y(""), (async () => {
+    return f([]), Q([]), ee([]), b(""), (async () => {
       var re;
       try {
-        const [Ve, _] = await Promise.all([u(`/task-packages?project_id=${Ge}&state=ready&limit=100`), u(`/knowledge/source-options?project_id=${Ge}&limit=100`)]);
+        const [$e, y] = await Promise.all([u(`/task-packages?project_id=${Qe}&state=ready&limit=100`), u(`/knowledge/source-options?project_id=${Qe}&limit=100`)]);
         if (L) return;
-        const be = Ve.items.filter((ge) => ge.is_current);
-        X(be), y(((re = be[0]) == null ? void 0 : re.id) || ""), ee(_.items);
-      } catch (Ve) {
-        L || me(Ve.message);
+        const ye = $e.items.filter((ge) => ge.is_current);
+        Q(ye), b(((re = ye[0]) == null ? void 0 : re.id) || ""), ee(y.items);
+      } catch ($e) {
+        L || fe($e.message);
       }
     })(), () => {
       L = !0;
     };
-  }, [B, Ge, ne]), r.useEffect(() => {
-    if (!(De != null && De.asset_id) || De.type !== "task_attachment") {
-      We(""), Ze("");
+  }, [M, Qe, ne]), r.useEffect(() => {
+    if (!(qe != null && qe.asset_id) || qe.type !== "task_attachment") {
+      tt(""), rt("");
       return;
     }
-    let L = !1, fe = "";
-    return Mt("/api/v1/assets/" + De.asset_id + "/content", { headers: { Authorization: "Bearer dev-" + R } }).then(async (re) => {
+    let L = !1, he = "";
+    return Mt("/api/v1/assets/" + qe.asset_id + "/content", { headers: { Authorization: "Bearer dev-" + A } }).then(async (re) => {
       if (!re.ok) {
-        const _ = await re.json();
-        throw new Error(_.message);
+        const y = await re.json();
+        throw new Error(y.message);
       }
-      const Ve = await re.blob();
-      !L && /^(image\/|text\/plain)/.test(Ve.type) && (fe = URL.createObjectURL(Ve), We(fe), Ze(Ve.type));
+      const $e = await re.blob();
+      !L && /^(image\/|text\/plain)/.test($e.type) && (he = URL.createObjectURL($e), tt(he), rt($e.type));
     }).catch((re) => {
-      L || me(re.message);
+      L || fe(re.message);
     }), () => {
-      L = !0, fe && URL.revokeObjectURL(fe), We("");
+      L = !0, he && URL.revokeObjectURL(he), tt("");
     };
-  }, [De, R]);
+  }, [qe, A]);
   const E = async (L) => {
-    xe(!0), me(""), oe("");
+    xe(!0), fe(""), de("");
     try {
       await L();
-    } catch (fe) {
-      me(fe.message);
+    } catch (he) {
+      fe(he.message);
     } finally {
       xe(!1);
     }
-  }, w = () => ({ revision_id: p.revision_id, row_version: p.row_version, reason: H, evidence_checked: $ }), W = !!p && !!K && JSON.stringify(K) === JSON.stringify({ summary: p.summary, findings: p.findings, suggestions: p.suggestions }), ve = (L) => void E(async () => {
-    const fe = L === "submit" ? `/retrospectives/${B}/submit-review` : `/reviews/${p.revision_id}/${L}`;
-    await u(fe, { method: "POST", body: JSON.stringify(w()) }), oe("已保存本版本的审核状态与意见。"), D((re) => re + 1);
-  }), He = (L, fe) => L.map((re, Ve) => /* @__PURE__ */ s.jsxs("article", { className: "retro-finding " + re.claim_kind, children: [
+  }, w = () => ({ revision_id: v.revision_id, row_version: v.row_version, reason: B, evidence_checked: W }), $ = !!v && !!K && JSON.stringify(K) === JSON.stringify({ summary: v.summary, findings: v.findings, suggestions: v.suggestions }), we = (L) => void E(async () => {
+    const he = L === "submit" ? `/retrospectives/${M}/submit-review` : `/reviews/${v.revision_id}/${L}`;
+    await u(he, { method: "POST", body: JSON.stringify(w()) }), de("已保存本版本的审核状态与意见。"), q((re) => re + 1);
+  }), Le = (L, he) => L.map((re, $e) => /* @__PURE__ */ s.jsxs("article", { className: "retro-finding " + re.claim_kind, children: [
     /* @__PURE__ */ s.jsxs("div", { className: "retro-finding-title", children: [
-      /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: Ov[re.claim_kind] }),
+      /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: Rv[re.claim_kind] }),
       re.record_status && /* @__PURE__ */ s.jsx("strong", { children: re.record_status }),
       /* @__PURE__ */ s.jsx("small", { children: re.review_state === "confirmed" ? "已逐项确认" : "待确认" })
     ] }),
-    V && et ? /* @__PURE__ */ s.jsxs("label", { children: [
+    V && Ke ? /* @__PURE__ */ s.jsxs("label", { children: [
       "条目内容",
-      /* @__PURE__ */ s.jsx("textarea", { "aria-label": "修改" + re.id, value: re.text, onChange: (_) => k((be) => be && { ...be, [fe]: be[fe].map((ge, Qe) => Qe === Ve ? { ...ge, text: _.target.value, review_state: "unconfirmed" } : ge) }) })
+      /* @__PURE__ */ s.jsx("textarea", { "aria-label": "修改" + re.id, value: re.text, onChange: (y) => k((ye) => ye && { ...ye, [he]: ye[he].map((ge, Ze) => Ze === $e ? { ...ge, text: y.target.value, review_state: "unconfirmed" } : ge) }) })
     ] }) : /* @__PURE__ */ s.jsx("p", { children: re.text }),
-    /* @__PURE__ */ s.jsx("div", { className: "retro-evidence-links", children: re.evidence_refs.map((_, be) => /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => Ne(p.evidence.find((ge) => ge.id === _) || null), children: [
+    /* @__PURE__ */ s.jsx("div", { className: "retro-evidence-links", children: re.evidence_refs.map((y, ye) => /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => ke(v.evidence.find((ge) => ge.id === y) || null), children: [
       "查看证据 ",
-      be + 1
-    ] }, _)) }),
-    V && et && /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-      /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: re.review_state === "confirmed", onChange: (_) => k((be) => be && { ...be, [fe]: be[fe].map((ge, Qe) => Qe === Ve ? { ...ge, review_state: _.target.checked ? "confirmed" : "unconfirmed" } : ge) }) }),
+      ye + 1
+    ] }, y)) }),
+    V && Ke && /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
+      /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: re.review_state === "confirmed", onChange: (y) => k((ye) => ye && { ...ye, [he]: ye[he].map((ge, Ze) => Ze === $e ? { ...ge, review_state: y.target.checked ? "confirmed" : "unconfirmed" } : ge) }) }),
       "已核对此条内容与来源"
     ] })
-  ] }, re.id)), tt = (L) => L.map((fe) => /* @__PURE__ */ s.jsxs("li", { children: [
-    /* @__PURE__ */ s.jsx("time", { children: Qi(fe.occurred_at) }),
-    /* @__PURE__ */ s.jsx("strong", { children: Tv[fe.event_type] || "未知事件类型：" + fe.event_type }),
-    /* @__PURE__ */ s.jsx("p", { children: typeof fe.payload.note == "string" ? fe.payload.note : Object.keys(fe.payload).length ? JSON.stringify(fe.payload) : "未补充说明" }),
-    /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => Ne(p.evidence.find((re) => re.reference === "event:" + fe.event_id) || null), children: "打开事件记录" }),
-    fe.evidence_refs.map((re) => /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => {
-      const Ve = p.evidence.find((_) => _.reference === "attachment:" + re);
-      Ve ? Ne(Ve) : me("该事件的附件未通过校验或暂不可用。");
+  ] }, re.id)), Xe = (L) => L.map((he) => /* @__PURE__ */ s.jsxs("li", { children: [
+    /* @__PURE__ */ s.jsx("time", { children: Xi(he.occurred_at) }),
+    /* @__PURE__ */ s.jsx("strong", { children: Uv[he.event_type] || "未知事件类型：" + he.event_type }),
+    /* @__PURE__ */ s.jsx("p", { children: typeof he.payload.note == "string" ? he.payload.note : Object.keys(he.payload).length ? JSON.stringify(he.payload) : "未补充说明" }),
+    /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => ke(v.evidence.find((re) => re.reference === "event:" + he.event_id) || null), children: "打开事件记录" }),
+    he.evidence_refs.map((re) => /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => {
+      const $e = v.evidence.find((y) => y.reference === "attachment:" + re);
+      $e ? ke($e) : fe("该事件的附件未通过校验或暂不可用。");
     }, children: [
       "附件 ",
       re
     ] }, re))
-  ] }, fe.event_id));
+  ] }, he.event_id));
   return /* @__PURE__ */ s.jsxs("div", { className: "knowledge-module retro-module", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-banner", children: [
-      /* @__PURE__ */ s.jsx(Pj, { size: 20 }),
+      /* @__PURE__ */ s.jsx(lv, { size: 20 }),
       /* @__PURE__ */ s.jsxs("div", { children: [
         /* @__PURE__ */ s.jsx("strong", { children: "过程复盘与经验" }),
         /* @__PURE__ */ s.jsx("span", { children: "复用归档成果的事件和证据。时间与流程规则自动核算，摘要建议使用本地模拟模板；条目仍需人工核查。" })
       ] })
     ] }),
-    Ee && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
+    Te && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
       /* @__PURE__ */ s.jsx(Nl, { size: 18 }),
-      Ee,
-      /* @__PURE__ */ s.jsx("button", { onClick: () => D((L) => L + 1), children: "重新加载" })
+      Te,
+      /* @__PURE__ */ s.jsx("button", { onClick: () => q((L) => L + 1), children: "重新加载" })
     ] }),
     I && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
       /* @__PURE__ */ s.jsx(Sl, { size: 18 }),
       I
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
-      /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => S("/retrospectives"), children: "复盘清单" }),
-      /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => D((L) => L + 1), disabled: le, children: [
+      /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => _("/retrospectives"), children: "复盘清单" }),
+      /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => q((L) => L + 1), disabled: le, children: [
         /* @__PURE__ */ s.jsx(Rs, { size: 15 }),
         "刷新"
       ] })
     ] }),
-    _e ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取固定来源与复盘版本…" }) : B ? p && K ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+    Ne ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取固定来源与复盘版本…" }) : M ? v && K ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("div", { className: "knowledge-heading", children: [
         /* @__PURE__ */ s.jsxs("div", { children: [
-          /* @__PURE__ */ s.jsx("h2", { children: p.title }),
+          /* @__PURE__ */ s.jsx("h2", { children: v.title }),
           /* @__PURE__ */ s.jsxs("p", { children: [
             "v",
-            p.version,
+            v.version,
             " · ",
-            Cn[p.state],
+            En[v.state],
             " · ",
-            p.mode === "task_process" ? "任务过程" : "历史案例",
+            v.mode === "task_process" ? "任务过程" : "历史案例",
             " · 模板 ",
-            p.template_version
+            v.template_version
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-          /* @__PURE__ */ s.jsx("select", { "aria-label": "选择复盘版本", value: p.revision_id, onChange: (L) => P(L.target.value), children: p.revisions.map((L) => /* @__PURE__ */ s.jsxs("option", { value: L.id, children: [
+          /* @__PURE__ */ s.jsx("select", { "aria-label": "选择复盘版本", value: v.revision_id, onChange: (L) => P(L.target.value), children: v.revisions.map((L) => /* @__PURE__ */ s.jsxs("option", { value: L.id, children: [
             "v",
             L.version,
             " · ",
-            Cn[L.state]
+            En[L.state]
           ] }, L.id)) }),
-          /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => S(`/retrospectives/${B}${V ? "" : "/review"}`), children: V ? "查看实际过程" : "核查与审核" })
+          /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => _(`/retrospectives/${M}${V ? "" : "/review"}`), children: V ? "查看实际过程" : "核查与审核" })
         ] })
       ] }),
-      !p.is_current && /* @__PURE__ */ s.jsx("div", { className: "feedback error", children: "正在查看历史版本；内容和原审核结论保留，只能对当前版本操作。" }),
+      !v.is_current && /* @__PURE__ */ s.jsx("div", { className: "feedback error", children: "正在查看历史版本；内容和原审核结论保留，只能对当前版本操作。" }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "事实摘要" }),
           /* @__PURE__ */ s.jsx("span", { children: "自动带入，保存修改会产生新版本" })
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-          V && et ? /* @__PURE__ */ s.jsxs("label", { children: [
+          V && Ke ? /* @__PURE__ */ s.jsxs("label", { children: [
             "复盘摘要",
             /* @__PURE__ */ s.jsx("textarea", { "aria-label": "复盘摘要", value: K.summary, onChange: (L) => k({ ...K, summary: L.target.value }) })
-          ] }) : /* @__PURE__ */ s.jsx("p", { children: p.summary }),
+          ] }) : /* @__PURE__ */ s.jsx("p", { children: v.summary }),
           /* @__PURE__ */ s.jsxs("p", { className: "small-note", children: [
-            p.sources.task_package_id ? "固定任务包 v" + p.sources.package_version : "固定历史版本 " + p.sources.record_version_ids.length + "条",
+            v.sources.task_package_id ? "固定任务包 v" + v.sources.package_version : "固定历史版本 " + v.sources.record_version_ids.length + "条",
             " · 未发现相关记录表示资料缺口，不代表现场未执行。"
           ] }),
-          p.sources.task_package_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S("/task-packages/" + p.sources.task_package_id), children: "打开来源任务包" })
+          v.sources.task_package_id && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/task-packages/" + v.sources.task_package_id), children: "打开来源任务包" })
         ] })
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "retro-columns", children: [
@@ -14744,26 +14837,26 @@ function zv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
             /* @__PURE__ */ s.jsx("span", { children: "仅按来源中的实际时间排序" })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-            p.timeline.known.length ? /* @__PURE__ */ s.jsx("ol", { className: "retro-timeline", children: tt(p.timeline.known) }) : /* @__PURE__ */ s.jsx("p", { children: "未发现可排序的过程记录。" }),
-            p.timeline.unknown_time.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+            v.timeline.known.length ? /* @__PURE__ */ s.jsx("ol", { className: "retro-timeline", children: Xe(v.timeline.known) }) : /* @__PURE__ */ s.jsx("p", { children: "未发现可排序的过程记录。" }),
+            v.timeline.unknown_time.length > 0 && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
               /* @__PURE__ */ s.jsx("h3", { children: "时间未知的记录" }),
-              /* @__PURE__ */ s.jsx("ol", { className: "retro-timeline unknown", children: tt(p.timeline.unknown_time) })
+              /* @__PURE__ */ s.jsx("ol", { className: "retro-timeline unknown", children: Xe(v.timeline.unknown_time) })
             ] }),
             /* @__PURE__ */ s.jsx("h3", { children: "可核对的时间差" }),
-            p.timeline.intervals.length ? p.timeline.intervals.map((L, fe) => /* @__PURE__ */ s.jsxs("p", { children: [
+            v.timeline.intervals.length ? v.timeline.intervals.map((L, he) => /* @__PURE__ */ s.jsxs("p", { children: [
               L.name,
               "：",
               L.seconds / 60,
               " 分钟（不代表有效工作量）"
-            ] }, fe)) : /* @__PURE__ */ s.jsx("p", { children: "缺少可配对的实际时间，不计算过程时长。" }),
+            ] }, he)) : /* @__PURE__ */ s.jsx("p", { children: "缺少可配对的实际时间，不计算过程时长。" }),
             /* @__PURE__ */ s.jsx("h3", { children: "期限对照" }),
-            p.timeline.deadlines.length ? p.timeline.deadlines.map((L) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
+            v.timeline.deadlines.length ? v.timeline.deadlines.map((L) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
               /* @__PURE__ */ s.jsxs("strong", { children: [
                 L.issue_id,
                 " · ",
                 L.result
               ] }),
-              /* @__PURE__ */ s.jsx("p", { children: L.reason || `明确期限 ${Qi(L.due_at || null)}；复核记录 ${Qi(L.accepted_at || null)}；晚于期限 ${L.late_seconds / 60} 分钟。` })
+              /* @__PURE__ */ s.jsx("p", { children: L.reason || `明确期限 ${Xi(L.due_at || null)}；复核记录 ${Xi(L.accepted_at || null)}；晚于期限 ${L.late_seconds / 60} 分钟。` })
             ] }, L.issue_id)) : /* @__PURE__ */ s.jsx("p", { children: "未提供适用的期限与过程记录，不判超期。" })
           ] })
         ] }),
@@ -14773,14 +14866,14 @@ function zv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
             /* @__PURE__ */ s.jsx("span", { children: "每项均可回到固定版本证据" })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-            He(K.findings, "findings"),
+            Le(K.findings, "findings"),
             /* @__PURE__ */ s.jsx("h3", { children: "建议流程与培训启示" }),
             /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "本地模板建议，未经模型推理；不能当作已发生事实。" }),
-            He(K.suggestions, "suggestions")
+            Le(K.suggestions, "suggestions")
           ] })
         ] })
       ] }),
-      V && p.is_current && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+      V && v.is_current && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "版本审核与经验沉淀" }),
           /* @__PURE__ */ s.jsx("span", { children: "复用统一审核服务" })
@@ -14788,57 +14881,57 @@ function zv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "修改 / 审核说明",
-            /* @__PURE__ */ s.jsx("textarea", { "aria-label": "复盘审核说明", value: H, onChange: (L) => te(L.target.value) })
+            /* @__PURE__ */ s.jsx("textarea", { "aria-label": "复盘审核说明", value: B, onChange: (L) => te(L.target.value) })
           ] }),
-          et && /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-            /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: le || W || !H.trim(), onClick: () => void E(async () => {
-              await u(`/retrospectives/${B}/draft`, { method: "PATCH", body: JSON.stringify({ ...w(), ...K }) }), oe("已保存新草稿版本，旧内容及审核意见保留。"), D((L) => L + 1);
+          Ke && /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
+            /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: le || $ || !B.trim(), onClick: () => void E(async () => {
+              await u(`/retrospectives/${M}/draft`, { method: "PATCH", body: JSON.stringify({ ...w(), ...K }) }), de("已保存新草稿版本，旧内容及审核意见保留。"), q((L) => L + 1);
             }), children: "保存修订版本" }),
-            ["draft", "changes_requested"].includes(p.state) && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: le || !W || !H.trim(), onClick: () => ve("submit"), children: "提交当前版本审核" })
+            ["draft", "changes_requested"].includes(v.state) && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: le || !$ || !B.trim(), onClick: () => we("submit"), children: "提交当前版本审核" })
           ] }),
-          Ue && p.state === "pending_review" && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+          ze && v.state === "pending_review" && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
             /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-              /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: $, onChange: (L) => ae(L.target.checked) }),
+              /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: W, onChange: (L) => ae(L.target.checked) }),
               "已逐条核对事实、推断、建议与来源证据"
             ] }),
             /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-              /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: le || !$ || !W || !H.trim(), onClick: () => ve("approve"), children: "批准此复盘版本" }),
-              /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: le || !W || !H.trim(), onClick: () => ve("request-changes"), children: "退回修改" })
+              /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: le || !W || !$ || !B.trim(), onClick: () => we("approve"), children: "批准此复盘版本" }),
+              /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: le || !$ || !B.trim(), onClick: () => we("request-changes"), children: "退回修改" })
             ] })
           ] }),
-          et && p.state === "approved" && /* @__PURE__ */ s.jsx("div", { className: "card-actions", children: /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: le || !W || !H.trim(), onClick: () => void E(async () => {
-            const L = await u(`/retrospectives/${B}/publish-experiences`, { method: "POST", body: JSON.stringify({ ...w(), type: "case_card" }) });
-            oe(L.replayed ? "已存在相同版本的经验草稿，无重复创建。" : "已生成经验草稿，尚未发布；请继续知识审核。"), D((fe) => fe + 1);
+          Ke && v.state === "approved" && /* @__PURE__ */ s.jsx("div", { className: "card-actions", children: /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: le || !$ || !B.trim(), onClick: () => void E(async () => {
+            const L = await u(`/retrospectives/${M}/publish-experiences`, { method: "POST", body: JSON.stringify({ ...w(), type: "case_card" }) });
+            de(L.replayed ? "已存在相同版本的经验草稿，无重复创建。" : "已生成经验草稿，尚未发布；请继续知识审核。"), q((he) => he + 1);
           }), children: "转为经验候选草稿" }) }),
           /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "逐项确认后保存，再提交审核。审核通过不会自动进入知识库；转换得到的经验还需知识审核与发布。" })
         ] })
       ] }),
-      p.draft_ids.length > 0 && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+      v.draft_ids.length > 0 && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsx("h2", { children: "本版本的经验草稿" }) }),
-        /* @__PURE__ */ s.jsx("div", { className: "proof-body", children: p.draft_ids.map((L) => /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => S("/knowledge/" + L + "/edit"), children: "打开经验候选" }, L)) })
+        /* @__PURE__ */ s.jsx("div", { className: "proof-body", children: v.draft_ids.map((L) => /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => _("/knowledge/" + L + "/edit"), children: "打开经验候选" }, L)) })
       ] }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel revision-panel", children: [
         /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsx("h2", { children: "审核轨迹与来源指纹" }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-          /* @__PURE__ */ s.jsx("p", { className: "retro-hash", children: p.input_fingerprint }),
+          /* @__PURE__ */ s.jsx("p", { className: "retro-hash", children: v.input_fingerprint }),
           /* @__PURE__ */ s.jsxs("p", { children: [
             "摘要适配器：",
-            p.model_ref
+            v.model_ref
           ] })
         ] }),
-        p.review_actions.map((L, fe) => /* @__PURE__ */ s.jsxs("div", { className: "review-history", children: [
+        v.review_actions.map((L, he) => /* @__PURE__ */ s.jsxs("div", { className: "review-history", children: [
           /* @__PURE__ */ s.jsxs("strong", { children: [
             "v",
             L.version,
             " · ",
-            Cn[L.action] || L.action
+            En[L.action] || L.action
           ] }),
           /* @__PURE__ */ s.jsx("p", { children: L.reason }),
-          /* @__PURE__ */ s.jsx("small", { children: Qi(L.created_at) })
-        ] }, fe))
+          /* @__PURE__ */ s.jsx("small", { children: Xi(L.created_at) })
+        ] }, he))
       ] })
     ] }) : null : /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-      he && /* @__PURE__ */ s.jsxs("section", { className: "panel generation-panel", children: [
+      je && /* @__PURE__ */ s.jsxs("section", { className: "panel generation-panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "从已有资料自动生成复盘" }),
           /* @__PURE__ */ s.jsx("span", { children: "选择一次来源，无需重新录入事件、问题和证据" })
@@ -14847,33 +14940,33 @@ function zv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
           /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "建议生成",
-              /* @__PURE__ */ s.jsxs("select", { "aria-label": "复盘生成方式", value: je, onChange: (L) => Re(L.target.value), children: [
+              /* @__PURE__ */ s.jsxs("select", { "aria-label": "复盘生成方式", value: ve, onChange: (L) => Me(L.target.value), children: [
                 /* @__PURE__ */ s.jsx("option", { value: "llm", children: "云端模型（引用来源，人工审核）" }),
                 /* @__PURE__ */ s.jsx("option", { value: "mock", children: "本地模板演示" })
               ] })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "复盘模式",
-              /* @__PURE__ */ s.jsxs("select", { "aria-label": "复盘模式", value: Be, onChange: (L) => Xe(L.target.value), children: [
+              /* @__PURE__ */ s.jsxs("select", { "aria-label": "复盘模式", value: Ye, onChange: (L) => Je(L.target.value), children: [
                 /* @__PURE__ */ s.jsx("option", { value: "task_process", children: "任务过程复盘" }),
                 /* @__PURE__ */ s.jsx("option", { value: "historical_case", children: "历史案例复盘" })
               ] })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "项目",
-              /* @__PURE__ */ s.jsx("select", { "aria-label": "复盘项目", value: Ge, onChange: (L) => pe(L.target.value), children: d.filter((L) => At(L, "retrospective.generate")).map((L) => /* @__PURE__ */ s.jsx("option", { value: L.id, children: L.name }, L.id)) })
+              /* @__PURE__ */ s.jsx("select", { "aria-label": "复盘项目", value: Qe, onChange: (L) => pe(L.target.value), children: d.filter((L) => Rt(L, "retrospective.generate")).map((L) => /* @__PURE__ */ s.jsx("option", { value: L.id, children: L.name }, L.id)) })
             ] })
           ] }),
-          Be === "task_process" ? /* @__PURE__ */ s.jsxs("label", { children: [
+          Ye === "task_process" ? /* @__PURE__ */ s.jsxs("label", { children: [
             "已就绪的当前任务包",
-            /* @__PURE__ */ s.jsx("select", { "aria-label": "复盘任务包", value: de, onChange: (L) => y(L.target.value), children: Ke.map((L) => /* @__PURE__ */ s.jsxs("option", { value: L.id, children: [
+            /* @__PURE__ */ s.jsx("select", { "aria-label": "复盘任务包", value: ce, onChange: (L) => b(L.target.value), children: Fe.map((L) => /* @__PURE__ */ s.jsxs("option", { value: L.id, children: [
               L.name,
               " · 包v",
               L.package_version
             ] }, L.id)) }),
-            !Ke.length && /* @__PURE__ */ s.jsx("p", { children: "暂无可用成果，请先到成果接入页面接入已归档版本。" })
-          ] }) : /* @__PURE__ */ s.jsx("div", { className: "source-options", children: Y.map((L) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: ke.includes(L.record_version_id), onChange: (fe) => m(fe.target.checked ? [...ke, L.record_version_id] : ke.filter((re) => re !== L.record_version_id)) }),
+            !Fe.length && /* @__PURE__ */ s.jsx("p", { children: "暂无可用成果，请先到成果接入页面接入已归档版本。" })
+          ] }) : /* @__PURE__ */ s.jsx("div", { className: "source-options", children: G.map((L) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: Ee.includes(L.record_version_id), onChange: (he) => f(he.target.checked ? [...Ee, L.record_version_id] : Ee.filter((re) => re !== L.record_version_id)) }),
             /* @__PURE__ */ s.jsxs("span", { children: [
               L.description || "未填写描述",
               " · 来源v",
@@ -14881,36 +14974,36 @@ function zv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
             ] })
           ] }, L.id)) }),
           /* @__PURE__ */ s.jsxs("p", { className: "small-note", children: [
-            Be === "task_process" ? "固定任务包版本，对照演示流程模板；记录不完整时明确说明。" : "只汇总所选固定来源，不能将历史隐患描述当成完整作业过程。",
+            Ye === "task_process" ? "固定任务包版本，对照演示流程模板；记录不完整时明确说明。" : "只汇总所选固定来源，不能将历史隐患描述当成完整作业过程。",
             " 当前显示最近100项，每次历史来源最多20条。"
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-            /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: le || (Be === "task_process" ? !de : !ke.length || ke.length > 20), onClick: () => void E(async () => {
-              const L = await em(u, "/retrospective-generation-jobs", { mode: Be, generation_mode: je, task_package_id: Be === "task_process" ? de : null, record_version_ids: Be === "historical_case" ? ke : [], template_version: "process-review-v1" }, () => oe("已提交后台复盘，关闭页面不影响任务；可在任务工作台查看进度。"));
-              S("/retrospectives/" + L.id);
+            /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: le || (Ye === "task_process" ? !ce : !Ee.length || Ee.length > 20), onClick: () => void E(async () => {
+              const L = await am(u, "/retrospective-generation-jobs", { mode: Ye, generation_mode: ve, task_package_id: Ye === "task_process" ? ce : null, record_version_ids: Ye === "historical_case" ? Ee : [], template_version: "process-review-v1" }, () => de("已提交后台复盘，关闭页面不影响任务；可在任务工作台查看进度。"));
+              _("/retrospectives/" + L.id);
             }), children: "生成复盘草稿" }),
-            /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => S("/task-packages"), children: "查看归档成果" })
+            /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => _("/task-packages"), children: "查看归档成果" })
           ] })
         ] })
       ] }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "复盘清单" }),
-          /* @__PURE__ */ s.jsxs("select", { "aria-label": "复盘状态", value: Ce, onChange: (L) => {
-            ie(L.target.value), st(""), Te([]);
+          /* @__PURE__ */ s.jsxs("select", { "aria-label": "复盘状态", value: Oe, onChange: (L) => {
+            ie(L.target.value), lt(""), Re([]);
           }, children: [
             /* @__PURE__ */ s.jsx("option", { value: "", children: "全部状态" }),
-            ["draft", "pending_review", "changes_requested", "approved"].map((L) => /* @__PURE__ */ s.jsx("option", { value: L, children: Cn[L] }, L))
+            ["draft", "pending_review", "changes_requested", "approved"].map((L) => /* @__PURE__ */ s.jsx("option", { value: L, children: En[L] }, L))
           ] })
         ] }),
-        M.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
+        z.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
           /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsxs("tr", { children: [
             /* @__PURE__ */ s.jsx("th", { children: "复盘 / 模式" }),
             /* @__PURE__ */ s.jsx("th", { children: "固定来源" }),
             /* @__PURE__ */ s.jsx("th", { children: "版本与状态" }),
             /* @__PURE__ */ s.jsx("th", { children: "操作" })
           ] }) }),
-          /* @__PURE__ */ s.jsx("tbody", { children: M.map((L) => /* @__PURE__ */ s.jsxs("tr", { children: [
+          /* @__PURE__ */ s.jsx("tbody", { children: z.map((L) => /* @__PURE__ */ s.jsxs("tr", { children: [
             /* @__PURE__ */ s.jsxs("td", { children: [
               L.title,
               /* @__PURE__ */ s.jsx("small", { children: L.mode === "task_process" ? "任务过程复盘" : "历史案例复盘" })
@@ -14920,11 +15013,11 @@ function zv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
               "v",
               L.version,
               " · ",
-              Cn[L.state]
+              En[L.state]
             ] }),
             /* @__PURE__ */ s.jsxs("td", { children: [
-              /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S("/retrospectives/" + L.id), children: "查看复盘" }),
-              /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S("/retrospectives/" + L.id + "/review"), children: "核查与审核" })
+              /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/retrospectives/" + L.id), children: "查看复盘" }),
+              /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/retrospectives/" + L.id + "/review"), children: "核查与审核" })
             ] })
           ] }, L.id)) })
         ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
@@ -14934,123 +15027,123 @@ function zv({ api: u, path: h, navigate: S, projects: d, identity: R }) {
         /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
           /* @__PURE__ */ s.jsx("span", { children: "按当前项目权限显示" }),
           /* @__PURE__ */ s.jsxs("div", { className: "pagination", children: [
-            /* @__PURE__ */ s.jsx("button", { disabled: !Oe.length, onClick: () => {
-              st(Oe.at(-1) || ""), Te(Oe.slice(0, -1));
+            /* @__PURE__ */ s.jsx("button", { disabled: !Ae.length, onClick: () => {
+              lt(Ae.at(-1) || ""), Re(Ae.slice(0, -1));
             }, children: "上一页" }),
-            /* @__PURE__ */ s.jsx("button", { disabled: !lt, onClick: () => {
-              Te([...Oe, Se]), st(lt || "");
+            /* @__PURE__ */ s.jsx("button", { disabled: !at, onClick: () => {
+              Re([...Ae, Ce]), lt(at || "");
             }, children: "下一页" })
           ] })
         ] })
       ] })
     ] }),
-    De && /* @__PURE__ */ s.jsx("div", { className: "modal-backdrop", children: /* @__PURE__ */ s.jsxs("section", { className: "modal retro-modal", role: "dialog", "aria-modal": "true", "aria-labelledby": "retro-evidence", children: [
+    qe && /* @__PURE__ */ s.jsx("div", { className: "modal-backdrop", children: /* @__PURE__ */ s.jsxs("section", { className: "modal retro-modal", role: "dialog", "aria-modal": "true", "aria-labelledby": "retro-evidence", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "modal-heading", children: [
         /* @__PURE__ */ s.jsx("h2", { id: "retro-evidence", children: "固定版本证据" }),
-        /* @__PURE__ */ s.jsx("button", { className: "icon-button", "aria-label": "关闭证据", onClick: () => Ne(null), children: /* @__PURE__ */ s.jsx(Zi, { size: 19 }) })
+        /* @__PURE__ */ s.jsx("button", { className: "icon-button", "aria-label": "关闭证据", onClick: () => ke(null), children: /* @__PURE__ */ s.jsx(Vi, { size: 19 }) })
       ] }),
-      /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: De.type === "process_event" ? "实际事件记录" : De.type === "task_attachment" ? "任务附件" : De.type === "historical_row" ? "固定历史来源行" : "任务快照" }),
-      /* @__PURE__ */ s.jsx("p", { children: De.text }),
+      /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: qe.type === "process_event" ? "实际事件记录" : qe.type === "task_attachment" ? "任务附件" : qe.type === "historical_row" ? "固定历史来源行" : "任务快照" }),
+      /* @__PURE__ */ s.jsx("p", { children: qe.text }),
       /* @__PURE__ */ s.jsxs("p", { className: "retro-hash", children: [
         "定位：",
-        JSON.stringify(De.locator)
+        JSON.stringify(qe.locator)
       ] }),
-      Le && Fe.startsWith("image/") && /* @__PURE__ */ s.jsx("img", { src: Le, alt: "来源证据" }),
-      Le && Fe.startsWith("text/") && /* @__PURE__ */ s.jsx("iframe", { title: "作业日志", src: Le }),
+      Be && st.startsWith("image/") && /* @__PURE__ */ s.jsx("img", { src: Be, alt: "来源证据" }),
+      Be && st.startsWith("text/") && /* @__PURE__ */ s.jsx("iframe", { title: "作业日志", src: Be }),
       /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "证据来自固定来源版本；缺失信息需人工核查。" })
     ] }) })
   ] });
 }
-const ks = { draft: "草稿", pending_review: "待审核", changes_requested: "已退回", approved: "已审核", published: "已发布", in_progress: "作答中", submitted: "已提交", not_submitted: "未提交", pending_scoring: "待评分", awaiting_review: "待教员复核", confirmed: "评分已确认", edited: "人工修订" }, _a = { single_choice: "单选题", multiple_choice: "多选题", case_answer: "案例问答" }, Lf = { selected: [], text: "", row_version: 0 };
-function Av({ api: u, path: h, navigate: S, projects: d }) {
-  var we, nt, pt;
-  const R = h.startsWith("/learn"), B = /^\/training\/results\/[^/]+$/.test(h), V = h.startsWith("/learn/attempts/") || B ? h.split("/")[3] : "", M = /^\/training\/questions\/[^/]+$/.test(h), Q = M ? h.split("/")[3] : "", p = h === "/training/questions", U = h === "/training/packages", K = h === "/training/results", k = d.some((j) => At(j, "training.manage")), le = d.some((j) => At(j, "training.review")), [xe, _e] = r.useState("llm"), [ye, Ee] = r.useState(""), [me, I] = r.useState(((we = d.find((j) => At(j, "training.manage"))) == null ? void 0 : we.id) || ((nt = d[0]) == null ? void 0 : nt.id) || ""), [oe, ne] = r.useState([]), [D, je] = r.useState([]), [Re, Be] = r.useState([]), [Xe, Ge] = r.useState([]), [pe, Ke] = r.useState(null), [X, de] = r.useState(null), [y, Y] = r.useState(""), [ee, ke] = r.useState(!1), [m, H] = r.useState([]), [te, $] = r.useState(["single_choice", "case_answer"]), [ae, Z] = r.useState([]), [P, Ce] = r.useState("新人风险识别与复盘练习"), [ie, Se] = r.useState("learning-" + Date.now()), [st, lt] = r.useState(1), [Pe, Oe] = r.useState(null), [Te, De] = r.useState({}), [Ne, Le] = r.useState(null), [We, Fe] = r.useState("rules"), [Ze, he] = r.useState("useful"), [et, Ue] = r.useState(""), [E, w] = r.useState({}), [W, ve] = r.useState({}), [He, tt] = r.useState(""), [dt, L] = r.useState(""), [fe, re] = r.useState(null), [Ve, _] = r.useState([]), [be, ge] = r.useState(!0), [Qe, xt] = r.useState(!1), [z, v] = r.useState(""), [ue, f] = r.useState(""), [G, x] = r.useState(0);
+const ks = { draft: "草稿", pending_review: "待审核", changes_requested: "已退回", approved: "已审核", published: "已发布", in_progress: "作答中", submitted: "已提交", not_submitted: "未提交", pending_scoring: "待评分", awaiting_review: "待教员复核", confirmed: "评分已确认", edited: "人工修订" }, Na = { single_choice: "单选题", multiple_choice: "多选题", case_answer: "案例问答" }, Xf = { selected: [], text: "", row_version: 0 };
+function Mv({ api: u, path: h, navigate: _, projects: d }) {
+  var _e, it, jt;
+  const A = h.startsWith("/learn"), M = /^\/training\/results\/[^/]+$/.test(h), V = h.startsWith("/learn/attempts/") || M ? h.split("/")[3] : "", z = /^\/training\/questions\/[^/]+$/.test(h), Y = z ? h.split("/")[3] : "", v = h === "/training/questions", U = h === "/training/packages", K = h === "/training/results", k = d.some((m) => Rt(m, "training.manage")), le = d.some((m) => Rt(m, "training.review")), [xe, Ne] = r.useState("llm"), [Se, Te] = r.useState(""), [fe, I] = r.useState(((_e = d.find((m) => Rt(m, "training.manage"))) == null ? void 0 : _e.id) || ((it = d[0]) == null ? void 0 : it.id) || ""), [de, ne] = r.useState([]), [q, ve] = r.useState([]), [Me, Ye] = r.useState([]), [Je, Qe] = r.useState([]), [pe, Fe] = r.useState(null), [Q, ce] = r.useState(null), [b, G] = r.useState(""), [ee, Ee] = r.useState(!1), [f, B] = r.useState([]), [te, W] = r.useState(["single_choice", "case_answer"]), [ae, Z] = r.useState([]), [P, Oe] = r.useState("新人风险识别与复盘练习"), [ie, Ce] = r.useState("learning-" + Date.now()), [lt, at] = r.useState(1), [et, Ae] = r.useState(null), [Re, qe] = r.useState({}), [ke, Be] = r.useState(null), [tt, st] = r.useState("rules"), [rt, je] = r.useState("useful"), [Ke, ze] = r.useState(""), [E, w] = r.useState({}), [$, we] = r.useState({}), [Le, Xe] = r.useState(""), [ft, L] = r.useState(""), [he, re] = r.useState(null), [$e, y] = r.useState([]), [ye, ge] = r.useState(!0), [Ze, pt] = r.useState(!1), [D, x] = r.useState(""), [ue, be] = r.useState(""), [ut, N] = r.useState(0);
   r.useEffect(() => {
-    L(""), _([]), Y(""), ke(!1), f(""), v(""), Z([]);
+    L(""), y([]), G(""), Ee(!1), be(""), x(""), Z([]);
   }, [h]), r.useEffect(() => {
-    let j = !1;
-    return ge(!0), v(""), Ke(null), Oe(null), Le(null), (async () => {
+    let m = !1;
+    return ge(!0), x(""), Fe(null), Ae(null), Be(null), (async () => {
       try {
         if (V)
-          if (B) {
-            const Ae = await u(`/training/attempts/${V}/result?teacher=true`);
-            j || Le(Ae);
+          if (M) {
+            const De = await u(`/training/attempts/${V}/result?teacher=true`);
+            m || Be(De);
           } else {
-            const Ae = await u("/training/attempts/" + V);
-            if (j) return;
-            if (Oe(Ae), De(Object.fromEntries(Ae.saved_answers.map((at) => [at.question_revision_id, { ...at.answer, row_version: at.row_version }]))), Ae.state === "submitted") {
-              const at = await u(`/training/attempts/${V}/result`);
-              j || Le(at);
+            const De = await u("/training/attempts/" + V);
+            if (m) return;
+            if (Ae(De), qe(Object.fromEntries(De.saved_answers.map((ct) => [ct.question_revision_id, { ...ct.answer, row_version: ct.row_version }]))), De.state === "submitted") {
+              const ct = await u(`/training/attempts/${V}/result`);
+              m || Be(ct);
             }
           }
-        else if (M) {
-          const Ae = await u("/training/questions/" + Q);
-          j || (Ke(Ae), de(structuredClone(Ae.content)));
-        } else if (R) {
-          const [Ae, at] = await Promise.all([u("/training/packages?learner=true&limit=100"), u("/training/attempts?limit=100")]);
-          j || (je(Ae.items), Ge(at.items));
+        else if (z) {
+          const De = await u("/training/questions/" + Y);
+          m || (Fe(De), ce(structuredClone(De.content)));
+        } else if (A) {
+          const [De, ct] = await Promise.all([u("/training/packages?learner=true&limit=100"), u("/training/attempts?limit=100")]);
+          m || (ve(De.items), Qe(ct.items));
         } else if (K) {
-          const Ae = await u(`/training/results?limit=20${dt ? "&cursor=" + dt : ""}`);
-          j || (Ge(Ae.items), re(Ae.next_cursor));
+          const De = await u(`/training/results?limit=20${ft ? "&cursor=" + ft : ""}`);
+          m || (Qe(De.items), re(De.next_cursor));
         } else if (U) {
-          const [Ae, at] = await Promise.all([u(`/training/packages?limit=20${dt ? "&cursor=" + dt : ""}`), u("/training/questions?state=approved&limit=100")]);
-          j || (je(Ae.items), ne(at.items), re(Ae.next_cursor));
+          const [De, ct] = await Promise.all([u(`/training/packages?limit=20${ft ? "&cursor=" + ft : ""}`), u("/training/questions?state=approved&limit=100")]);
+          m || (ve(De.items), ne(ct.items), re(De.next_cursor));
         } else {
-          const [Ae, at] = await Promise.all([u(`/training/questions?limit=20${He ? "&state=" + He : ""}${dt ? "&cursor=" + dt : ""}`), u("/knowledge/library?limit=100&project_id=" + me)]);
-          j || (ne(Ae.items), Be(at.items), re(Ae.next_cursor));
+          const [De, ct] = await Promise.all([u(`/training/questions?limit=20${Le ? "&state=" + Le : ""}${ft ? "&cursor=" + ft : ""}`), u("/knowledge/library?limit=100&project_id=" + fe)]);
+          m || (ne(De.items), Ye(ct.items), re(De.next_cursor));
         }
-      } catch (Ae) {
-        j || v(Ae.message);
+      } catch (De) {
+        m || x(De.message);
       } finally {
-        j || ge(!1);
+        m || ge(!1);
       }
     })(), () => {
-      j = !0;
+      m = !0;
     };
-  }, [h, me, He, dt, G]), r.useEffect(() => {
-    if (!(Ne != null && Ne.grading_job) || !["queued", "running", "retrying"].includes(Ne.grading_job.status)) return;
-    const j = window.setTimeout(() => x((ze) => ze + 1), 1800);
-    return () => clearTimeout(j);
-  }, [(pt = Ne == null ? void 0 : Ne.grading_job) == null ? void 0 : pt.status, G]);
-  const ce = async (j) => {
-    xt(!0), v(""), f("");
+  }, [h, fe, Le, ft, ut]), r.useEffect(() => {
+    if (!(ke != null && ke.grading_job) || !["queued", "running", "retrying"].includes(ke.grading_job.status)) return;
+    const m = window.setTimeout(() => N((Ue) => Ue + 1), 1800);
+    return () => clearTimeout(m);
+  }, [(jt = ke == null ? void 0 : ke.grading_job) == null ? void 0 : jt.status, ut]);
+  const oe = async (m) => {
+    pt(!0), x(""), be("");
     try {
-      await j();
-    } catch (ze) {
-      v(ze.message);
+      await m();
+    } catch (Ue) {
+      x(Ue.message);
     } finally {
-      xt(!1);
+      pt(!1);
     }
-  }, qe = !!pe && !!X && JSON.stringify(X) === JSON.stringify(pe.content), vt = () => ({ revision_id: pe.revision_id, row_version: pe.row_version, reason: y, evidence_checked: ee }), Rt = (j) => void ce(async () => {
-    await u(j === "submit" ? `/training/questions/${Q}/submit-review` : `/reviews/${pe.revision_id}/${j}`, { method: "POST", body: JSON.stringify(vt()) }), f("题目审核状态已保存到统一审核记录。"), x((ze) => ze + 1);
-  }), Et = async (j) => {
-    const ze = Te[j.revision_id] || Lf, Ae = await u(`/training/attempts/${V}/answers/${j.question_id}`, { method: "PUT", body: JSON.stringify(ze) });
-    return De((at) => ({ ...at, [j.revision_id]: { ...ze, row_version: Ae.row_version } })), Ae;
-  }, rt = /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
+  }, Ve = !!pe && !!Q && JSON.stringify(Q) === JSON.stringify(pe.content), Nt = () => ({ revision_id: pe.revision_id, row_version: pe.row_version, reason: b, evidence_checked: ee }), g = (m) => void oe(async () => {
+    await u(m === "submit" ? `/training/questions/${Y}/submit-review` : `/reviews/${pe.revision_id}/${m}`, { method: "POST", body: JSON.stringify(Nt()) }), be("题目审核状态已保存到统一审核记录。"), N((Ue) => Ue + 1);
+  }), X = async (m) => {
+    const Ue = Re[m.revision_id] || Xf, De = await u(`/training/attempts/${V}/answers/${m.question_id}`, { method: "PUT", body: JSON.stringify(Ue) });
+    return qe((ct) => ({ ...ct, [m.revision_id]: { ...Ue, row_version: De.row_version } })), De;
+  }, me = /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
     /* @__PURE__ */ s.jsx("span", { children: "只显示当前授权范围；题库每页20项" }),
     /* @__PURE__ */ s.jsxs("div", { className: "pagination", children: [
-      /* @__PURE__ */ s.jsx("button", { disabled: !Ve.length, onClick: () => {
-        L(Ve.at(-1) || ""), _(Ve.slice(0, -1));
+      /* @__PURE__ */ s.jsx("button", { disabled: !$e.length, onClick: () => {
+        L($e.at(-1) || ""), y($e.slice(0, -1));
       }, children: "上一页" }),
-      /* @__PURE__ */ s.jsx("button", { disabled: !fe, onClick: () => {
-        _([...Ve, dt]), L(fe || "");
+      /* @__PURE__ */ s.jsx("button", { disabled: !he, onClick: () => {
+        y([...$e, ft]), L(he || "");
       }, children: "下一页" })
     ] })
-  ] }), St = (j, ze, Ae) => Ae ? [...j, ze] : j.filter((at) => at !== ze), b = (j) => void ce(async () => {
-    const ze = await u("/training/attempts", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ package_version_id: j.id, grading_mode: We }) });
-    S("/learn/attempts/" + ze.id);
+  ] }), nt = (m, Ue, De) => De ? [...m, Ue] : m.filter((ct) => ct !== Ue), j = (m) => void oe(async () => {
+    const Ue = await u("/training/attempts", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ package_version_id: m.id, grading_mode: tt }) });
+    _("/learn/attempts/" + Ue.id);
   });
   return /* @__PURE__ */ s.jsxs("div", { className: "knowledge-module training-module", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-banner", children: [
-      /* @__PURE__ */ s.jsx($i, { size: 20 }),
+      /* @__PURE__ */ s.jsx(Ki, { size: 20 }),
       /* @__PURE__ */ s.jsxs("div", { children: [
-        /* @__PURE__ */ s.jsx("strong", { children: R ? "新人学习与练习" : "培训题库与学习记录" }),
+        /* @__PURE__ */ s.jsx("strong", { children: A ? "新人学习与练习" : "培训题库与学习记录" }),
         /* @__PURE__ */ s.jsx("span", { children: "题目固定审核来源版本，开放题建议分仍需教员复核。学习记录保留原题版本；来源受限时隐藏正文。" })
       ] })
     ] }),
-    z && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
+    D && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
       /* @__PURE__ */ s.jsx(Nl, { size: 18 }),
-      z
+      D
     ] }),
     ue && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
       /* @__PURE__ */ s.jsx(Sl, { size: 18 }),
@@ -15058,185 +15151,185 @@ function Av({ api: u, path: h, navigate: S, projects: d }) {
     ] }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
-        !R && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-          /* @__PURE__ */ s.jsx("button", { className: p || M ? "selected" : "", onClick: () => S("/training/questions"), children: "题库与审核" }),
+        !A && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+          /* @__PURE__ */ s.jsx("button", { className: v || z ? "selected" : "", onClick: () => _("/training/questions"), children: "题库与审核" }),
           k && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-            /* @__PURE__ */ s.jsx("button", { className: U ? "selected" : "", onClick: () => S("/training/packages"), children: "学习包" }),
-            /* @__PURE__ */ s.jsx("button", { className: K || B ? "selected" : "", onClick: () => S("/training/results"), children: "学习结果" })
+            /* @__PURE__ */ s.jsx("button", { className: U ? "selected" : "", onClick: () => _("/training/packages"), children: "学习包" }),
+            /* @__PURE__ */ s.jsx("button", { className: K || M ? "selected" : "", onClick: () => _("/training/results"), children: "学习结果" })
           ] })
         ] }),
-        /* @__PURE__ */ s.jsx("button", { className: R ? "selected" : "", onClick: () => S("/learn"), children: "我的学习" })
+        /* @__PURE__ */ s.jsx("button", { className: A ? "selected" : "", onClick: () => _("/learn"), children: "我的学习" })
       ] }),
-      /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => x((j) => j + 1), children: [
+      /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => N((m) => m + 1), children: [
         /* @__PURE__ */ s.jsx(Rs, { size: 15 }),
         "刷新"
       ] })
     ] }),
-    be ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取培训资料与版本…" }) : Ne ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+    ye ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取培训资料与版本…" }) : ke ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "本次学习结果" }),
-          /* @__PURE__ */ s.jsx("span", { children: ks[Ne.result_state] })
+          /* @__PURE__ */ s.jsx("span", { children: ks[ke.result_state] })
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
           /* @__PURE__ */ s.jsxs("div", { className: "training-score", children: [
             /* @__PURE__ */ s.jsxs("div", { children: [
               "教员确认总分",
-              /* @__PURE__ */ s.jsx("strong", { children: Ne.confirmed_total === null ? "待确认" : Ne.confirmed_total })
+              /* @__PURE__ */ s.jsx("strong", { children: ke.confirmed_total === null ? "待确认" : ke.confirmed_total })
             ] }),
             /* @__PURE__ */ s.jsxs("div", { children: [
               "含建议的参考总分",
-              /* @__PURE__ */ s.jsx("strong", { children: Ne.provisional_total === null ? "待评分" : Ne.provisional_total })
+              /* @__PURE__ */ s.jsx("strong", { children: ke.provisional_total === null ? "待评分" : ke.provisional_total })
             ] }),
             /* @__PURE__ */ s.jsxs("div", { children: [
               "满分",
-              /* @__PURE__ */ s.jsx("strong", { children: Ne.max_score })
+              /* @__PURE__ */ s.jsx("strong", { children: ke.max_score })
             ] })
           ] }),
-          Ne.grading_job && /* @__PURE__ */ s.jsxs("div", { className: "generation-result", children: [
+          ke.grading_job && /* @__PURE__ */ s.jsxs("div", { className: "generation-result", children: [
             /* @__PURE__ */ s.jsxs("p", { children: [
               "后台建议评分：",
-              Ne.grading_job.status === "failed" ? "暂未完成" : Ne.grading_job.status === "succeeded" ? "已完成，仍需人工确认" : "处理中，可稍后回来查看"
+              ke.grading_job.status === "failed" ? "暂未完成" : ke.grading_job.status === "succeeded" ? "已完成，仍需人工确认" : "处理中，可稍后回来查看"
             ] }),
-            Ne.grading_job.error && /* @__PURE__ */ s.jsx("p", { children: Ne.grading_job.error }),
-            B && k && Ne.grading_job.status === "failed" && Ne.content_available && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Qe, onClick: () => void ce(async () => {
-              await u("/jobs/" + Ne.grading_job.id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: Ne.grading_job.row_version }) }), x((j) => j + 1);
+            ke.grading_job.error && /* @__PURE__ */ s.jsx("p", { children: ke.grading_job.error }),
+            M && k && ke.grading_job.status === "failed" && ke.content_available && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Ze, onClick: () => void oe(async () => {
+              await u("/jobs/" + ke.grading_job.id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: ke.grading_job.row_version }) }), N((m) => m + 1);
             }), children: "按当前模型配置重试未完成评分" })
           ] }),
-          Ne.restriction_note && /* @__PURE__ */ s.jsx("p", { className: "warning-text", children: Ne.restriction_note }),
-          Ne.answers.map((j, ze) => {
-            var Ae, at, Xt, Cs, Us, qt, Ea, Oa;
+          ke.restriction_note && /* @__PURE__ */ s.jsx("p", { className: "warning-text", children: ke.restriction_note }),
+          ke.answers.map((m, Ue) => {
+            var De, ct, Zt, Cs, Us, qt, Ea, Oa;
             return /* @__PURE__ */ s.jsxs("article", { className: "training-question", children: [
               /* @__PURE__ */ s.jsxs("h3", { children: [
                 "第",
-                ze + 1,
+                Ue + 1,
                 "题 ",
-                j.type ? _a[j.type] : ""
+                m.type ? Na[m.type] : ""
               ] }),
-              j.content_available && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
-                /* @__PURE__ */ s.jsx("p", { className: "question-stem", children: j.stem }),
+              m.content_available && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+                /* @__PURE__ */ s.jsx("p", { className: "question-stem", children: m.stem }),
                 /* @__PURE__ */ s.jsxs("p", { children: [
                   "我的作答：",
-                  ((Ae = j.answer) == null ? void 0 : Ae.text) || ((at = j.answer) == null ? void 0 : at.selected.join("、")) || "空白"
+                  ((De = m.answer) == null ? void 0 : De.text) || ((ct = m.answer) == null ? void 0 : ct.selected.join("、")) || "空白"
                 ] }),
                 /* @__PURE__ */ s.jsxs("p", { children: [
                   "参考答案：",
-                  ((Xt = j.reference_answer) == null ? void 0 : Xt.text) || ((Us = (Cs = j.reference_answer) == null ? void 0 : Cs.selected) == null ? void 0 : Us.join("、"))
+                  ((Zt = m.reference_answer) == null ? void 0 : Zt.text) || ((Us = (Cs = m.reference_answer) == null ? void 0 : Cs.selected) == null ? void 0 : Us.join("、"))
                 ] }),
-                (qt = j.rubric) == null ? void 0 : qt.map((It, Ps) => /* @__PURE__ */ s.jsxs("p", { className: "training-muted", children: [
+                (qt = m.rubric) == null ? void 0 : qt.map((It, Ps) => /* @__PURE__ */ s.jsxs("p", { className: "training-muted", children: [
                   "评分要点：",
                   It.point,
                   " · ",
                   It.points,
                   "分"
                 ] }, Ps)),
-                /* @__PURE__ */ s.jsx("p", { children: (Ea = j.feedback) == null ? void 0 : Ea.message }),
-                ((Oa = j.feedback) == null ? void 0 : Oa.human_review_reason) && /* @__PURE__ */ s.jsxs("p", { children: [
+                /* @__PURE__ */ s.jsx("p", { children: (Ea = m.feedback) == null ? void 0 : Ea.message }),
+                ((Oa = m.feedback) == null ? void 0 : Oa.human_review_reason) && /* @__PURE__ */ s.jsxs("p", { children: [
                   "教员说明：",
-                  j.feedback.human_review_reason
+                  m.feedback.human_review_reason
                 ] })
               ] }),
               /* @__PURE__ */ s.jsxs("p", { children: [
                 "建议分：",
-                j.suggested_score ?? "无",
+                m.suggested_score ?? "无",
                 " · 确认分：",
-                j.confirmed_score ?? "待确认",
+                m.confirmed_score ?? "待确认",
                 " · ",
-                j.score_kind === "model_suggestion" ? "大模型建议" : j.score_kind === "rule_suggestion" ? "规则建议，需复核" : j.score_kind === "human_confirmed" ? "人工确认" : j.score_kind === "pending" ? "待评分" : "客观题规则评分"
+                m.score_kind === "model_suggestion" ? "大模型建议" : m.score_kind === "rule_suggestion" ? "规则建议，需复核" : m.score_kind === "human_confirmed" ? "人工确认" : m.score_kind === "pending" ? "待评分" : "客观题规则评分"
               ] }),
               /* @__PURE__ */ s.jsxs("small", { children: [
                 "评分规则：",
-                j.scoring_version,
+                m.scoring_version,
                 " · 评分器：",
-                j.model_ref
+                m.model_ref
               ] }),
-              B && k && j.content_available && /* @__PURE__ */ s.jsxs("div", { className: "score-review", children: [
+              M && k && m.content_available && /* @__PURE__ */ s.jsxs("div", { className: "score-review", children: [
                 /* @__PURE__ */ s.jsxs("label", { children: [
                   "确认分数（0—100）",
-                  /* @__PURE__ */ s.jsx("input", { type: "number", min: 0, max: 100, value: E[j.id] ?? String(j.confirmed_score ?? j.suggested_score ?? ""), onChange: (It) => w({ ...E, [j.id]: It.target.value }) })
+                  /* @__PURE__ */ s.jsx("input", { type: "number", min: 0, max: 100, value: E[m.id] ?? String(m.confirmed_score ?? m.suggested_score ?? ""), onChange: (It) => w({ ...E, [m.id]: It.target.value }) })
                 ] }),
                 /* @__PURE__ */ s.jsxs("label", { children: [
                   "评分复核原因",
-                  /* @__PURE__ */ s.jsx("textarea", { value: W[j.id] || "", onChange: (It) => ve({ ...W, [j.id]: It.target.value }) })
+                  /* @__PURE__ */ s.jsx("textarea", { value: $[m.id] || "", onChange: (It) => we({ ...$, [m.id]: It.target.value }) })
                 ] }),
-                /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Qe || !(W[j.id] || "").trim() || (E[j.id] ?? String(j.confirmed_score ?? j.suggested_score ?? "")) === "", onClick: () => void ce(async () => {
-                  await u("/training/answers/" + j.id + "/review-score", { method: "POST", body: JSON.stringify({ row_version: j.row_version, score: Number(E[j.id] ?? j.confirmed_score ?? j.suggested_score), reason: W[j.id] }) }), f("人工确认分已保存，原建议分和复核轨迹保留。"), x((It) => It + 1);
+                /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Ze || !($[m.id] || "").trim() || (E[m.id] ?? String(m.confirmed_score ?? m.suggested_score ?? "")) === "", onClick: () => void oe(async () => {
+                  await u("/training/answers/" + m.id + "/review-score", { method: "POST", body: JSON.stringify({ row_version: m.row_version, score: Number(E[m.id] ?? m.confirmed_score ?? m.suggested_score), reason: $[m.id] }) }), be("人工确认分已保存，原建议分和复核轨迹保留。"), N((It) => It + 1);
                 }), children: "保存人工确认分" })
               ] })
-            ] }, j.id);
+            ] }, m.id);
           })
         ] })
       ] }),
-      !B && Ne.content_available && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+      !M && ke.content_available && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsx("h2", { children: "题目与解释反馈" }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-          /* @__PURE__ */ s.jsxs("select", { "aria-label": "学习反馈", value: Ze, onChange: (j) => he(j.target.value), children: [
+          /* @__PURE__ */ s.jsxs("select", { "aria-label": "学习反馈", value: rt, onChange: (m) => je(m.target.value), children: [
             /* @__PURE__ */ s.jsx("option", { value: "useful", children: "有帮助" }),
             /* @__PURE__ */ s.jsx("option", { value: "unclear", children: "表述不清" }),
             /* @__PURE__ */ s.jsx("option", { value: "incorrect", children: "需要核查" })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "补充说明",
-            /* @__PURE__ */ s.jsx("textarea", { value: et, onChange: (j) => Ue(j.target.value) })
+            /* @__PURE__ */ s.jsx("textarea", { value: Ke, onChange: (m) => ze(m.target.value) })
           ] }),
-          /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Qe, onClick: () => void ce(async () => {
-            await u(`/training/attempts/${V}/feedback`, { method: "POST", body: JSON.stringify({ rating: Ze, comment: et }) }), f("学习反馈已保存。");
+          /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Ze, onClick: () => void oe(async () => {
+            await u(`/training/attempts/${V}/feedback`, { method: "POST", body: JSON.stringify({ rating: rt, comment: Ke }) }), be("学习反馈已保存。");
           }), children: "提交反馈" })
         ] })
       ] })
-    ] }) : Pe ? /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+    ] }) : et ? /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
         /* @__PURE__ */ s.jsxs("h2", { children: [
-          Pe.package_title,
+          et.package_title,
           " · v",
-          Pe.package_version
+          et.package_version
         ] }),
         /* @__PURE__ */ s.jsx("span", { children: "保存后可刷新恢复；提交后锁定本次作答" })
       ] }),
-      Pe.questions.map((j) => {
-        const ze = Te[j.revision_id] || Lf;
+      et.questions.map((m) => {
+        const Ue = Re[m.revision_id] || Xf;
         return /* @__PURE__ */ s.jsxs("article", { className: "training-question", children: [
           /* @__PURE__ */ s.jsxs("h3", { children: [
             "第",
-            j.position,
+            m.position,
             "题 · ",
-            _a[j.type],
+            Na[m.type],
             " · ",
-            j.max_score,
+            m.max_score,
             "分"
           ] }),
-          /* @__PURE__ */ s.jsx("p", { className: "question-stem", children: j.stem }),
-          j.type === "case_answer" ? /* @__PURE__ */ s.jsxs("label", { children: [
+          /* @__PURE__ */ s.jsx("p", { className: "question-stem", children: m.stem }),
+          m.type === "case_answer" ? /* @__PURE__ */ s.jsxs("label", { children: [
             "我的回答",
-            /* @__PURE__ */ s.jsx("textarea", { "aria-label": "第" + j.position + "题回答", value: ze.text, onChange: (Ae) => De({ ...Te, [j.revision_id]: { ...ze, text: Ae.target.value } }) })
-          ] }) : j.options.map((Ae) => /* @__PURE__ */ s.jsxs("label", { className: "training-option", children: [
-            /* @__PURE__ */ s.jsx("input", { type: j.type === "single_choice" ? "radio" : "checkbox", name: j.revision_id, checked: ze.selected.includes(Ae.id), onChange: (at) => De({ ...Te, [j.revision_id]: { ...ze, selected: j.type === "single_choice" ? [Ae.id] : St(ze.selected, Ae.id, at.target.checked) } }) }),
+            /* @__PURE__ */ s.jsx("textarea", { "aria-label": "第" + m.position + "题回答", value: Ue.text, onChange: (De) => qe({ ...Re, [m.revision_id]: { ...Ue, text: De.target.value } }) })
+          ] }) : m.options.map((De) => /* @__PURE__ */ s.jsxs("label", { className: "training-option", children: [
+            /* @__PURE__ */ s.jsx("input", { type: m.type === "single_choice" ? "radio" : "checkbox", name: m.revision_id, checked: Ue.selected.includes(De.id), onChange: (ct) => qe({ ...Re, [m.revision_id]: { ...Ue, selected: m.type === "single_choice" ? [De.id] : nt(Ue.selected, De.id, ct.target.checked) } }) }),
             /* @__PURE__ */ s.jsxs("span", { children: [
-              Ae.id.toUpperCase(),
+              De.id.toUpperCase(),
               " · ",
-              Ae.text
+              De.text
             ] })
-          ] }, Ae.id)),
+          ] }, De.id)),
           /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-            /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Qe, onClick: () => void ce(async () => {
-              await Et(j), f("第" + j.position + "题已保存到服务端。");
+            /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Ze, onClick: () => void oe(async () => {
+              await X(m), be("第" + m.position + "题已保存到服务端。");
             }), children: "保存本题作答" }),
             /* @__PURE__ */ s.jsxs("span", { className: "training-muted", children: [
               "已保存版本 ",
-              ze.row_version
+              Ue.row_version
             ] })
           ] })
-        ] }, j.revision_id);
+        ] }, m.revision_id);
       }),
-      /* @__PURE__ */ s.jsx("div", { className: "proof-body", children: /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Qe, onClick: () => void ce(async () => {
-        for (const j of Pe.questions) await Et(j);
-        await u(`/training/attempts/${V}/submit`, { method: "POST" }), x((j) => j + 1), f("作答已提交，评分结果如下。");
+      /* @__PURE__ */ s.jsx("div", { className: "proof-body", children: /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Ze, onClick: () => void oe(async () => {
+        for (const m of et.questions) await X(m);
+        await u(`/training/attempts/${V}/submit`, { method: "POST" }), N((m) => m + 1), be("作答已提交，评分结果如下。");
       }), children: "保存全部并提交" }) })
-    ] }) : M && pe && X ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+    ] }) : z && pe && Q ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsxs("h2", { children: [
-            _a[pe.type],
+            Na[pe.type],
             " · v",
             pe.version,
             " · ",
@@ -15247,61 +15340,61 @@ function Av({ api: u, path: h, navigate: S, projects: d }) {
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "题面",
-            /* @__PURE__ */ s.jsx("textarea", { "aria-label": "题面", value: X.stem, disabled: !k, onChange: (j) => de({ ...X, stem: j.target.value }) })
+            /* @__PURE__ */ s.jsx("textarea", { "aria-label": "题面", value: Q.stem, disabled: !k, onChange: (m) => ce({ ...Q, stem: m.target.value }) })
           ] }),
-          X.options.map((j, ze) => {
-            var Ae;
+          Q.options.map((m, Ue) => {
+            var De;
             return /* @__PURE__ */ s.jsxs("label", { children: [
               "选项 ",
-              j.id.toUpperCase(),
-              /* @__PURE__ */ s.jsx("input", { value: j.text, disabled: !k, onChange: (at) => de({ ...X, options: X.options.map((Xt, Cs) => Cs === ze ? { ...Xt, text: at.target.value } : Xt) }) }),
+              m.id.toUpperCase(),
+              /* @__PURE__ */ s.jsx("input", { value: m.text, disabled: !k, onChange: (ct) => ce({ ...Q, options: Q.options.map((Zt, Cs) => Cs === Ue ? { ...Zt, text: ct.target.value } : Zt) }) }),
               /* @__PURE__ */ s.jsxs("span", { className: "check-label", children: [
-                /* @__PURE__ */ s.jsx("input", { type: "checkbox", disabled: !k, checked: ((Ae = X.answer.selected) == null ? void 0 : Ae.includes(j.id)) || !1, onChange: (at) => de({ ...X, answer: { selected: St(X.answer.selected || [], j.id, at.target.checked) } }) }),
+                /* @__PURE__ */ s.jsx("input", { type: "checkbox", disabled: !k, checked: ((De = Q.answer.selected) == null ? void 0 : De.includes(m.id)) || !1, onChange: (ct) => ce({ ...Q, answer: { selected: nt(Q.answer.selected || [], m.id, ct.target.checked) } }) }),
                 "此项为正确答案"
               ] })
-            ] }, j.id);
+            ] }, m.id);
           }),
           pe.type === "case_answer" && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "参考回答",
-              /* @__PURE__ */ s.jsx("textarea", { value: X.answer.text || "", disabled: !k, onChange: (j) => de({ ...X, answer: { text: j.target.value } }) })
+              /* @__PURE__ */ s.jsx("textarea", { value: Q.answer.text || "", disabled: !k, onChange: (m) => ce({ ...Q, answer: { text: m.target.value } }) })
             ] }),
-            X.rubric.map((j, ze) => /* @__PURE__ */ s.jsxs("div", { className: "rubric-edit", children: [
+            Q.rubric.map((m, Ue) => /* @__PURE__ */ s.jsxs("div", { className: "rubric-edit", children: [
               /* @__PURE__ */ s.jsxs("label", { children: [
                 "评分要点",
-                /* @__PURE__ */ s.jsx("textarea", { value: j.point, disabled: !k, onChange: (Ae) => de({ ...X, rubric: X.rubric.map((at, Xt) => Xt === ze ? { ...at, point: Ae.target.value } : at) }) })
+                /* @__PURE__ */ s.jsx("textarea", { value: m.point, disabled: !k, onChange: (De) => ce({ ...Q, rubric: Q.rubric.map((ct, Zt) => Zt === Ue ? { ...ct, point: De.target.value } : ct) }) })
               ] }),
               /* @__PURE__ */ s.jsxs("label", { children: [
                 "匹配词（用逗号分隔，仅规则建议评分使用）",
-                /* @__PURE__ */ s.jsx("input", { value: j.keywords.join("，"), disabled: !k, onChange: (Ae) => de({ ...X, rubric: X.rubric.map((at, Xt) => Xt === ze ? { ...at, keywords: Ae.target.value.split(/[,，]/).filter(Boolean) } : at) }) })
+                /* @__PURE__ */ s.jsx("input", { value: m.keywords.join("，"), disabled: !k, onChange: (De) => ce({ ...Q, rubric: Q.rubric.map((ct, Zt) => Zt === Ue ? { ...ct, keywords: De.target.value.split(/[,，]/).filter(Boolean) } : ct) }) })
               ] }),
               /* @__PURE__ */ s.jsxs("label", { children: [
                 "分值",
-                /* @__PURE__ */ s.jsx("input", { type: "number", min: 1, max: 100, value: j.points, disabled: !k, onChange: (Ae) => de({ ...X, rubric: X.rubric.map((at, Xt) => Xt === ze ? { ...at, points: Number(Ae.target.value) } : at) }) })
+                /* @__PURE__ */ s.jsx("input", { type: "number", min: 1, max: 100, value: m.points, disabled: !k, onChange: (De) => ce({ ...Q, rubric: Q.rubric.map((ct, Zt) => Zt === Ue ? { ...ct, points: Number(De.target.value) } : ct) }) })
               ] })
-            ] }, ze))
+            ] }, Ue))
           ] }),
           /* @__PURE__ */ s.jsx("h3", { children: "固定审核来源" }),
-          pe.source_versions.map((j) => /* @__PURE__ */ s.jsx("p", { children: /* @__PURE__ */ s.jsx("code", { children: j }) }, j)),
+          pe.source_versions.map((m) => /* @__PURE__ */ s.jsx("p", { children: /* @__PURE__ */ s.jsx("code", { children: m }) }, m)),
           /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "请到知识库核对来源版本；原始隐患没有可信整改结论时，题目只用于识别和补证据，不编造标准处置。" }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "修改或审核原因",
-            /* @__PURE__ */ s.jsx("textarea", { "aria-label": "题目审核原因", value: y, onChange: (j) => Y(j.target.value) })
+            /* @__PURE__ */ s.jsx("textarea", { "aria-label": "题目审核原因", value: b, onChange: (m) => G(m.target.value) })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-            k && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Qe || qe || !y.trim(), onClick: () => void ce(async () => {
-              await u(`/training/questions/${Q}/draft`, { method: "PATCH", body: JSON.stringify({ ...vt(), content: X }) }), f("新题目版本已保存，不改变旧学习包与成绩。"), x((j) => j + 1);
+            k && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Ze || Ve || !b.trim(), onClick: () => void oe(async () => {
+              await u(`/training/questions/${Y}/draft`, { method: "PATCH", body: JSON.stringify({ ...Nt(), content: Q }) }), be("新题目版本已保存，不改变旧学习包与成绩。"), N((m) => m + 1);
             }), children: "保存新版本" }),
-            k && ["draft", "changes_requested"].includes(pe.state) && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Qe || !qe || !y.trim(), onClick: () => Rt("submit"), children: "提交题目审核" })
+            k && ["draft", "changes_requested"].includes(pe.state) && /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Ze || !Ve || !b.trim(), onClick: () => g("submit"), children: "提交题目审核" })
           ] }),
           le && pe.state === "pending_review" && /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
             /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-              /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: ee, onChange: (j) => ke(j.target.checked) }),
+              /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: ee, onChange: (m) => Ee(m.target.checked) }),
               "已核对题面、正确答案、评分要点和来源"
             ] }),
             /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-              /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Qe || !ee || !qe || !y.trim(), onClick: () => Rt("approve"), children: "批准此题目版本" }),
-              /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: Qe || !qe || !y.trim(), onClick: () => Rt("request-changes"), children: "退回修改" })
+              /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Ze || !ee || !Ve || !b.trim(), onClick: () => g("approve"), children: "批准此题目版本" }),
+              /* @__PURE__ */ s.jsx("button", { className: "button ghost", disabled: Ze || !Ve || !b.trim(), onClick: () => g("request-changes"), children: "退回修改" })
             ] })
           ] })
         ] })
@@ -15309,58 +15402,58 @@ function Av({ api: u, path: h, navigate: S, projects: d }) {
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsx("h2", { children: "版本与审核记录" }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-          pe.revisions.map((j) => /* @__PURE__ */ s.jsxs("p", { children: [
+          pe.revisions.map((m) => /* @__PURE__ */ s.jsxs("p", { children: [
             "v",
-            j.version,
+            m.version,
             " · ",
-            ks[j.state]
-          ] }, j.id)),
-          pe.review_actions.map((j, ze) => /* @__PURE__ */ s.jsxs("p", { children: [
+            ks[m.state]
+          ] }, m.id)),
+          pe.review_actions.map((m, Ue) => /* @__PURE__ */ s.jsxs("p", { children: [
             "v",
-            j.version,
+            m.version,
             " · ",
-            ks[j.action] || j.action,
+            ks[m.action] || m.action,
             " · ",
-            j.reason
-          ] }, ze))
+            m.reason
+          ] }, Ue))
         ] })
       ] })
-    ] }) : R ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+    ] }) : A ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsx("h2", { children: "可学习的固定版本学习包" }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "开放题评分方式",
-            /* @__PURE__ */ s.jsxs("select", { "aria-label": "开放题评分方式", value: We, onChange: (j) => Fe(j.target.value), children: [
+            /* @__PURE__ */ s.jsxs("select", { "aria-label": "开放题评分方式", value: tt, onChange: (m) => st(m.target.value), children: [
               /* @__PURE__ */ s.jsx("option", { value: "rules", children: "关键词规则建议分，等待教员确认" }),
               /* @__PURE__ */ s.jsx("option", { value: "llm", children: "云端模型建议分，等待教员确认" }),
-              !Tt && /* @__PURE__ */ s.jsx("option", { value: "simulate_failure", children: "模拟评分失败，验证作答保留" })
+              !zt && /* @__PURE__ */ s.jsx("option", { value: "simulate_failure", children: "模拟评分失败，验证作答保留" })
             ] })
           ] }),
-          D.length ? D.map((j) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
-            /* @__PURE__ */ s.jsx("h3", { children: j.title }),
+          q.length ? q.map((m) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
+            /* @__PURE__ */ s.jsx("h3", { children: m.title }),
             /* @__PURE__ */ s.jsxs("p", { children: [
               "固定版本 v",
-              j.version,
+              m.version,
               " · ",
-              j.question_count,
+              m.question_count,
               "题"
             ] }),
-            /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Qe, onClick: () => b(j), children: "开始本次练习" })
-          ] }, j.id)) : /* @__PURE__ */ s.jsx("p", { children: "暂无适用于当前身份的已发布学习包。" })
+            /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Ze, onClick: () => j(m), children: "开始本次练习" })
+          ] }, m.id)) : /* @__PURE__ */ s.jsx("p", { children: "暂无适用于当前身份的已发布学习包。" })
         ] })
       ] }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsx("h2", { children: "我的学习记录" }) }),
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-          Xe.map((j) => /* @__PURE__ */ s.jsx("p", { children: /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => S("/learn/attempts/" + j.id), children: [
-            ks[j.state],
+          Je.map((m) => /* @__PURE__ */ s.jsx("p", { children: /* @__PURE__ */ s.jsxs("button", { className: "text-button", onClick: () => _("/learn/attempts/" + m.id), children: [
+            ks[m.state],
             " · ",
-            ks[j.result_state],
+            ks[m.result_state],
             " · ",
-            new Date(j.started_at).toLocaleString("zh-CN")
-          ] }) }, j.id)),
-          !Xe.length && /* @__PURE__ */ s.jsx("p", { children: "还没有学习记录。" })
+            new Date(m.started_at).toLocaleString("zh-CN")
+          ] }) }, m.id)),
+          !Je.length && /* @__PURE__ */ s.jsx("p", { children: "还没有学习记录。" })
         ] })
       ] })
     ] }) : K ? /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
@@ -15372,25 +15465,25 @@ function Av({ api: u, path: h, navigate: S, projects: d }) {
           /* @__PURE__ */ s.jsx("th", { children: "状态" }),
           /* @__PURE__ */ s.jsx("th", { children: "操作" })
         ] }) }),
-        /* @__PURE__ */ s.jsx("tbody", { children: Xe.map((j) => {
-          var ze;
+        /* @__PURE__ */ s.jsx("tbody", { children: Je.map((m) => {
+          var Ue;
           return /* @__PURE__ */ s.jsxs("tr", { children: [
             /* @__PURE__ */ s.jsxs("td", { children: [
-              j.title,
+              m.title,
               " · v",
-              j.package_version
+              m.package_version
             ] }),
-            /* @__PURE__ */ s.jsx("td", { children: (ze = j.learner_id) == null ? void 0 : ze.slice(0, 8) }),
+            /* @__PURE__ */ s.jsx("td", { children: (Ue = m.learner_id) == null ? void 0 : Ue.slice(0, 8) }),
             /* @__PURE__ */ s.jsxs("td", { children: [
-              ks[j.state],
+              ks[m.state],
               " · ",
-              ks[j.result_state]
+              ks[m.result_state]
             ] }),
-            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: j.state !== "submitted", onClick: () => S("/training/results/" + j.id), children: "查看结果与复核" }) })
-          ] }, j.id);
+            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: m.state !== "submitted", onClick: () => _("/training/results/" + m.id), children: "查看结果与复核" }) })
+          ] }, m.id);
         }) })
       ] }) }),
-      rt
+      me
     ] }) : U ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       k && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
@@ -15401,39 +15494,39 @@ function Av({ api: u, path: h, navigate: S, projects: d }) {
           /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "项目",
-              /* @__PURE__ */ s.jsx("select", { value: me, onChange: (j) => {
-                I(j.target.value), Z([]);
-              }, children: d.filter((j) => At(j, "training.manage")).map((j) => /* @__PURE__ */ s.jsx("option", { value: j.id, children: j.name }, j.id)) })
+              /* @__PURE__ */ s.jsx("select", { value: fe, onChange: (m) => {
+                I(m.target.value), Z([]);
+              }, children: d.filter((m) => Rt(m, "training.manage")).map((m) => /* @__PURE__ */ s.jsx("option", { value: m.id, children: m.name }, m.id)) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "指定学习账号（可留空，逗号分隔）",
-              /* @__PURE__ */ s.jsx("input", { "aria-label": "指定学习账号", value: ye, onChange: (j) => Ee(j.target.value) })
+              /* @__PURE__ */ s.jsx("input", { "aria-label": "指定学习账号", value: Se, onChange: (m) => Te(m.target.value) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "名称",
-              /* @__PURE__ */ s.jsx("input", { value: P, onChange: (j) => Ce(j.target.value) })
+              /* @__PURE__ */ s.jsx("input", { value: P, onChange: (m) => Oe(m.target.value) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "学习包组编码",
-              /* @__PURE__ */ s.jsx("input", { value: ie, onChange: (j) => Se(j.target.value) })
+              /* @__PURE__ */ s.jsx("input", { value: ie, onChange: (m) => Ce(m.target.value) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "版本号",
-              /* @__PURE__ */ s.jsx("input", { type: "number", min: 1, value: st, onChange: (j) => lt(Number(j.target.value)) })
+              /* @__PURE__ */ s.jsx("input", { type: "number", min: 1, value: lt, onChange: (m) => at(Number(m.target.value)) })
             ] })
           ] }),
-          /* @__PURE__ */ s.jsx("div", { className: "source-options", children: oe.filter((j) => j.project_id === me).map((j) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: ae.includes(j.revision_id), onChange: (ze) => Z((Ae) => St(Ae, j.revision_id, ze.target.checked)) }),
+          /* @__PURE__ */ s.jsx("div", { className: "source-options", children: de.filter((m) => m.project_id === fe).map((m) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: ae.includes(m.revision_id), onChange: (Ue) => Z((De) => nt(De, m.revision_id, Ue.target.checked)) }),
             /* @__PURE__ */ s.jsxs("span", { children: [
-              _a[j.type],
+              Na[m.type],
               " · ",
-              j.title,
+              m.title,
               " · v",
-              j.version
+              m.version
             ] })
-          ] }, j.revision_id)) }),
-          /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Qe || !ae.length || ae.length > 30 || !P.trim(), onClick: () => void ce(async () => {
-            await u("/training/packages", { method: "POST", body: JSON.stringify({ title: P, package_key: ie, version: st, project_id: me, question_revision_ids: ae, role_scope: ["learner", "admin", "teacher"], audience_subjects: ye.split(/[,，\n]/).map((j) => j.trim()).filter(Boolean) }) }), f("学习包草稿已建立，发布后学员可使用。"), x((j) => j + 1);
+          ] }, m.revision_id)) }),
+          /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Ze || !ae.length || ae.length > 30 || !P.trim(), onClick: () => void oe(async () => {
+            await u("/training/packages", { method: "POST", body: JSON.stringify({ title: P, package_key: ie, version: lt, project_id: fe, question_revision_ids: ae, role_scope: ["learner", "admin", "teacher"], audience_subjects: Se.split(/[,，\n]/).map((m) => m.trim()).filter(Boolean) }) }), be("学习包草稿已建立，发布后学员可使用。"), N((m) => m + 1);
           }), children: [
             "创建学习包草稿（",
             ae.length,
@@ -15443,24 +15536,24 @@ function Av({ api: u, path: h, navigate: S, projects: d }) {
       ] }),
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsx("div", { className: "panel-heading", children: /* @__PURE__ */ s.jsx("h2", { children: "学习包版本" }) }),
-        /* @__PURE__ */ s.jsx("div", { className: "proof-body", children: D.map((j) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
+        /* @__PURE__ */ s.jsx("div", { className: "proof-body", children: q.map((m) => /* @__PURE__ */ s.jsxs("div", { className: "proof-row", children: [
           /* @__PURE__ */ s.jsxs("h3", { children: [
-            j.title,
+            m.title,
             " · v",
-            j.version
+            m.version
           ] }),
           /* @__PURE__ */ s.jsxs("p", { children: [
-            ks[j.state],
+            ks[m.state],
             " · ",
-            j.question_count,
+            m.question_count,
             "题 · ",
-            j.package_key
+            m.package_key
           ] }),
-          j.state === "draft" && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Qe, onClick: () => void ce(async () => {
-            await u(`/training/packages/${j.id}/publish`, { method: "POST", body: JSON.stringify({ row_version: j.row_version, reason: "发布已审核题目的固定版本学习包" }) }), f("学习包已发布。"), x((ze) => ze + 1);
+          m.state === "draft" && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Ze, onClick: () => void oe(async () => {
+            await u(`/training/packages/${m.id}/publish`, { method: "POST", body: JSON.stringify({ row_version: m.row_version, reason: "发布已审核题目的固定版本学习包" }) }), be("学习包已发布。"), N((Ue) => Ue + 1);
           }), children: "发布此学习包版本" })
-        ] }, j.id)) }),
-        rt
+        ] }, m.id)) }),
+        me
       ] })
     ] }) : /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       k && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
@@ -15471,37 +15564,37 @@ function Av({ api: u, path: h, navigate: S, projects: d }) {
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "项目",
-            /* @__PURE__ */ s.jsx("select", { value: me, onChange: (j) => {
-              I(j.target.value), H([]);
-            }, children: d.filter((j) => At(j, "training.manage")).map((j) => /* @__PURE__ */ s.jsx("option", { value: j.id, children: j.name }, j.id)) })
+            /* @__PURE__ */ s.jsx("select", { value: fe, onChange: (m) => {
+              I(m.target.value), B([]);
+            }, children: d.filter((m) => Rt(m, "training.manage")).map((m) => /* @__PURE__ */ s.jsx("option", { value: m.id, children: m.name }, m.id)) })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "source-options", children: [
-            Re.map((j) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-              /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: m.includes(j.revision_id), onChange: (ze) => H((Ae) => St(Ae, j.revision_id, ze.target.checked)) }),
+            Me.map((m) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
+              /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: f.includes(m.revision_id), onChange: (Ue) => B((De) => nt(De, m.revision_id, Ue.target.checked)) }),
               /* @__PURE__ */ s.jsxs("span", { children: [
-                j.title,
+                m.title,
                 /* @__PURE__ */ s.jsxs("small", { children: [
-                  j.origin_type === "retrospective" ? "复盘经验" : "历史知识",
+                  m.origin_type === "retrospective" ? "复盘经验" : "历史知识",
                   " · 已发布固定版本"
                 ] })
               ] })
-            ] }, j.revision_id)),
-            !Re.length && /* @__PURE__ */ s.jsx("p", { children: "先审核并发布知识；B06复盘需先转经验并完成知识审核，不能直接跳过来源门槛出题。" })
+            ] }, m.revision_id)),
+            !Me.length && /* @__PURE__ */ s.jsx("p", { children: "先审核并发布知识；B06复盘需先转经验并完成知识审核，不能直接跳过来源门槛出题。" })
           ] }),
-          /* @__PURE__ */ s.jsx("div", { className: "card-actions", children: Object.entries(_a).map(([j, ze]) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: te.includes(j), onChange: (Ae) => $((at) => St(at, j, Ae.target.checked)) }),
-            ze
-          ] }, j)) }),
+          /* @__PURE__ */ s.jsx("div", { className: "card-actions", children: Object.entries(Na).map(([m, Ue]) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: te.includes(m), onChange: (De) => W((ct) => nt(ct, m, De.target.checked)) }),
+            Ue
+          ] }, m)) }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "出题方式",
-            /* @__PURE__ */ s.jsxs("select", { "aria-label": "出题方式", value: xe, onChange: (j) => _e(j.target.value), children: [
+            /* @__PURE__ */ s.jsxs("select", { "aria-label": "出题方式", value: xe, onChange: (m) => Ne(m.target.value), children: [
               /* @__PURE__ */ s.jsx("option", { value: "llm", children: "云端模型生成" }),
               /* @__PURE__ */ s.jsx("option", { value: "mock", children: "本地模板演示" })
             ] })
           ] }),
-          /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Qe || !m.length || m.length > 10 || !te.length, onClick: () => void ce(async () => {
-            const j = await em(u, "/training/generation-jobs", { knowledge_revision_ids: m, types: te, generation_mode: xe }, () => f("已提交后台生成，关闭页面不影响任务；可在任务工作台查看进度。"));
-            f("已生成或复用" + j.items.length + "道候选题，仍需核查答案与来源后提交审核。"), x((ze) => ze + 1);
+          /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: Ze || !f.length || f.length > 10 || !te.length, onClick: () => void oe(async () => {
+            const m = await am(u, "/training/generation-jobs", { knowledge_revision_ids: f, types: te, generation_mode: xe }, () => be("已提交后台生成，关闭页面不影响任务；可在任务工作台查看进度。"));
+            be("已生成或复用" + m.items.length + "道候选题，仍需核查答案与来源后提交审核。"), N((Ue) => Ue + 1);
           }), children: "生成题目候选" }),
           /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "多选演示题需至少两条审核事实。模型输出仍需核对，不将自动生成等同于质量验收通过。" })
         ] })
@@ -15509,70 +15602,70 @@ function Av({ api: u, path: h, navigate: S, projects: d }) {
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "题目候选与审核" }),
-          /* @__PURE__ */ s.jsxs("select", { "aria-label": "题目状态", value: He, onChange: (j) => {
-            tt(j.target.value), L(""), _([]);
+          /* @__PURE__ */ s.jsxs("select", { "aria-label": "题目状态", value: Le, onChange: (m) => {
+            Xe(m.target.value), L(""), y([]);
           }, children: [
             /* @__PURE__ */ s.jsx("option", { value: "", children: "全部状态" }),
-            ["draft", "pending_review", "changes_requested", "approved", "published"].map((j) => /* @__PURE__ */ s.jsx("option", { value: j, children: ks[j] }, j))
+            ["draft", "pending_review", "changes_requested", "approved", "published"].map((m) => /* @__PURE__ */ s.jsx("option", { value: m, children: ks[m] }, m))
           ] })
         ] }),
-        oe.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
+        de.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
           /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsxs("tr", { children: [
             /* @__PURE__ */ s.jsx("th", { children: "题面" }),
             /* @__PURE__ */ s.jsx("th", { children: "类型" }),
             /* @__PURE__ */ s.jsx("th", { children: "版本/状态" }),
             /* @__PURE__ */ s.jsx("th", { children: "操作" })
           ] }) }),
-          /* @__PURE__ */ s.jsx("tbody", { children: oe.map((j) => /* @__PURE__ */ s.jsxs("tr", { children: [
-            /* @__PURE__ */ s.jsx("td", { children: j.title }),
-            /* @__PURE__ */ s.jsx("td", { children: _a[j.type] }),
+          /* @__PURE__ */ s.jsx("tbody", { children: de.map((m) => /* @__PURE__ */ s.jsxs("tr", { children: [
+            /* @__PURE__ */ s.jsx("td", { children: m.title }),
+            /* @__PURE__ */ s.jsx("td", { children: Na[m.type] }),
             /* @__PURE__ */ s.jsxs("td", { children: [
               "v",
-              j.version,
+              m.version,
               " · ",
-              ks[j.state],
-              j.published && /* @__PURE__ */ s.jsx("small", { children: "已用于发布学习包" })
+              ks[m.state],
+              m.published && /* @__PURE__ */ s.jsx("small", { children: "已用于发布学习包" })
             ] }),
-            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S("/training/questions/" + j.id), children: "核查与审核" }) })
-          ] }, j.id)) })
+            /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/training/questions/" + m.id), children: "核查与审核" }) })
+          ] }, m.id)) })
         ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "暂无当前范围题目" }),
           /* @__PURE__ */ s.jsx("p", { children: "从已发布的固定知识版本开始。" })
         ] }),
-        rt
+        me
       ] })
     ] })
   ] });
 }
-function Rv({ api: u }) {
-  var Ee, me;
-  const [h, S] = r.useState(null), [d, R] = r.useState([]), [B, V] = r.useState("openai"), [M, Q] = r.useState(""), [p, U] = r.useState(!1), [K, k] = r.useState(""), [le, xe] = r.useState("");
+function qv({ api: u }) {
+  var Te, fe;
+  const [h, _] = r.useState(null), [d, A] = r.useState([]), [M, V] = r.useState("openai"), [z, Y] = r.useState(""), [v, U] = r.useState(!1), [K, k] = r.useState(""), [le, xe] = r.useState("");
   r.useEffect(() => {
     let I = !1;
-    return Promise.all([u("/models/settings"), u("/models/presets")]).then(([oe, ne]) => {
+    return Promise.all([u("/models/settings"), u("/models/presets")]).then(([de, ne]) => {
       if (I) return;
-      R(ne.items);
-      const D = ne.items.find((je) => je.base_url === oe.base_url);
-      if (!oe.model && !oe.api_key_configured) {
-        const je = ne.items[0];
-        V(je.id), S({ ...oe, base_url: je.base_url, model: je.default_model });
+      A(ne.items);
+      const q = ne.items.find((ve) => ve.base_url === de.base_url);
+      if (!de.model && !de.api_key_configured) {
+        const ve = ne.items[0];
+        V(ve.id), _({ ...de, base_url: ve.base_url, model: ve.default_model });
       } else
-        V((D == null ? void 0 : D.id) || "custom"), S(oe);
-    }).catch((oe) => {
-      I || k(oe.message);
+        V((q == null ? void 0 : q.id) || "custom"), _(de);
+    }).catch((de) => {
+      I || k(de.message);
     }), () => {
       I = !0;
     };
   }, []);
-  const _e = (I) => {
-    const oe = d.find((ne) => ne.id === I);
-    V(I), Q(""), xe(""), k(""), h && S({ ...h, base_url: (oe == null ? void 0 : oe.base_url) || "", model: (oe == null ? void 0 : oe.default_model) || "", api_key_configured: !1 });
-  }, ye = async () => {
+  const Ne = (I) => {
+    const de = d.find((ne) => ne.id === I);
+    V(I), Y(""), xe(""), k(""), h && _({ ...h, base_url: (de == null ? void 0 : de.base_url) || "", model: (de == null ? void 0 : de.default_model) || "", api_key_configured: !1 });
+  }, Se = async () => {
     if (h) {
       U(!0), k(""), xe("");
       try {
-        const { api_key_configured: I, ...oe } = h, ne = await u("/models/settings", { method: "PUT", body: JSON.stringify({ ...oe, enabled: !0, ...M ? { api_key: M } : {} }) });
-        if (S(ne), Q(""), xe("配置已保存，正在测试连接…"), (await u("/models/test", { method: "POST" })).status !== "ok") throw new Error("配置已保存，但模型未返回预期结果，请重新测试。");
+        const { api_key_configured: I, ...de } = h, ne = await u("/models/settings", { method: "PUT", body: JSON.stringify({ ...de, enabled: !0, ...z ? { api_key: z } : {} }) });
+        if (_(ne), Y(""), xe("配置已保存，正在测试连接…"), (await u("/models/test", { method: "POST" })).status !== "ok") throw new Error("配置已保存，但模型未返回预期结果，请重新测试。");
         xe("连接测试通过，可以开始知识萃取和案例评分。");
       } catch (I) {
         xe(""), k(I.message);
@@ -15592,44 +15685,44 @@ function Rv({ api: u }) {
       h ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
         /* @__PURE__ */ s.jsxs("label", { children: [
           "模型服务",
-          /* @__PURE__ */ s.jsxs("select", { "aria-label": "模型服务", disabled: p, value: B, onChange: (I) => _e(I.target.value), children: [
+          /* @__PURE__ */ s.jsxs("select", { "aria-label": "模型服务", disabled: v, value: M, onChange: (I) => Ne(I.target.value), children: [
             d.map((I) => /* @__PURE__ */ s.jsx("option", { value: I.id, children: I.name }, I.id)),
             /* @__PURE__ */ s.jsx("option", { value: "custom", children: "其他兼容服务（自定义）" })
           ] })
         ] }),
-        B === "custom" ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+        M === "custom" ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "服务地址",
-            /* @__PURE__ */ s.jsx("input", { "aria-label": "模型服务地址", disabled: p, value: h.base_url, onChange: (I) => S({ ...h, base_url: I.target.value, api_key_configured: !1 }) })
+            /* @__PURE__ */ s.jsx("input", { "aria-label": "模型服务地址", disabled: v, value: h.base_url, onChange: (I) => _({ ...h, base_url: I.target.value, api_key_configured: !1 }) })
           ] }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "模型名称",
-            /* @__PURE__ */ s.jsx("input", { "aria-label": "模型名称", disabled: p, value: h.model, onChange: (I) => S({ ...h, model: I.target.value }) })
+            /* @__PURE__ */ s.jsx("input", { "aria-label": "模型名称", disabled: v, value: h.model, onChange: (I) => _({ ...h, model: I.target.value }) })
           ] })
         ] }) : /* @__PURE__ */ s.jsxs("label", { children: [
           "模型",
-          /* @__PURE__ */ s.jsxs("select", { "aria-label": "模型名称", disabled: p, value: h.model, onChange: (I) => S({ ...h, model: I.target.value }), children: [
-            !((Ee = d.find((I) => I.id === B)) != null && Ee.models.some((I) => I.id === h.model)) && /* @__PURE__ */ s.jsxs("option", { value: h.model, children: [
+          /* @__PURE__ */ s.jsxs("select", { "aria-label": "模型名称", disabled: v, value: h.model, onChange: (I) => _({ ...h, model: I.target.value }), children: [
+            !((Te = d.find((I) => I.id === M)) != null && Te.models.some((I) => I.id === h.model)) && /* @__PURE__ */ s.jsxs("option", { value: h.model, children: [
               h.model,
               "（已保存）"
             ] }),
-            (me = d.find((I) => I.id === B)) == null ? void 0 : me.models.map((I) => /* @__PURE__ */ s.jsx("option", { value: I.id, children: I.name }, I.id))
+            (fe = d.find((I) => I.id === M)) == null ? void 0 : fe.models.map((I) => /* @__PURE__ */ s.jsx("option", { value: I.id, children: I.name }, I.id))
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("label", { children: [
           "API Key",
-          /* @__PURE__ */ s.jsx("input", { "aria-label": "模型密钥", type: "password", autoComplete: "new-password", disabled: p, value: M, onChange: (I) => Q(I.target.value), placeholder: h.api_key_configured ? "已保存，留空继续使用" : "粘贴所选服务的 API Key" })
+          /* @__PURE__ */ s.jsx("input", { "aria-label": "模型密钥", type: "password", autoComplete: "new-password", disabled: v, value: z, onChange: (I) => Y(I.target.value), placeholder: h.api_key_configured ? "已保存，留空继续使用" : "粘贴所选服务的 API Key" })
         ] }),
         /* @__PURE__ */ s.jsxs("details", { children: [
           /* @__PURE__ */ s.jsx("summary", { children: "高级设置" }),
           /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
             /* @__PURE__ */ s.jsxs("label", { children: [
               "请求超时（秒）",
-              /* @__PURE__ */ s.jsx("input", { "aria-label": "模型超时", type: "number", min: 5, max: 180, value: h.timeout_seconds, onChange: (I) => S({ ...h, timeout_seconds: Number(I.target.value) }) })
+              /* @__PURE__ */ s.jsx("input", { "aria-label": "模型超时", type: "number", min: 5, max: 180, value: h.timeout_seconds, onChange: (I) => _({ ...h, timeout_seconds: Number(I.target.value) }) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "最大输出 token",
-              /* @__PURE__ */ s.jsx("input", { "aria-label": "模型输出限制", type: "number", min: 256, max: 16e3, value: h.max_tokens, onChange: (I) => S({ ...h, max_tokens: Number(I.target.value) }) })
+              /* @__PURE__ */ s.jsx("input", { "aria-label": "模型输出限制", type: "number", min: 256, max: 16e3, value: h.max_tokens, onChange: (I) => _({ ...h, max_tokens: Number(I.target.value) }) })
             ] })
           ] }),
           /* @__PURE__ */ s.jsxs("p", { className: "small-note", children: [
@@ -15638,12 +15731,12 @@ function Rv({ api: u }) {
           ] })
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-          /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: p || !h.model || !M.trim() && !h.api_key_configured, onClick: () => void ye(), children: p ? "正在保存并测试…" : "保存并测试" }),
-          h.enabled && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: p, onClick: () => {
+          /* @__PURE__ */ s.jsx("button", { className: "button primary", disabled: v || !h.model || !z.trim() && !h.api_key_configured, onClick: () => void Se(), children: v ? "正在保存并测试…" : "保存并测试" }),
+          h.enabled && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: v, onClick: () => {
             U(!0), k("");
-            const { api_key_configured: I, ...oe } = h;
-            u("/models/settings", { method: "PUT", body: JSON.stringify({ ...oe, enabled: !1 }) }).then((ne) => {
-              S(ne), xe("云端调用已停用。");
+            const { api_key_configured: I, ...de } = h;
+            u("/models/settings", { method: "PUT", body: JSON.stringify({ ...de, enabled: !1 }) }).then((ne) => {
+              _(ne), xe("云端调用已停用。");
             }).catch((ne) => k(ne.message)).finally(() => U(!1));
           }, children: "停用云端调用" })
         ] }),
@@ -15652,56 +15745,56 @@ function Rv({ api: u }) {
     ] })
   ] });
 }
-const Uv = [{ code: "general", name: "通用施工检查", focus: "从历史记录归纳施工准备、现场实施、验收复核要点；后续替换为正式分类。", keywords: [] }];
-function Dv({ api: u, path: h, navigate: S, projects: d, identity: R, canManageModels: B }) {
-  var te, $, ae;
-  const V = h === "/settings/models", M = B, Q = d.some((Z) => Z.can_run), [p, U] = r.useState(((te = d.find((Z) => Z.can_run)) == null ? void 0 : te.id) || ""), [K, k] = r.useState([]), [le, xe] = r.useState([]), [_e, ye] = r.useState(null), [Ee, me] = r.useState(Uv), [I, oe] = r.useState("llm"), [ne, D] = r.useState(sessionStorage.getItem("b07-extraction-" + R) || ""), [je, Re] = r.useState(null), [Be, Xe] = r.useState(!1), [Ge, pe] = r.useState(!0), [Ke, X] = r.useState(""), [de, y] = r.useState(""), [Y, ee] = r.useState(0), ke = async (Z) => {
-    Xe(!0), X(""), y("");
+const Hv = [{ code: "general", name: "通用施工检查", focus: "从历史记录归纳施工准备、现场实施、验收复核要点；后续替换为正式分类。", keywords: [] }];
+function Bv({ api: u, path: h, navigate: _, projects: d, identity: A, canManageModels: M }) {
+  var te, W, ae;
+  const V = h === "/settings/models", z = M, Y = d.some((Z) => Z.can_run), [v, U] = r.useState(((te = d.find((Z) => Z.can_run)) == null ? void 0 : te.id) || ""), [K, k] = r.useState([]), [le, xe] = r.useState([]), [Ne, Se] = r.useState(null), [Te, fe] = r.useState(Hv), [I, de] = r.useState("llm"), [ne, q] = r.useState(sessionStorage.getItem("b07-extraction-" + A) || ""), [ve, Me] = r.useState(null), [Ye, Je] = r.useState(!1), [Qe, pe] = r.useState(!0), [Fe, Q] = r.useState(""), [ce, b] = r.useState(""), [G, ee] = r.useState(0), Ee = async (Z) => {
+    Je(!0), Q(""), b("");
     try {
       await Z();
     } catch (P) {
-      X(P.message);
+      Q(P.message);
     } finally {
-      Xe(!1);
+      Je(!1);
     }
   };
   r.useEffect(() => {
     let Z = !1;
-    return pe(!0), X(""), xe([]), (async () => {
-      var Ce;
+    return pe(!0), Q(""), xe([]), (async () => {
+      var Oe;
       try {
         if (V) {
-          if (!M) throw new Error("仅管理员可配置云端模型。");
+          if (!z) throw new Error("仅管理员可配置云端模型。");
         } else {
-          if (!Q || !p) throw new Error("当前身份没有知识加工权限。");
-          const [ie, Se] = await Promise.all([u(`/knowledge/source-options?project_id=${p}&limit=100`), u(`/knowledge/taxonomies?project_id=${p}`)]);
-          Z || (k(ie.items), ye(Se.items[0] || null), me(structuredClone(((Ce = Se.items[0]) == null ? void 0 : Ce.categories) || Se.suggested_categories)));
+          if (!Y || !v) throw new Error("当前身份没有知识加工权限。");
+          const [ie, Ce] = await Promise.all([u(`/knowledge/source-options?project_id=${v}&limit=100`), u(`/knowledge/taxonomies?project_id=${v}`)]);
+          Z || (k(ie.items), Se(Ce.items[0] || null), fe(structuredClone(((Oe = Ce.items[0]) == null ? void 0 : Oe.categories) || Ce.suggested_categories)));
         }
       } catch (ie) {
-        Z || X(ie.message);
+        Z || Q(ie.message);
       } finally {
         Z || pe(!1);
       }
     })(), () => {
       Z = !0;
     };
-  }, [h, p, Y]), r.useEffect(() => {
+  }, [h, v, G]), r.useEffect(() => {
     if (!ne || V) return;
     let Z = !1, P;
-    const Ce = async () => {
+    const Oe = async () => {
       try {
         const ie = await u("/knowledge/extraction-jobs/" + ne);
         if (Z) return;
-        Re(ie), ["queued", "running", "retrying"].includes(ie.status) && (P = window.setTimeout(() => void Ce(), 1800));
+        Me(ie), ["queued", "running", "retrying"].includes(ie.status) && (P = window.setTimeout(() => void Oe(), 1800));
       } catch (ie) {
-        Z || X(ie.message);
+        Z || Q(ie.message);
       }
     };
-    return Ce(), () => {
+    return Oe(), () => {
       Z = !0, window.clearTimeout(P);
     };
-  }, [ne, h, Y]);
-  const m = (Z, P) => me((Ce) => Ce.map((ie, Se) => Se === Z ? { ...ie, ...P } : ie)), H = JSON.stringify(Ee) !== JSON.stringify((_e == null ? void 0 : _e.categories) || []);
+  }, [ne, h, G]);
+  const f = (Z, P) => fe((Oe) => Oe.map((ie, Ce) => Ce === Z ? { ...ie, ...P } : ie)), B = JSON.stringify(Te) !== JSON.stringify((Ne == null ? void 0 : Ne.categories) || []);
   return /* @__PURE__ */ s.jsxs("div", { className: "knowledge-module training-module", children: [
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-banner", children: [
       /* @__PURE__ */ s.jsx(Sl, { size: 20 }),
@@ -15710,24 +15803,24 @@ function Dv({ api: u, path: h, navigate: S, projects: d, identity: R, canManageM
         /* @__PURE__ */ s.jsx("span", { children: V ? "密钥只写入本机受忽略的配置文件，网页不会回传已保存的密钥。" : "多条记录自动分类、合并、提炼施工要点。事实、来源归纳与新增建议分开标记，候选继续进入原知识审核。" })
       ] })
     ] }),
-    Ke && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
+    Fe && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
       /* @__PURE__ */ s.jsx(Nl, { size: 18 }),
-      Ke
+      Fe
     ] }),
-    de && /* @__PURE__ */ s.jsx("div", { className: "feedback success", role: "status", children: de }),
+    ce && /* @__PURE__ */ s.jsx("div", { className: "feedback success", role: "status", children: ce }),
     /* @__PURE__ */ s.jsxs("div", { className: "ingest-toolbar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "ingest-tabs", children: [
-        /* @__PURE__ */ s.jsx("button", { className: V ? "" : "selected", onClick: () => S("/extraction"), children: "施工要点萃取" }),
-        M && /* @__PURE__ */ s.jsx("button", { className: V ? "selected" : "", onClick: () => S("/settings/models"), children: "云端模型配置" }),
-        /* @__PURE__ */ s.jsx("button", { onClick: () => S("/settings/scenes"), children: "场景配置" }),
-        /* @__PURE__ */ s.jsx("button", { onClick: () => S("/knowledge/drafts"), children: "知识候选与审核" })
+        /* @__PURE__ */ s.jsx("button", { className: V ? "" : "selected", onClick: () => _("/extraction"), children: "施工要点萃取" }),
+        z && /* @__PURE__ */ s.jsx("button", { className: V ? "selected" : "", onClick: () => _("/settings/models"), children: "云端模型配置" }),
+        /* @__PURE__ */ s.jsx("button", { onClick: () => _("/settings/scenes"), children: "场景配置" }),
+        /* @__PURE__ */ s.jsx("button", { onClick: () => _("/knowledge/drafts"), children: "知识候选与审核" })
       ] }),
       /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => ee((Z) => Z + 1), children: [
         /* @__PURE__ */ s.jsx(Rs, { size: 15 }),
         "刷新"
       ] })
     ] }),
-    Ge ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取加工配置…" }) : V && M ? /* @__PURE__ */ s.jsx(Rv, { api: u }) : !V && Q ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
+    Qe ? /* @__PURE__ */ s.jsx("div", { className: "loading", children: "正在读取加工配置…" }) : V && z ? /* @__PURE__ */ s.jsx(qv, { api: u }) : !V && Y ? /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
       /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsx("h2", { children: "分类与施工关注点" }),
@@ -15736,42 +15829,42 @@ function Dv({ api: u, path: h, navigate: S, projects: d, identity: R, canManageM
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
           /* @__PURE__ */ s.jsxs("label", { children: [
             "项目",
-            /* @__PURE__ */ s.jsx("select", { "aria-label": "萃取项目", value: p, onChange: (Z) => U(Z.target.value), children: d.filter((Z) => Z.can_run).map((Z) => /* @__PURE__ */ s.jsx("option", { value: Z.id, children: Z.name }, Z.id)) })
+            /* @__PURE__ */ s.jsx("select", { "aria-label": "萃取项目", value: v, onChange: (Z) => U(Z.target.value), children: d.filter((Z) => Z.can_run).map((Z) => /* @__PURE__ */ s.jsx("option", { value: Z.id, children: Z.name }, Z.id)) })
           ] }),
           /* @__PURE__ */ s.jsxs("p", { className: "small-note", children: [
             "当前",
-            _e ? "分类 v" + _e.version : "尚无分类版本",
+            Ne ? "分类 v" + Ne.version : "尚无分类版本",
             "。先使用通用分类，后续可替换为你提供的类别；关键词帮助演示模式分组，云端模型同时参考名称与关注点。"
           ] }),
-          Ee.map((Z, P) => /* @__PURE__ */ s.jsxs("div", { className: "training-category", children: [
+          Te.map((Z, P) => /* @__PURE__ */ s.jsxs("div", { className: "training-category", children: [
             /* @__PURE__ */ s.jsxs("div", { className: "form-grid", children: [
               /* @__PURE__ */ s.jsxs("label", { children: [
                 "类别编码",
-                /* @__PURE__ */ s.jsx("input", { "aria-label": "类别编码" + (P + 1), value: Z.code, onChange: (Ce) => m(P, { code: Ce.target.value }) })
+                /* @__PURE__ */ s.jsx("input", { "aria-label": "类别编码" + (P + 1), value: Z.code, onChange: (Oe) => f(P, { code: Oe.target.value }) })
               ] }),
               /* @__PURE__ */ s.jsxs("label", { children: [
                 "类别名称",
-                /* @__PURE__ */ s.jsx("input", { "aria-label": "类别名称" + (P + 1), value: Z.name, onChange: (Ce) => m(P, { name: Ce.target.value }) })
+                /* @__PURE__ */ s.jsx("input", { "aria-label": "类别名称" + (P + 1), value: Z.name, onChange: (Oe) => f(P, { name: Oe.target.value }) })
               ] })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "施工关注点",
-              /* @__PURE__ */ s.jsx("textarea", { value: Z.focus, onChange: (Ce) => m(P, { focus: Ce.target.value }) })
+              /* @__PURE__ */ s.jsx("textarea", { value: Z.focus, onChange: (Oe) => f(P, { focus: Oe.target.value }) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "匹配关键词（用逗号分隔，可留空）",
-              /* @__PURE__ */ s.jsx("input", { value: Z.keywords.join("，"), onChange: (Ce) => m(P, { keywords: Ce.target.value.split(/[,，]/).map((ie) => ie.trim()).filter(Boolean) }) })
+              /* @__PURE__ */ s.jsx("input", { value: Z.keywords.join("，"), onChange: (Oe) => f(P, { keywords: Oe.target.value.split(/[,，]/).map((ie) => ie.trim()).filter(Boolean) }) })
             ] }),
-            Ee.length > 1 && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => me((Ce) => Ce.filter((ie, Se) => Se !== P)), children: "移除此类别" })
+            Te.length > 1 && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => fe((Oe) => Oe.filter((ie, Ce) => Ce !== P)), children: "移除此类别" })
           ] }, P)),
           /* @__PURE__ */ s.jsxs("div", { className: "card-actions", children: [
-            /* @__PURE__ */ s.jsxs("button", { className: "button ghost", disabled: Ee.length >= 100, onClick: () => me([...Ee, { code: "category_" + (Ee.length + 1), name: "", focus: "", keywords: [] }]), children: [
-              /* @__PURE__ */ s.jsx(av, { size: 16 }),
+            /* @__PURE__ */ s.jsxs("button", { className: "button ghost", disabled: Te.length >= 100, onClick: () => fe([...Te, { code: "category_" + (Te.length + 1), name: "", focus: "", keywords: [] }]), children: [
+              /* @__PURE__ */ s.jsx(rv, { size: 16 }),
               "添加类别"
             ] }),
-            /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Be || !H, onClick: () => void ke(async () => {
-              const Z = await u("/knowledge/taxonomies", { method: "POST", body: JSON.stringify({ project_id: p, expected_version: (_e == null ? void 0 : _e.version) || 0, categories: Ee }) });
-              ye(Z), me(Z.categories), y("分类版本已固定，可开始加工。");
+            /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Ye || !B, onClick: () => void Ee(async () => {
+              const Z = await u("/knowledge/taxonomies", { method: "POST", body: JSON.stringify({ project_id: v, expected_version: (Ne == null ? void 0 : Ne.version) || 0, categories: Te }) });
+              Se(Z), fe(Z.categories), b("分类版本已固定，可开始加工。");
             }), children: "保存分类新版本" })
           ] })
         ] })
@@ -15784,7 +15877,7 @@ function Dv({ api: u, path: h, navigate: S, projects: d, identity: R, canManageM
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
           /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => xe(K.slice(0, 20).map((Z) => Z.record_version_id)), children: "选择当前显示的前20条" }),
           /* @__PURE__ */ s.jsx("div", { className: "source-options", children: K.map((Z) => /* @__PURE__ */ s.jsxs("label", { className: "check-label", children: [
-            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: le.includes(Z.record_version_id), onChange: (P) => xe((Ce) => P.target.checked ? [...Ce, Z.record_version_id] : Ce.filter((ie) => ie !== Z.record_version_id)) }),
+            /* @__PURE__ */ s.jsx("input", { type: "checkbox", checked: le.includes(Z.record_version_id), onChange: (P) => xe((Oe) => P.target.checked ? [...Oe, Z.record_version_id] : Oe.filter((ie) => ie !== Z.record_version_id)) }),
             /* @__PURE__ */ s.jsxs("span", { children: [
               Z.description || "缺少描述",
               /* @__PURE__ */ s.jsxs("small", { children: [
@@ -15795,14 +15888,14 @@ function Dv({ api: u, path: h, navigate: S, projects: d, identity: R, canManageM
           ] }, Z.id)) }),
           /* @__PURE__ */ s.jsxs("label", { children: [
             "加工方式",
-            /* @__PURE__ */ s.jsxs("select", { "aria-label": "知识加工方式", value: I, onChange: (Z) => oe(Z.target.value), children: [
+            /* @__PURE__ */ s.jsxs("select", { "aria-label": "知识加工方式", value: I, onChange: (Z) => de(Z.target.value), children: [
               /* @__PURE__ */ s.jsx("option", { value: "llm", children: "调用云端大模型，自主分类与提炼" }),
               /* @__PURE__ */ s.jsx("option", { value: "mock", children: "本地模板演示（不代表模型效果）" })
             ] })
           ] }),
-          /* @__PURE__ */ s.jsx("div", { className: "card-actions", children: /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Be || !_e || H || !le.length || le.length > 20, onClick: () => void ke(async () => {
-            const Z = await u("/knowledge/extraction-jobs", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ record_version_ids: le, taxonomy_id: _e.id, mode: I }) });
-            D(Z.job_id), sessionStorage.setItem("b07-extraction-" + R, Z.job_id), y("后台加工已提交，完成后生成有来源的施工要点候选。");
+          /* @__PURE__ */ s.jsx("div", { className: "card-actions", children: /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: Ye || !Ne || B || !le.length || le.length > 20, onClick: () => void Ee(async () => {
+            const Z = await u("/knowledge/extraction-jobs", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ record_version_ids: le, taxonomy_id: Ne.id, mode: I }) });
+            q(Z.job_id), sessionStorage.setItem("b07-extraction-" + A, Z.job_id), b("后台加工已提交，完成后生成有来源的施工要点候选。");
           }), children: [
             "自动萃取施工要点（",
             le.length,
@@ -15811,163 +15904,163 @@ function Dv({ api: u, path: h, navigate: S, projects: d, identity: R, canManageM
           /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "模型自主完成分类、跨记录归纳与证据摘录，人工只核对候选。不会自动批准为有效标准或直接发布。" })
         ] })
       ] }),
-      je && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
+      ve && /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
         /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
           /* @__PURE__ */ s.jsxs("h2", { children: [
             "最近加工任务 · ",
-            je.progress,
+            ve.progress,
             "%"
           ] }),
-          /* @__PURE__ */ s.jsx("span", { children: je.status })
+          /* @__PURE__ */ s.jsx("span", { children: ve.status })
         ] }),
         /* @__PURE__ */ s.jsxs("div", { className: "proof-body", children: [
-          je.error && /* @__PURE__ */ s.jsx("p", { className: "warning-text", children: je.error }),
+          ve.error && /* @__PURE__ */ s.jsx("p", { className: "warning-text", children: ve.error }),
           /* @__PURE__ */ s.jsxs("p", { children: [
             "模式：",
-            je.result.generation_mode === "llm" ? "云端大模型" : je.result.generation_mode === "mock" ? "本地模板演示" : "等待处理"
+            ve.result.generation_mode === "llm" ? "云端大模型" : ve.result.generation_mode === "mock" ? "本地模板演示" : "等待处理"
           ] }),
-          je.result.model && /* @__PURE__ */ s.jsxs("p", { children: [
+          ve.result.model && /* @__PURE__ */ s.jsxs("p", { children: [
             "模型：",
-            je.result.model.model_ref,
+            ve.result.model.model_ref,
             " · 用量 ",
-            JSON.stringify(je.result.model.usage)
+            JSON.stringify(ve.result.model.usage)
           ] }),
-          ($ = je.result.items) == null ? void 0 : $.map((Z) => /* @__PURE__ */ s.jsxs("p", { children: [
-            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => S("/knowledge/" + Z.item_id + "/edit"), children: "打开施工要点候选" }),
+          (W = ve.result.items) == null ? void 0 : W.map((Z) => /* @__PURE__ */ s.jsxs("p", { children: [
+            /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => _("/knowledge/" + Z.item_id + "/edit"), children: "打开施工要点候选" }),
             " · ",
             Z.outcome === "reused" ? "复用已有人工版本" : "新增草稿"
           ] }, Z.item_id)),
-          (ae = je.result.missing_information) == null ? void 0 : ae.map((Z, P) => /* @__PURE__ */ s.jsxs("p", { children: [
+          (ae = ve.result.missing_information) == null ? void 0 : ae.map((Z, P) => /* @__PURE__ */ s.jsxs("p", { children: [
             "资料缺口：",
             Z
           ] }, P)),
-          je.status === "failed" && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Be, onClick: () => void ke(async () => {
-            await u("/jobs/" + je.job_id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: je.row_version }) }), ee((Z) => Z + 1);
+          ve.status === "failed" && /* @__PURE__ */ s.jsx("button", { className: "button secondary", disabled: Ye, onClick: () => void Ee(async () => {
+            await u("/jobs/" + ve.job_id + "/retry", { method: "POST", headers: { "Idempotency-Key": crypto.randomUUID() }, body: JSON.stringify({ row_version: ve.row_version }) }), ee((Z) => Z + 1);
           }), children: "重试此加工任务" })
         ] })
       ] })
     ] }) : null
   ] });
 }
-const vu = { queued: "等待处理", running: "正在处理", retrying: "自动重试中", succeeded: "已完成", failed: "处理失败" }, Yf = { admin: "管理员", processor: "资料加工", reviewer: "内容审核", teacher: "培训教员", learner: "学习成员", a_service: "模拟A服务" }, Gf = { demo_check: "演示检查", source_import: "历史数据接入", knowledge_generation: "模板知识候选", knowledge_extraction: "施工要点萃取", release_build: "发布索引构建", task_package_import: "任务包处理", a_import: "A 成果接入", a_retrospective: "A 成果复盘", training_generation: "培训题目生成", retrospective_generation: "案例复盘生成", training_grading: "培训案例评分" }, Xi = (u) => new Date(u).toLocaleString("zh-CN", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }), Mv = [["admin", "本地管理员"], ["processor", "资料加工员"], ["learner", "新成员"], ["teacher", "培训教员"], ["outsider", "其他项目成员"]];
-function qv({ embedded: u = !1 }) {
-  var G;
-  const [h, S] = r.useState(localStorage.getItem("b01-identity") || "admin"), [d, R] = r.useState(Yi()), [B, V] = r.useState(!1), M = d === "/platform/services", Q = d.startsWith("/archive-review/"), p = /^\/imports\/ai_[a-f0-9]{32}$/.test(d), [U, K] = r.useState(["/sources", "/imports", "/records"].some((x) => Yi().startsWith(x))), k = ["/search", "/releases", "/knowledge/library"].includes(d) || /^\/knowledge\/[^/]+$/.test(d) && d !== "/knowledge/drafts", le = !k && ["/quality", "/knowledge", "/reviews"].some((x) => d.startsWith(x)), xe = d.startsWith("/training") || d.startsWith("/learn"), _e = d.startsWith("/workflows"), ye = d.startsWith("/standards"), Ee = _e || ye || d.startsWith("/extraction") || d === "/settings/models" || d === "/settings/scenes", me = d.startsWith("/retrospectives"), I = d.startsWith("/task-packages"), oe = d === "/records", ne = !p && ["/sources", "/imports", "/records"].some((x) => d.startsWith(x)), [D, je] = r.useState(null), [Re, Be] = r.useState([]), [Xe, Ge] = r.useState({}), [pe, Ke] = r.useState(!1), [X, de] = r.useState(""), [y, Y] = r.useState(""), [ee, ke] = r.useState(!0), [m, H] = r.useState(!1), [te, $] = r.useState(0), [ae, Z] = r.useState(""), [P, Ce] = r.useState(""), [ie, Se] = r.useState(""), [st, lt] = r.useState(null), [Pe, Oe] = r.useState([]), [Te, De] = r.useState(null), [Ne, Le] = r.useState(!1), [We, Fe] = r.useState("demo-airport"), [Ze, he] = r.useState("success"), [et, Ue] = r.useState(null), [E, w] = r.useState(""), [W, ve] = r.useState("processor"), [He, tt] = r.useState("demo-airport"), [dt, L] = r.useState([]);
-  async function fe(x, ce = {}) {
-    const qe = await Mt("/api/v1" + x, {
-      ...ce,
-      headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${h}`, ...ce.headers }
+const pu = { queued: "等待处理", running: "正在处理", retrying: "自动重试中", succeeded: "已完成", failed: "处理失败" }, Zf = { admin: "管理员", processor: "资料加工", reviewer: "内容审核", teacher: "培训教员", learner: "学习成员", a_service: "模拟A服务" }, Vf = { demo_check: "演示检查", source_import: "历史数据接入", knowledge_generation: "模板知识候选", knowledge_extraction: "施工要点萃取", release_build: "发布索引构建", task_package_import: "任务包处理", a_import: "A 成果接入", a_retrospective: "A 成果复盘", training_generation: "培训题目生成", retrospective_generation: "案例复盘生成", training_grading: "培训案例评分" }, Zi = (u) => new Date(u).toLocaleString("zh-CN", { month: "2-digit", day: "2-digit", hour: "2-digit", minute: "2-digit", second: "2-digit" }), Lv = [["admin", "本地管理员"], ["processor", "资料加工员"], ["learner", "新成员"], ["teacher", "培训教员"], ["outsider", "其他项目成员"]];
+function Yv({ embedded: u = !1 }) {
+  var ut;
+  const [h, _] = r.useState(localStorage.getItem("b01-identity") || "admin"), [d, A] = r.useState(Gi()), [M, V] = r.useState(!1), z = d === "/platform/services", Y = d.startsWith("/archive-review/"), v = /^\/imports\/ai_[a-f0-9]{32}$/.test(d), [U, K] = r.useState(["/sources", "/imports", "/records"].some((N) => Gi().startsWith(N))), k = ["/search", "/releases", "/knowledge/library"].includes(d) || /^\/knowledge\/[^/]+$/.test(d) && d !== "/knowledge/drafts", le = !k && ["/quality", "/knowledge", "/reviews"].some((N) => d.startsWith(N)), xe = d.startsWith("/training") || d.startsWith("/learn"), Ne = d.startsWith("/workflows"), Se = d.startsWith("/standards"), Te = Ne || Se || d.startsWith("/extraction") || d === "/settings/models" || d === "/settings/scenes", fe = d.startsWith("/retrospectives"), I = d.startsWith("/task-packages"), de = d === "/records", ne = !v && ["/sources", "/imports", "/records"].some((N) => d.startsWith(N)), [q, ve] = r.useState(null), [Me, Ye] = r.useState([]), [Je, Qe] = r.useState({}), [pe, Fe] = r.useState(!1), [Q, ce] = r.useState(""), [b, G] = r.useState(""), [ee, Ee] = r.useState(!0), [f, B] = r.useState(!1), [te, W] = r.useState(0), [ae, Z] = r.useState(""), [P, Oe] = r.useState(""), [ie, Ce] = r.useState(""), [lt, at] = r.useState(null), [et, Ae] = r.useState([]), [Re, qe] = r.useState(null), [ke, Be] = r.useState(!1), [tt, st] = r.useState("demo-airport"), [rt, je] = r.useState("success"), [Ke, ze] = r.useState(null), [E, w] = r.useState(""), [$, we] = r.useState("processor"), [Le, Xe] = r.useState("demo-airport"), [ft, L] = r.useState([]);
+  async function he(N, oe = {}) {
+    const Ve = await Mt("/api/v1" + N, {
+      ...oe,
+      headers: { "Content-Type": "application/json", Authorization: `Bearer dev-${h}`, ...oe.headers }
     });
-    if (!qe.ok) {
-      const vt = await qe.json().catch(() => ({}));
-      throw new Error(vt.message || `请求失败（${qe.status}），请刷新后重试。`);
+    if (!Ve.ok) {
+      const Nt = await Ve.json().catch(() => ({}));
+      throw new Error(Nt.message || `请求失败（${Ve.status}），请刷新后重试。`);
     }
-    return qe.json();
+    return Ve.json();
   }
-  const re = (x) => {
-    var qe, vt;
-    const ce = window;
-    u && ((qe = ce.QaxcHasPendingEdits) != null && qe.call(ce)) && !confirm("当前页面有编辑操作，请确认已保存后再离开。继续？") || ((vt = ce.QaxcClearPendingEdits) == null || vt.call(ce), bj(x), R(Yi()), de(""), De(null), Se(""), Oe([]));
+  const re = (N) => {
+    var Ve, Nt;
+    const oe = window;
+    u && ((Ve = oe.QaxcHasPendingEdits) != null && Ve.call(oe)) && !confirm("当前页面有编辑操作，请确认已保存后再离开。继续？") || ((Nt = oe.QaxcClearPendingEdits) == null || Nt.call(oe), Sj(N), A(Gi()), ce(""), qe(null), Ce(""), Ae([]));
   };
   r.useEffect(() => {
-    const x = () => R(Yi());
-    return window.addEventListener("popstate", x), window.addEventListener("hashchange", x), () => {
-      window.removeEventListener("popstate", x), window.removeEventListener("hashchange", x);
+    const N = () => A(Gi());
+    return window.addEventListener("popstate", N), window.addEventListener("hashchange", N), () => {
+      window.removeEventListener("popstate", N), window.removeEventListener("hashchange", N);
     };
   }, []), r.useEffect(() => {
-    const x = () => V(!0);
-    return window.addEventListener("b-session-expired", x), () => window.removeEventListener("b-session-expired", x);
+    const N = () => V(!0);
+    return window.addEventListener("b-session-expired", N), () => window.removeEventListener("b-session-expired", N);
   }, []), r.useEffect(() => {
-    let x = !1;
-    ke(!0), de(""), je(null), Ue(null), Be([]), L([]);
-    async function ce() {
+    let N = !1;
+    Ee(!0), ce(""), ve(null), ze(null), Ye([]), L([]);
+    async function oe() {
       try {
-        const qe = await fe("/me");
-        if (x) return;
-        const vt = window.QaxcProjectNames || {};
-        u && (qe.projects = qe.projects.map((rt) => ({ ...rt, name: vt[rt.id] || rt.name })));
-        const Rt = window.QaxcProjectId;
-        u && Rt && (qe.projects = qe.projects.filter((rt) => rt.id === Rt)), je(qe);
-        const Et = await fe("/health");
-        if (x || (Ke(Et.worker_online), p || M || Q || ne || le || k || I || me || xe || Ee)) return;
+        const Ve = await he("/me");
+        if (N) return;
+        const Nt = window.QaxcProjectNames || {};
+        u && (Ve.projects = Ve.projects.map((me) => ({ ...me, name: Nt[me.id] || me.name })));
+        const g = window.QaxcProjectId;
+        u && g && (Ve.projects = Ve.projects.filter((me) => me.id === g)), ve(Ve);
+        const X = await he("/health");
+        if (N || (Fe(X.worker_online), v || z || Y || ne || le || k || I || fe || xe || Te)) return;
         if (d === "/settings/access") {
-          if (!qe.projects.some((b) => b.can_manage)) return;
-          const [rt, St] = await Promise.all([fe("/access"), fe("/audit-events?limit=10")]);
-          if (x) return;
-          Ue(rt), L(St.items), w((b) => {
-            var we;
-            return rt.users.some((nt) => nt.id === b) ? b : ((we = rt.users[0]) == null ? void 0 : we.id) || "";
+          if (!Ve.projects.some((j) => j.can_manage)) return;
+          const [me, nt] = await Promise.all([he("/access"), he("/audit-events?limit=10")]);
+          if (N) return;
+          ze(me), L(nt.items), w((j) => {
+            var _e;
+            return me.users.some((it) => it.id === j) ? j : ((_e = me.users[0]) == null ? void 0 : _e.id) || "";
           });
         } else {
-          const [rt, St] = await Promise.all([
-            fe(`/jobs?limit=12${P ? `&kind=${P}` : ""}${ae ? `&status=${ae}` : ""}${ie ? `&cursor=${encodeURIComponent(ie)}` : ""}`),
-            fe("/dashboard")
+          const [me, nt] = await Promise.all([
+            he(`/jobs?limit=12${P ? `&kind=${P}` : ""}${ae ? `&status=${ae}` : ""}${ie ? `&cursor=${encodeURIComponent(ie)}` : ""}`),
+            he("/dashboard")
           ]);
-          if (x) return;
-          Be(rt.items), lt(rt.next_cursor), Ge(St.counts);
+          if (N) return;
+          Ye(me.items), at(me.next_cursor), Qe(nt.counts);
         }
-      } catch (qe) {
-        x || de(qe.message);
+      } catch (Ve) {
+        N || ce(Ve.message);
       } finally {
-        x || ke(!1);
+        N || Ee(!1);
       }
     }
-    return ce(), () => {
-      x = !0;
+    return oe(), () => {
+      N = !0;
     };
   }, [h, d, ae, P, ie, te]), r.useEffect(() => {
-    if (!D || p || M || Q || d === "/settings/access" || ne || le || k || I || me || xe || Ee) return;
-    let x = !1;
-    const ce = window.setInterval(async () => {
+    if (!q || v || z || Y || d === "/settings/access" || ne || le || k || I || fe || xe || Te) return;
+    let N = !1;
+    const oe = window.setInterval(async () => {
       try {
-        const [qe, vt, Rt] = await Promise.all([
-          fe(`/jobs?limit=12${P ? `&kind=${P}` : ""}${ae ? `&status=${ae}` : ""}${ie ? `&cursor=${encodeURIComponent(ie)}` : ""}`),
-          fe("/dashboard"),
-          fe("/health")
+        const [Ve, Nt, g] = await Promise.all([
+          he(`/jobs?limit=12${P ? `&kind=${P}` : ""}${ae ? `&status=${ae}` : ""}${ie ? `&cursor=${encodeURIComponent(ie)}` : ""}`),
+          he("/dashboard"),
+          he("/health")
         ]);
-        if (x) return;
-        Be(qe.items), lt(qe.next_cursor), Ge(vt.counts), Ke(Rt.worker_online), De((Et) => Et ? qe.items.find((rt) => rt.id === Et.id) || Et : null), de("");
-      } catch (qe) {
-        x || (de(qe.message), Ke(!1));
+        if (N) return;
+        Ye(Ve.items), at(Ve.next_cursor), Qe(Nt.counts), Fe(g.worker_online), qe((X) => X ? Ve.items.find((me) => me.id === X.id) || X : null), ce("");
+      } catch (Ve) {
+        N || (ce(Ve.message), Fe(!1));
       }
     }, 2e3);
     return () => {
-      x = !0, clearInterval(ce);
+      N = !0, clearInterval(oe);
     };
-  }, [h, d, ae, P, ie, D == null ? void 0 : D.id]);
-  const Ve = async (x) => {
-    H(!0), de(""), Y("");
+  }, [h, d, ae, P, ie, q == null ? void 0 : q.id]);
+  const $e = async (N) => {
+    B(!0), ce(""), G("");
     try {
-      await x(), $((ce) => ce + 1);
-    } catch (ce) {
-      de(ce.message);
+      await N(), W((oe) => oe + 1);
+    } catch (oe) {
+      ce(oe.message);
     } finally {
-      H(!1);
+      B(!1);
     }
-  }, _ = () => Ve(async () => {
-    await fe("/jobs", {
+  }, y = () => $e(async () => {
+    await he("/jobs", {
       method: "POST",
       headers: { "Idempotency-Key": crypto.randomUUID() },
-      body: JSON.stringify({ title: "演示资料完整性检查", project_id: We, scenario: Ze, duration_seconds: 6 })
-    }), Le(!1), Y("任务已保存，处理服务会自动执行。"), re("/jobs");
-  }), be = (x) => Ve(async () => {
-    await fe(`/jobs/${x.id}/retry`, {
+      body: JSON.stringify({ title: "演示资料完整性检查", project_id: tt, scenario: rt, duration_seconds: 6 })
+    }), Be(!1), G("任务已保存，处理服务会自动执行。"), re("/jobs");
+  }), ye = (N) => $e(async () => {
+    await he(`/jobs/${N.id}/retry`, {
       method: "POST",
       headers: { "Idempotency-Key": crypto.randomUUID() },
-      body: JSON.stringify({ row_version: x.row_version })
-    }), Y("已提交重试，原任务和来源保持不变。");
-  }), ge = (x) => Ve(async () => {
-    const ce = await Mt(`/api/v1/assets/${x.result_ref}/content`, { headers: { Authorization: `Bearer dev-${h}` } });
-    if (!ce.ok) {
-      const Rt = await ce.json();
-      throw new Error(Rt.message);
+      body: JSON.stringify({ row_version: N.row_version })
+    }), G("已提交重试，原任务和来源保持不变。");
+  }), ge = (N) => $e(async () => {
+    const oe = await Mt(`/api/v1/assets/${N.result_ref}/content`, { headers: { Authorization: `Bearer dev-${h}` } });
+    if (!oe.ok) {
+      const g = await oe.json();
+      throw new Error(g.message);
     }
-    const qe = document.createElement("a"), vt = URL.createObjectURL(await ce.blob());
-    qe.href = vt, qe.download = `演示检查结果-${x.id.slice(0, 8)}.txt`, qe.click(), URL.revokeObjectURL(vt), Y("演示结果已下载。");
-  }), Qe = !Tt && (D == null ? void 0 : D.projects.some((x) => x.can_run)), xt = (x) => {
-    const ce = D == null ? void 0 : D.projects.find((vt) => vt.id === x.project_id);
-    if ((ce == null ? void 0 : ce.permissions) == null) return !!(ce != null && ce.can_run);
-    const qe = {
+    const Ve = document.createElement("a"), Nt = URL.createObjectURL(await oe.blob());
+    Ve.href = Nt, Ve.download = `演示检查结果-${N.id.slice(0, 8)}.txt`, Ve.click(), URL.revokeObjectURL(Nt), G("演示结果已下载。");
+  }), Ze = !zt && (q == null ? void 0 : q.projects.some((N) => N.can_run)), pt = (N) => {
+    const oe = q == null ? void 0 : q.projects.find((Nt) => Nt.id === N.project_id);
+    if ((oe == null ? void 0 : oe.permissions) == null) return !!(oe != null && oe.can_run);
+    const Ve = {
       source_import: "knowledge.process",
       knowledge_generation: "knowledge.process",
       knowledge_extraction: "knowledge.process",
@@ -15976,72 +16069,72 @@ function qv({ embedded: u = !1 }) {
       retrospective_generation: "retrospective.generate",
       training_grading: "training.manage"
     };
-    return !!qe[x.kind] && ce.permissions.includes(qe[x.kind]);
-  }, z = D == null ? void 0 : D.projects.some((x) => x.can_manage), v = Object.fromEntries(((D == null ? void 0 : D.projects) || []).map((x) => [x.id, x.name])), ue = p ? "A 成果接入" : M ? "平台服务" : Q ? "归档成果复盘" : xe ? d.startsWith("/learn") ? "我的学习" : "培训与学习记录" : Ee ? _e ? "隐患分析与知识成果" : ye ? "规范原文与版本" : d === "/settings/models" ? "云端模型配置" : d === "/settings/scenes" ? "场景与流程配置" : "施工要点知识萃取" : me ? "过程复盘与经验" : I ? "归档成果与证据" : k ? d === "/releases" ? "知识发布管理" : d === "/search" ? "知识检索" : "已发布知识库" : le ? "知识加工与审核" : ne ? oe ? "风险数据" : d.startsWith("/sources") ? "历史数据来源" : d.startsWith("/imports") ? "历史项目" : "风险数据" : d === "/settings/access" ? "成员与权限" : d === "/jobs" ? "处理任务" : "我的工作台", f = (Xe.queued || 0) + (Xe.running || 0) + (Xe.retrying || 0);
+    return !!Ve[N.kind] && oe.permissions.includes(Ve[N.kind]);
+  }, D = q == null ? void 0 : q.projects.some((N) => N.can_manage), x = Object.fromEntries(((q == null ? void 0 : q.projects) || []).map((N) => [N.id, N.name])), ue = v ? "A 成果接入" : z ? "平台服务" : Y ? "归档成果复盘" : xe ? d.startsWith("/learn") ? "我的学习" : "培训与学习记录" : Te ? Ne ? "隐患分析与知识成果" : Se ? "规范原文与版本" : d === "/settings/models" ? "云端模型配置" : d === "/settings/scenes" ? "场景与流程配置" : "施工要点知识萃取" : fe ? "过程复盘与经验" : I ? "归档成果与证据" : k ? d === "/releases" ? "知识发布管理" : d === "/search" ? "知识检索" : "已发布知识库" : le ? "知识加工与审核" : ne ? de ? "风险数据" : d.startsWith("/sources") ? "历史数据来源" : d.startsWith("/imports") ? "历史项目" : "风险数据" : d === "/settings/access" ? "成员与权限" : d === "/jobs" ? "处理任务" : "我的工作台", be = (Je.queued || 0) + (Je.running || 0) + (Je.retrying || 0);
   return /* @__PURE__ */ s.jsxs("div", { className: "app-shell", children: [
     !u && /* @__PURE__ */ s.jsxs("aside", { className: "sidebar", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "brand", children: [
-        /* @__PURE__ */ s.jsx("span", { className: "brand-mark", children: /* @__PURE__ */ s.jsx(Af, { size: 26 }) }),
+        /* @__PURE__ */ s.jsx("span", { className: "brand-mark", children: /* @__PURE__ */ s.jsx(Df, { size: 26 }) }),
         /* @__PURE__ */ s.jsxs("div", { children: [
           "工程风险",
           /* @__PURE__ */ s.jsx("span", { children: "知识与复盘培训中心" })
         ] })
       ] }),
-      /* @__PURE__ */ s.jsx("div", { className: "workspace-label", children: Tt ? "质量安全小察 / 知识与学习" : "B模块 / 开发工作区" }),
+      /* @__PURE__ */ s.jsx("div", { className: "workspace-label", children: zt ? "质量安全小察 / 知识与学习" : "B模块 / 开发工作区" }),
       /* @__PURE__ */ s.jsxs("nav", { "aria-label": "主导航", children: [
-        Tt && /* @__PURE__ */ s.jsxs("button", { className: "nav-item", onClick: () => {
+        zt && /* @__PURE__ */ s.jsxs("button", { className: "nav-item", onClick: () => {
           window.location.href = "/quality/";
         }, children: [
-          /* @__PURE__ */ s.jsx(Of, { size: 19 }),
+          /* @__PURE__ */ s.jsx(Af, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "返回小察工作台" })
         ] }),
-        [["/workbench", Of, "我的工作台"], ["/jobs", Qj, "处理任务"]].map(([x, ce, qe]) => {
-          const vt = ce;
-          return /* @__PURE__ */ s.jsxs("button", { "aria-label": String(qe), className: d === x || x === "/workbench" && d === "/" ? "nav-item active" : "nav-item", onClick: () => re(String(x)), children: [
-            /* @__PURE__ */ s.jsx(vt, { size: 19 }),
-            /* @__PURE__ */ s.jsx("span", { children: String(qe) }),
+        [["/workbench", Af, "我的工作台"], ["/jobs", Jj, "处理任务"]].map(([N, oe, Ve]) => {
+          const Nt = oe;
+          return /* @__PURE__ */ s.jsxs("button", { "aria-label": String(Ve), className: d === N || N === "/workbench" && d === "/" ? "nav-item active" : "nav-item", onClick: () => re(String(N)), children: [
+            /* @__PURE__ */ s.jsx(Nt, { size: 19 }),
+            /* @__PURE__ */ s.jsx("span", { children: String(Ve) }),
             /* @__PURE__ */ s.jsx(Ws, { size: 15 })
-          ] }, String(x));
+          ] }, String(N));
         }),
-        /* @__PURE__ */ s.jsxs("button", { className: `nav-item governance-toggle ${ne ? "active-group" : ""}`, "aria-label": "历史数据治理", "aria-expanded": U, "aria-controls": "governance-menu", onClick: () => K((x) => !x), children: [
-          /* @__PURE__ */ s.jsx(Gi, { size: 19 }),
+        /* @__PURE__ */ s.jsxs("button", { className: `nav-item governance-toggle ${ne ? "active-group" : ""}`, "aria-label": "历史数据治理", "aria-expanded": U, "aria-controls": "governance-menu", onClick: () => K((N) => !N), children: [
+          /* @__PURE__ */ s.jsx(Qi, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "历史数据治理" }),
           /* @__PURE__ */ s.jsx(Ws, { className: U ? "expanded" : "", size: 15 })
         ] }),
-        U && /* @__PURE__ */ s.jsx("div", { id: "governance-menu", className: "subnav", children: [["/sources", "数据来源"], ["/imports", "历史项目"], ["/records", "风险数据"]].map(([x, ce]) => /* @__PURE__ */ s.jsx("button", { "aria-label": ce, className: d.startsWith(x) ? "active" : "", onClick: () => re(x), children: ce }, x)) }),
-        /* @__PURE__ */ s.jsxs("button", { className: le || Ee ? "nav-item active" : "nav-item", onClick: () => re("/extraction"), "aria-label": "知识加工与审核", children: [
-          /* @__PURE__ */ s.jsx(En, { size: 19 }),
+        U && /* @__PURE__ */ s.jsx("div", { id: "governance-menu", className: "subnav", children: [["/sources", "数据来源"], ["/imports", "历史项目"], ["/records", "风险数据"]].map(([N, oe]) => /* @__PURE__ */ s.jsx("button", { "aria-label": oe, className: d.startsWith(N) ? "active" : "", onClick: () => re(N), children: oe }, N)) }),
+        /* @__PURE__ */ s.jsxs("button", { className: le || Te ? "nav-item active" : "nav-item", onClick: () => re("/extraction"), "aria-label": "知识加工与审核", children: [
+          /* @__PURE__ */ s.jsx(On, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "知识加工与审核" }),
           /* @__PURE__ */ s.jsx(Ws, { size: 15 })
         ] }),
         /* @__PURE__ */ s.jsxs("button", { className: k ? "nav-item active" : "nav-item", onClick: () => re("/knowledge/library"), "aria-label": "知识库与检索", children: [
-          /* @__PURE__ */ s.jsx(En, { size: 19 }),
+          /* @__PURE__ */ s.jsx(On, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "知识库与检索" }),
           /* @__PURE__ */ s.jsx(Ws, { size: 15 })
         ] }),
         /* @__PURE__ */ s.jsxs("button", { className: I ? "nav-item active" : "nav-item", onClick: () => re("/task-packages"), "aria-label": "A任务包接入", children: [
-          /* @__PURE__ */ s.jsx(En, { size: 19 }),
+          /* @__PURE__ */ s.jsx(On, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "A任务包接入" }),
           /* @__PURE__ */ s.jsx(Ws, { size: 15 })
         ] }),
-        /* @__PURE__ */ s.jsxs("button", { className: me ? "nav-item active" : "nav-item", onClick: () => re("/retrospectives"), "aria-label": "过程复盘与经验", children: [
-          /* @__PURE__ */ s.jsx(wf, { size: 19 }),
+        /* @__PURE__ */ s.jsxs("button", { className: fe ? "nav-item active" : "nav-item", onClick: () => re("/retrospectives"), "aria-label": "过程复盘与经验", children: [
+          /* @__PURE__ */ s.jsx(Ef, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "过程复盘与经验" }),
           /* @__PURE__ */ s.jsx(Ws, { size: 15 })
         ] }),
-        /* @__PURE__ */ s.jsxs("button", { className: xe ? "nav-item active" : "nav-item", onClick: () => re(D != null && D.projects.some((x) => x.roles.some((ce) => ["admin", "teacher", "reviewer"].includes(ce))) ? "/training/questions" : "/learn"), "aria-label": "培训与学习", children: [
-          /* @__PURE__ */ s.jsx($i, { size: 19 }),
+        /* @__PURE__ */ s.jsxs("button", { className: xe ? "nav-item active" : "nav-item", onClick: () => re(q != null && q.projects.some((N) => N.roles.some((oe) => ["admin", "teacher", "reviewer"].includes(oe))) ? "/training/questions" : "/learn"), "aria-label": "培训与学习", children: [
+          /* @__PURE__ */ s.jsx(Ki, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "培训与学习" }),
           /* @__PURE__ */ s.jsx(Ws, { size: 15 })
         ] }),
-        !Tt && /* @__PURE__ */ s.jsxs("button", { className: d === "/settings/access" ? "nav-item active" : "nav-item", onClick: () => re("/settings/access"), "aria-label": "成员与权限", children: [
-          /* @__PURE__ */ s.jsx(ov, { size: 19 }),
+        !zt && /* @__PURE__ */ s.jsxs("button", { className: d === "/settings/access" ? "nav-item active" : "nav-item", onClick: () => re("/settings/access"), "aria-label": "成员与权限", children: [
+          /* @__PURE__ */ s.jsx(xv, { size: 19 }),
           /* @__PURE__ */ s.jsx("span", { children: "成员与权限" }),
           /* @__PURE__ */ s.jsx(Ws, { size: 15 })
         ] })
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "scope-card", children: [
-        /* @__PURE__ */ s.jsx(Gi, { size: 19 }),
+        /* @__PURE__ */ s.jsx(Qi, { size: 19 }),
         /* @__PURE__ */ s.jsx("strong", { children: "项目范围隔离" }),
         /* @__PURE__ */ s.jsxs("p", { children: [
           "记录、文件和操作权限",
@@ -16051,7 +16144,7 @@ function qv({ embedded: u = !1 }) {
       ] }),
       /* @__PURE__ */ s.jsxs("div", { className: "sidebar-bottom", children: [
         /* @__PURE__ */ s.jsx("span", { className: "dot" }),
-        Tt ? "平台账号 · 项目授权" : "本地开发 · B07",
+        zt ? "平台账号 · 项目授权" : "本地开发 · B07",
         /* @__PURE__ */ s.jsx("span", { className: "version", children: "v0.7" })
       ] })
     ] }),
@@ -16062,65 +16155,65 @@ function qv({ embedded: u = !1 }) {
           /* @__PURE__ */ s.jsx(Ws, { size: 14 }),
           /* @__PURE__ */ s.jsx("strong", { children: ue })
         ] }),
-        Tt ? /* @__PURE__ */ s.jsx("a", { href: "/quality/", children: "返回平台" }) : /* @__PURE__ */ s.jsxs("div", { className: "identity", children: [
+        zt ? /* @__PURE__ */ s.jsx("a", { href: "/quality/", children: "返回平台" }) : /* @__PURE__ */ s.jsxs("div", { className: "identity", children: [
           /* @__PURE__ */ s.jsx("span", { className: "demo-tag", children: "模拟身份" }),
-          /* @__PURE__ */ s.jsx("select", { "aria-label": "切换模拟身份", value: h, onChange: (x) => {
-            localStorage.setItem("b01-identity", x.target.value), S(x.target.value), De(null), Se(""), Oe([]), Y("");
-          }, children: Mv.map(([x, ce]) => /* @__PURE__ */ s.jsx("option", { value: x, children: ce }, x)) })
+          /* @__PURE__ */ s.jsx("select", { "aria-label": "切换模拟身份", value: h, onChange: (N) => {
+            localStorage.setItem("b01-identity", N.target.value), _(N.target.value), qe(null), Ce(""), Ae([]), G("");
+          }, children: Lv.map(([N, oe]) => /* @__PURE__ */ s.jsx("option", { value: N, children: oe }, N)) })
         ] })
       ] }),
       /* @__PURE__ */ s.jsxs("main", { children: [
-        u && !p && !k && !M && /* @__PURE__ */ s.jsx("nav", { "aria-label": "业务功能", className: "heading-actions", style: { flexWrap: "wrap", marginBottom: 20 }, children: (ne ? [["/sources", "数据来源"], ["/imports", "历史项目"], ["/records", "风险数据"]] : xe ? [["/learn", "我的学习"], ["/training/questions", "题库与学习包"]] : le || Ee ? [["/workflows", "隐患与指导书"], ["/standards", "规范原文"], ["/extraction", "知识萃取"], ["/quality", "质量核查"], ["/knowledge/drafts", "知识草稿"], ["/reviews", "内容审核"], ["/settings/models", "模型设置"], ["/settings/scenes", "场景配置"]] : k ? [["/knowledge/library", "已发布知识"], ["/search", "检索"], ["/releases", "发布管理"]] : I ? [["/task-packages", "成果清单"], ["/task-packages/import", "接入成果"]] : [["/retrospectives", "复盘清单"]]).map(([x, ce]) => /* @__PURE__ */ s.jsx("button", { className: d === x ? "button primary" : "button ghost", onClick: () => re(x), children: ce }, x)) }),
+        u && !v && !k && !z && /* @__PURE__ */ s.jsx("nav", { "aria-label": "业务功能", className: "heading-actions", style: { flexWrap: "wrap", marginBottom: 20 }, children: (ne ? [["/sources", "数据来源"], ["/imports", "历史项目"], ["/records", "风险数据"]] : xe ? [["/learn", "我的学习"], ["/training/questions", "题库与学习包"]] : le || Te ? [["/workflows", "隐患与指导书"], ["/standards", "规范原文"], ["/extraction", "知识萃取"], ["/quality", "质量核查"], ["/knowledge/drafts", "知识草稿"], ["/reviews", "内容审核"], ["/settings/models", "模型设置"], ["/settings/scenes", "场景配置"]] : k ? [["/knowledge/library", "已发布知识"], ["/search", "检索"], ["/releases", "发布管理"]] : I ? [["/task-packages", "成果清单"], ["/task-packages/import", "接入成果"]] : [["/retrospectives", "复盘清单"]]).map(([N, oe]) => /* @__PURE__ */ s.jsx("button", { className: d === N ? "button primary" : "button ghost", onClick: () => re(N), children: oe }, N)) }),
         /* @__PURE__ */ s.jsxs("div", { className: "page-heading", children: [
           /* @__PURE__ */ s.jsxs("div", { children: [
             /* @__PURE__ */ s.jsx("div", { className: "eyebrow", children: "工作空间" }),
             /* @__PURE__ */ s.jsx("h1", { children: ue }),
-            /* @__PURE__ */ s.jsx("p", { children: p ? "指定版本接入、证据校验与过程复盘。" : xe ? "固定审核来源、题目与学习包版本，保留作答、建议评分和教员复核。" : _e ? "按固定来源版本登记事件、分析分类、编制汇编和指导书，经审核发布后进入培训。" : ye ? "保存规范原文与适用版本，核对来源后审核发布。" : Ee ? "按类别合并历史记录，调用云端模型提炼可追溯的施工要点。" : me ? "复用已有过程记录与证据，核查实际流程，形成可审核的经验草稿。" : I ? "接收作业快照，核对事件、证据和版本，减少重复准备资料。" : k ? "固定审核版本发布，以项目权限检索知识并打开来源。" : le ? "复用来源证据生成候选，核查质量问题后逐版本审核。" : ne ? oe ? "查看原报告当前解析版本、字段证据和关联图片。" : "一次接入模拟资料，保留原文、治理生效值与来源证据。" : d === "/settings/access" ? "按项目分配角色，保留每次授权与撤销的记录。" : "查看处理进度、定位失败任务，保留每一次执行结果。" })
+            /* @__PURE__ */ s.jsx("p", { children: v ? "指定版本接入、证据校验与过程复盘。" : xe ? "固定审核来源、题目与学习包版本，保留作答、建议评分和教员复核。" : Ne ? "按固定来源版本登记事件、分析分类、编制汇编和指导书，经审核发布后进入培训。" : Se ? "保存规范原文与适用版本，核对来源后审核发布。" : Te ? "按类别合并历史记录，调用云端模型提炼可追溯的施工要点。" : fe ? "复用已有过程记录与证据，核查实际流程，形成可审核的经验草稿。" : I ? "接收作业快照，核对事件、证据和版本，减少重复准备资料。" : k ? "固定审核版本发布，以项目权限检索知识并打开来源。" : le ? "复用来源证据生成候选，核查质量问题后逐版本审核。" : ne ? de ? "查看原报告当前解析版本、字段证据和关联图片。" : "一次接入模拟资料，保留原文、治理生效值与来源证据。" : d === "/settings/access" ? "按项目分配角色，保留每次授权与撤销的记录。" : "查看处理进度、定位失败任务，保留每一次执行结果。" })
           ] }),
           /* @__PURE__ */ s.jsxs("div", { className: "heading-actions", children: [
-            !u && /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => $((x) => x + 1), disabled: ee, children: [
+            !u && /* @__PURE__ */ s.jsxs("button", { className: "button ghost", onClick: () => W((N) => N + 1), disabled: ee, children: [
               /* @__PURE__ */ s.jsx(Rs, { size: 16 }),
               "刷新"
             ] }),
-            !Tt && !ne && !le && !k && !I && !me && !xe && !Ee && d !== "/settings/access" && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: !Qe || m, onClick: () => {
-              var x;
-              Fe(((x = D == null ? void 0 : D.projects.find((ce) => ce.can_run)) == null ? void 0 : x.id) || "demo-airport"), Le(!0);
+            !zt && !ne && !le && !k && !I && !fe && !xe && !Te && d !== "/settings/access" && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: !Ze || f, onClick: () => {
+              var N;
+              st(((N = q == null ? void 0 : q.projects.find((oe) => oe.can_run)) == null ? void 0 : N.id) || "demo-airport"), Be(!0);
             }, children: [
-              /* @__PURE__ */ s.jsx(zf, { size: 16 }),
+              /* @__PURE__ */ s.jsx(Uf, { size: 16 }),
               "运行演示检查"
             ] })
           ] })
         ] }),
-        !Tt && !ne && !le && !k && !I && !me && !xe && !Ee && /* @__PURE__ */ s.jsxs("div", { className: "mode-banner", children: [
-          /* @__PURE__ */ s.jsx(Af, { size: 18 }),
+        !zt && !ne && !le && !k && !I && !fe && !xe && !Te && /* @__PURE__ */ s.jsxs("div", { className: "mode-banner", children: [
+          /* @__PURE__ */ s.jsx(Df, { size: 18 }),
           /* @__PURE__ */ s.jsxs("div", { children: [
             /* @__PURE__ */ s.jsx("strong", { children: "本地演示模式" }),
             /* @__PURE__ */ s.jsx("span", { children: "尚未接入A的真实身份或历史资料。所有输入均为明确标注的模拟数据，尚未接入真实工程资料。" })
           ] })
         ] }),
-        B && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
+        M && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
           "登录已失效，请返回平台重新登录。",
           /* @__PURE__ */ s.jsx("a", { href: "/quality/", children: "返回平台" })
         ] }),
-        X && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
+        Q && /* @__PURE__ */ s.jsxs("div", { className: "feedback error", role: "alert", children: [
           /* @__PURE__ */ s.jsx(Nl, { size: 18 }),
-          X,
-          /* @__PURE__ */ s.jsx("button", { onClick: () => $((x) => x + 1), children: "重新加载" })
+          Q,
+          /* @__PURE__ */ s.jsx("button", { onClick: () => W((N) => N + 1), children: "重新加载" })
         ] }),
-        y && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
+        b && /* @__PURE__ */ s.jsxs("div", { className: "feedback success", role: "status", children: [
           /* @__PURE__ */ s.jsx(Sl, { size: 18 }),
-          y,
-          /* @__PURE__ */ s.jsx("button", { "aria-label": "关闭提示", onClick: () => Y(""), children: /* @__PURE__ */ s.jsx(Zi, { size: 16 }) })
+          b,
+          /* @__PURE__ */ s.jsx("button", { "aria-label": "关闭提示", onClick: () => G(""), children: /* @__PURE__ */ s.jsx(Vi, { size: 16 }) })
         ] }),
-        B ? null : p ? D ? /* @__PURE__ */ s.jsx(Cj, { id: d.split("/").pop(), identity: D.id, projects: D.projects, navigate: re }) : /* @__PURE__ */ s.jsx("p", { children: X || "正在读取身份…" }) : ee ? /* @__PURE__ */ s.jsxs("div", { className: "loading", children: [
-          /* @__PURE__ */ s.jsx(Tf, { className: "spin", size: 24 }),
+        M ? null : v ? q ? /* @__PURE__ */ s.jsx(zj, { id: d.split("/").pop(), identity: q.id, projects: q.projects, navigate: re }) : /* @__PURE__ */ s.jsx("p", { children: Q || "正在读取身份…" }) : ee ? /* @__PURE__ */ s.jsxs("div", { className: "loading", children: [
+          /* @__PURE__ */ s.jsx(Rf, { className: "spin", size: 24 }),
           /* @__PURE__ */ s.jsx("span", { children: "正在读取工作区…" })
-        ] }) : X ? null : M ? /* @__PURE__ */ s.jsx(Ej, { navigate: re }, te) : Q ? /* @__PURE__ */ s.jsx(Oj, { deliveryId: decodeURIComponent(d.split("/")[2]), navigate: re }, d) : xe ? /* @__PURE__ */ s.jsx(Av, { api: fe, path: d, navigate: re, projects: (D == null ? void 0 : D.projects) || [] }, h) : _e ? /* @__PURE__ */ s.jsx(kj, { api: fe, projects: (D == null ? void 0 : D.projects) || [], identity: h }, h + ":" + (D == null ? void 0 : D.projects.map((x) => x.id).join(","))) : ye ? /* @__PURE__ */ s.jsx(_j, { api: fe, projects: (D == null ? void 0 : D.projects) || [], identity: h }, h + ":" + (D == null ? void 0 : D.projects.map((x) => x.id).join(","))) : d === "/settings/scenes" ? /* @__PURE__ */ s.jsx("div", { className: "knowledge-module training-module", children: /* @__PURE__ */ s.jsx(gj, { api: fe, projects: (D == null ? void 0 : D.projects) || [] }) }) : Ee ? /* @__PURE__ */ s.jsx(Dv, { api: fe, identity: h, path: d, navigate: re, projects: (D == null ? void 0 : D.projects) || [], canManageModels: !!(D != null && D.can_manage_models) }, h) : me ? /* @__PURE__ */ s.jsx(zv, { api: fe, identity: h, path: d, navigate: re, projects: (D == null ? void 0 : D.projects) || [] }, h) : I ? /* @__PURE__ */ s.jsx(Ev, { identity: h, path: d, navigate: re, projects: (D == null ? void 0 : D.projects) || [] }, h) : k ? /* @__PURE__ */ s.jsx(Nv, { identity: h, path: d, navigate: re, projects: (D == null ? void 0 : D.projects) || [] }, h) : le ? /* @__PURE__ */ s.jsx(bv, { api: fe, path: d, navigate: re, projects: (D == null ? void 0 : D.projects) || [], identity: h }, h) : oe ? /* @__PURE__ */ s.jsx(gv, { api: fe }, h) : ne ? /* @__PURE__ */ s.jsx(mv, { api: fe, path: d, navigate: re, projects: (D == null ? void 0 : D.projects) || [], identity: h }, h) : d === "/settings/access" ? z ? et && /* @__PURE__ */ s.jsxs("div", { className: "access-layout", children: [
+        ] }) : Q ? null : z ? /* @__PURE__ */ s.jsx(Aj, { navigate: re }, te) : Y ? /* @__PURE__ */ s.jsx(Rj, { deliveryId: decodeURIComponent(d.split("/")[2]), navigate: re }, d) : xe ? /* @__PURE__ */ s.jsx(Mv, { api: he, path: d, navigate: re, projects: (q == null ? void 0 : q.projects) || [] }, h) : Ne ? /* @__PURE__ */ s.jsx(Tj, { api: he, projects: (q == null ? void 0 : q.projects) || [], identity: h }, h + ":" + (q == null ? void 0 : q.projects.map((N) => N.id).join(","))) : Se ? /* @__PURE__ */ s.jsx(kj, { api: he, projects: (q == null ? void 0 : q.projects) || [], identity: h }, h + ":" + (q == null ? void 0 : q.projects.map((N) => N.id).join(","))) : d === "/settings/scenes" ? /* @__PURE__ */ s.jsx("div", { className: "knowledge-module training-module", children: /* @__PURE__ */ s.jsx(Nj, { api: he, projects: (q == null ? void 0 : q.projects) || [] }) }) : Te ? /* @__PURE__ */ s.jsx(Bv, { api: he, identity: h, path: d, navigate: re, projects: (q == null ? void 0 : q.projects) || [], canManageModels: !!(q != null && q.can_manage_models) }, h) : fe ? /* @__PURE__ */ s.jsx(Dv, { api: he, identity: h, path: d, navigate: re, projects: (q == null ? void 0 : q.projects) || [] }, h) : I ? /* @__PURE__ */ s.jsx(Av, { identity: h, path: d, navigate: re, projects: (q == null ? void 0 : q.projects) || [] }, h) : k ? /* @__PURE__ */ s.jsx(Cv, { identity: h, path: d, navigate: re, projects: (q == null ? void 0 : q.projects) || [] }, h) : le ? /* @__PURE__ */ s.jsx(Sv, { api: he, path: d, navigate: re, projects: (q == null ? void 0 : q.projects) || [], identity: h }, h) : de ? /* @__PURE__ */ s.jsx(Nv, { api: he }, h) : ne ? /* @__PURE__ */ s.jsx(pv, { api: he, path: d, navigate: re, projects: (q == null ? void 0 : q.projects) || [], identity: h }, h) : d === "/settings/access" ? D ? Ke && /* @__PURE__ */ s.jsxs("div", { className: "access-layout", children: [
           /* @__PURE__ */ s.jsxs("section", { className: "panel", children: [
             /* @__PURE__ */ s.jsxs("div", { className: "panel-heading", children: [
               /* @__PURE__ */ s.jsx("h2", { children: "项目角色" }),
               /* @__PURE__ */ s.jsxs("span", { children: [
-                et.bindings.length,
+                Ke.bindings.length,
                 " 项绑定"
               ] })
             ] }),
@@ -16131,30 +16224,30 @@ function qv({ embedded: u = !1 }) {
                 /* @__PURE__ */ s.jsx("th", { children: "角色" }),
                 /* @__PURE__ */ s.jsx("th", { children: "操作" })
               ] }) }),
-              /* @__PURE__ */ s.jsx("tbody", { children: et.bindings.map((x) => {
-                var ce;
+              /* @__PURE__ */ s.jsx("tbody", { children: Ke.bindings.map((N) => {
+                var oe;
                 return /* @__PURE__ */ s.jsxs("tr", { children: [
-                  /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("strong", { children: (ce = et.users.find((qe) => qe.id === x.user_id)) == null ? void 0 : ce.name }) }),
-                  /* @__PURE__ */ s.jsx("td", { children: v[x.project_id] }),
-                  /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: Yf[x.role] }) }),
-                  /* @__PURE__ */ s.jsx("td", { children: x.role === "admin" ? /* @__PURE__ */ s.jsx("span", { className: "muted", children: "初始化管理" }) : /* @__PURE__ */ s.jsx(
+                  /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("strong", { children: (oe = Ke.users.find((Ve) => Ve.id === N.user_id)) == null ? void 0 : oe.name }) }),
+                  /* @__PURE__ */ s.jsx("td", { children: x[N.project_id] }),
+                  /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsx("span", { className: "role-tag", children: Zf[N.role] }) }),
+                  /* @__PURE__ */ s.jsx("td", { children: N.role === "admin" ? /* @__PURE__ */ s.jsx("span", { className: "muted", children: "初始化管理" }) : /* @__PURE__ */ s.jsx(
                     "button",
                     {
                       className: "text-button danger",
-                      disabled: m,
+                      disabled: f,
                       onClick: () => {
-                        confirm("撤销后，该成员在此项目的对应能力将立即失效。继续？") && Ve(async () => {
-                          await fe(`/role-bindings/${x.id}`, { method: "DELETE", body: JSON.stringify({ row_version: x.row_version }) }), Y("角色已撤销。");
+                        confirm("撤销后，该成员在此项目的对应能力将立即失效。继续？") && $e(async () => {
+                          await he(`/role-bindings/${N.id}`, { method: "DELETE", body: JSON.stringify({ row_version: N.row_version }) }), G("角色已撤销。");
                         });
                       },
                       children: "撤销"
                     }
                   ) })
-                ] }, x.id);
+                ] }, N.id);
               }) })
             ] }) }),
             /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
-              /* @__PURE__ */ s.jsx(Gi, { size: 15 }),
+              /* @__PURE__ */ s.jsx(Qi, { size: 15 }),
               "B内角色不能扩大来源系统授予的项目范围。"
             ] })
           ] }),
@@ -16162,18 +16255,18 @@ function qv({ embedded: u = !1 }) {
             /* @__PURE__ */ s.jsx("h2", { children: "添加项目角色" }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "成员",
-              /* @__PURE__ */ s.jsx("select", { value: E, onChange: (x) => w(x.target.value), children: et.users.map((x) => /* @__PURE__ */ s.jsx("option", { value: x.id, children: x.name }, x.id)) })
+              /* @__PURE__ */ s.jsx("select", { value: E, onChange: (N) => w(N.target.value), children: Ke.users.map((N) => /* @__PURE__ */ s.jsx("option", { value: N.id, children: N.name }, N.id)) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "项目",
-              /* @__PURE__ */ s.jsx("select", { value: He, onChange: (x) => tt(x.target.value), children: et.projects.map((x) => /* @__PURE__ */ s.jsx("option", { value: x.id, children: x.name }, x.id)) })
+              /* @__PURE__ */ s.jsx("select", { value: Le, onChange: (N) => Xe(N.target.value), children: Ke.projects.map((N) => /* @__PURE__ */ s.jsx("option", { value: N.id, children: N.name }, N.id)) })
             ] }),
             /* @__PURE__ */ s.jsxs("label", { children: [
               "角色",
-              /* @__PURE__ */ s.jsx("select", { value: W, onChange: (x) => ve(x.target.value), children: Object.entries(Yf).filter(([x]) => x !== "admin" && x !== "a_service").map(([x, ce]) => /* @__PURE__ */ s.jsx("option", { value: x, children: ce }, x)) })
+              /* @__PURE__ */ s.jsx("select", { value: $, onChange: (N) => we(N.target.value), children: Object.entries(Zf).filter(([N]) => N !== "admin" && N !== "a_service").map(([N, oe]) => /* @__PURE__ */ s.jsx("option", { value: N, children: oe }, N)) })
             ] }),
-            /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: m || !E, onClick: () => void Ve(async () => {
-              await fe("/role-bindings", { method: "POST", body: JSON.stringify({ user_id: E, project_id: He, role: W }) }), Y("角色已添加。");
+            /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: f || !E, onClick: () => void $e(async () => {
+              await he("/role-bindings", { method: "POST", body: JSON.stringify({ user_id: E, project_id: Le, role: $ }) }), G("角色已添加。");
             }), children: [
               "添加角色",
               /* @__PURE__ */ s.jsx(_l, { size: 16 })
@@ -16185,32 +16278,32 @@ function qv({ embedded: u = !1 }) {
               /* @__PURE__ */ s.jsx("h2", { children: "最近操作" }),
               /* @__PURE__ */ s.jsx("span", { children: "按当前管理范围展示" })
             ] }),
-            dt.length ? dt.map((x) => /* @__PURE__ */ s.jsxs("div", { className: "audit-row", children: [
+            ft.length ? ft.map((N) => /* @__PURE__ */ s.jsxs("div", { className: "audit-row", children: [
               /* @__PURE__ */ s.jsx("span", { className: "audit-point" }),
-              /* @__PURE__ */ s.jsx("strong", { children: { job_created: "创建演示任务", job_retried: "重试任务", role_granted: "添加角色", role_revoked: "撤销角色" }[x.action] || x.action }),
-              /* @__PURE__ */ s.jsx("span", { children: v[x.project_id] }),
-              /* @__PURE__ */ s.jsx("time", { children: Xi(x.created_at) })
-            ] }, x.id)) : /* @__PURE__ */ s.jsx("p", { className: "empty-inline", children: "暂无操作记录。" })
+              /* @__PURE__ */ s.jsx("strong", { children: { job_created: "创建演示任务", job_retried: "重试任务", role_granted: "添加角色", role_revoked: "撤销角色" }[N.action] || N.action }),
+              /* @__PURE__ */ s.jsx("span", { children: x[N.project_id] }),
+              /* @__PURE__ */ s.jsx("time", { children: Zi(N.created_at) })
+            ] }, N.id)) : /* @__PURE__ */ s.jsx("p", { className: "empty-inline", children: "暂无操作记录。" })
           ] })
         ] }) : /* @__PURE__ */ s.jsxs("section", { className: "panel empty", children: [
-          /* @__PURE__ */ s.jsx(Gi, { size: 38 }),
+          /* @__PURE__ */ s.jsx(Qi, { size: 38 }),
           /* @__PURE__ */ s.jsx("h2", { children: "当前身份没有管理权限" }),
           /* @__PURE__ */ s.jsx("p", { children: "可以切换到本地管理员验证授权流程。后端同样会拒绝越权请求。" })
         ] }) : /* @__PURE__ */ s.jsxs(s.Fragment, { children: [
           /* @__PURE__ */ s.jsxs("section", { className: "metrics", "aria-label": "任务概况", children: [
             /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
               /* @__PURE__ */ s.jsx("span", { children: "处理中" }),
-              /* @__PURE__ */ s.jsx("strong", { children: f }),
+              /* @__PURE__ */ s.jsx("strong", { children: be }),
               /* @__PURE__ */ s.jsx("small", { children: "包含等待与自动重试" })
             ] }),
             /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
               /* @__PURE__ */ s.jsx("span", { children: "已完成" }),
-              /* @__PURE__ */ s.jsx("strong", { children: Xe.succeeded || 0 }),
+              /* @__PURE__ */ s.jsx("strong", { children: Je.succeeded || 0 }),
               /* @__PURE__ */ s.jsx("small", { children: "结果可查看、可下载" })
             ] }),
             /* @__PURE__ */ s.jsxs("div", { className: "metric", children: [
               /* @__PURE__ */ s.jsx("span", { children: "待处理失败" }),
-              /* @__PURE__ */ s.jsx("strong", { className: Xe.failed ? "danger-color" : "", children: Xe.failed || 0 }),
+              /* @__PURE__ */ s.jsx("strong", { className: Je.failed ? "danger-color" : "", children: Je.failed || 0 }),
               /* @__PURE__ */ s.jsx("small", { children: "保留原因，可手动重试" })
             ] }),
             /* @__PURE__ */ s.jsxs("div", { className: "metric service", children: [
@@ -16228,20 +16321,20 @@ function qv({ embedded: u = !1 }) {
                 /* @__PURE__ */ s.jsx("h2", { children: d === "/jobs" ? "任务列表" : "最近处理任务" }),
                 /* @__PURE__ */ s.jsx("span", { children: "仅展示当前身份可访问的项目" })
               ] }),
-              /* @__PURE__ */ s.jsxs("select", { "aria-label": "任务类型筛选", value: P, onChange: (x) => {
-                Ce(x.target.value), Se(""), Oe([]);
+              /* @__PURE__ */ s.jsxs("select", { "aria-label": "任务类型筛选", value: P, onChange: (N) => {
+                Oe(N.target.value), Ce(""), Ae([]);
               }, children: [
                 /* @__PURE__ */ s.jsx("option", { value: "", children: "全部类型" }),
-                Object.entries(Gf).map(([x, ce]) => /* @__PURE__ */ s.jsx("option", { value: x, children: ce }, x))
+                Object.entries(Vf).map(([N, oe]) => /* @__PURE__ */ s.jsx("option", { value: N, children: oe }, N))
               ] }),
-              /* @__PURE__ */ s.jsxs("select", { "aria-label": "任务状态筛选", value: ae, onChange: (x) => {
-                Z(x.target.value), Se(""), Oe([]);
+              /* @__PURE__ */ s.jsxs("select", { "aria-label": "任务状态筛选", value: ae, onChange: (N) => {
+                Z(N.target.value), Ce(""), Ae([]);
               }, children: [
                 /* @__PURE__ */ s.jsx("option", { value: "", children: "全部状态" }),
-                Object.entries(vu).map(([x, ce]) => /* @__PURE__ */ s.jsx("option", { value: x, children: ce }, x))
+                Object.entries(pu).map(([N, oe]) => /* @__PURE__ */ s.jsx("option", { value: N, children: oe }, N))
               ] })
             ] }),
-            Re.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
+            Me.length ? /* @__PURE__ */ s.jsx("div", { className: "table-wrap", children: /* @__PURE__ */ s.jsxs("table", { children: [
               /* @__PURE__ */ s.jsx("thead", { children: /* @__PURE__ */ s.jsxs("tr", { children: [
                 /* @__PURE__ */ s.jsx("th", { children: "任务 / 项目" }),
                 /* @__PURE__ */ s.jsx("th", { children: "状态" }),
@@ -16249,39 +16342,39 @@ function qv({ embedded: u = !1 }) {
                 /* @__PURE__ */ s.jsx("th", { children: "提交时间" }),
                 /* @__PURE__ */ s.jsx("th", { children: "操作" })
               ] }) }),
-              /* @__PURE__ */ s.jsx("tbody", { children: Re.map((x) => /* @__PURE__ */ s.jsxs("tr", { children: [
+              /* @__PURE__ */ s.jsx("tbody", { children: Me.map((N) => /* @__PURE__ */ s.jsxs("tr", { children: [
                 /* @__PURE__ */ s.jsxs("td", { children: [
-                  /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => De(x), children: x.title }),
+                  /* @__PURE__ */ s.jsx("button", { className: "job-title", onClick: () => qe(N), children: N.title }),
                   /* @__PURE__ */ s.jsxs("small", { children: [
-                    v[x.project_id] || x.project_id,
+                    x[N.project_id] || N.project_id,
                     /* @__PURE__ */ s.jsx("span", { className: "subtle-separator", children: "·" }),
-                    Gf[x.kind] || x.kind
+                    Vf[N.kind] || N.kind
                   ] })
                 ] }),
-                /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsxs("span", { className: `status ${x.status}`, children: [
+                /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsxs("span", { className: `status ${N.status}`, children: [
                   /* @__PURE__ */ s.jsx("i", {}),
-                  vu[x.status]
+                  pu[N.status]
                 ] }) }),
                 /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsxs("div", { className: "progress-cell", children: [
-                  /* @__PURE__ */ s.jsx("div", { className: "progress-track", children: /* @__PURE__ */ s.jsx("span", { style: { width: `${x.progress}%` } }) }),
+                  /* @__PURE__ */ s.jsx("div", { className: "progress-track", children: /* @__PURE__ */ s.jsx("span", { style: { width: `${N.progress}%` } }) }),
                   /* @__PURE__ */ s.jsxs("span", { children: [
-                    x.progress,
+                    N.progress,
                     "%"
                   ] })
                 ] }) }),
-                /* @__PURE__ */ s.jsx("td", { className: "muted nowrap", children: Xi(x.created_at) }),
+                /* @__PURE__ */ s.jsx("td", { className: "muted nowrap", children: Zi(N.created_at) }),
                 /* @__PURE__ */ s.jsx("td", { children: /* @__PURE__ */ s.jsxs("div", { className: "row-actions", children: [
-                  x.kind === "source_import" && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => re("/imports"), children: "历史项目" }),
-                  /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => De(x), children: "详情" }),
-                  x.status === "failed" && xt(x) && /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: m, onClick: () => void be(x), children: "重试任务" }),
-                  x.result_ref && /* @__PURE__ */ s.jsx("button", { className: "icon-button", "aria-label": "下载任务结果", disabled: m, onClick: () => void ge(x), children: /* @__PURE__ */ s.jsx(Cf, { size: 17 }) })
+                  N.kind === "source_import" && /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => re("/imports"), children: "历史项目" }),
+                  /* @__PURE__ */ s.jsx("button", { className: "text-button", onClick: () => qe(N), children: "详情" }),
+                  N.status === "failed" && pt(N) && /* @__PURE__ */ s.jsx("button", { className: "text-button", disabled: f, onClick: () => void ye(N), children: "重试任务" }),
+                  N.result_ref && /* @__PURE__ */ s.jsx("button", { className: "icon-button", "aria-label": "下载任务结果", disabled: f, onClick: () => void ge(N), children: /* @__PURE__ */ s.jsx(Tf, { size: 17 }) })
                 ] }) })
-              ] }, x.id)) })
+              ] }, N.id)) })
             ] }) }) : /* @__PURE__ */ s.jsxs("div", { className: "empty", children: [
-              /* @__PURE__ */ s.jsx(En, { size: 42 }),
+              /* @__PURE__ */ s.jsx(On, { size: 42 }),
               /* @__PURE__ */ s.jsx("h2", { children: ae ? "没有符合条件的任务" : "还没有处理任务" }),
-              /* @__PURE__ */ s.jsx("p", { children: ae ? "切换筛选条件查看其他任务。" : Qe ? "运行一次演示检查，验证提交、执行和结果保存的完整过程。" : "当前身份可查看项目任务，请等待加工人员提交。" }),
-              Qe && !ae && /* @__PURE__ */ s.jsxs("button", { className: "button secondary", onClick: () => Le(!0), children: [
+              /* @__PURE__ */ s.jsx("p", { children: ae ? "切换筛选条件查看其他任务。" : Ze ? "运行一次演示检查，验证提交、执行和结果保存的完整过程。" : "当前身份可查看项目任务，请等待加工人员提交。" }),
+              Ze && !ae && /* @__PURE__ */ s.jsxs("button", { className: "button secondary", onClick: () => Be(!0), children: [
                 "开始一次演示",
                 /* @__PURE__ */ s.jsx(_l, { size: 16 })
               ] })
@@ -16289,21 +16382,21 @@ function qv({ embedded: u = !1 }) {
             /* @__PURE__ */ s.jsxs("div", { className: "panel-footer", children: [
               /* @__PURE__ */ s.jsxs("span", { children: [
                 "显示 ",
-                Re.length,
+                Me.length,
                 " 条 · 任务状态自动更新"
               ] }),
               /* @__PURE__ */ s.jsxs("div", { className: "pagination", children: [
-                /* @__PURE__ */ s.jsx("button", { disabled: !Pe.length, onClick: () => {
-                  Se(Pe[Pe.length - 1]), Oe(Pe.slice(0, -1));
+                /* @__PURE__ */ s.jsx("button", { disabled: !et.length, onClick: () => {
+                  Ce(et[et.length - 1]), Ae(et.slice(0, -1));
                 }, children: "上一页" }),
-                /* @__PURE__ */ s.jsx("button", { disabled: !st, onClick: () => {
-                  Oe([...Pe, ie]), Se(st || "");
+                /* @__PURE__ */ s.jsx("button", { disabled: !lt, onClick: () => {
+                  Ae([...et, ie]), Ce(lt || "");
                 }, children: "下一页" })
               ] })
             ] })
           ] }),
           d !== "/jobs" && /* @__PURE__ */ s.jsxs("section", { className: "next-step", children: [
-            /* @__PURE__ */ s.jsx("div", { className: "next-icon", children: /* @__PURE__ */ s.jsx(wf, { size: 22 }) }),
+            /* @__PURE__ */ s.jsx("div", { className: "next-icon", children: /* @__PURE__ */ s.jsx(Ef, { size: 22 }) }),
             /* @__PURE__ */ s.jsxs("div", { children: [
               /* @__PURE__ */ s.jsx("h3", { children: "从真实记录开始，逐步形成可用知识" }),
               /* @__PURE__ */ s.jsx("p", { children: "现在可以配置模拟来源、预览字段和异常，再增量接入并核查证据。" })
@@ -16316,23 +16409,23 @@ function qv({ embedded: u = !1 }) {
         ] }),
         /* @__PURE__ */ s.jsxs("footer", { className: "footer", children: [
           "工程风险知识与复盘培训中心",
-          /* @__PURE__ */ s.jsx("span", { children: Tt ? "小察统一账号 · 按项目授权访问" : "仅限本机开发验证 · 模拟身份" })
+          /* @__PURE__ */ s.jsx("span", { children: zt ? "小察统一账号 · 按项目授权访问" : "仅限本机开发验证 · 模拟身份" })
         ] })
       ] })
     ] }),
-    Ne && /* @__PURE__ */ s.jsx("div", { className: "modal-backdrop", role: "presentation", children: /* @__PURE__ */ s.jsxs("section", { className: "modal", role: "dialog", "aria-modal": "true", "aria-labelledby": "create-title", children: [
+    ke && /* @__PURE__ */ s.jsx("div", { className: "modal-backdrop", role: "presentation", children: /* @__PURE__ */ s.jsxs("section", { className: "modal", role: "dialog", "aria-modal": "true", "aria-labelledby": "create-title", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "modal-heading", children: [
         /* @__PURE__ */ s.jsx("h2", { id: "create-title", children: "运行演示检查" }),
-        /* @__PURE__ */ s.jsx("button", { className: "icon-button", "aria-label": "关闭", onClick: () => Le(!1), children: /* @__PURE__ */ s.jsx(Zi, { size: 20 }) })
+        /* @__PURE__ */ s.jsx("button", { className: "icon-button", "aria-label": "关闭", onClick: () => Be(!1), children: /* @__PURE__ */ s.jsx(Vi, { size: 20 }) })
       ] }),
       /* @__PURE__ */ s.jsx("p", { children: "创建真实的后台任务，生成一份演示结果文件。不会读取原始工程资料。" }),
       /* @__PURE__ */ s.jsxs("label", { children: [
         "所属项目",
-        /* @__PURE__ */ s.jsx("select", { value: We, onChange: (x) => Fe(x.target.value), children: D == null ? void 0 : D.projects.filter((x) => x.can_run).map((x) => /* @__PURE__ */ s.jsx("option", { value: x.id, children: x.name }, x.id)) })
+        /* @__PURE__ */ s.jsx("select", { value: tt, onChange: (N) => st(N.target.value), children: q == null ? void 0 : q.projects.filter((N) => N.can_run).map((N) => /* @__PURE__ */ s.jsx("option", { value: N.id, children: N.name }, N.id)) })
       ] }),
       /* @__PURE__ */ s.jsxs("label", { children: [
         "验证场景",
-        /* @__PURE__ */ s.jsxs("select", { value: Ze, onChange: (x) => he(x.target.value), children: [
+        /* @__PURE__ */ s.jsxs("select", { value: rt, onChange: (N) => je(N.target.value), children: [
           /* @__PURE__ */ s.jsx("option", { value: "success", children: "正常完成" }),
           /* @__PURE__ */ s.jsx("option", { value: "fail_once", children: "临时失败后自动重试" }),
           /* @__PURE__ */ s.jsx("option", { value: "manual_failure", children: "失败后手动重试" })
@@ -16340,56 +16433,56 @@ function qv({ embedded: u = !1 }) {
       ] }),
       !pe && /* @__PURE__ */ s.jsx("p", { className: "warning-text", children: "处理服务未连接，任务将保存并等待恢复。" }),
       /* @__PURE__ */ s.jsxs("div", { className: "modal-actions", children: [
-        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => Le(!1), children: "取消" }),
-        /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: m || !Qe, onClick: () => void _(), children: [
-          m ? /* @__PURE__ */ s.jsx(Tf, { className: "spin", size: 16 }) : /* @__PURE__ */ s.jsx(zf, { size: 16 }),
+        /* @__PURE__ */ s.jsx("button", { className: "button ghost", onClick: () => Be(!1), children: "取消" }),
+        /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: f || !Ze, onClick: () => void y(), children: [
+          f ? /* @__PURE__ */ s.jsx(Rf, { className: "spin", size: 16 }) : /* @__PURE__ */ s.jsx(Uf, { size: 16 }),
           "提交任务"
         ] })
       ] })
     ] }) }),
-    Te && /* @__PURE__ */ s.jsx("div", { className: "drawer-backdrop", children: /* @__PURE__ */ s.jsxs("aside", { className: "drawer", role: "dialog", "aria-modal": "true", "aria-labelledby": "detail-title", children: [
+    Re && /* @__PURE__ */ s.jsx("div", { className: "drawer-backdrop", children: /* @__PURE__ */ s.jsxs("aside", { className: "drawer", role: "dialog", "aria-modal": "true", "aria-labelledby": "detail-title", children: [
       /* @__PURE__ */ s.jsxs("div", { className: "modal-heading", children: [
         /* @__PURE__ */ s.jsx("h2", { id: "detail-title", children: "任务详情" }),
-        /* @__PURE__ */ s.jsx("button", { className: "icon-button", "aria-label": "关闭详情", onClick: () => De(null), children: /* @__PURE__ */ s.jsx(Zi, { size: 20 }) })
+        /* @__PURE__ */ s.jsx("button", { className: "icon-button", "aria-label": "关闭详情", onClick: () => qe(null), children: /* @__PURE__ */ s.jsx(Vi, { size: 20 }) })
       ] }),
-      /* @__PURE__ */ s.jsxs("span", { className: `status ${Te.status}`, children: [
+      /* @__PURE__ */ s.jsxs("span", { className: `status ${Re.status}`, children: [
         /* @__PURE__ */ s.jsx("i", {}),
-        vu[Te.status]
+        pu[Re.status]
       ] }),
-      /* @__PURE__ */ s.jsx("h3", { children: Te.title }),
+      /* @__PURE__ */ s.jsx("h3", { children: Re.title }),
       /* @__PURE__ */ s.jsxs("dl", { children: [
         /* @__PURE__ */ s.jsx("dt", { children: "项目" }),
-        /* @__PURE__ */ s.jsx("dd", { children: v[Te.project_id] }),
+        /* @__PURE__ */ s.jsx("dd", { children: x[Re.project_id] }),
         /* @__PURE__ */ s.jsx("dt", { children: "实际执行次数" }),
-        /* @__PURE__ */ s.jsx("dd", { children: Te.attempts }),
+        /* @__PURE__ */ s.jsx("dd", { children: Re.attempts }),
         /* @__PURE__ */ s.jsx("dt", { children: "提交时间" }),
-        /* @__PURE__ */ s.jsx("dd", { children: Xi(Te.created_at) }),
+        /* @__PURE__ */ s.jsx("dd", { children: Zi(Re.created_at) }),
         /* @__PURE__ */ s.jsx("dt", { children: "最近更新" }),
-        /* @__PURE__ */ s.jsx("dd", { children: Xi(Te.updated_at) }),
+        /* @__PURE__ */ s.jsx("dd", { children: Zi(Re.updated_at) }),
         /* @__PURE__ */ s.jsx("dt", { children: "任务编号" }),
-        /* @__PURE__ */ s.jsx("dd", { className: "mono", children: Te.id })
+        /* @__PURE__ */ s.jsx("dd", { className: "mono", children: Re.id })
       ] }),
-      Te.error && /* @__PURE__ */ s.jsxs("div", { className: "detail-error", children: [
+      Re.error && /* @__PURE__ */ s.jsxs("div", { className: "detail-error", children: [
         /* @__PURE__ */ s.jsx("strong", { children: "处理说明" }),
-        /* @__PURE__ */ s.jsx("p", { children: Te.error })
+        /* @__PURE__ */ s.jsx("p", { children: Re.error })
       ] }),
       /* @__PURE__ */ s.jsx("p", { className: "small-note", children: "此为本地模拟数据任务，不代表实际工程检查。所有进度和结果均来自后台执行记录。" }),
-      Te.result_ref && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: m, onClick: () => void ge(Te), children: [
-        /* @__PURE__ */ s.jsx(Cf, { size: 16 }),
+      Re.result_ref && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: f, onClick: () => void ge(Re), children: [
+        /* @__PURE__ */ s.jsx(Tf, { size: 16 }),
         "下载演示结果"
       ] }),
-      (G = Te.result_links) == null ? void 0 : G.map((x) => /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => re(x.path), children: x.label }, x.path)),
-      Te.status === "failed" && xt(Te) && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: m, onClick: () => void be(Te), children: [
+      (ut = Re.result_links) == null ? void 0 : ut.map((N) => /* @__PURE__ */ s.jsx("button", { className: "button secondary", onClick: () => re(N.path), children: N.label }, N.path)),
+      Re.status === "failed" && pt(Re) && /* @__PURE__ */ s.jsxs("button", { className: "button primary", disabled: f, onClick: () => void ye(Re), children: [
         /* @__PURE__ */ s.jsx(Rs, { size: 16 }),
         "重试任务"
       ] })
     ] }) })
   ] });
 }
-function Hv(u) {
-  const h = pj.createRoot(u);
-  return h.render(/* @__PURE__ */ s.jsx(qv, { embedded: !0 })), () => h.unmount();
+function Gv(u) {
+  const h = _j.createRoot(u);
+  return h.render(/* @__PURE__ */ s.jsx(Yv, { embedded: !0 })), () => h.unmount();
 }
 export {
-  Hv as mountKnowledge
+  Gv as mountKnowledge
 };
