@@ -2,6 +2,7 @@
 import argparse
 import json
 from pathlib import Path
+import re
 import shutil
 from urllib.parse import urlsplit
 
@@ -38,10 +39,11 @@ def main():
             destination.write_text(text, encoding='utf-8')
     api = output / 'utils/api.js'
     text = api.read_text(encoding='utf-8')
-    original = "function base(){return 'https://fxbxcx.jkec.info/quality'}"
-    if original not in text:
-        raise SystemExit('Cloud address implementation changed; review local build logic.')
-    api.write_text(text.replace(original, 'function base(){return ' + json.dumps(url) + '}'), encoding='utf-8')
+    pattern = r'''function base\(\)\{return (?:'[^']*'|"[^"]*")\}'''
+    if len(re.findall(pattern, text)) != 1:
+        raise SystemExit('Backend address implementation changed; review local build logic.')
+    # Also supports rebuilding an existing local package for a different LAN IP.
+    api.write_text(re.sub(pattern, lambda _: 'function base(){return ' + json.dumps(url) + '}', text), encoding='utf-8')
     config_path = output / 'project.config.json'
     config = json.loads(config_path.read_text(encoding='utf-8'))
     config.update(projectname='quality-safety-local-20261112', description='质量安全小察 本地部署客户端')
