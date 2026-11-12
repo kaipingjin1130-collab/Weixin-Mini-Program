@@ -2,6 +2,7 @@ import notice
 """Developer A workflow. SQLite transactions are owned by server.Handler."""
 import base64
 import leader_reports
+import combined_reports
 from host_auth import is_admin
 import copy
 import csv
@@ -43,6 +44,7 @@ def init(c):
  CREATE TABLE IF NOT EXISTS scenarios(id TEXT PRIMARY KEY, payload TEXT NOT NULL);
  CREATE TABLE IF NOT EXISTS leader_reads(user_id TEXT NOT NULL, document_key TEXT NOT NULL, read_at TEXT NOT NULL, PRIMARY KEY(user_id,document_key));
  CREATE TABLE IF NOT EXISTS document_leaders(document_key TEXT PRIMARY KEY, payload TEXT NOT NULL);
+ CREATE TABLE IF NOT EXISTS combined_reports(id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id), payload TEXT NOT NULL);
  CREATE TABLE IF NOT EXISTS field_reports(id TEXT PRIMARY KEY, task_id TEXT NOT NULL REFERENCES tasks(id), payload TEXT NOT NULL);
  ''')
  for s in SCENARIOS:
@@ -146,6 +148,8 @@ class Workflow:
   self.task(r['task_id'])
   return json.loads(r['payload'])
  def dispatch(self,path,d):
+  if path=='combined-create': return combined_reports.create(self,d)
+  if path in ('combined-assign','combined-sign'): return combined_reports.mutate(self,path,d)
   if path=='assign-document-leader': return leader_reports.assign_document(self,d)
   if path=='leader-read':
    rows=leader_reports.select(self,d.get('keys'))
@@ -255,6 +259,9 @@ class Workflow:
           status='ready',fieldStatus='collecting',fieldBriefs=[],revision=1,records=[],issues=[],events=[],deliveries=[],createdAt=self.s.now(),updatedAt=self.s.now())
    try: t['notice']=notice.clean(d.get('notice',{}))
    except ValueError as e: self.fail(str(e))
+   if adhoc and d.get('quickStart') is True:
+    t['status']='active'
+    self.stamp(t,'quick-start','临时巡查直接进入隐患采集，未代勾准备清单')
    self.stamp(t,'create','现场自主发起临时巡查' if adhoc else '平台建立派发任务')
    self.c.execute('INSERT INTO tasks VALUES(?,?,?,?)',(t['id'],pid,dump(t),1));return t
   if path=='knowledge':
@@ -368,6 +375,11 @@ class Workflow:
    risk=d.get('risk','中')
    if not isinstance(risk,str) or len(risk)>100: self.fail('风险等级格式错误')
    details={}
+   inspection_date=self.optional(d,'inspectionDate',100) if 'inspectionDate' in d else (old or {}).get('inspectionDate','')
+   if inspection_date: self.checkdate(inspection_date)
+   inspection_time=self.optional(d,'inspectionTime',5) if 'inspectionTime' in d else (old or {}).get('inspectionTime','')
+   if inspection_time and not re.fullmatch(r'(?:[01]\d|2[0-3]):[0-5]\d',inspection_time): self.fail('检查时间请使用 HH:mm')
+   details.update(inspectionDate=inspection_date,inspectionTime=inspection_time)
    for key in ['category','subcategory','location','reference','suggestion']:
     value=d.get(key,'')
     if not isinstance(value,str) or len(value)>4000: self.fail('隐患字段格式不正确')

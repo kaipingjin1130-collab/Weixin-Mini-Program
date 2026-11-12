@@ -1,11 +1,11 @@
 {
-  "description": "质量安全小察本地试用版",
+  "description": "质量安全小察云端体验版",
   "miniprogramRoot": "./",
   "compileType": "miniprogram",
   "appid": "wxd6a8ce42934d49d8",
-  "projectname": "quality-safety-local",
+  "projectname": "quality-safety-cloud",
   "setting": {
-    "urlCheck": false,
+    "urlCheck": true,
     "es6": true,
     "enhance": true,
     "minified": true,

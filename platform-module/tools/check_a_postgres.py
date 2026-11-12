@@ -44,7 +44,7 @@ def main():
 
     integration.Integration.setUp = isolated_set_up
     suite = unittest.defaultTestLoader.loadTestsFromNames([
-        'test_integration', 'test_notice', 'test_leader_reports'])
+        'test_integration', 'test_notice', 'test_leader_reports', 'test_combined_reports'])
     try:
         result = unittest.TextTestRunner(verbosity=2).run(suite)
         print('TEST_DATABASE', name)

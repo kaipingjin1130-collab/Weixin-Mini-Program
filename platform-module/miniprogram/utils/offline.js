@@ -19,12 +19,12 @@ async function sync(id,api){if(active.has(id))throw Error('这份记录正在同
  d.status='syncing';d.error='';update(d);
  async function step(key,action,payload){let op=d.journal[key];if(op?.done)return op.result;if(!op){op={requestId:'off-'+d.id+'-'+key,payload:clone(payload)};d.journal[key]=op;update(d)}const result=await api.request('/api/work/'+action,{...op.payload,requestId:op.requestId});op.done=true;op.result=result;update(d);return result}
  let t=await step('create','adhoc-tasks',{notice:d.notice||{},projectId:d.project.id,scenarioId:d.scenario.id,title:d.title,object:d.object,inspectors:d.inspectors,dueDate:d.date,fields:d.fields});
- t=await step('start','start',{taskId:t.id,revision:t.revision,checklist:d.scenario.checklist});
+ t=await step('start','start',{taskId:t.id,revision:t.revision,checklist:d.checklist||[]});
  for(const i of d.issues){const evidence=[];for(const photo of i.photos){const key='photo-'+photo.id;let ev=d.journal[key]?.result;if(!d.journal[key]?.done){const base64=await new Promise((resolve,reject)=>wx.getFileSystemManager().readFile({filePath:photo.path,encoding:'base64',success:r=>resolve(r.data),fail:()=>reject(Error('本地照片无法读取，请勿清理微信数据'))}));
  // Photo bytes live in the durable file, not in the small key/value store.
  let op=d.journal[key];if(!op){op={requestId:'off-'+d.id+'-'+key};d.journal[key]=op;update(d)}
  ev=await api.request('/api/work/upload',{projectId:d.project.id,name:photo.name,occurredAt:photo.occurredAt,base64,requestId:op.requestId});op.done=true;op.result=ev;update(d)}evidence.push(ev.id)}
- t=await step('issue-'+i.id,'issue',{taskId:t.id,revision:t.revision,category:i.category,subcategory:i.subcategory,location:i.location,description:i.description,reference:i.reference,suggestion:i.suggestion,risk:i.risk,evidence});}
+ t=await step('issue-'+i.id,'issue',{taskId:t.id,revision:t.revision,category:i.category,subcategory:i.subcategory,location:i.location,inspectionDate:i.inspectionDate||d.date,inspectionTime:i.inspectionTime||'',description:i.description,reference:i.reference,suggestion:i.suggestion,risk:i.risk,evidence});}
  d.status='synced';d.taskId=t.id;d.taskNumber=t.number;d.syncedAt=new Date().toISOString();d.error='';update(d);return d;
  }catch(e){try{const d=get(id);if(d.status==='syncing'){d.status='pending';d.error=e.message;update(d)}}catch(_){}throw e}finally{active.delete(id)}}
 async function rebind(id,api){const d=get(id);if(active.has(id))throw Error('请等待同步结束');const s=await api.request('/api/work/state');const p=s.projects.find(x=>x.id===d.project.id);if(s.user.id!==d.user.id||!p||p.name!==d.project.name||(p.contract||'')!==(d.project.contract||''))throw Error('账号或项目与原后台不一致，不能更换地址');const taskId=d.journal.create?.result?.id;if(taskId&&!s.tasks.some(t=>t.id===taskId))throw Error('新地址中未找到已同步的任务，不能更换地址');d.server=api.base();return update(d)}

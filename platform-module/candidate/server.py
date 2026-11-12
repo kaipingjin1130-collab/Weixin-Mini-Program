@@ -12,6 +12,7 @@ ROOT = Path(__file__).resolve().parent
 sys.path.insert(0,str(ROOT))
 import workflow
 import leader_reports
+import combined_reports
 import notice
 import host_auth
 import pg_storage
@@ -185,7 +186,7 @@ def snapshot_docx(snap,brief=False):
   issue_rows=[]
   for i in t['issues']:
    history='\n'.join(names.get(h['actor'],h['actor'])+'：'+h['text'] for h in i['history'])
-   issue_rows.append(dict(category=i.get('category') or '发现的问题',subcategory=i.get('subcategory',''),location=i.get('location',''),reference=i.get('reference',''),risk=i['risk'],description=i['description'],suggestion='\n'.join(filter(None,[i.get('suggestion',''),history])) or '由网页平台分派、整改及复核',photos=[eid for eid in i['evidence'] if eid in photos]))
+   issue_rows.append(dict(category=i.get('category') or '发现的问题',subcategory=i.get('subcategory',''),location=i.get('location',''),inspectionDate=i.get('inspectionDate',''),inspectionTime=i.get('inspectionTime',''),reference=i.get('reference',''),risk=i['risk'],description=i['description'],suggestion='\n'.join(filter(None,[i.get('suggestion',''),history])) or '由网页平台分派、整改及复核',photos=[eid for eid in i['evidence'] if eid in photos]))
   report=dict(title='现场检查简报（非正式审核报告）' if brief else t['scenario']['report']['title'],
    statusLabel=('现场上报材料' if brief else workflow.STATUS[t['status']])+' · 版本 '+str(snap['version']),status='submitted',
    contract=snap['project']['contract'],project=snap['project']['name'],number=t['number'],date=t['updatedAt'][:10],
@@ -310,6 +311,11 @@ class Handler(BaseHTTPRequestHandler):
      if method=='GET':
       if action=='state': self.send(w.state());return
       if action=='leader-inbox': self.send(leader_reports.inbox(w));return
+      if action=='combined-list': self.send(combined_reports.listing(w));return
+      if action.startswith(('combined-data/','combined-word/')):
+       kind,rid=action.split('/',1);value=combined_reports.get(w,rid)
+       if kind=='combined-data': self.send(combined_reports.public(w,value));return
+       self.send(combined_reports.export(w,value),mime='application/vnd.openxmlformats-officedocument.wordprocessingml.document',headers={'Content-Disposition':notice.disposition(value['title'])});return
       if action=='document-leader': self.send(leader_reports.document(w,parse_qs(urlsplit(self.path).query).get('key',[''])[0]));return
       if action=='leader-export':
        keys=parse_qs(urlsplit(self.path).query).get('key',[])
@@ -357,6 +363,13 @@ class Handler(BaseHTTPRequestHandler):
       if d.get('projectId'): w.role(d['projectId'])
       if d.get('reportId'): w.role(get_report(c,d['reportId'])['projectId'])
       if action=='assign-document-leader': w.allow(leader_reports.document(w,d.get('key'))['projectId'],['manager'])
+      if action=='combined-create':
+       leader_reports.select(w,d.get('keys'))
+       combined_reports.get(w,json.loads(previous['result'])['id'])
+      if action in ('combined-assign','combined-sign'):
+       current=combined_reports.get(w,d.get('combinedId'))
+       if action=='combined-sign' and current['recipientId']!=user['id']: raise Problem('签署权限已变更',403)
+       if action=='combined-assign' and not (host_auth.is_admin(user) or current['createdBy']==user['id'] or w.role(current['projectId'])=='manager'): raise Problem('分发权限已变更',403)
       self.send(json.loads(previous['result']));return
      result=w.upload(d) if action=='upload' else w.dispatch(action,d)
      c.execute('INSERT INTO operations VALUES(?,?,?,?)',(user['id'],request_id,fingerprint,workflow.dump(result)))

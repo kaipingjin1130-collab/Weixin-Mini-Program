@@ -135,7 +135,8 @@ def render(report, read_image, dimensions):
         row = prototype.cloneNode(True)
         details = '\n'.join([issue.get('description', '')] + [label + '：' + issue[k]
             for k, label in [('location', '部位'), ('category', '类别'), ('subcategory', '子分类'),
-                             ('risk', '风险等级'), ('reference', '规范依据'), ('suggestion', '整改建议')]
+                             ('inspectionDate', '检查日期'), ('inspectionTime', '检查时间'),
+                             ('risk', '风险等级'), ('reference', '规范依据'), ('suggestion', '整改建议'), ('sourceLabel', '来源报告')]
             if issue.get(k)])
         fill(row, {'sequence': str(index), 'description': details})
         add_pictures(children(row, 'w:tc')[2], issue.get('photos', []))
@@ -145,7 +146,53 @@ def render(report, read_image, dimensions):
     else:
         annex.removeChild(prototype)
     signatures = [s['signature'] for s in report.get('signatures', []) if s.get('signature')]
-    add_pictures(children(rows[7], 'w:tc')[1], signatures, signature=True)
+    add_pictures(children(rows[7], 'w:tc')[1], [] if report.get('combined') else signatures, signature=True)
+
+    if report.get('combined'):
+        def paragraph(text='', image_id=None):
+            p = doc.createElementNS(W, 'w:p')
+            r = doc.createElementNS(W, 'w:r'); p.appendChild(r)
+            t = doc.createElementNS(W, 'w:t'); r.appendChild(t)
+            t.appendChild(doc.createTextNode(''))
+            set_text(t, text)
+            if image_id:
+                p.appendChild(picture(image_id, 1500000, 500000))
+            return p
+
+        cells = children(rows[7], 'w:tc')
+        cells[1].appendChild(paragraph('检查人原签名见清单签字页'))
+        for t in nodes(cells[2], 'w:t'):
+            set_text(t, '')
+        cells[2].appendChild(paragraph('被检查单位负责人签字'))
+        recipient = report.get('recipientSignature')
+        if recipient:
+            add_pictures(cells[3], [recipient['signature']], signature=True)
+            cells[3].appendChild(paragraph(recipient['name']))
+            children(rows[8], 'w:tc')[3].appendChild(paragraph(recipient['signedAt'][:10]))
+
+        body = nodes(doc, 'w:body')[0]
+        section_properties = children(body, 'w:sectPr')[0]
+        def append(text='', image_id=None):
+            p = paragraph(text, image_id)
+            body.insertBefore(p, section_properties)
+            return p
+        heading = append('附件2 隐患清单签字与报告来源')
+        props = doc.createElementNS(W, 'w:pPr')
+        props.appendChild(doc.createElementNS(W, 'w:pageBreakBefore'))
+        heading.insertBefore(props, heading.firstChild)
+        append('以下签名对应本次合并报告；原报告和检查人员原签名按来源保留。')
+        for source in report.get('sources', []):
+            append(f"来源：{source['number']} · v{source['version']} · {source['inspectors']} · {source['createdAt']}")
+        append('检查人员原签名')
+        for signature in report.get('signatures', []):
+            append(signature.get('name', '') + ' · ' + signature.get('sourceLabel', ''), signature['signature'])
+        append('被检查单位负责人签字')
+        if recipient:
+            append(recipient['name'], recipient['signature'])
+            append('签署时间：' + recipient['signedAt'])
+        else:
+            append('待负责人本人在线签署')
+        append('报告内容校验：' + report.get('contentHash', ''))
 
     parts['word/document.xml'] = doc.toxml(encoding='UTF-8')
     parts['word/_rels/document.xml.rels'] = rels.toxml(encoding='UTF-8')

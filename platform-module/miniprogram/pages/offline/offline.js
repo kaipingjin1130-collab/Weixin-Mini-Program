@@ -1,8 +1,9 @@
 const store=require('../../utils/offline');
 const api=require('../../utils/api');
-const blank=()=>({id:store.uid(),category:'施工安全',subcategory:'',location:'',description:'',reference:'',suggestion:'',risk:'中',photos:[]});
+const localDate=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
+const blank=()=>({id:store.uid(),category:'施工安全',subcategory:'',location:'',inspectionDate:localDate(),inspectionTime:new Date().toTimeString().slice(0,5),description:'',reference:'',suggestion:'',risk:'中',photos:[]});
 Page({
- data:{noticeFields:[{"key": "noticeNumber", "label": "告知单编号"}, {"key": "projectName", "label": "项目名称"}, {"key": "progress", "label": "项目进度"}, {"key": "client", "label": "委托单位"}, {"key": "developer", "label": "建设单位"}, {"key": "contractor", "label": "施工单位"}, {"key": "supervisor", "label": "监理单位"}, {"key": "inspectionDate", "label": "检查时间"}, {"key": "subject", "label": "事由"}, {"key": "recipient", "label": "受检单位人员"}, {"key": "recipientDate", "label": "受检日期"}],busy:false,drafts:[],context:null,draft:null,editor:null,projectIndex:0,checkOptions:[],message:'',categories:['工程质量','施工安全','消防安全','文明施工','其他']},
+ data:{noticeFields:[],busy:false,drafts:[],context:null,draft:null,editor:null,projectIndex:0,checkOptions:[],message:'',categories:['工程质量','施工安全','消防安全','文明施工','其他']},
  onLoad(){this.reload()},
  onHide(){this.persist()},
  onUnload(){this.persist()},
@@ -12,7 +13,7 @@ Page({
  persist(){if(this._syncing||!this.data.draft||this.data.draft.status!=='draft')return true;try{const d={...this.data.draft,editor:this.data.editor};store.update(d);this.setData({message:'已保存在手机 '+new Date().toLocaleTimeString()});return true}catch(e){this.error(e);return false}},
  async prepare(){await this.run(async()=>{await store.prepare(api);this.reload();this.setData({message:'项目资料已下载，断网后可从此入口采集'})})},
  pick(e){this.setData({projectIndex:Number(e.detail.value)})},
- create(){try{const p=this.data.context?.projects[this.data.projectIndex];const d=store.create(p?.id);this.setData({draft:d,editor:null,checkOptions:d.scenario.checklist.map(x=>({text:x,checked:false})),message:'已建立手机草稿'})}catch(e){this.error(e)}},
+ create(){try{const p=this.data.context?.projects[this.data.projectIndex];const d=store.create(p?.id);this.setData({draft:d,editor:blank(),checkOptions:d.scenario.checklist.map(x=>({text:x,checked:false})),message:'已建立手机草稿'});this.persist()}catch(e){this.error(e)}},
  open(e){if(this.data.busy)return;try{const d=store.get(e.currentTarget.dataset.id);this.setData({draft:d,editor:d.editor||null,checkOptions:d.scenario.checklist.map(x=>({text:x,checked:d.checklist.includes(x)})),message:d.error||''})}catch(e){this.error(e)}},
  input(e){if(this.data.busy||this.data.draft.status!=='draft')return;const key=e.currentTarget.dataset.key;this.setData({[key]:e.detail.value});this.persist()},
  category(e){this.setData({'editor.category':this.data.categories[Number(e.detail.value)]});this.persist()},

@@ -33,7 +33,7 @@ test('ad hoc creation only offers inspection projects and keeps management field
  const {p,calls}=setup();
  p.data.projects.push({id:'other',name:'仅整改项目',role:'rectifier',members:[]});
  p.data.scenarios=[{id:'inspection',name:'质量安全巡查',fields:['检查区域','检查重点']}];
- p.newAdhoc();assert.equal(p.data.view,'create');assert.deepEqual(p.data.eligibleProjects.map(x=>x.id),['p1']);
+ p.prepareAdhoc();assert.equal(p.data.view,'create');assert.deepEqual(p.data.eligibleProjects.map(x=>x.id),['p1']);
  p.data.newTask={title:'临时巡查',object:'三号楼',dueDate:'2026-10-22',receiver:'must-not-send',assignee:'must-not-send'};
  p.data.fieldValues={'检查区域':'三层','检查重点':'防护'};
  await p.createAdhoc();
@@ -43,7 +43,7 @@ test('ad hoc creation only offers inspection projects and keeps management field
  assert.equal(p.data.view,'detail');
 });
 test('failed ad hoc creation keeps form for correction or retry',async()=>{
- const {p}=setup(true);p.data.scenarios=[{id:'inspection',name:'巡查'}];p.newAdhoc();
+ const {p}=setup(true);p.data.scenarios=[{id:'inspection',name:'巡查'}];p.prepareAdhoc();
  p.data.newTask.object='保留的检查对象';await p.createAdhoc();
  assert.equal(p.data.view,'create');assert.equal(p.data.newTask.object,'保留的检查对象');assert.equal(p.data.busy,false);
 });
@@ -110,11 +110,14 @@ test('blank manual risk is optional and custom risk survives editing',async()=>{
 });
 
 test('optional leader is submitted without changing executor or project roles',async()=>{
- const {p,calls}=setup();p.data.scenarios=[{id:'inspection',fields:[]}];p.data.projects[0].members=[{id:'lead',name:'负责人'}];p.newAdhoc();
+ const {p,calls}=setup();p.data.scenarios=[{id:'inspection',fields:[]}];p.data.projects[0].members=[{id:'lead',name:'负责人'}];p.prepareAdhoc();
  assert.equal(p.data.leaderOptions[0].id,'');p.leaderPick({detail:{value:'1'}});await p.createAdhoc();
  const call=calls.find(c=>c.url.endsWith('/adhoc-tasks'));assert.equal(call.data.leaderId,'lead');assert.equal(call.data.assignee,undefined);
 });
 test('changing ad hoc project clears previous leader selection',()=>{
- const {p}=setup();p.data.projects=[{id:'p1',role:'inspector',members:[{id:'lead1',name:'甲'}]},{id:'p2',role:'inspector',members:[{id:'lead2',name:'乙'}]}];p.data.scenarios=[{id:'inspection',fields:[]}];p.newAdhoc();p.leaderPick({detail:{value:'1'}});p.adhocProjectPick({detail:{value:'1'}});
+ const {p}=setup();p.data.projects=[{id:'p1',role:'inspector',members:[{id:'lead1',name:'甲'}]},{id:'p2',role:'inspector',members:[{id:'lead2',name:'乙'}]}];p.data.scenarios=[{id:'inspection',fields:[]}];p.prepareAdhoc();p.leaderPick({detail:{value:'1'}});p.adhocProjectPick({detail:{value:'1'}});
  assert.equal(p.data.leaderIndex,0);assert.equal(p.data.leaderOptions[1].id,'lead2');
 });
+
+ test('temporary task opens directly in collection with explicit quickStart',async()=>{const {p,calls}=setup();p.data.scenarios=[{id:'inspection',fields:[]}];await p.newAdhoc();const request=calls.find(c=>c.url.endsWith('/adhoc-tasks'));assert.equal(request.data.quickStart,true);assert.equal(p.data.view,'detail');assert.equal(p.data.canCollect,true);assert.equal(p.data.newTask.inspectors,'现场员')});
+ test('multiple projects require choosing a project before automatic collection',async()=>{const {p,calls}=setup();p.data.projects.push({id:'p2',role:'inspector',name:'另一项目',members:[]});p.data.scenarios=[{id:'inspection',fields:[]}];await p.newAdhoc();assert.equal(p.data.view,'create');assert.equal(calls.length,0);p.adhocProjectPick({detail:{value:'1'}});await p.createAdhoc();assert.equal(calls.find(c=>c.url.endsWith('/adhoc-tasks')).data.projectId,'p2')});

@@ -105,10 +105,11 @@ function leaderRows(){return leaderInbox.filter(r=>(!selectedProject||r.projectI
 function leaders(){
  const rows=leaderRows();const kinds={inspection:'巡查报告',brief:'现场简报',delivery:'正式成果'};
  const people=[...new Set(leaderInbox.filter(r=>!selectedProject||r.projectId===selectedProject).map(r=>r.inspectors))];
- return `<h1>负责人汇总</h1><p class="muted">小程序与网页提交的报告自动同步到本次巡查指定负责人的待阅列表，每30秒检查更新。未指定负责人时保持原流程。管理员可查看全部已指定报告。</p><div class="card row"><label>执行人员<select id="leaderMember"><option value="">全部人员</option>${people.map(n=>`<option value="${e(n)}" ${leaderMember===n?'selected':''}>${e(n||'未填写')}</option>`).join('')}</select></label><button id="leaderSelectAll" class="secondary">全选当前列表</button><button id="leaderRead" class="secondary">标记所选已阅</button><button id="leaderExport">导出所选汇总包</button><span>已选 ${leaderSelection.size} 份 / 当前 ${rows.length} 份，待阅 ${rows.filter(r=>r.unread).length} 份</span></div><p class="muted">汇总包含可打印的汇总页、Excel可打开的CSV清单及含照片与签名的原始Word报告。请勾选同一项目的报告；历史版本单独列示，不自动合并或去重隐患。</p><div class="cards">${rows.map(r=>`<article class="card"><label><input type="checkbox" data-leader-key="${e(r.key)}" ${leaderSelection.has(r.key)?'checked':''}> ${r.unread?'● 待阅':'已阅'} · ${kinds[r.kind]} v${e(r.version)}</label><h3>${e(r.title)}</h3><p>${e(r.project)} · ${e(r.number)}</p><p>负责人：${e(r.leaderName)} · 检查人：${e(r.inspectors||'未填写')}</p><p>${e(r.createdAt)} · ${r.issues} 条隐患</p><div class="row">${r.kind==='inspection'?`<button class="secondary" data-open="${e(r.id)}">查看报告</button><a href="/api/export/${encodeURIComponent(r.id)}">下载 Word</a>`:`<a target="_blank" rel="noopener" href="/api/work/${r.kind==='brief'?'brief':'report'}/${encodeURIComponent(r.id)}">查看报告</a><a href="/api/work/${r.kind==='brief'?'brief-word':'word'}/${encodeURIComponent(r.id)}">下载 Word</a><a href="/work?module=tasks&task=${encodeURIComponent(r.taskId)}">关联任务</a>`}</div></article>`).join('')||'<div class="card">暂无指定给你的已提交报告。请在新建巡查或任务详情中选择项目负责人。</div>'}</div>`;
+ return `<h1>负责人汇总</h1><p class="muted">小程序与网页提交的报告自动同步到本次巡查指定负责人的待阅列表，每30秒检查更新。未指定负责人时保持原流程。管理员可查看全部已指定报告。</p><div class="card row"><label>执行人员<select id="leaderMember"><option value="">全部人员</option>${people.map(n=>`<option value="${e(n)}" ${leaderMember===n?'selected':''}>${e(n||'未填写')}</option>`).join('')}</select></label><button id="leaderSelectAll" class="secondary">全选当前列表</button><button id="leaderRead" class="secondary">标记所选已阅</button><button id="leaderCombine">自动整合成一份大报告</button><button id="leaderExport" class="secondary">导出所选汇总包</button><span>已选 ${leaderSelection.size} 份 / 当前 ${rows.length} 份，待阅 ${rows.filter(r=>r.unread).length} 份</span></div><p class="muted">汇总包含可打印的汇总页、Excel可打开的CSV清单及含照片与签名的原始Word报告。请勾选同一项目的报告；可将所选报告整合为一份 Word；同一任务请选择一个版本，不同任务的相似隐患保留来源。</p><div id="combinedReports"></div><div class="cards">${rows.map(r=>`<article class="card"><label><input type="checkbox" data-leader-key="${e(r.key)}" ${leaderSelection.has(r.key)?'checked':''}> ${r.unread?'● 待阅':'已阅'} · ${kinds[r.kind]} v${e(r.version)}</label><h3>${e(r.title)}</h3><p>${e(r.project)} · ${e(r.number)}</p><p>负责人：${e(r.leaderName)} · 检查人：${e(r.inspectors||'未填写')}</p><p>${e(r.createdAt)} · ${r.issues} 条隐患</p><div class="row">${r.kind==='inspection'?`<button class="secondary" data-open="${e(r.id)}">查看报告</button><a href="/api/export/${encodeURIComponent(r.id)}">下载 Word</a>`:`<a target="_blank" rel="noopener" href="/api/work/${r.kind==='brief'?'brief':'report'}/${encodeURIComponent(r.id)}">查看报告</a><a href="/api/work/${r.kind==='brief'?'brief-word':'word'}/${encodeURIComponent(r.id)}">下载 Word</a><a href="/work?module=tasks&task=${encodeURIComponent(r.taskId)}">关联任务</a>`}</div></article>`).join('')||'<div class="card">暂无指定给你的已提交报告。请在新建巡查或任务详情中选择项目负责人。</div>'}</div>`;
 }
 function bindLeaders(){
  if(page!=='leaders')return;
+ bindCombined();
  on('leaderMember','change',ev=>{leaderMember=ev.target.value;leaderSelection.clear();render()});
  app.querySelectorAll('[data-leader-key]').forEach(b=>b.onchange=()=>{if(b.checked)leaderSelection.add(b.dataset.leaderKey);else leaderSelection.delete(b.dataset.leaderKey);render()});
  on('leaderSelectAll','click',()=>{leaderSelection=new Set(leaderRows().map(r=>r.key));render()});
@@ -127,6 +128,7 @@ setInterval(async()=>{
  if(page==='login'||dirty||busy||document.hidden||leaderPolling)return;
  leaderPolling=true;
  try{
+  if(page==='leaders')loadCombinedCards();
   const rows=await api('/api/work/leader-inbox');
   const changed=JSON.stringify(rows)!==JSON.stringify(leaderInbox);leaderInbox=rows;
   const keys=new Set(rows.map(r=>r.key));leaderSelection=new Set([...leaderSelection].filter(k=>keys.has(k)));
@@ -361,3 +363,50 @@ window.addEventListener('b-session-expired',()=>{dirty=false;login()});
 window.QaxcHasPendingEdits=()=>dirty;
 window.QaxcClearPendingEdits=()=>{dirty=false};
 app.addEventListener('input',event=>{if(location.hash==='#/b/records')return;if(page==='tasks'||bPages[page]){const input=event.composedPath().find(el=>el?.tagName==='TEXTAREA'||el?.tagName==='INPUT');if(input)dirty=true}});
+
+// Included in app.js so existing root/prefix asset routing remains unchanged.
+function combinedCards(rows){
+ return `<h2>合并报告与签字同步</h2><p class="muted">指定的被检查单位负责人使用本人账号签署，签字自动同步到小程序和网页，下载 Word 包含最新签字。</p>${rows.filter(r=>!selectedProject||r.projectId===selectedProject).map(r=>`<article class="card"><h3>${e(r.title)}</h3><p>${e(r.createdByName)} · ${e(r.createdAt)}</p><p>被检查单位负责人：${e(r.recipientName||'待指定')} · ${r.recipientSignature?'已签署':'待签署'}</p><button data-combined="${e(r.id)}">查看报告／签字</button></article>`).join('')||'<p>暂无合并报告。</p>'}`;
+}
+async function loadCombinedCards(){
+ const container=document.getElementById('combinedReports');if(!container)return;
+ try{const rows=await api('/api/work/combined-list');if(!container.isConnected)return;container.innerHTML=combinedCards(rows);container.querySelectorAll('[data-combined]').forEach(b=>b.onclick=()=>run(()=>openCombined(b.dataset.combined)))}catch(error){if(container.isConnected)container.textContent=error.message}
+}
+function bindCombined(){
+ loadCombinedCards();
+ on('leaderCombine','click',()=>run(async()=>{
+  const keys=[...leaderSelection];if(!keys.length)throw Error('请勾选同一项目的报告，每个任务保留一个版本');
+  const fingerprint=JSON.stringify(keys.sort());
+  if(bindCombined.pending?.fingerprint!==fingerprint)bindCombined.pending={fingerprint,requestId:crypto.randomUUID()};
+  const result=await api('/api/work/combined-create',{keys,requestId:bindCombined.pending.requestId});bindCombined.pending=null;
+  await loadCombinedCards();await openCombined(result.id);
+ }));
+}
+async function openCombined(id){
+ let value=await api('/api/work/combined-data/'+encodeURIComponent(id));
+ const overlay=document.createElement('div');overlay.className='modal';document.body.append(overlay);
+ let drawing=false,ink=false,saving=false,closed=false,timer,pending;
+ const close=()=>{closed=true;clearInterval(timer);overlay.remove()};
+ const imageUrl=ref=>{const [kind,...parts]=ref.split(':');return kind==='media'?'/media/'+encodeURIComponent(parts.join(':')):'/api/work/evidence/'+encodeURIComponent(parts.join(':'))};
+ const request=async(action,payload)=>{const fingerprint=JSON.stringify({action,payload});if(pending?.fingerprint!==fingerprint)pending={fingerprint,id:crypto.randomUUID()};const result=await api('/api/work/'+action,{...payload,requestId:pending.id});pending=null;return result};
+ const draw=()=>{
+  ink=false;drawing=false;
+  const members=lifecycleState.projects.find(p=>p.id===value.projectId)?.members||[];
+  overlay.innerHTML=`<section class="card" role="dialog" aria-modal="true" style="max-width:960px;width:95%;max-height:90vh;overflow:auto"><div class="row between"><h2>${e(value.title)}</h2><button class="secondary" data-close>关闭</button></div><p>共 ${value.sources.length} 份报告，${value.report.issues.length} 条记录；签字状态版本 ${value.revision}</p><p>${e(value.report.scope)}</p>${value.report.issues.map((i,n)=>`<section class="card"><h3>${n+1}. ${e(i.description||'现场照片记录')}</h3><p>${e(i.location)} · ${e(i.inspectionDate)} ${e(i.inspectionTime)} · ${e(i.risk)}</p><p>${e(i.reference)} ${e(i.suggestion)}</p><p class="muted">来源：${e(i.sourceLabel)}</p><div>${(i.photos||[]).map(ref=>`<a href="${imageUrl(ref)}" target="_blank" rel="noopener"><img alt="隐患照片" src="${imageUrl(ref)}" style="max-width:240px;max-height:200px;margin:6px"></a>`).join('')}</div></section>`).join('')}<h3>检查人员原签名</h3>${value.report.signatures.map(s=>`<p>${e(s.name)} · ${e(s.sourceLabel)}</p><img alt="检查人员原签名" src="${imageUrl(s.signature)}" style="max-width:220px;max-height:90px">`).join('')}<h3>被检查单位负责人签字</h3><p>${e(value.recipientName||'待指定签名人')}</p>${value.canAssign?`<label>指定本人账号<select data-recipient><option value="">请选择项目成员</option>${members.map(m=>`<option value="${e(m.id)}" ${m.id===value.recipientId?'selected':''}>${e(m.name)}</option>`).join('')}</select></label><button data-assign>发送签字请求</button><p class="muted">如列表没有对方，请管理员先将其账号加入项目。</p>`:''}${value.recipientSignature?`<img alt="被检查单位负责人签字" src="/api/work/evidence/${encodeURIComponent(value.recipientSignature.evidenceId)}" style="max-width:240px;max-height:100px"><p>${e(value.recipientSignature.name)} · ${e(value.recipientSignature.signedAt)}</p>`:value.canSign?'<p>请核对上方整份隐患清单后，本人手写签署。</p><canvas data-sign width="640" height="180" style="touch-action:none;width:100%;max-width:640px;height:180px;border:1px solid #aaa;background:white"></canvas><div class="row"><button data-clear class="secondary">清除重签</button><button data-sign-save>确认报告并签署</button></div>':'<p>等待指定的被检查单位负责人本人签署。</p>'}<p data-status role="status">每5秒同步签字状态。</p><a href="/api/work/combined-word/${encodeURIComponent(value.id)}">下载整份 Word 报告</a></section>`;
+  overlay.querySelector('[data-close]').onclick=close;
+  const status=message=>{if(!closed)overlay.querySelector('[data-status]').textContent=message};
+  const perform=async fn=>{if(saving)return;saving=true;try{const changed=await fn();if(changed===false)return;if(!closed)draw();loadCombinedCards()}catch(error){status(error.message)}finally{saving=false}};
+  const assign=overlay.querySelector('[data-assign]');if(assign)assign.onclick=()=>perform(async()=>{value=await request('combined-assign',{combinedId:id,revision:value.revision,recipientId:overlay.querySelector('[data-recipient]').value})});
+  const canvas=overlay.querySelector('[data-sign]');if(!canvas)return;
+  const ctx=canvas.getContext('2d');ctx.lineWidth=3;ctx.lineCap='round';ctx.strokeStyle='#193b30';
+  const point=event=>{const b=canvas.getBoundingClientRect();return [(event.clientX-b.left)*canvas.width/b.width,(event.clientY-b.top)*canvas.height/b.height]};
+  canvas.onpointerdown=event=>{if(saving)return;drawing=true;canvas.setPointerCapture(event.pointerId);ctx.beginPath();ctx.moveTo(...point(event))};
+  canvas.onpointermove=event=>{if(!drawing||saving)return;ctx.lineTo(...point(event));ctx.stroke();ink=true};
+  canvas.onpointerup=canvas.onpointercancel=()=>drawing=false;
+  overlay.querySelector('[data-clear]').onclick=()=>{if(saving)return;ctx.clearRect(0,0,640,180);ink=false};
+  overlay.querySelector('[data-sign-save]').onclick=()=>perform(async()=>{if(!ink)throw Error('请先本人手写签名');if(!await ask('确认已核对整份报告，并以被检查单位负责人身份签署？'))return false;value=await request('combined-sign',{combinedId:id,revision:value.revision,contentHash:value.contentHash,confirmed:true,base64:canvas.toDataURL('image/png').split(',')[1]})});
+ };
+ draw();
+ let polling=false;
+ timer=setInterval(async()=>{if(closed||saving||polling||document.hidden)return;polling=true;try{const fresh=await api('/api/work/combined-data/'+encodeURIComponent(id));if(closed||saving)return;if(fresh.revision>value.revision){value=fresh;draw();overlay.querySelector('[data-status]').textContent='报告签字状态已更新；请重新核对后签署。'}}catch(error){if(!closed)overlay.querySelector('[data-status]').textContent='同步失败：'+error.message}finally{polling=false}},5000);
+}

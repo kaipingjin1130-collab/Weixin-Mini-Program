@@ -2,7 +2,8 @@
   "pages": [
     "pages/index/index",
     "pages/work/work",
-    "pages/offline/offline"
+    "pages/offline/offline",
+    "pages/combined/combined"
   ],
   "window": {
     "navigationBarTitleText": "质量安全小察",
