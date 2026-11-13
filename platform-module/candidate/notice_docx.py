@@ -49,10 +49,67 @@ def fill(node, values):
             set_text(t, values[token[2:-2]])
 
 
+def center_report_tables(doc):
+    """Use the printable page width and center both retained report tables."""
+    section = nodes(doc, 'w:sectPr')[0]
+    page = children(section, 'w:pgSz')[0]
+    margins = children(section, 'w:pgMar')[0]
+    width = int(page.getAttribute('w:w')) - sum(int(margins.getAttribute(k) or 0)
+        for k in ('w:left', 'w:right', 'w:gutter'))
+    for table in nodes(doc, 'w:tbl'):
+        props = children(table, 'w:tblPr')[0]
+        for indent in children(props, 'w:tblInd'):
+            props.removeChild(indent)
+        table_width = children(props, 'w:tblW')[0]
+        table_width.setAttribute('w:type', 'dxa')
+        table_width.setAttribute('w:w', str(width))
+        alignment = children(props, 'w:jc')
+        alignment = alignment[0] if alignment else doc.createElementNS(W, 'w:jc')
+        if alignment.parentNode is None:
+            props.insertBefore(alignment, table_width.nextSibling)
+        alignment.setAttribute('w:val', 'center')
+        columns = children(children(table, 'w:tblGrid')[0], 'w:gridCol')
+        old_widths = [int(c.getAttribute('w:w')) for c in columns]
+        total = sum(old_widths)
+        boundaries = [round(width * sum(old_widths[:i]) / total) for i in range(len(columns) + 1)]
+        widths = [b - a for a, b in zip(boundaries, boundaries[1:])]
+        for column, value in zip(columns, widths):
+            column.setAttribute('w:w', str(value))
+        for row in children(table, 'w:tr'):
+            column_index = 0
+            for cell in children(row, 'w:tc'):
+                cell_props = children(cell, 'w:tcPr')[0]
+                span = children(cell_props, 'w:gridSpan')
+                span = int(span[0].getAttribute('w:val')) if span else 1
+                cell_width = children(cell_props, 'w:tcW')[0]
+                cell_width.setAttribute('w:type', 'dxa')
+                cell_width.setAttribute('w:w', str(sum(widths[column_index:column_index + span])))
+                column_index += span
+
+
+def fit_picture_paragraph(paragraph):
+    """Let inline images set line height instead of clipping to template text lines."""
+    doc = paragraph.ownerDocument
+    props = children(paragraph, 'w:pPr')
+    props = props[0] if props else doc.createElementNS(W, 'w:pPr')
+    if props.parentNode is None:
+        paragraph.insertBefore(props, paragraph.firstChild)
+    for name, attributes in [('w:spacing', {'w:line': '240', 'w:lineRule': 'auto'}),
+                             ('w:snapToGrid', {'w:val': '0'})]:
+        elements = children(props, name)
+        element = elements[0] if elements else doc.createElementNS(W, name)
+        if element.parentNode is None:
+            following = children(props, 'w:spacing' if name == 'w:snapToGrid' else 'w:rPr')
+            props.insertBefore(element, following[0] if following else None)
+        for key, value in attributes.items():
+            element.setAttribute(key, value)
+
+
 def render(report, read_image, dimensions):
     with zipfile.ZipFile(TEMPLATE) as source:
         parts = {n: source.read(n) for n in source.namelist()}
     doc = minidom.parseString(parts['word/document.xml'])
+    center_report_tables(doc)
     rels = minidom.parseString(parts['word/_rels/document.xml.rels'])
     types = minidom.parseString(parts['[Content_Types].xml'])
     tables = nodes(doc, 'w:tbl')
@@ -124,6 +181,7 @@ def render(report, read_image, dimensions):
             p = prototype.cloneNode(True)
             for child in list(p.childNodes):
                 if child.nodeType != child.ELEMENT_NODE or child.tagName != 'w:pPr': p.removeChild(child)
+            fit_picture_paragraph(p)
             p.appendChild(picture(mid, 1100000, 380000) if signature else picture(mid))
             cell.appendChild(p)
 
@@ -156,6 +214,7 @@ def render(report, read_image, dimensions):
             t.appendChild(doc.createTextNode(''))
             set_text(t, text)
             if image_id:
+                fit_picture_paragraph(p)
                 p.appendChild(picture(image_id, 1500000, 500000))
             return p
 

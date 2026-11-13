@@ -80,6 +80,22 @@ class LeaderReports(unittest.TestCase):
         self.assertFalse(self.inbox()[0]['unread'])
         self.assertTrue(self.inbox(self.owner)[0]['unread'])
 
+    def test_quick_start_saved_leader_routes_submitted_brief(self):
+        task = self.post('adhoc-tasks', self.worker, projectId=self.pid, scenarioId='inspection',
+                         title='直接拍照巡查', fields={}, quickStart=True, leaderId='')
+        task = self.post('assign-leader', self.worker, taskId=task['id'], revision=task['revision'], leaderId='host:admin:8')
+        self.assertEqual(self.inbox(), [])
+        state = self.request('/quality/api/work/state', token=self.worker)[1]
+        saved = next(t for t in state['tasks'] if t['id'] == task['id'])
+        self.assertEqual(saved['leaderId'], 'host:admin:8')
+        task = self.post('submit-field', self.worker, taskId=task['id'], revision=task['revision'],
+                         leaderId=saved['leaderId'], inspectors='现场成员', noHazard=True)
+        rows = self.inbox()
+        self.assertEqual(len(rows), 1)
+        self.assertEqual(rows[0]['taskId'], task['id'])
+        self.assertTrue(rows[0]['unread'])
+        self.assertEqual(self.inbox(self.other), [])
+
     def test_cross_project_assignment_and_unauthorized_reassignment_rejected(self):
         task = self.task()
         result = self.request('/quality/api/work/assign-leader', dict(taskId=task['id'], revision=task['revision'], leaderId='host:admin:10', requestId='forged'), self.other)

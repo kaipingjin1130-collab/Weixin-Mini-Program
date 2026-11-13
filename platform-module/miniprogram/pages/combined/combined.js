@@ -33,7 +33,7 @@ Page({
  async addGuest(){await this.run(async()=>{if(!await this.discard())return;const report=await this.post('combined-guest-add',{combinedId:this.data.report.id,name:this.data.guestName.trim(),unit:this.data.guestUnit.trim()});this.show(report);this.setData({guestName:'',guestUnit:''})})},
  async signGuest(e){if(this.data.busy||!await this.discard())return;const person=(this.data.report.guestSigners||[]).find(p=>p.id===e.currentTarget.dataset.id);if(!person||person.signature||!this.data.report.canCollectGuest)return;this.setData({guestTarget:person.id,canDraw:true,targetName:person.name,targetRole:person.role,targetUnit:person.unit},()=>this.clear())},
  async signSelf(){if(this.data.busy||!await this.discard())return;this.setData({guestTarget:'',canDraw:this.data.report.canSign,targetName:'本人',targetRole:this.data.report.myRole,targetUnit:''},()=>this.clear())},
- async insertSign(){await this.run(async()=>{const image=await signatureImage.choose();if(!image)return;this.signImage=image;this.ink=false;this.setData({signingImagePath:image.path})})},
+ async insertSign(){await this.run(async()=>{const image=await signatureImage.choose(this);if(!image)return;this.signImage=image;this.ink=false;this.setData({signingImagePath:image.path})})},
  init(){this.ctx=wx.createCanvasContext('recipientSignature',this);this.ctx.setStrokeStyle('#193b30');this.ctx.setLineWidth(3);this.ctx.setLineCap('round')},
  start(e){if(this.data.busy)return;if(!this.ctx)this.init();this.last=e.touches[0]},
  move(e){if(this.data.busy||!this.last)return;const p=e.touches[0];this.ctx.beginPath();this.ctx.moveTo(this.last.x,this.last.y);this.ctx.lineTo(p.x,p.y);this.ctx.stroke();this.ctx.draw(true);this.last=p;this.ink=true},
@@ -44,6 +44,7 @@ Page({
   const r=this.data.report;const guest=(r.guestSigners||[]).find(p=>p.id===this.data.guestTarget);
   const content=guest?'请将手机交给'+guest.unit+'的'+guest.name+'本人核对完整报告及签名，确认以被检查人身份签署？':'确认已核对整份报告和签名，并以'+(r.myRole||'会签人')+'身份签署？';
   const confirmed=await new Promise(resolve=>wx.showModal({title:'本人确认签署',content,success:r=>resolve(r.confirm),fail:()=>resolve(false)}));if(!confirmed)return;
+  if(this.signImage){this.signImage=await signatureImage.prepare(this.signImage,this);this.setData({signingImagePath:this.signImage.path})}
   const path=this.signImage?.path||await new Promise((resolve,reject)=>wx.canvasToTempFilePath({canvasId:'recipientSignature',fileType:'png',success:r=>resolve(r.tempFilePath),fail:()=>reject(Error('签名读取失败'))},this));
   const base64=this.signImage?.base64||await new Promise((resolve,reject)=>wx.getFileSystemManager().readFile({filePath:path,encoding:'base64',success:r=>resolve(r.data),fail:()=>reject(Error('签名读取失败'))}));
   const payload={combinedId:r.id,revision:r.revision,contentHash:r.contentHash,base64,confirmed:true,signMethod:this.signImage?'image':'draw'};

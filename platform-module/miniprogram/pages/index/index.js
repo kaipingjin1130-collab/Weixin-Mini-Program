@@ -1,4 +1,5 @@
 const api=require('../../utils/api');
+const images=require('../../utils/image-import');
 const blankIssue=()=>({category:'施工安全',subcategory:'',location:'',description:'',risk:'中',reference:'',suggestion:'',photos:[]});
 const namesOf=s=>(s||'').split(/[,，、;；\n]+/).map(n=>n.trim()).filter(Boolean);
 const today=()=>{let d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
@@ -39,8 +40,8 @@ Page({
  addIssue(){if(this.data.edit.issues.length>=100){wx.showToast({title:'最多100条',icon:'none'});return}this.setData({'edit.issues':[...this.data.edit.issues,blankIssue()]});this.mark()},
  async removeIssue(e){if(!(await this.confirm('删除这条隐患？')))return;let list=this.data.edit.issues.slice();list.splice(e.currentTarget.dataset.index,1);this.setData({'edit.issues':list});this.mark()},
  async photos(e){let i=Number(e.currentTarget.dataset.index);let camera=e.currentTarget.dataset.source==='camera';let remaining=9-this.data.edit.issues[i].photos.length;if(remaining<=0){wx.showToast({title:'每条最多9张照片',icon:'none'});return}await this.work(async()=>{
-  let files=await new Promise((resolve,reject)=>wx.chooseMedia({count:camera?1:remaining,mediaType:['image'],sourceType:[camera?'camera':'album'],sizeType:['compressed'],camera:'back',success:r=>resolve(r.tempFiles),fail:err=>{if(err.errMsg.includes('cancel'))resolve([]);else reject(Error('拍照/选图失败，请确认相机权限、隐私授权及真机环境'))}}));
-  for(let f of files){if(f.size>10*1024*1024)throw Error('单张照片超过10MB，请压缩后再试');let id=await api.upload(f.tempFilePath);let list=this.data.edit.issues[i].photos.concat(id);this.setData({[`edit.issues[${i}].photos`]:list,[`media.${id}`]:f.tempFilePath});this.mark()}
+  let files=await images.select({source:camera?'camera':'album',count:camera?1:remaining});
+  for(let f of files){const image=await images.normalize(f,this);let id=await api.upload(image.path);let list=this.data.edit.issues[i].photos.concat(id);this.setData({[`edit.issues[${i}].photos`]:list,[`media.${id}`]:image.path});this.mark()}
  })},
  removePhoto(e){let {index,photo}=e.currentTarget.dataset;let list=this.data.edit.issues[index].photos.slice();list.splice(photo,1);this.setData({[`edit.issues[${index}].photos`]:list});this.mark()},
  preview(e){let url=this.data.media[e.currentTarget.dataset.id];if(url)wx.previewImage({current:url,urls:[url]})},

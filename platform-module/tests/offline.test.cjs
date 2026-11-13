@@ -15,3 +15,10 @@ test('storage full does not overwrite saved draft',async()=>{const h=setup(),{s,
 test('missing durable photo stops upload and keeps retryable local record',async()=>{const h=setup(),{s,d}=await draft(h);delete h.files[d.issues[0].photos[0].path];await assert.rejects(s.sync(d.id,h.api),/照片无法读取/);assert.equal(s.get(d.id).status,'pending');assert.equal(h.counts().issues,0)});
 test('unfinished editor blocks sync but preparation is optional',async()=>{const h=setup(),{s,d}=await draft(h);d.editor={description:'草稿'};s.update(d);await assert.rejects(s.sync(d.id,h.api),/正在编辑/);d.editor=null;d.checklist=[];s.update(d);await s.sync(d.id,h.api);assert.equal(h.counts().creates,1)});
 test('explicit IP update requires original account and project identity',async()=>{const h=setup(),{s,d}=await draft(h);h.api.base=()=> 'http://new-office:8765';h.state.projects[0].id='other';await assert.rejects(s.rebind(d.id,h.api),/不一致/);assert.equal(s.get(d.id).server,'http://office:8765');h.state.projects[0].id='p1';await s.rebind(d.id,h.api);assert.equal(s.get(d.id).server,'http://new-office:8765');await s.sync(d.id,h.api);assert.equal(s.get(d.id).status,'synced')});
+
+test('offline leader and member names survive restart and response-loss retries',async()=>{
+ const h=setup();h.state.projects[0].members=[{id:'lead',name:'负责人'}];const {s,d}=await draft(h);
+ assert.equal(d.project.members[0].name,'负责人');d.leaderId='lead';d.leaderName='负责人';s.update(d);
+ const fresh=h.load();assert.equal(fresh.get(d.id).leaderId,'lead');h.fail('/adhoc-tasks');await assert.rejects(fresh.sync(d.id,h.api),/response lost/);await fresh.sync(d.id,h.api);
+ const requests=h.calls.filter(c=>c.path.endsWith('/adhoc-tasks'));assert.equal(requests.length,2);assert.ok(requests.every(c=>c.p.leaderId==='lead'));assert.equal(h.counts().creates,1);
+});

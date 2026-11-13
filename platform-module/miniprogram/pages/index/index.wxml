@@ -12,3 +12,5 @@
   <button class="secondary actions" bindtap="logout" disabled="{{busy}}">退出登录／切换账号</button>
  </block>
 </view>
+
+<canvas type="2d" id="imageImportCanvas" style="position:fixed;left:-9999px;top:0;width:1px;height:1px;pointer-events:none"/>

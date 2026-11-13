@@ -4,9 +4,9 @@ function setup(fail=false){
  let task={id:'task1',projectId:'p1',revision:3,status:'active',fieldStatus:'collecting',assignee:'inspector',receiver:'receiver',records:[],issues:[],scenario:{recordTypes:['巡查记录'],checklist:[]},materials:[],fieldBriefs:[]};
  const state=()=>({user:{id:'inspector',name:'现场员'},projects:[{id:'p1',name:'项目',role:'inspector',members:[]}],tasks:[task],scenarios:[],reminders:[],users:[]});
  const api={request:async(url,data)=>{calls.push({url,data});if(url==='/api/work/state')return state();if(fail)throw Error('服务暂时不可用');task={...task,revision:task.revision+1};if(url.endsWith('/issue'))task.issues=[...task.issues,{...data,id:'i'+(task.issues.length+1),status:'unassigned'}];if(url.endsWith('/record'))task.records=[{...data,id:'r1',status:data.confirm?'confirmed':'draft'}];if(url.endsWith('/submit-field'))task.fieldStatus='submitted';return task}};
- const signatureImage={choose:async()=>null};
+ const signatureImage={choose:async()=>null,prepare:async image=>image};
  const wx={showModal:o=>o.success?.({confirm:true}),showToast:()=>{},enableAlertBeforeUnload:()=>{},disableAlertBeforeUnload:()=>{}};
- vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../miniprogram/pages/work/work.js'),'utf8'),{require:name=>name.endsWith('/signature')?signatureImage:api,Page:d=>definition=d,wx,console});
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../miniprogram/pages/work/work.js'),'utf8'),{require:name=>name.endsWith('/signature')?signatureImage:name.endsWith('/image-import')?{select:async o=>{const r=await new Promise(resolve=>wx.chooseMedia({...o,sourceType:[o.source],success:resolve}));return r.tempFiles},normalize:async f=>({path:f.tempFilePath,extension:'jpg'})}:api,Page:d=>definition=d,wx,console});
  const p={...definition,data:JSON.parse(JSON.stringify(definition.data))};
  p.setData=values=>{for(const [key,value] of Object.entries(values)){const keys=key.split('.');let obj=p.data;for(const k of keys.slice(0,-1))obj=obj[k]??(obj[k]={});obj[keys.at(-1)]=value}};
  p.setData(state());p.setTask(task);p.data.record={type:'巡查记录',text:'现场检查内容',occurredAt:'2026-10-20T09:00:00+08:00',evidence:['photo1']};p.data.evidence=[{id:'photo1',selected:true}];
@@ -127,6 +127,29 @@ test('changing ad hoc project clears previous leader selection',()=>{
  assert.equal(p.data.leaderIndex,0);assert.equal(p.data.leaderOptions[1].id,'lead2');
 });
 
+test('save leader uses assignment endpoint and keeps unsaved field content',async()=>{
+ const {p,calls}=setup();p.data.projects[0].members=[{id:'lead',name:'负责人'}];p.open({currentTarget:{dataset:{id:'task1'}}});
+ p.data.issue.description='尚未保存的隐患';p.data.note='检查结论';p.leaderPick({detail:{value:'1'}});await p.saveLeader();
+ const req=calls.find(c=>c.url.endsWith('/assign-leader'));assert.equal(req.data.leaderId,'lead');assert.equal(req.data.taskId,'task1');assert.equal(req.data.revision,3);
+ assert.equal(p.data.issue.description,'尚未保存的隐患');assert.equal(p.data.note,'检查结论');assert.equal(p.data.leaderOptions[p.data.leaderIndex].id,'lead');
+});
+
+test('submission retains selected leader after saving another hazard',async()=>{
+ const {p,calls}=setup();p.data.projects[0].members=[{id:'lead',name:'负责人'}];p.open({currentTarget:{dataset:{id:'task1'}}});p.leaderPick({detail:{value:'1'}});
+ p.data.issue.description='待整改问题';await p.addIssue();await p.submitField();
+ assert.equal(calls.find(c=>c.url.endsWith('/submit-field')).data.leaderId,'lead');
+});
+
+test('missing picker state preserves saved routing instead of clearing leader',async()=>{
+ const {p,calls}=setup();p.data.task.leaderId='saved-lead';p.data.record={text:'',evidence:[]};await p.submitField();
+ assert.equal(calls.find(c=>c.url.endsWith('/submit-field')).data.leaderId,'saved-lead');
+});
+
+test('submitted inspector cannot save task leader and failed saves keep selection',async()=>{
+ const {p,calls}=setup();p.setTask({...p.data.task,fieldStatus:'submitted'});await p.saveLeader();assert.equal(calls.length,0);
+ const h=setup(true);h.p.data.leaderOptions=[{id:'lead',name:'负责人'}];h.p.data.leaderIndex=0;await h.p.saveLeader();assert.equal(h.p.data.leaderIndex,0);assert.equal(h.p.data.task.revision,3);
+});
+
  test('temporary task opens directly in collection with explicit quickStart',async()=>{const {p,calls}=setup();p.data.scenarios=[{id:'inspection',fields:[]}];await p.newAdhoc();const request=calls.find(c=>c.url.endsWith('/adhoc-tasks'));assert.equal(request.data.quickStart,true);assert.equal(p.data.view,'detail');assert.equal(p.data.canCollect,true);assert.equal(p.data.newTask.inspectors,'现场员')});
  test('multiple projects require choosing a project before automatic collection',async()=>{const {p,calls}=setup();p.data.projects.push({id:'p2',role:'inspector',name:'另一项目',members:[]});p.data.scenarios=[{id:'inspection',fields:[]}];await p.newAdhoc();assert.equal(p.data.view,'create');assert.equal(calls.length,0);p.adhocProjectPick({detail:{value:'1'}});await p.createAdhoc();assert.equal(calls.find(c=>c.url.endsWith('/adhoc-tasks')).data.projectId,'p2')});
 
@@ -158,7 +181,7 @@ for(const failure of [null,'adhoc-tasks','start','state'])test('legacy server en
  if(failure){assert.equal(p.data.view,'create');assert.equal(p.data.busy,false);assert.ok(p.pendingAdhoc);await p.createAdhoc()}
  assert.equal(creations,1);assert.equal(starts,1);assert.equal(p.data.view,'detail');
  assert.equal(p.data.task.id,'legacy-task');assert.equal(p.data.canCollect,true);
- assert.equal(p.pendingAdhoc,null);assert.deepEqual(scrolls,['#issue-form']);
+ assert.equal(p.pendingAdhoc,null);assert.deepEqual(scrolls,['#report-leader']);
  for(const action of ['adhoc-tasks','start'])assert.equal(new Set(requests.filter(r=>r.action===action).map(r=>r.data.requestId)).size,1);
 });
 
@@ -176,4 +199,12 @@ test('reporting uploads imported inspector signature and records the method',asy
  const {p,calls,signatureImage}=setup();signatureImage.choose=async()=>({path:'signature.jpg',base64:'image-data'});
  await p.insertSign();p.data.record={text:'',evidence:[]};p.data.task.issues=[{id:'saved'}];p.data.signer='现场员';p.data.inspectors='现场员';
  await p.submitField();assert.equal(calls.find(c=>c.url.endsWith('/upload')).data.base64,'image-data');assert.equal(calls.find(c=>c.url.endsWith('/submit-field')).data.signMethod,'image');assert.equal(p.signDirty,false);
+});
+
+test('previously selected signature is revalidated before upload and fields survive conversion failure',async()=>{
+ const {p,calls,signatureImage}=setup();p.signImage={path:'old.jpeg',base64:'old-bytes'};p.signDirty=true;p.data.note='保留检查结论';
+ signatureImage.prepare=async(image,page)=>{assert.equal(image.path,'old.jpeg');assert.equal(page,p);throw Error('图片转换失败')};
+ await assert.rejects(p.captureSign(),/图片转换失败/);assert.equal(calls.length,0);assert.equal(p.signDirty,true);assert.equal(p.signImage.base64,'old-bytes');assert.equal(p.data.note,'保留检查结论');
+ signatureImage.prepare=async()=>({path:'normalized.png',base64:'normalized-bytes'});await p.captureSign();
+ assert.equal(calls[0].data.base64,'normalized-bytes');assert.equal(p.data.signPath,'normalized.png');assert.equal(p.data.note,'保留检查结论');
 });

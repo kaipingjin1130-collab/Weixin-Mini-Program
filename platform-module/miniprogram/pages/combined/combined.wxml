@@ -25,7 +25,9 @@
   </view>
   <view class="card" wx:if="{{canDraw}}"><view class="h2">当前签字：{{targetName}}（{{targetRole}}）</view><view>{{targetUnit}}</view><view class="muted">核对整份报告后由签字人本人确认。签名图片在提交前仅预览。</view>
    <image wx:if="{{signingImagePath}}" src="{{signingImagePath}}" mode="aspectFit" style="width:100%;height:240rpx"/><canvas wx:else class="signature" canvas-id="recipientSignature" disable-scroll="true" bindtouchstart="start" catchtouchmove="move" bindtouchend="end"/>
-   <button bindtap="insertSign" class="secondary" disabled="{{busy}}">插入电子签名（PNG/JPG）</button><button bindtap="clear" class="secondary" disabled="{{busy}}">清除／改为手写</button><button bindtap="sign" disabled="{{busy}}">本人确认整份报告并签署</button>
+   <button bindtap="insertSign" class="secondary" disabled="{{busy}}">插入电子签名图片</button><view class="muted">支持PNG/JPG、WebP、BMP、GIF等设备可读取图片；动图按静态图片导入。HEIC/HEIF/TIFF/AVIF依设备支持，签名前请核对预览。</view><button bindtap="clear" class="secondary" disabled="{{busy}}">清除／改为手写</button><button bindtap="sign" disabled="{{busy}}">本人确认整份报告并签署</button>
   </view>
  </block>
 </view>
+
+<canvas type="2d" id="imageImportCanvas" style="position:fixed;left:-9999px;top:0;width:1px;height:1px;pointer-events:none"/>

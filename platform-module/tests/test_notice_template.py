@@ -18,11 +18,26 @@ class NoticeTemplateTests(unittest.TestCase):
             for part in ['word/header1.xml','word/_rels/header1.xml.rels','word/media/image1.png','word/styles.xml','word/theme/theme1.xml','word/fontTable.xml']:
                 self.assertEqual(result.read(part),template.read(part),part)
             a=minidom.parseString(result.read('word/document.xml'));b=minidom.parseString(template.read('word/document.xml'))
+            self.assertEqual(n.nodes(a, 'w:sectPr')[0].toxml(), n.nodes(b, 'w:sectPr')[0].toxml())
+            n.center_report_tables(b)
             for tag in ['w:sectPr','w:tblGrid','w:tblPr','w:tcPr']:
                 self.assertEqual([e.toxml() for e in n.nodes(a,tag)],[e.toxml() for e in n.nodes(b,tag)])
             xml=result.read('word/document.xml').decode()
             self.assertIn('20260922-三林项目-06',xml);self.assertIn('C9C9C9',xml)
             self.assertNotIn('{{',xml)
+
+    def test_tables_center_with_equal_width_inside_page_margins(self):
+        with self.export({'issues': [{'description': '隐患', 'photos': []}]}) as result:
+            doc = minidom.parseString(result.read('word/document.xml'))
+            for table in n.nodes(doc, 'w:tbl'):
+                props = n.children(table, 'w:tblPr')[0]
+                self.assertEqual(n.children(props, 'w:jc')[0].getAttribute('w:val'), 'center')
+                self.assertFalse(n.children(props, 'w:tblInd'))
+                self.assertEqual(n.children(props, 'w:tblW')[0].getAttribute('w:w'), '8306')
+                self.assertEqual(sum(int(c.getAttribute('w:w')) for c in n.nodes(table, 'w:gridCol')), 8306)
+                for row in n.children(table, 'w:tr'):
+                    self.assertEqual(sum(int(n.nodes(cell, 'w:tcW')[0].getAttribute('w:w'))
+                                         for cell in n.children(row, 'w:tc')), 8306)
 
     def test_no_reference_data_or_photos_leak(self):
         with self.export({}) as result:
@@ -45,6 +60,30 @@ class NoticeTemplateTests(unittest.TestCase):
             self.assertEqual(len([p for p in result.namelist() if 'notice-photo-' in p]),3)
             self.assertEqual(len(n.nodes(d,'w:tblHeader')),1)
             self.assertNotIn('{{',xml)
+
+    def test_inline_images_expand_lines_without_changing_image_bytes_or_aspect_ratio(self):
+        for report in [
+            {'signatures': [{'signature': 'sig'}], 'issues': [{'description': '照片', 'photos': ['photo']}]},
+            {'combined': True, 'signatures': [{'signature': 'sig'}],
+             'recipientSignature': {'signature': 'recipient', 'name': '负责人', 'signedAt': '2026-11-13'}}
+        ]:
+            with self.subTest(combined=report.get('combined', False)), self.export(report) as result:
+                doc = minidom.parseString(result.read('word/document.xml'))
+                drawings = n.nodes(doc, 'w:drawing')
+                self.assertGreater(len(drawings), 0)
+                for drawing in drawings:
+                    paragraph = drawing.parentNode.parentNode
+                    spacing = n.nodes(paragraph, 'w:spacing')[0]
+                    self.assertEqual(spacing.getAttribute('w:lineRule'), 'auto')
+                    self.assertEqual(n.nodes(paragraph, 'w:snapToGrid')[0].getAttribute('w:val'), '0')
+                    extent = n.nodes(drawing, 'wp:extent')[0]
+                    self.assertEqual(int(extent.getAttribute('cy')), 2 * int(extent.getAttribute('cx')))
+                    rid = n.nodes(drawing, 'a:blip')[0].getAttribute('r:embed')
+                    rels = minidom.parseString(result.read('word/_rels/document.xml.rels'))
+                    rel = next(r for r in n.nodes(rels, 'Relationship') if r.getAttribute('Id') == rid)
+                    self.assertTrue(result.read('word/' + rel.getAttribute('Target')).startswith(b'image-'))
+                row = n.children(n.nodes(doc, 'w:tbl')[0], 'w:tr')[7]
+                self.assertEqual(n.nodes(row, 'w:trHeight')[0].getAttribute('w:hRule'), 'atLeast')
 
     def test_many_issues_and_explicit_no_hazard(self):
         with self.export({'issues':[{'description':'长内容'*100,'photos':[]} for _ in range(100)]}) as result:

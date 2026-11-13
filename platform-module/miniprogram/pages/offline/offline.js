@@ -1,9 +1,12 @@
 const store=require('../../utils/offline');
 const api=require('../../utils/api');
+const images=require('../../utils/image-import');
 const localDate=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
 const blank=()=>({id:store.uid(),category:'施工安全',subcategory:'',location:'',inspectionDate:localDate(),inspectionTime:new Date().toTimeString().slice(0,5),description:'',reference:'',suggestion:'',risk:'中',photos:[]});
 Page({
  data:{noticeFields:[],busy:false,drafts:[],context:null,draft:null,editor:null,projectIndex:0,checkOptions:[],message:'',categories:['工程质量','施工安全','消防安全','文明施工','其他']},
+ leaderState(d){const members=d.project.members||[];const options=[{id:'',name:'不指定负责人'},...members];if(d.leaderId&&!options.some(m=>m.id===d.leaderId))options.push({id:d.leaderId,name:d.leaderName||d.leaderId});return {leaderOptions:options,leaderIndex:Math.max(0,options.findIndex(m=>m.id===d.leaderId))}},
+ leaderPick(e){if(this.data.busy||this.data.draft.status!=='draft')return;const index=Number(e.detail.value),member=this.data.leaderOptions[index];if(!member)return;this.setData({leaderIndex:index,'draft.leaderId':member.id,'draft.leaderName':member.name});this.persist()},
  onLoad(){this.reload()},
  onHide(){this.persist()},
  onUnload(){this.persist()},
@@ -13,15 +16,15 @@ Page({
  persist(){if(this._syncing||!this.data.draft||this.data.draft.status!=='draft')return true;try{const d={...this.data.draft,editor:this.data.editor};store.update(d);this.setData({message:'已保存在手机 '+new Date().toLocaleTimeString()});return true}catch(e){this.error(e);return false}},
  async prepare(){await this.run(async()=>{await store.prepare(api);this.reload();this.setData({message:'项目资料已下载，断网后可从此入口采集'})})},
  pick(e){this.setData({projectIndex:Number(e.detail.value)})},
- create(){try{const p=this.data.context?.projects[this.data.projectIndex];const d=store.create(p?.id);this.setData({draft:d,editor:blank(),checkOptions:d.scenario.checklist.map(x=>({text:x,checked:false})),message:'已建立手机草稿'});this.persist()}catch(e){this.error(e)}},
- open(e){if(this.data.busy)return;try{const d=store.get(e.currentTarget.dataset.id);this.setData({draft:d,editor:d.editor||null,checkOptions:d.scenario.checklist.map(x=>({text:x,checked:d.checklist.includes(x)})),message:d.error||''})}catch(e){this.error(e)}},
+ create(){try{const p=this.data.context?.projects[this.data.projectIndex];const d=store.create(p?.id);this.setData({...this.leaderState(d),draft:d,editor:blank(),checkOptions:d.scenario.checklist.map(x=>({text:x,checked:false})),message:'已建立手机草稿'});this.persist()}catch(e){this.error(e)}},
+ open(e){if(this.data.busy)return;try{const d=store.get(e.currentTarget.dataset.id);this.setData({...this.leaderState(d),draft:d,editor:d.editor||null,checkOptions:d.scenario.checklist.map(x=>({text:x,checked:d.checklist.includes(x)})),message:d.error||''})}catch(e){this.error(e)}},
  input(e){if(this.data.busy||this.data.draft.status!=='draft')return;const key=e.currentTarget.dataset.key;this.setData({[key]:e.detail.value});this.persist()},
  category(e){this.setData({'editor.category':this.data.categories[Number(e.detail.value)]});this.persist()},
  checks(e){if(this.data.busy)return;this.setData({'draft.checklist':e.detail.value,checkOptions:this.data.checkOptions.map(x=>({...x,checked:e.detail.value.includes(x.text)}))});this.persist()},
  add(){this.setData({editor:blank()});this.persist()},
  edit(e){const i=this.data.draft.issues.find(x=>x.id===e.currentTarget.dataset.id);this.setData({editor:JSON.parse(JSON.stringify(i))});this.persist()},
- saveIssue(){const i=this.data.editor;const issues=this.data.draft.issues.slice();const pos=issues.findIndex(x=>x.id===i.id);if(pos<0)issues.push(i);else issues[pos]=i;const d={...this.data.draft,issues,editor:null};try{store.update(d);this.setData({draft:d,editor:null,message:'本条隐患已保存在手机'});}catch(e){this.error(e)}},
- async photo(e){await this.run(async()=>{const count=9-this.data.editor.photos.length;if(count<=0)throw Error('每条隐患最多9张照片');const r=await new Promise((resolve,reject)=>wx.chooseMedia({count:e.currentTarget.dataset.source==='camera'?1:count,mediaType:['image'],sourceType:[e.currentTarget.dataset.source],sizeType:['compressed'],success:resolve,fail:e=>e.errMsg.includes('cancel')?resolve(null):reject(Error('无法拍照或选图，请检查授权'))}));if(!r)return;for(const f of r.tempFiles){if(f.size>10*1024*1024)throw Error('单张照片不能超过10MB');const p=await store.savePhoto(f.tempFilePath);this.setData({'editor.photos':[...this.data.editor.photos,p]});if(!this.persist())return}})},
+ saveIssue(){const i=this.data.editor;const issues=this.data.draft.issues.slice();const pos=issues.findIndex(x=>x.id===i.id);if(pos<0)issues.push(i);else issues[pos]=i;const d={...this.data.draft,issues,editor:null};try{store.update(d);this.setData({...this.leaderState(d),draft:d,editor:null,message:'本条隐患已保存在手机'});}catch(e){this.error(e)}},
+ async photo(e){await this.run(async()=>{const count=9-this.data.editor.photos.length;if(count<=0)throw Error('每条隐患最多9张照片');const files=await images.select({source:e.currentTarget.dataset.source,count:e.currentTarget.dataset.source==='camera'?1:count});for(const f of files){const image=await images.normalize(f,this);const p=await store.savePhoto(image.path);this.setData({'editor.photos':[...this.data.editor.photos,p]});if(!this.persist())return}})},
  preview(e){wx.previewImage({current:e.currentTarget.dataset.path,urls:[e.currentTarget.dataset.path]})},
  removePhoto(e){this.setData({'editor.photos':this.data.editor.photos.filter(p=>p.id!==e.currentTarget.dataset.id)});this.persist()},
  back(){if(!this.persist())return;this.setData({draft:null,editor:null});this.reload()},
