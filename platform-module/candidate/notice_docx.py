@@ -186,6 +186,12 @@ def render(report, read_image, dimensions):
         append('检查人员原签名')
         for signature in report.get('signatures', []):
             append(signature.get('name', '') + ' · ' + signature.get('sourceLabel', ''), signature['signature'])
+        append('合并报告在线会签')
+        for signature in report.get('coSignatures', []):
+            append(signature['role'] + '：' + signature['name'], signature['signature'])
+            append('签署时间：' + signature['signedAt'])
+        for person in report.get('pendingCoSigners', []):
+            append(person['role'] + '：' + person['name'] + ' · 待本人在线签署')
         append('被检查单位负责人签字')
         if recipient:
             append(recipient['name'], recipient['signature'])

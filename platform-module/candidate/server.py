@@ -368,7 +368,7 @@ class Handler(BaseHTTPRequestHandler):
        combined_reports.get(w,json.loads(previous['result'])['id'])
       if action in ('combined-assign','combined-sign'):
        current=combined_reports.get(w,d.get('combinedId'))
-       if action=='combined-sign' and current['recipientId']!=user['id']: raise Problem('签署权限已变更',403)
+       if action=='combined-sign' and user['id'] not in [p['userId'] for p in combined_reports.signers(current)]: raise Problem('签署权限已变更',403)
        if action=='combined-assign' and not (host_auth.is_admin(user) or current['createdBy']==user['id'] or w.role(current['projectId'])=='manager'): raise Problem('分发权限已变更',403)
       self.send(json.loads(previous['result']));return
      result=w.upload(d) if action=='upload' else w.dispatch(action,d)

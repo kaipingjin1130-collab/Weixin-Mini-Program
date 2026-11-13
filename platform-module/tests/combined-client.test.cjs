@@ -4,7 +4,23 @@ test('lost merge response retries with the same idempotency key',async()=>{const
 test('polling keeps an unfinished drawing when revision did not change',async()=>{const {page,api}=setup();page.data.report={id:'combined',revision:2};page.ink=true;api.request=async()=>({id:'combined',revision:2});let shown=0;page.show=()=>shown++;await page.poll();assert.equal(shown,0);assert.equal(page.ink,true)});
 test('older in-flight poll cannot replace a newer signed revision',async()=>{const {page,api}=setup();page.data.report={id:'combined',revision:3};api.request=async()=>({id:'combined',revision:2});let shown=0;page.show=()=>shown++;await page.poll();assert.equal(shown,0);assert.equal(page.data.report.revision,3)});
 test('sign sends explicit confirmation, exact revision and content hash',async()=>{const {page,calls}=setup();page.data.report={id:'combined',revision:2,contentHash:'reviewed-hash'};page.ink=true;page.show=()=>{};page.refresh=async()=>{};await page.sign();const request=calls[0];assert.equal(request.url,'/api/work/combined-sign');assert.equal(request.payload.confirmed,true);assert.equal(request.payload.contentHash,'reviewed-hash');assert.equal(request.payload.revision,2);assert.equal(request.payload.base64,'signature-bytes')});
-test('cancelled signature confirmation retains the drawing and makes no write',async()=>{const {page,calls,wx}=setup();page.ink=true;wx.showModal=o=>o.success({confirm:false});await page.sign();assert.equal(calls.length,0);assert.equal(page.ink,true)});
+test('cancelled signature confirmation retains the drawing and makes no write',async()=>{const {page,calls,wx}=setup();page.data.report={myRole:'检查人'};page.ink=true;wx.showModal=o=>o.success({confirm:false});await page.sign();assert.equal(calls.length,0);assert.equal(page.ink,true)});
+
+test('peer signature sync preserves canvas while updating all signer states',async()=>{
+ const {page,api}=setup();const report={id:'shared',projectId:'p',revision:2,contentHash:'content',assignmentHash:'people',canSign:true,report:{issues:[],signatures:[]},signers:[]};
+ page.data.report=report;page.ink=true;const ctx={drawing:'unsubmitted'};page.ctx=ctx;
+ api.request=async()=>({...report,revision:3,signers:[{userId:'peer',signature:{evidenceId:'signed'}}]});
+ await page.poll();assert.equal(page.data.report.revision,3);assert.equal(page.data.report.signers.length,1);assert.equal(page.ink,true);assert.equal(page.ctx,ctx);
+});
+test('changed assignment clears old drawing and requires fresh review',async()=>{
+ const {page,api}=setup();page.data.report={id:'shared',revision:2,contentHash:'content',assignmentHash:'old'};page.ink=true;
+ api.request=async()=>({id:'shared',revision:3,contentHash:'content',assignmentHash:'new',canSign:true,report:{issues:[],signatures:[]}});
+ await page.poll();assert.equal(page.ink,false);assert.equal(page.data.report.assignmentHash,'new');
+});
+test('multi-sign request binds both report content and assigned participants',async()=>{
+ const {page,calls}=setup();page.data.report={id:'shared',revision:2,contentHash:'content',assignmentHash:'people',myRole:'检查人'};page.ink=true;page.show=()=>{};page.refresh=async()=>{};
+ await page.sign();assert.equal(calls[0].payload.assignmentHash,'people');assert.equal(calls[0].payload.contentHash,'content');
+});
 
 test('missing backend stops automatic requests and manual refresh recovers after deployment',async()=>{
  const {page,api}=setup();let missing=true,count=0;

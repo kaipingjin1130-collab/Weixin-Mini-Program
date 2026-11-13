@@ -5,6 +5,8 @@ from pathlib import Path
 import unittest
 import uuid
 import zipfile
+from concurrent.futures import ThreadPoolExecutor
+from threading import Barrier
 
 from test_leader_reports import LeaderReports, s
 
@@ -128,6 +130,57 @@ class CombinedReports(unittest.TestCase):
         task = self.post('edit-issue', self.worker, taskId=task['id'], revision=task['revision'], issueId=task['issues'][0]['id'], description='旧客户端修改文字')
         self.assertEqual(task['issues'][0]['inspectionDate'], '2026-11-12')
         self.assertEqual(task['issues'][0]['inspectionTime'], '09:30')
+
+    def test_four_people_sign_same_revision_concurrently_without_lost_signatures(self):
+        report = self.combined()
+        report = self.post('combined-assign', self.lead, combinedId=report['id'], revision=report['revision'],
+                           recipientId='host:admin:11', coSignerIds=['host:admin:8', 'host:admin:9', 'host:admin:10'])
+        tokens = [self.lead, self.worker, self.other, self.receiver]
+        for token in tokens:
+            read = self.request('/quality/api/work/combined-data/'+report['id'], token=token)[1]
+            self.assertEqual(read['contentHash'], report['contentHash'])
+            self.assertTrue(read['canSign'])
+        barrier = Barrier(4)
+        payload = dict(combinedId=report['id'], revision=report['revision'], contentHash=report['contentHash'],
+                       assignmentHash=report['assignmentHash'], confirmed=True, base64=self.image)
+        def sign(token):
+            barrier.wait()
+            return self.raw('combined-sign', token, **payload)
+        with ThreadPoolExecutor(max_workers=4) as pool:
+            results = list(pool.map(sign, tokens))
+        self.assertEqual([r[0] for r in results], [200]*4, results)
+        for token in tokens:
+            read = self.request('/quality/api/work/combined-data/'+report['id'], token=token)[1]
+            self.assertEqual(read['signedCount'], 4)
+            self.assertEqual(len({p['signature']['evidenceId'] for p in read['signers']}), 4)
+            self.assertFalse(read['canSign'])
+            self.assertFalse(read['canAssign'])
+        self.assertEqual(self.raw('combined-sign', self.worker, **payload)[0], 409)
+        self.assertEqual(self.raw('combined-sign', self.owner, **payload)[0], 403)
+        self.assertEqual(self.raw('combined-assign', self.lead, combinedId=report['id'], revision=read['revision'], recipientId='host:admin:11', coSignerIds=[])[0], 403)
+        status, data, _ = self.request('/quality/api/work/combined-word/'+report['id'], token=self.worker)
+        self.assertEqual(status, 200)
+        with zipfile.ZipFile(io.BytesIO(data)) as doc:
+            xml = doc.read('word/document.xml').decode()
+            for text in ['合并报告在线会签', '项目负责人', '检查人', '被检查单位负责人', 'host:admin:8', 'host:admin:9', 'host:admin:10', 'host:admin:11']:
+                self.assertIn(text, xml)
+        if os.environ.get('QAXC_QA_OUTPUT'):
+            Path(os.environ['QAXC_QA_OUTPUT']).mkdir(parents=True, exist_ok=True)
+            (Path(os.environ['QAXC_QA_OUTPUT'])/'combined-four-signers.docx').write_bytes(data)
+
+    def test_assignment_change_requires_review_and_revocation_blocks_replay(self):
+        report = self.combined()
+        report = self.post('combined-assign', self.lead, combinedId=report['id'], revision=report['revision'], recipientId='host:admin:11', coSignerIds=['host:admin:9'])
+        payload = dict(combinedId=report['id'], revision=report['revision'], contentHash=report['contentHash'], assignmentHash=report['assignmentHash'], confirmed=True, base64=self.image)
+        changed = self.post('combined-assign', self.lead, combinedId=report['id'], revision=report['revision'], recipientId='host:admin:11', coSignerIds=['host:admin:9','host:admin:10'])
+        self.assertEqual(self.raw('combined-sign', self.worker, **payload)[0], 409)
+        payload.update(revision=changed['revision'], assignmentHash=changed['assignmentHash'], requestId='co-sign-retry')
+        first = self.request('/quality/api/work/combined-sign', payload, self.worker)
+        self.assertEqual(first[0], 200)
+        self.assertEqual(first[1], self.request('/quality/api/work/combined-sign', payload, self.worker)[1])
+        with s.db() as c:
+            c.execute('DELETE FROM memberships WHERE project_id=? AND user_id=?', (self.pid,'host:admin:9'))
+        self.assertEqual(self.request('/quality/api/work/combined-sign', payload, self.worker)[0], 403)
 
 
 if __name__ == '__main__':

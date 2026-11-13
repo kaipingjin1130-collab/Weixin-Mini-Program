@@ -15,9 +15,21 @@ def digest(value):
     return hashlib.sha256(encode(value).encode()).hexdigest()
 
 
+def signers(value):
+    people = copy.deepcopy(value.get('coSigners', []))
+    if value['recipientId']:
+        people.append(dict(userId=value['recipientId'], name=value['recipientName'],
+                           role='被检查单位负责人', signature=value['recipientSignature']))
+    return people
+
+
+def assignment_hash(value):
+    return digest([(p['userId'], p['role']) for p in signers(value)])
+
+
 def accessible(w, report):
     role = w.role(report['projectId'])
-    if role not in ('admin', 'manager') and w.user['id'] not in report['readers'] + [report['recipientId']]:
+    if role not in ('admin', 'manager') and w.user['id'] not in report['readers'] + [p['userId'] for p in signers(report)]:
         w.fail('这份合并报告未分发给当前账号', 403)
 
 
@@ -32,8 +44,13 @@ def get(w, report_id):
 
 def public(w, value):
     value = copy.deepcopy(value)
-    value['canAssign'] = not value['recipientSignature'] and (is_admin(w.user) or w.user['id'] == value['createdBy'] or w.role(value['projectId']) == 'manager')
-    value['canSign'] = not value['recipientSignature'] and w.user['id'] == value['recipientId']
+    value['signers'] = signers(value)
+    value['assignmentHash'] = assignment_hash(value)
+    value['signedCount'] = sum(bool(p['signature']) for p in value['signers'])
+    value['canAssign'] = not value['signedCount'] and (is_admin(w.user) or w.user['id'] == value['createdBy'] or w.role(value['projectId']) == 'manager')
+    mine = next((p for p in value['signers'] if p['userId'] == w.user['id']), None)
+    value['canSign'] = bool(mine and not mine['signature'])
+    value['myRole'] = mine['role'] if mine else ''
     return value
 
 
@@ -47,7 +64,9 @@ def listing(w):
             if error.status in (403, 404):
                 continue
             raise
-        result.append({key: value[key] for key in ('id', 'projectId', 'title', 'createdAt', 'createdByName', 'revision', 'recipientId', 'recipientName', 'recipientSignature')})
+        item = {key: value[key] for key in ('id', 'projectId', 'title', 'createdAt', 'createdByName', 'revision', 'recipientId', 'recipientName', 'recipientSignature')}
+        item.update(signedCount=sum(bool(p['signature']) for p in signers(value)), signerCount=len(signers(value)))
+        result.append(item)
     return sorted(result, key=lambda x: (x['createdAt'], x['id']), reverse=True)
 
 
@@ -105,38 +124,61 @@ def create(w, data):
     value = dict(id=report_id, projectId=rows[0]['projectId'], title=rows[0]['project'] + ' 巡查合并报告',
                  createdAt=w.s.now(), createdBy=w.user['id'], createdByName=w.user['name'],
                  readers=list(dict.fromkeys(readers)), sources=sources, report=report, contentHash=digest(report),
-                 revision=1, recipientId='', recipientName='', recipientSignature=None, history=[])
+                 revision=1, recipientId='', recipientName='', recipientSignature=None, coSigners=[], history=[])
     w.c.execute('INSERT INTO combined_reports VALUES(?,?,?)', (report_id, value['projectId'], encode(value)))
     return public(w, value)
 
 
 def mutate(w, action, data):
     value = get(w, w.text(data, 'combinedId', 100))
+    mine = next((p for p in signers(value) if p['userId'] == w.user['id']), None)
     if action == 'combined-assign':
         if not public(w, value)['canAssign']:
             w.fail('仅汇总人或项目管理人员可在签署前指定签名人', 403)
-    elif w.user['id'] != value['recipientId']:
-        w.fail('请使用指定的被检查单位负责人本人账号签署', 403)
-    if data.get('revision') != value['revision']:
+    elif not mine:
+        w.fail('请使用指定会签人本人账号签署', 403)
+    # Independent signatures may arrive from the same reviewed revision. The content
+    # and signer assignment must still match; each person's slot is append-only.
+    concurrent_sign = action == 'combined-sign' and data.get('assignmentHash') == assignment_hash(value)
+    if not concurrent_sign and data.get('revision') != value['revision']:
         w.fail('报告签字状态已更新，请刷新核对后再提交', 409)
-    if value['recipientSignature']:
-        w.fail('报告已签署，不能覆盖签字；内容变更请重新生成报告', 409)
     if action == 'combined-assign':
         recipient = w.member(value['projectId'], w.text(data, 'recipientId', 100))
+        ids = data.get('coSignerIds', [p['userId'] for p in value.get('coSigners', [])])
+        if not isinstance(ids, list) or len(ids) > 100 or any(not isinstance(uid, str) for uid in ids) or len(set(ids)) != len(ids):
+            w.fail('请选择不重复的会签人，最多100名')
+        if recipient in ids:
+            w.fail('受检单位负责人已单独列为签署人，请勿重复选择')
+        people = []
+        for uid in ids:
+            w.member(value['projectId'], uid)
+            name = w.c.execute('SELECT name FROM users WHERE id=?', (uid,)).fetchone()[0]
+            membership = w.c.execute('SELECT role FROM memberships WHERE project_id=? AND user_id=?', (value['projectId'], uid)).fetchone()
+            role = '项目负责人' if uid == value['createdBy'] or membership and membership[0] == 'manager' else '检查人'
+            people.append(dict(userId=uid, name=name, role=role, signature=None))
+        value['coSigners'] = people
         value['recipientId'] = recipient
         value['recipientName'] = w.c.execute('SELECT name FROM users WHERE id=?', (recipient,)).fetchone()[0]
     else:
+        if mine['signature']:
+            w.fail('你已签署，不能覆盖签字；内容变更请重新生成报告', 409)
+        if data.get('assignmentHash') and data['assignmentHash'] != assignment_hash(value):
+            w.fail('会签人员已调整，请重新核对后签署', 409)
         if data.get('contentHash') != value['contentHash']:
             w.fail('签署的报告内容不一致，请重新打开报告核对', 409)
         if data.get('confirmed') is not True:
             w.fail('请本人核对整份报告后确认签署')
         # Upload through this operation: never accept another person's existing signature ID.
-        ev = w.upload(dict(projectId=value['projectId'], name='被检查单位负责人签名.png',
+        ev = w.upload(dict(projectId=value['projectId'], name=mine['role']+'签名.png',
                            base64=w.text(data, 'base64', 2_000_000), occurredAt=w.s.now()))
         if ev['mime'] != 'image/png':
             w.fail('请提交 PNG 手写签名')
-        value['recipientSignature'] = dict(evidenceId=ev['id'], name=w.user['name'], userId=w.user['id'],
-                                           signedAt=w.s.now(), contentHash=value['contentHash'])
+        signature = dict(evidenceId=ev['id'], name=w.user['name'], userId=w.user['id'], role=mine['role'],
+                         signedAt=w.s.now(), contentHash=value['contentHash'], assignmentHash=assignment_hash(value))
+        if w.user['id'] == value['recipientId']:
+            value['recipientSignature'] = signature
+        else:
+            next(p for p in value['coSigners'] if p['userId'] == w.user['id'])['signature'] = signature
     value['revision'] += 1
     value['history'].append(dict(action=action, actorId=w.user['id'], actorName=w.user['name'],
                                  at=w.s.now(), recipientId=value['recipientId'], revision=value['revision']))
@@ -149,6 +191,9 @@ def export(w, value):
     report = copy.deepcopy(value['report'])
     report['sources'] = value['sources']
     report['contentHash'] = value['contentHash']
+    report['coSignatures'] = [dict(p, signature='evidence:'+p['signature']['evidenceId'],
+                                  signedAt=p['signature']['signedAt']) for p in value.get('coSigners', []) if p['signature']]
+    report['pendingCoSigners'] = [p for p in value.get('coSigners', []) if not p['signature']]
     if value['recipientSignature']:
         signature = value['recipientSignature']
         report['recipientSignature'] = dict(signature, signature='evidence:' + signature['evidenceId'])

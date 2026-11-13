@@ -20,16 +20,17 @@ class LeaderReports(unittest.TestCase):
         integration.Integration.setUp(self)
         def bridge(action, data=None, cookie=''):
             data = data or {}
-            uid = data.get('id') or {'owner':'host:admin:7', 'lead':'host:admin:8', 'worker':'host:admin:9', 'other':'host:admin:10'}.get(data.get('username'), 'host:admin:8')
+            uid = data.get('id') or {'owner':'host:admin:7', 'lead':'host:admin:8', 'worker':'host:admin:9', 'other':'host:admin:10', 'receiver':'host:admin:11'}.get(data.get('username'), 'host:admin:8')
             return dict(active=True, aud='qaxc', id=uid, name=uid, isAdmin=uid=='host:admin:7')
         s.host_auth.call.side_effect = bridge
         self.owner = self.login()[0]
         self.lead = self.login('lead')[0]
         self.worker = self.login('worker')[0]
         self.other = self.login('other')[0]
+        self.receiver = self.login('receiver')[0]
         self.pid = self.request('/quality/api/projects', dict(name='汇总测试项目', contract='测试合同'), self.owner)[1]['id']
         with s.db() as c:
-            for uid in ('host:admin:8', 'host:admin:9', 'host:admin:10'):
+            for uid in ('host:admin:8', 'host:admin:9', 'host:admin:10', 'host:admin:11'):
                 c.execute('INSERT INTO memberships VALUES(?,?,?)', (self.pid, uid, 'inspector'))
         image = Path(__file__).resolve().parents[2] / 'local-inspector/tests/fixtures/upload-test.png'
         self.image = base64.b64encode(image.read_bytes()).decode()
