@@ -150,6 +150,7 @@ class Workflow:
  def dispatch(self,path,d):
   if path=='combined-create': return combined_reports.create(self,d)
   if path in ('combined-assign','combined-sign'): return combined_reports.mutate(self,path,d)
+  if path in ('combined-guest-add','combined-guest-sign'): return combined_reports.guest(self,path,d)
   if path=='assign-document-leader': return leader_reports.assign_document(self,d)
   if path=='leader-read':
    rows=leader_reports.select(self,d.get('keys'))
@@ -306,7 +307,7 @@ class Workflow:
     meta=json.loads(self.c.execute('SELECT payload FROM evidence WHERE id=?',(sid,)).fetchone()[0])
     if not meta['mime'].startswith('image/'): self.fail('签名必须为图片')
    t['inspectors']=inspectors
-   t['fieldSignature']=dict(name=signer,evidenceId=sid,signedAt=self.s.now(),submittedBy=self.user['id']) if sid else None
+   t['fieldSignature']=dict(name=signer,evidenceId=sid,signedAt=self.s.now(),submittedBy=self.user['id'],signMethod='image' if d.get('signMethod')=='image' else 'draw') if sid else None
    try: t['notice']=notice.clean(d.get('notice',t.get('notice',{})))
    except ValueError as e: self.fail(str(e))
    if 'leaderId' in d: t['leaderId']=self.leader(pid,d['leaderId'])

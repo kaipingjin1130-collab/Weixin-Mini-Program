@@ -164,6 +164,7 @@ def render(report, read_image, dimensions):
         for t in nodes(cells[2], 'w:t'):
             set_text(t, '')
         cells[2].appendChild(paragraph('被检查单位负责人签字'))
+        cells[3].appendChild(paragraph('多人签字及现场采集记录见附件2'))
         recipient = report.get('recipientSignature')
         if recipient:
             add_pictures(cells[3], [recipient['signature']], signature=True)
@@ -187,17 +188,31 @@ def render(report, read_image, dimensions):
         for signature in report.get('signatures', []):
             append(signature.get('name', '') + ' · ' + signature.get('sourceLabel', ''), signature['signature'])
         append('合并报告在线会签')
-        for signature in report.get('coSignatures', []):
-            append(signature['role'] + '：' + signature['name'], signature['signature'])
-            append('签署时间：' + signature['signedAt'])
-        for person in report.get('pendingCoSigners', []):
-            append(person['role'] + '：' + person['name'] + ' · 待本人在线签署')
+        for role in ['项目负责人', '检查人', '被检查人']:
+            signed = [p for p in report.get('coSignatures', []) if p['role'] == role]
+            pending = [p for p in report.get('pendingCoSigners', []) if p['role'] == role]
+            if role == '检查人' and not signed and not pending:
+                continue
+            append(role + '签字（支持多人）')
+            for signature in signed:
+                append(signature['role'] + '：' + signature['name'], signature['signature'])
+                append('签署时间：' + signature['signedAt'])
+            for person in pending:
+                append(person['role'] + '：' + person['name'] + ' · 待本人在线签署')
         append('被检查单位负责人签字')
         if recipient:
             append(recipient['name'], recipient['signature'])
             append('签署时间：' + recipient['signedAt'])
         else:
             append('待负责人本人在线签署')
+        append('被检查人现场签字（支持多人）')
+        for person in report.get('guestSigners', []):
+            signature = person['signature']
+            append(person['unit'] + ' · ' + person['name'], signature['signature'] if signature else None)
+            if signature:
+                append('签署时间：' + signature['signedAt'] + ' · 现场采集人：' + signature['collectedByName'])
+            else:
+                append('待被检查人本人现场签署')
         append('报告内容校验：' + report.get('contentHash', ''))
 
     parts['word/document.xml'] = doc.toxml(encoding='UTF-8')

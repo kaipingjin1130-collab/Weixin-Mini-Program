@@ -11,10 +11,10 @@ const fs=require('node:fs'),path=require('node:path'),assert=require('node:asser
   browser=await chromium.launch({headless:true,channel:'msedge'});
   async function logged(name){const context=await browser.newContext({viewport:{width:1360,height:960}});const r=await context.request.post(base+'/api/login',{data:{username:name,password:'synthetic-password'}});assert.equal(r.status(),200);const page=await context.newPage();page.on('pageerror',e=>errors.push(e.message));await page.goto(base+'/#leaders');await page.getByRole('heading',{name:'负责人汇总',exact:true}).waitFor();return page}
   const lead=await logged('lead');await lead.locator('#leaderSelectAll').click();await lead.locator('#leaderCombine').click();
-  await lead.locator('[role=dialog] [data-recipient]').waitFor();
+  await lead.locator('[role=dialog] [data-recipient]').first().waitFor();
   const dialog=lead.locator('[role=dialog]');assert.equal(await dialog.locator('img[alt="隐患照片"]').count(),2);
   const download=await dialog.getByRole('link',{name:'下载整份 Word 报告'}).getAttribute('href');assert.match(download,/^\/quality\/api\/work\/combined-word\//);
-  const id=download.split('/').at(-1);await dialog.locator('[data-recipient]').selectOption('host:admin:10');await dialog.locator('[data-assign]').click();await dialog.locator('p').filter({hasText:/^host:admin:10$/}).waitFor();
+  const id=download.split('/').at(-1);await dialog.locator('[data-recipient][value="host:admin:10"]').check();await dialog.locator('[data-assign]').click();await dialog.locator('[data-sign]').waitFor();
   const signer=await logged('other');await signer.locator(`[data-combined="${id}"]`).click();
   const signDialog=signer.locator('[role=dialog]');const canvas=signDialog.locator('[data-sign]');await canvas.waitFor();
   await canvas.scrollIntoViewIfNeeded();const box=await canvas.boundingBox();await signer.mouse.move(box.x+45,box.y+50);await signer.mouse.down();await signer.mouse.move(box.x+125,box.y+100,{steps:10});await signer.mouse.move(box.x+205,box.y+45,{steps:10});await signer.mouse.up();

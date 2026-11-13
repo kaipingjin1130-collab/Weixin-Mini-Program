@@ -23,7 +23,7 @@ class CombinedReports(unittest.TestCase):
     submitted_report = LeaderReports.submitted_report
 
     def raw(self, action, token=None, **payload):
-        return self.request('/quality/api/work/' + action, dict(requestId=uuid.uuid4().hex, **payload), token or self.lead)
+        return self.request('/quality/api/work/' + action, {'requestId':uuid.uuid4().hex, **payload}, token or self.lead)
 
     def combined(self):
         for token, text in [(self.worker, '一号楼临边缺少防护'), (self.other, '二号楼通道被占用')]:
@@ -181,6 +181,67 @@ class CombinedReports(unittest.TestCase):
         with s.db() as c:
             c.execute('DELETE FROM memberships WHERE project_id=? AND user_id=?', (self.pid,'host:admin:9'))
         self.assertEqual(self.request('/quality/api/work/combined-sign', payload, self.worker)[0], 403)
+
+    def test_multiple_leaders_recipients_and_onsite_people_keep_originals_shared(self):
+        report = self.combined()
+        originals = report['report']['signatures']
+        report = self.post('combined-assign', self.lead, combinedId=report['id'], revision=report['revision'],
+                           managerIds=['host:admin:8','host:admin:12'], recipientIds=['host:admin:11','host:admin:13'])
+        self.assertEqual([p['role'] for p in report['signers']].count('项目负责人'), 2)
+        for token in [self.worker, self.other]:
+            shared = self.request('/quality/api/work/combined-data/'+report['id'], token=token)[1]
+            self.assertEqual(shared['report']['signatures'], originals)
+            self.assertFalse(shared['canSign'])  # Original inspectors need not sign twice.
+            self.assertTrue(shared['canCollectGuest'])
+        old_hash = report['assignmentHash']
+        report = self.post('combined-guest-add', self.worker, combinedId=report['id'], name='现场甲', unit='单位甲')
+        report = self.post('combined-guest-add', self.other, combinedId=report['id'], name='现场乙', unit='单位乙')
+        self.assertEqual(report['assignmentHash'], old_hash)
+        revision = report['revision']
+        jobs = [(token, 'combined-sign', dict(assignmentHash=old_hash)) for token in [self.lead,self.lead2,self.receiver,self.receiver2]]
+        jobs += [(token, 'combined-guest-sign', dict(guestSignerId=person['id'],slotHash=person['slotHash'])) for token, person in zip([self.worker,self.other],report['guestSigners'])]
+        barrier = Barrier(6)
+        def submit(job):
+            token, action, extra = job
+            barrier.wait()
+            return self.raw(action,token,combinedId=report['id'],revision=revision,contentHash=report['contentHash'],confirmed=True,base64=self.image,signMethod='image',**extra)
+        with ThreadPoolExecutor(max_workers=6) as pool:
+            responses=list(pool.map(submit,jobs))
+        self.assertEqual([r[0] for r in responses],[200]*6,responses)
+        for token in [self.worker,self.other,self.lead,self.lead2]:
+            shared=self.request('/quality/api/work/combined-data/'+report['id'],token=token)[1]
+            self.assertEqual(shared['signedCount'],6)
+            self.assertEqual(shared['report']['signatures'],originals)
+            self.assertEqual({p['signature']['collectedBy'] for p in shared['guestSigners']},{'host:admin:9','host:admin:10'})
+            self.assertTrue(all(p['signature']['signMethod']=='image' for p in shared['signers']+shared['guestSigners']))
+        appended=self.post('combined-guest-add',self.other,combinedId=report['id'],name='现场丙',unit='单位丙')
+        self.assertEqual(appended['signedCount'],6)
+        self.assertEqual(len(appended['guestSigners']),3)
+        status, data, _ = self.request('/quality/api/work/combined-word/'+report['id'],token=self.worker)
+        self.assertEqual(status,200)
+        with zipfile.ZipFile(io.BytesIO(data)) as doc:
+            xml=doc.read('word/document.xml').decode()
+            for text in ['项目负责人签字（支持多人）','host:admin:12','host:admin:13','现场甲','现场乙','现场丙','单位甲','现场采集人','检查人员原签名']:
+                self.assertIn(text,xml)
+
+    def test_onsite_identity_permissions_and_retry(self):
+        report=self.combined()
+        report=self.post('combined-assign',self.lead,combinedId=report['id'],revision=report['revision'],managerIds=['host:admin:8'],recipientIds=['host:admin:11'])
+        with s.db() as c:
+            c.execute("UPDATE memberships SET role='receiver' WHERE project_id=? AND user_id=?",(self.pid,'host:admin:11'))
+        self.assertEqual(self.raw('combined-guest-add',self.receiver,combinedId=report['id'],name='甲',unit='乙')[0],403)
+        report=self.post('combined-guest-add',self.worker,combinedId=report['id'],name='甲',unit='乙')
+        person=report['guestSigners'][0]
+        payload=dict(combinedId=report['id'],guestSignerId=person['id'],slotHash=person['slotHash'],contentHash=report['contentHash'],confirmed=True,base64=self.image,signMethod='image',requestId='onsite-retry')
+        self.assertEqual(self.raw('combined-guest-sign',self.worker,**dict(payload,requestId='bad-slot',slotHash='wrong'))[0],409)
+        self.assertEqual(self.raw('combined-guest-sign',self.worker,**dict(payload,requestId='no-confirm',confirmed=False))[0],400)
+        first=self.request('/quality/api/work/combined-guest-sign',payload,self.worker)
+        self.assertEqual(first[0],200)
+        self.assertEqual(first[1],self.request('/quality/api/work/combined-guest-sign',payload,self.worker)[1])
+        self.assertEqual(self.raw('combined-guest-sign',self.other,**dict(payload,requestId='overwrite'))[0],409)
+        with s.db() as c:
+            c.execute("UPDATE memberships SET role='receiver' WHERE project_id=? AND user_id=?",(self.pid,'host:admin:9'))
+        self.assertEqual(self.request('/quality/api/work/combined-guest-sign',payload,self.worker)[0],403)
 
 
 if __name__ == '__main__':

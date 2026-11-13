@@ -10,11 +10,22 @@
   <view class="card"><view class="h2">{{report.title}}</view><view>{{report.sources.length}} 份报告 · {{report.report.issues.length}} 条记录</view><view class="text">{{report.report.scope}}</view><button bindtap="word" disabled="{{busy}}">预览／分享完整 Word</button></view>
   <view class="card" wx:for="{{report.report.issues}}" wx:key="displayId"><view class="h2">{{index+1}}. {{item.description||'现场照片记录'}}</view><view>{{item.location}} · {{item.inspectionDate}} {{item.inspectionTime}}</view><view>{{item.category}} · {{item.risk}}</view><view>{{item.reference}}</view><view>{{item.suggestion}}</view><view class="muted">来源：{{item.sourceLabel}}</view><button wx:for="{{item.photos}}" wx:for-item="photo" wx:key="*this" class="secondary small" data-ref="{{photo}}" bindtap="photo">查看隐患照片</button></view>
   <view class="card"><view class="h2">检查人员原签名</view><view wx:for="{{report.report.signatures}}" wx:key="displayId"><view>{{item.name}} · {{item.sourceLabel}}</view><button class="secondary small" data-ref="{{item.signature}}" bindtap="photo">查看原签名</button></view></view>
-  <view class="card"><view class="h2">合并报告在线会签</view><view class="muted">所有人签署同一份合并报告。首人签署后锁定人员名单；内容修改须重新合并。</view>
-   <block wx:if="{{report.canAssign}}"><view class="label">被检查单位负责人</view><picker range="{{members}}" range-key="name" value="{{recipientIndex}}" bindchange="recipient"><view class="picker">{{members[recipientIndex].name||'请先将对方账号加入项目'}} ▾</view></picker><view class="label">同时会签的检查人及项目负责人（可多选）</view><checkbox-group bindchange="coSigners"><label wx:for="{{members}}" wx:key="id"><checkbox value="{{item.id}}" checked="{{item.checked}}" disabled="{{busy}}"/>{{item.name}}</label></checkbox-group><view class="muted">受检负责人自动单独列入，不会重复分配签字。</view><button bindtap="assign" disabled="{{busy||!members.length}}">发送签字请求</button></block>
+  <view class="card"><view class="h2">项目负责人及被检查人签字</view><view class="muted">检查人的原签字已随原清单保留，无需重复签。所有人看到同一份合并报告。</view>
+   <block wx:if="{{report.canAssign}}">
+    <view class="label">项目负责人（支持多人）</view><checkbox-group bindchange="managers"><label wx:for="{{members}}" wx:key="id"><checkbox value="{{item.id}}" checked="{{item.managerChecked}}" disabled="{{busy}}"/>{{item.name}}</label></checkbox-group>
+    <view class="label">被检查人账号（支持多人，无账号可下方现场采集）</view><checkbox-group bindchange="recipients"><label wx:for="{{members}}" wx:key="id"><checkbox value="{{item.id}}" checked="{{item.recipientChecked}}" disabled="{{busy}}"/>{{item.name}}</label></checkbox-group>
+    <button bindtap="assign" disabled="{{busy}}">保存多人签字名单</button><view class="muted">首人签署后账号名单锁定；现场被检查人可以继续追加。</view>
+   </block>
    <view wx:for="{{report.signers}}" wx:key="userId"><view>{{item.role}}：{{item.name}} · {{item.signature?'已签署':'待签署'}}</view><block wx:if="{{item.signature}}"><view>{{item.signature.signedAt}}</view><button class="secondary small" data-ref="{{'evidence:'+item.signature.evidenceId}}" bindtap="photo">查看签名</button></block></view>
-   <block wx:if="{{report.canSign}}"><view class="muted">请以{{report.myRole}}身份核对完整报告后，本人手写签署。</view><canvas class="signature" canvas-id="recipientSignature" disable-scroll="true" bindtouchstart="start" catchtouchmove="move" bindtouchend="end"/><button bindtap="clear" class="secondary" disabled="{{busy}}">清除重签</button><button bindtap="sign" disabled="{{busy}}">确认整份报告并签署</button></block>
-   <view wx:else class="muted">请查看上方各人的签字状态，由指定人员使用本人账号签署。</view>
+   <button wx:if="{{report.canSign}}" bindtap="signSelf" class="secondary" disabled="{{busy}}">签署本人位置（{{report.myRole}}）</button>
+  </view>
+  <view class="card"><view class="h2">被检查人现场签字（支持多人）</view><view class="muted">各地检查人可在自己的手机上打开本报告，请被检查人本人签字，无需对方的平台账号。</view>
+   <block wx:if="{{report.canCollectGuest}}"><input placeholder="被检查人姓名" maxlength="100" value="{{guestName}}" data-key="guestName" bindinput="guestInput"/><input placeholder="被检查人单位" maxlength="200" value="{{guestUnit}}" data-key="guestUnit" bindinput="guestInput"/><button bindtap="addGuest" disabled="{{busy}}">新增现场签字位置</button></block>
+   <view wx:for="{{report.guestSigners}}" wx:key="id"><view>{{item.unit}} · {{item.name}} · {{item.signature?'已签署':'待签署'}}</view><block wx:if="{{item.signature}}"><view>{{item.signature.signedAt}} · 采集人：{{item.signature.collectedByName}}</view><button class="secondary small" data-ref="{{'evidence:'+item.signature.evidenceId}}" bindtap="photo">查看签名</button></block><button wx:elif="{{report.canCollectGuest}}" class="secondary" data-id="{{item.id}}" bindtap="signGuest" disabled="{{busy}}">请{{item.name}}本人签字</button></view>
+  </view>
+  <view class="card" wx:if="{{canDraw}}"><view class="h2">当前签字：{{targetName}}（{{targetRole}}）</view><view>{{targetUnit}}</view><view class="muted">核对整份报告后由签字人本人确认。签名图片在提交前仅预览。</view>
+   <image wx:if="{{signingImagePath}}" src="{{signingImagePath}}" mode="aspectFit" style="width:100%;height:240rpx"/><canvas wx:else class="signature" canvas-id="recipientSignature" disable-scroll="true" bindtouchstart="start" catchtouchmove="move" bindtouchend="end"/>
+   <button bindtap="insertSign" class="secondary" disabled="{{busy}}">插入电子签名（PNG/JPG）</button><button bindtap="clear" class="secondary" disabled="{{busy}}">清除／改为手写</button><button bindtap="sign" disabled="{{busy}}">本人确认整份报告并签署</button>
   </view>
  </block>
 </view>

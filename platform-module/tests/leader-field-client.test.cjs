@@ -4,12 +4,13 @@ function setup(fail=false){
  let task={id:'task1',projectId:'p1',revision:3,status:'active',fieldStatus:'collecting',assignee:'inspector',receiver:'receiver',records:[],issues:[],scenario:{recordTypes:['巡查记录'],checklist:[]},materials:[],fieldBriefs:[]};
  const state=()=>({user:{id:'inspector',name:'现场员'},projects:[{id:'p1',name:'项目',role:'inspector',members:[]}],tasks:[task],scenarios:[],reminders:[],users:[]});
  const api={request:async(url,data)=>{calls.push({url,data});if(url==='/api/work/state')return state();if(fail)throw Error('服务暂时不可用');task={...task,revision:task.revision+1};if(url.endsWith('/issue'))task.issues=[...task.issues,{...data,id:'i'+(task.issues.length+1),status:'unassigned'}];if(url.endsWith('/record'))task.records=[{...data,id:'r1',status:data.confirm?'confirmed':'draft'}];if(url.endsWith('/submit-field'))task.fieldStatus='submitted';return task}};
+ const signatureImage={choose:async()=>null};
  const wx={showModal:o=>o.success?.({confirm:true}),showToast:()=>{},enableAlertBeforeUnload:()=>{},disableAlertBeforeUnload:()=>{}};
- vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../miniprogram/pages/work/work.js'),'utf8'),{require:()=>api,Page:d=>definition=d,wx,console});
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../miniprogram/pages/work/work.js'),'utf8'),{require:name=>name.endsWith('/signature')?signatureImage:api,Page:d=>definition=d,wx,console});
  const p={...definition,data:JSON.parse(JSON.stringify(definition.data))};
  p.setData=values=>{for(const [key,value] of Object.entries(values)){const keys=key.split('.');let obj=p.data;for(const k of keys.slice(0,-1))obj=obj[k]??(obj[k]={});obj[keys.at(-1)]=value}};
  p.setData(state());p.setTask(task);p.data.record={type:'巡查记录',text:'现场检查内容',occurredAt:'2026-10-20T09:00:00+08:00',evidence:['photo1']};p.data.evidence=[{id:'photo1',selected:true}];
- return {p,calls,wx,api};
+ return {p,calls,wx,api,signatureImage};
 }
 
 test('same-text reminders retain distinct task links and unique rendering keys',async()=>{
@@ -164,4 +165,15 @@ for(const failure of [null,'adhoc-tasks','start','state'])test('legacy server en
 test('quickStart-capable server does not receive a redundant start request',async()=>{
  const {p,calls}=setup();p.data.scenarios=[{id:'inspection',fields:[]}];await p.newAdhoc();
  assert.equal(p.data.canCollect,true);assert.equal(calls.filter(c=>c.url.endsWith('/start')).length,0);
+});
+
+test('inspector electronic signature stays local until reporting and survives failed upload',async()=>{
+ const {p,calls,signatureImage}=setup(true);signatureImage.choose=async()=>({path:'signature.png',base64:'image-data'});
+ await p.insertSign();assert.equal(calls.length,0);assert.equal(p.data.signMode,'image');assert.equal(p.signDirty,true);
+ await assert.rejects(()=>p.captureSign());assert.equal(p.signImage.base64,'image-data');assert.equal(p.signDirty,true);
+});
+test('reporting uploads imported inspector signature and records the method',async()=>{
+ const {p,calls,signatureImage}=setup();signatureImage.choose=async()=>({path:'signature.jpg',base64:'image-data'});
+ await p.insertSign();p.data.record={text:'',evidence:[]};p.data.task.issues=[{id:'saved'}];p.data.signer='现场员';p.data.inspectors='现场员';
+ await p.submitField();assert.equal(calls.find(c=>c.url.endsWith('/upload')).data.base64,'image-data');assert.equal(calls.find(c=>c.url.endsWith('/submit-field')).data.signMethod,'image');assert.equal(p.signDirty,false);
 });
