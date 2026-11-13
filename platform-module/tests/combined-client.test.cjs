@@ -5,3 +5,12 @@ test('polling keeps an unfinished drawing when revision did not change',async()=
 test('older in-flight poll cannot replace a newer signed revision',async()=>{const {page,api}=setup();page.data.report={id:'combined',revision:3};api.request=async()=>({id:'combined',revision:2});let shown=0;page.show=()=>shown++;await page.poll();assert.equal(shown,0);assert.equal(page.data.report.revision,3)});
 test('sign sends explicit confirmation, exact revision and content hash',async()=>{const {page,calls}=setup();page.data.report={id:'combined',revision:2,contentHash:'reviewed-hash'};page.ink=true;page.show=()=>{};page.refresh=async()=>{};await page.sign();const request=calls[0];assert.equal(request.url,'/api/work/combined-sign');assert.equal(request.payload.confirmed,true);assert.equal(request.payload.contentHash,'reviewed-hash');assert.equal(request.payload.revision,2);assert.equal(request.payload.base64,'signature-bytes')});
 test('cancelled signature confirmation retains the drawing and makes no write',async()=>{const {page,calls,wx}=setup();page.ink=true;wx.showModal=o=>o.success({confirm:false});await page.sign();assert.equal(calls.length,0);assert.equal(page.ink,true)});
+
+test('missing backend stops automatic requests and manual refresh recovers after deployment',async()=>{
+ const {page,api}=setup();let missing=true,count=0;
+ api.request=async url=>{count++;if(missing)throw Object.assign(Error('接口不存在'),{status:404});return url.endsWith('/state')?{projects:[]}:[]};
+ await page.reload();assert.match(page.data.message,/后台尚未更新/);const stoppedAt=count;
+ await page.poll();assert.equal(count,stoppedAt);
+ missing=false;await page.reload();assert.equal(page.data.message,'');assert.equal(page.unavailable,false);
+ await page.poll();assert.ok(count>stoppedAt+3);
+});

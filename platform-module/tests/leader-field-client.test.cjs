@@ -9,8 +9,15 @@ function setup(fail=false){
  const p={...definition,data:JSON.parse(JSON.stringify(definition.data))};
  p.setData=values=>{for(const [key,value] of Object.entries(values)){const keys=key.split('.');let obj=p.data;for(const k of keys.slice(0,-1))obj=obj[k]??(obj[k]={});obj[keys.at(-1)]=value}};
  p.setData(state());p.setTask(task);p.data.record={type:'巡查记录',text:'现场检查内容',occurredAt:'2026-10-20T09:00:00+08:00',evidence:['photo1']};p.data.evidence=[{id:'photo1',selected:true}];
- return {p,calls,wx};
+ return {p,calls,wx,api};
 }
+
+test('same-text reminders retain distinct task links and unique rendering keys',async()=>{
+ const {p,api}=setup();p.data.task=null;
+ api.request=async()=>({user:{id:'admin',isAdmin:true},projects:[],tasks:[],scenarios:[],users:[],reminders:[{taskId:'a',text:'临时巡查：任务逾期'},{taskId:'b',text:'临时巡查：任务逾期'},{taskId:'a',text:'临时巡查：任务逾期'}]});
+ await p.refresh();assert.equal(new Set(p.data.reminders.map(r=>r.displayId)).size,3);
+ assert.deepEqual(Array.from(p.data.reminders,r=>r.taskId),['a','b','a']);
+});
 test('field client confirms record with revision and stable evidence; clears saved selections',async()=>{
  const {p,calls}=setup();await p.saveRecord({currentTarget:{dataset:{confirm:'yes'}}});
  const req=calls.find(c=>c.url.endsWith('/record'));assert.equal(req.data.taskId,'task1');assert.equal(req.data.revision,3);assert.equal(req.data.confirm,true);assert.deepEqual([...req.data.evidence],['photo1']);assert.ok(req.data.requestId);

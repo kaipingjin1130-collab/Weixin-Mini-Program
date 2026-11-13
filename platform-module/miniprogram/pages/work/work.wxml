@@ -7,7 +7,7 @@
   <view class="note">可执行平台派发的任务，也可在有检查权限的项目自主发起临时巡查。上报后，由网页平台接收并办理整改、复核及正式报告。</view>
   <button wx:if="{{canInitiate}}" class="actions" bindtap="newAdhoc" disabled="{{busy}}">＋ 发起临时巡查</button>
   <button class="secondary actions" bindtap="reload" disabled="{{busy}}">刷新任务与平台反馈</button>
-  <view class="card" wx:if="{{reminders.length}}"><view class="h2 warning">任务提醒</view><view wx:for="{{reminders}}" wx:key="text" data-id="{{item.taskId}}" bindtap="openTemporary">{{item.text}} →</view></view>
+  <view class="card" wx:if="{{reminders.length}}"><view class="h2 warning">任务提醒</view><view wx:for="{{reminders}}" wx:key="displayId" data-id="{{item.taskId}}" bindtap="openTemporary">{{item.text}} →</view></view>
   <view class="card" wx:for="{{tasks}}" wx:key="id" data-id="{{item.id}}" bindtap="openTemporary"><view class="tag">{{item.sourceName}} · {{item.statusName}} · {{item.fieldStatusName}}</view><view class="h2">{{item.title}}</view><view>{{item.number}}</view><view class="muted">{{item.scenario.name}} · 截止 {{item.dueDate}}</view><view>{{item.issues.length}} 条隐患记录 →</view></view>
   <view wx:if="{{!tasks.length}}" class="empty">{{canInitiate?'暂无任务，可以自主发起临时巡查，无需等待平台派单。':'暂无任务，请联系平台负责人分配项目检查权限。'}}</view>
  </block>
