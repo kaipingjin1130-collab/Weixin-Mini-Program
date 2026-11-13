@@ -5,7 +5,7 @@ const today=()=>{let d=new Date();return [d.getFullYear(),String(d.getMonth()+1)
 Page({
  forgetAccount(){wx.removeStorageSync('rememberedAccount');this.setData({username:'',password:''});wx.showToast({title:'已清除登录记忆'})},
  openOffline(){wx.navigateTo({url:"/pages/offline/offline"})},
- openWork(){wx.navigateTo({url:'/pages/work/work'})},
+ openWork(){wx.navigateTo({url:'/pages/work/work',fail:e=>wx.showModal({title:'无法进入现场作业',content:e.errMsg||'页面跳转失败，请重新编译后再试',showCancel:false})})},
  data:{signerIndex:0,signerNames:[],mode:'login',server:'https://fxbxcx.jkec.info/quality',password:'',busy:false,projects:[],codes:[],reports:[],knowledge:[],favorites:[],list:[],codeLabels:[],codeIndex:0,projectName:'',contractName:'',query:'',filter:'all',media:{},categories:['工程质量','施工安全','消防安全','文明施工','其他'],risks:['低','中','高'],edit:{issues:[]},selected:[],saved:'',draftCount:0,submittedCount:0},
  async onLoad(){this.setData({server:api.base(),username:wx.getStorageSync('rememberedAccount')?.username||'',password:wx.getStorageSync('rememberedAccount')?.password||''});if(wx.getStorageSync('token'))await this.work(async()=>{await this.refresh();this.setData({mode:'home'})})},
  onUnload(){},
