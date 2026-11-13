@@ -14,7 +14,23 @@ Page({
  leaderPick(e){this.setData({leaderIndex:Number(e.detail.value)});this.markDirty()},
  adhocScenarioPick(e){this.setData({scenarioIndex:Number(e.detail.value),fieldValues:{}})},
  adhocField(e){this.setData({fieldValues:{...this.data.fieldValues,[e.currentTarget.dataset.key]:e.detail.value}});this.dirty=true},
- async createAdhoc(){await this.run(async()=>{const project=this.data.eligibleProjects[this.data.adhocProjectIndex];const scenario=this.data.scenarios[this.data.scenarioIndex];if(!project||!scenario)throw Error('请先选择项目和检查场景');const payload={quickStart:true,notice:this.data.notice,leaderId:(this.data.leaderOptions||[])[this.data.leaderIndex]?.id||'',projectId:project.id,scenarioId:scenario.id,title:this.data.newTask.title,object:this.data.newTask.object,dueDate:this.data.newTask.dueDate,fields:this.data.fieldValues,inspectors:this.data.newTask.inspectors||''};const fingerprint=JSON.stringify(payload);if(this.pendingAdhoc?.fingerprint!==fingerprint)this.pendingAdhoc={fingerprint,id:requestId()};const t=await this.post('adhoc-tasks',payload,this.pendingAdhoc.id);this.dirty=false;if(wx.disableAlertBeforeUnload)wx.disableAlertBeforeUnload();await this.refresh();this.open({currentTarget:{dataset:{id:t.id}}});wx.pageScrollTo?.({selector:'#issue-form',duration:0});this.pendingAdhoc=null;wx.showToast({title:'临时巡查已建立'})})},
+ async createAdhoc(){await this.run(async()=>{
+  const project=this.data.eligibleProjects[this.data.adhocProjectIndex];
+  const scenario=this.data.scenarios[this.data.scenarioIndex];
+  if(!project||!scenario)throw Error('请先选择项目和检查场景');
+  const payload={quickStart:true,notice:this.data.notice,leaderId:(this.data.leaderOptions||[])[this.data.leaderIndex]?.id||'',projectId:project.id,scenarioId:scenario.id,title:this.data.newTask.title,object:this.data.newTask.object,dueDate:this.data.newTask.dueDate,fields:this.data.fieldValues,inspectors:this.data.newTask.inspectors||''};
+  const fingerprint=JSON.stringify(payload);
+  if(this.pendingAdhoc?.fingerprint!==fingerprint)this.pendingAdhoc={fingerprint,id:requestId(),startId:requestId()};
+  const pending=this.pendingAdhoc;
+  // Keep the created task and request IDs until the form is open, including on network retries.
+  if(!pending.task)pending.task=await this.post('adhoc-tasks',payload,pending.id);
+  // Older servers ignore quickStart and return a ready task. Start it without claiming any checks.
+  if(pending.task.status==='ready')pending.task=await this.post('start',{taskId:pending.task.id,revision:pending.task.revision,checklist:[]},pending.startId);
+  this.dirty=false;if(wx.disableAlertBeforeUnload)wx.disableAlertBeforeUnload();
+  await this.refresh();this.open({currentTarget:{dataset:{id:pending.task.id}}});
+  if(this.data.canCollect)wx.pageScrollTo?.({selector:'#issue-form',duration:0});
+  this.pendingAdhoc=null;wx.showToast({title:'临时巡查已建立'});
+ })},
  data:{noticeFields:[],notice:{},editingIssueId:'',noHazard:false,expandedIssueId:'',busy:false,view:'list',projects:[],tasks:[],scenarios:[],users:[],reminders:[],user:{},projectIndex:0,scenarioIndex:0,roleIndex:0,roles:['manager','inspector','rectifier','reviewer','receiver'],roleNames:['项目负责人','检查人','整改人','复核人','接收人'],newUser:{},newProject:{},newTask:{},fieldValues:{},members:[],record:{type:'',text:'',evidence:[]},evidence:[],issue:blankIssue(),issuePhotos:[],categories:['工程质量','施工安全','消防安全','文明施工','其他'],categoryIndex:1,note:'',question:'',knowledge:null,recordIndex:0,selectedEvidence:[],checklist:[],accountName:'',reportId:'',recording:false,risks:['低','中','高'],riskIndex:1,customRisk:null},
  reload(){this.run(()=>this.refresh())},
  riskPick(e){this.setData({riskIndex:Number(e.detail.value),customRisk:null});this.markDirty()},

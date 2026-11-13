@@ -128,3 +128,40 @@ test('changing ad hoc project clears previous leader selection',()=>{
 
  test('temporary task opens directly in collection with explicit quickStart',async()=>{const {p,calls}=setup();p.data.scenarios=[{id:'inspection',fields:[]}];await p.newAdhoc();const request=calls.find(c=>c.url.endsWith('/adhoc-tasks'));assert.equal(request.data.quickStart,true);assert.equal(p.data.view,'detail');assert.equal(p.data.canCollect,true);assert.equal(p.data.newTask.inspectors,'现场员')});
  test('multiple projects require choosing a project before automatic collection',async()=>{const {p,calls}=setup();p.data.projects.push({id:'p2',role:'inspector',name:'另一项目',members:[]});p.data.scenarios=[{id:'inspection',fields:[]}];await p.newAdhoc();assert.equal(p.data.view,'create');assert.equal(calls.length,0);p.adhocProjectPick({detail:{value:'1'}});await p.createAdhoc();assert.equal(calls.find(c=>c.url.endsWith('/adhoc-tasks')).data.projectId,'p2')});
+
+for(const failure of [null,'adhoc-tasks','start','state'])test('legacy server enters hazard form with retry safety: '+(failure||'success'),async()=>{
+ const {p,api,wx}=setup();p.data.scenarios=[{id:'inspection',fields:[]}];
+ let task={...p.data.task,id:'legacy-task',source:'adhoc',status:'ready',revision:1};
+ const state={user:p.data.user,projects:p.data.projects,scenarios:p.data.scenarios,users:[],reminders:[]};
+ const requests=[],replies=new Map(),scrolls=[];let failed=false,creations=0,starts=0;
+ wx.pageScrollTo=o=>scrolls.push(o.selector);
+ api.request=async(url,data)=>{
+  const action=url.split('/').at(-1);requests.push({action,data});
+  if(action==='state'){
+   if(failure==='state'&&!failed){failed=true;throw Error('刷新失败')}
+   return {...state,tasks:[task]};
+  }
+  if(!replies.has(data.requestId)){
+   if(action==='adhoc-tasks')creations++;
+   else if(action==='start'){
+    assert.equal(data.taskId,task.id);assert.equal(data.revision,task.revision);
+    assert.equal(data.checklist.length,0);assert.equal(task.status,'ready');
+    starts++;task={...task,status:'active',revision:2};
+   }else throw Error('unexpected action '+action);
+   replies.set(data.requestId,{...task});
+  }
+  if(action===failure&&!failed){failed=true;throw Error('响应丢失')}
+  return replies.get(data.requestId);
+ };
+ await p.newAdhoc();
+ if(failure){assert.equal(p.data.view,'create');assert.equal(p.data.busy,false);assert.ok(p.pendingAdhoc);await p.createAdhoc()}
+ assert.equal(creations,1);assert.equal(starts,1);assert.equal(p.data.view,'detail');
+ assert.equal(p.data.task.id,'legacy-task');assert.equal(p.data.canCollect,true);
+ assert.equal(p.pendingAdhoc,null);assert.deepEqual(scrolls,['#issue-form']);
+ for(const action of ['adhoc-tasks','start'])assert.equal(new Set(requests.filter(r=>r.action===action).map(r=>r.data.requestId)).size,1);
+});
+
+test('quickStart-capable server does not receive a redundant start request',async()=>{
+ const {p,calls}=setup();p.data.scenarios=[{id:'inspection',fields:[]}];await p.newAdhoc();
+ assert.equal(p.data.canCollect,true);assert.equal(calls.filter(c=>c.url.endsWith('/start')).length,0);
+});
