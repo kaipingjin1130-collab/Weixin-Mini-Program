@@ -3,6 +3,7 @@ import notice
 import base64
 import leader_reports
 import combined_reports
+import mobile_workflow
 from host_auth import is_admin
 import copy
 import csv
@@ -47,6 +48,7 @@ def init(c):
  CREATE TABLE IF NOT EXISTS combined_reports(id TEXT PRIMARY KEY, project_id TEXT NOT NULL REFERENCES projects(id), payload TEXT NOT NULL);
  CREATE TABLE IF NOT EXISTS field_reports(id TEXT PRIMARY KEY, task_id TEXT NOT NULL REFERENCES tasks(id), payload TEXT NOT NULL);
  ''')
+ mobile_workflow.init(c)
  for s in SCENARIOS:
   c.execute('INSERT INTO scenarios VALUES(?,?) ON CONFLICT DO NOTHING',(s['id'],dump(s)))
 
@@ -148,6 +150,7 @@ class Workflow:
   self.task(r['task_id'])
   return json.loads(r['payload'])
  def dispatch(self,path,d):
+  if path.startswith("mobile-"): return mobile_workflow.dispatch(self,path,d)
   if path=='combined-create': return combined_reports.create(self,d)
   if path in ('combined-assign','combined-sign'): return combined_reports.mutate(self,path,d)
   if path in ('combined-guest-add','combined-guest-sign'): return combined_reports.guest(self,path,d)
@@ -264,7 +267,10 @@ class Workflow:
     t['status']='active'
     self.stamp(t,'quick-start','临时巡查直接进入隐患采集，未代勾准备清单')
    self.stamp(t,'create','现场自主发起临时巡查' if adhoc else '平台建立派发任务')
-   self.c.execute('INSERT INTO tasks VALUES(?,?,?,?)',(t['id'],pid,dump(t),1));return t
+   if d.get('workflowVersion')==2: mobile_workflow.initialize(self,t,d,adhoc)
+   self.c.execute('INSERT INTO tasks VALUES(?,?,?,?)',(t['id'],pid,dump(t),1))
+   if t.get('workflowVersion')==2: mobile_workflow.queue(self,t)
+   return t
   if path=='knowledge':
    t=self.task(d.get('taskId'))
    return self.adapter('knowledge',dict(scene=t['scenario']['id'],version=t['scenario']['version'],object=t['object'],question=self.text(d,'question')),
@@ -279,6 +285,7 @@ class Workflow:
   t=self.task(d.get('taskId'));pid=t['projectId']
   if d.get('revision')!=t['revision']: self.fail('任务已更新，请刷新后重试，避免覆盖他人修改',409)
   if t['status']=='archived' and path!='reopen': self.fail('归档任务只读，请负责人发起补正后再操作',409)
+  mobile_workflow.guard(self,t,path,d)
   if path=='assign-leader':
    if self.role(pid) not in ['admin','manager']:
     if self.user['id']!=t['assignee'] or t.get('fieldStatus','collecting')!='collecting': self.fail('仅项目管理人员或尚未上报的任务执行人可指定负责人',403)

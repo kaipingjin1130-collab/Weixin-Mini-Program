@@ -65,12 +65,12 @@ def public(w, value):
     value = copy.deepcopy(value)
     value['signers'] = signers(value)
     value['guestSigners'] = [dict(p, slotHash=guest_hash(p)) for p in value.get('guestSigners', [])]
-    value['canCollectGuest'] = can_collect(w, value)
+    value['canCollectGuest'] = not value.get('publishedAt') and can_collect(w, value)
     value['assignmentHash'] = assignment_hash(value)
     value['signedCount'] = sum(bool(p['signature']) for p in value['signers'] + value['guestSigners'])
     value['canAssign'] = not value['signedCount'] and (is_admin(w.user) or w.user['id'] == value['createdBy'] or w.role(value['projectId']) == 'manager')
     mine = next((p for p in value['signers'] if p['userId'] == w.user['id']), None)
-    value['canSign'] = bool(mine and not mine['signature'])
+    value['canSign'] = not value.get('publishedAt') and bool(mine and not mine['signature'])
     value['myRole'] = mine['role'] if mine else ''
     return value
 
@@ -123,6 +123,9 @@ def source(w, row):
 
 def create(w, data):
     rows = leader_reports.select(w, data.get('keys'))
+    strict = [w.task(r['taskId']) for r in rows if r['taskId'] and w.task(r['taskId']).get('workflowVersion') == 2]
+    if strict and (len(rows) != 1 or strict[0]['stage'] != 'signing' or strict[0].get('combinedId')):
+        w.fail('新流程报告须由组长筛选清单生成，不能重复合并或改变已签内容', 409)
     logical = [r['taskId'] or r['key'] for r in rows]
     if len(set(logical)) != len(logical):
         w.fail('同一任务只能选择一个版本的简报或成果，请取消重复版本后合并')
@@ -147,12 +150,18 @@ def create(w, data):
                  createdAt=w.s.now(), createdBy=w.user['id'], createdByName=w.user['name'],
                  readers=list(dict.fromkeys(readers)), sources=sources, report=report, contentHash=digest(report),
                  revision=1, recipientId='', recipientName='', recipientSignature=None, coSigners=[], guestSigners=[], history=[])
+    if strict:
+        task = strict[0]
+        value.update(workflowVersion=2, taskId=task['id'], requiredInspectorIds=task['confirmedIds'], requiredLeaderId=task['leaderId'])
+        ids = list(dict.fromkeys(task['confirmedIds'] + [task['leaderId']]))
+        value['coSigners'] = [dict(userId=uid, name=w.c.execute('SELECT name FROM users WHERE id=?',(uid,)).fetchone()[0], role='项目负责人' if uid==task['leaderId'] else '检查人', signature=None) for uid in ids]
     w.c.execute('INSERT INTO combined_reports VALUES(?,?,?)', (report_id, value['projectId'], encode(value)))
     return public(w, value)
 
 
 def mutate(w, action, data):
     value = get(w, w.text(data, 'combinedId', 100))
+    if value.get('publishedAt'): w.fail('已发布报告签字已锁定', 409)
     mine = next((p for p in signers(value) if p['userId'] == w.user['id']), None)
     if action == 'combined-assign':
         if not public(w, value)['canAssign']:
@@ -187,6 +196,13 @@ def mutate(w, action, data):
             membership = w.c.execute('SELECT role FROM memberships WHERE project_id=? AND user_id=?', (value['projectId'], uid)).fetchone()
             role = ('项目负责人' if uid in managers else '被检查人') if typed else ('项目负责人' if uid == value['createdBy'] or membership and membership[0] == 'manager' else '检查人')
             people.append(dict(userId=uid, name=name, role=role, signature=None))
+        if value.get('workflowVersion') == 2:
+            required = set(value['requiredInspectorIds'] + [value['requiredLeaderId']])
+            if recipient in required or any(uid in required for uid in recipients): w.fail('检查人和组长不能兼作被检查人')
+            for uid in required:
+                w.member(value['projectId'], uid, ['manager','inspector'])
+                people = [p for p in people if p['userId'] != uid]
+                people.append(dict(userId=uid,name=w.c.execute('SELECT name FROM users WHERE id=?',(uid,)).fetchone()[0],role='项目负责人' if uid==value['requiredLeaderId'] else '检查人',signature=None))
         value['coSigners'] = people
         value['recipientId'] = recipient
         value['recipientName'] = w.c.execute('SELECT name FROM users WHERE id=?', (recipient,)).fetchone()[0] if recipient else ''
@@ -207,6 +223,9 @@ def mutate(w, action, data):
             value['recipientSignature'] = signature
         else:
             next(p for p in value['coSigners'] if p['userId'] == w.user['id'])['signature'] = signature
+    if action == 'combined-assign' and value.get('workflowVersion') == 2:
+        import mobile_workflow
+        mobile_workflow.notify(w,w.task(value['taskId']),[p['userId'] for p in signers(value)],'signing','报告签字名单已确定，请本人核对签署：'+value['title'])
     value['revision'] += 1
     value['history'].append(dict(action=action, actorId=w.user['id'], actorName=w.user['name'],
                                  at=w.s.now(), recipientId=value['recipientId'], revision=value['revision']))
@@ -216,6 +235,7 @@ def mutate(w, action, data):
 
 def guest(w, action, data):
     value = get(w, w.text(data, 'combinedId', 100))
+    if value.get('publishedAt'): w.fail('已发布报告签字已锁定', 409)
     if not can_collect(w, value):
         w.fail('仅本项目检查人或负责人可采集现场签字', 403)
     people = value.setdefault('guestSigners', [])
@@ -254,6 +274,8 @@ def guest(w, action, data):
 def export(w, value):
     import notice_docx
     report = copy.deepcopy(value['report'])
+    if value.get('workflowVersion') == 2:
+        report['publicationLabel'] = '已确认发布：'+value['publishedAt'] if value.get('publishedAt') else '未发布：待各方签字并由负责人确认发布'
     report['sources'] = value['sources']
     report['contentHash'] = value['contentHash']
     report['coSignatures'] = [dict(p, signature='evidence:'+p['signature']['evidenceId'],

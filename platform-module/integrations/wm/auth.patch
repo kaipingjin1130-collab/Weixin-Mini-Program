@@ -1,0 +1,18 @@
+--- a/wm/app/auth.py
++++ b/wm/app/auth.py
+@@ -79,10 +79,12 @@
+     return identity
+ 
+ 
+-def current_principal(request: Request, db: Session = Depends(get_db)) -> Principal:
+-    identity = verify_host_session(request)
++async def current_principal(request: Request, db: Session = Depends(get_db)) -> Principal:
++    from .qaxc_auth import verify_qaxc
++    bridge = bool(request.headers.get('x-qaxc-signature'))
++    identity = await verify_qaxc(request) if bridge else verify_host_session(request)
+     from .host_sync import enabled, sync_identity
+-    if enabled():
++    if enabled() and not bridge:
+         sync_identity(db, identity)
+     binding = db.query(ExternalIdentity).filter_by(issuer=identity["iss"], subject=identity["sub"]).first()
+     person = db.get(Person, binding.person_id) if binding else None

@@ -309,6 +309,15 @@ class Handler(BaseHTTPRequestHandler):
     if path.startswith('/api/work/'):
      action=path.removeprefix('/api/work/')
      if method=='GET':
+      if action=='mobile-legacy-statistics':
+       import mobile_bridge
+       try: result=mobile_bridge.statistics(w,parse_qs(urlsplit(self.path).query))
+       except mobile_bridge.BridgeError as exc: raise Problem(str(exc),503)
+       self.send(result);return
+      if action=='mobile-state': self.send(workflow.mobile_workflow.state(w,parse_qs(urlsplit(self.path).query)));return
+      if action=='mobile-push-config':
+       import mobile_push
+       self.send(mobile_push.config());return
       if action=='state': self.send(w.state());return
       if action=='leader-inbox': self.send(leader_reports.inbox(w));return
       if action=='combined-list': self.send(combined_reports.listing(w));return
@@ -374,7 +383,10 @@ class Handler(BaseHTTPRequestHandler):
        current=combined_reports.get(w,d.get('combinedId'))
        if not combined_reports.can_collect(w,current): raise Problem('现场采集权限已变更',403)
       self.send(json.loads(previous['result']));return
-     result=w.upload(d) if action=='upload' else w.dispatch(action,d)
+     if action=='mobile-push-bind':
+      import mobile_push
+      result=mobile_push.bind(w,d)
+     else: result=w.upload(d) if action=='upload' else w.dispatch(action,d)
      c.execute('INSERT INTO operations VALUES(?,?,?,?)',(user['id'],request_id,fingerprint,workflow.dump(result)))
      self.send(result);return
     if not host_auth.is_admin(user) and method=='POST': raise Problem('成员请使用作业协同入口办理任务',403)

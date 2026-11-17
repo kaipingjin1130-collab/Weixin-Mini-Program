@@ -6,6 +6,7 @@
   <view class="card" wx:for="{{reports}}" wx:key="id" data-id="{{item.id}}" bindtap="open"><view class="h2">{{item.title}}</view><view>{{item.createdByName}} · {{item.createdAt}}</view><view>被检查单位负责人：{{item.recipientName||'待指定'}}</view><view>已签 {{item.signedCount||0}} / {{item.signerCount||0}} 人 →</view></view>
  </block>
  <block wx:else>
+  <view wx:if="{{report.workflowVersion===2}}" class="note">{{report.publishedAt?"已确认发布 · 签字锁定":"待各方签字 / 负责人确认发布"}}</view>
   <button bindtap="back" class="secondary" disabled="{{busy}}">返回列表</button>
   <view class="card"><view class="h2">{{report.title}}</view><view>{{report.sources.length}} 份报告 · {{report.report.issues.length}} 条记录</view><view class="text">{{report.report.scope}}</view><button bindtap="word" disabled="{{busy}}">预览／分享完整 Word</button></view>
   <view class="card" wx:for="{{report.report.issues}}" wx:key="displayId"><view class="h2">{{index+1}}. {{item.description||'现场照片记录'}}</view><view>{{item.location}} · {{item.inspectionDate}} {{item.inspectionTime}}</view><view>{{item.category}} · {{item.risk}}</view><view>{{item.reference}}</view><view>{{item.suggestion}}</view><view class="muted">来源：{{item.sourceLabel}}</view><button wx:for="{{item.photos}}" wx:for-item="photo" wx:key="*this" class="secondary small" data-ref="{{photo}}" bindtap="photo">查看隐患照片</button></view>

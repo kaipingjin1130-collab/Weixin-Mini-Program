@@ -2,6 +2,7 @@ const api=require('../../utils/api');
 const signatureImage=require('../../utils/signature');
 const uid=()=>Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
 Page({
+ onLoad(options){this.targetId=options?.reportId||""},
  data:{busy:false,rows:[],reports:[],selected:[],report:null,members:[],managerIds:[],recipientIds:[],guestName:'',guestUnit:'',guestTarget:'',canDraw:false,signingImagePath:'',message:''},
  onShow(){clearInterval(this.timer);this.reload();this.timer=setInterval(()=>this.poll(),5000)},
  onHide(){clearInterval(this.timer)},
@@ -9,7 +10,7 @@ Page({
  async run(fn){if(this.data.busy)return;this.setData({busy:true});try{await fn()}catch(e){this.setData({message:e.message});wx.showModal({title:'报告提示',content:e.message,showCancel:false})}finally{this.setData({busy:false})}},
  async post(action,payload){const fingerprint=JSON.stringify({action,payload});if(this.pending?.fingerprint!==fingerprint)this.pending={fingerprint,id:uid()};const value=await api.request('/api/work/'+action,{...payload,requestId:this.pending.id});this.pending=null;return value},
  async refresh(){let reports;try{reports=await api.request('/api/work/combined-list')}catch(e){if(e.status===404){this.unavailable=true;throw Error('当前后台尚未更新合并报告功能，请完成后台部署后再刷新')}throw e}this.unavailable=false;const [rows,state]=await Promise.all([api.request('/api/work/leader-inbox'),api.request('/api/work/state')]);this.state=state;this.setData({rows,reports,message:''})},
- reload(){this.unavailable=false;return this.run(()=>this.refresh())},
+ reload(){this.unavailable=false;return this.run(async()=>{await this.refresh();if(this.targetId){this.show(await api.request('/api/work/combined-data/'+this.targetId));this.targetId=''}})},
  select(e){this.setData({selected:e.detail.value})},
  async create(){await this.run(async()=>{if(!this.data.selected.length)throw Error('请选择同一项目的报告，每个任务保留一个版本');const report=await this.post('combined-create',{keys:this.data.selected});await this.refresh();this.show(report)})},
  open(e){return this.run(async()=>{this.show(await api.request('/api/work/combined-data/'+e.currentTarget.dataset.id))})},

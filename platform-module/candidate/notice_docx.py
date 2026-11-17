@@ -246,6 +246,7 @@ def render(report, read_image, dimensions):
         append('检查人员原签名')
         for signature in report.get('signatures', []):
             append(signature.get('name', '') + ' · ' + signature.get('sourceLabel', ''), signature['signature'])
+        if report.get('publicationLabel'): append(report['publicationLabel'])
         append('合并报告在线会签')
         for role in ['项目负责人', '检查人', '被检查人']:
             signed = [p for p in report.get('coSignatures', []) if p['role'] == role]

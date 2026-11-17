@@ -1,5 +1,14 @@
 const test=require('node:test'),assert=require('node:assert/strict'),fs=require('node:fs'),vm=require('node:vm');
 const source=fs.readFileSync(__dirname+'/../miniprogram/utils/offline.js','utf8');
+test('new offline drafts attach to a confirmed task and never create bypass inspections',async()=>{
+ const h=setup();let task={id:'strict',projectId:'p1',workflowVersion:2,stage:'inspection',confirmedIds:['u1'],leaderId:'u2',workDate:'2026-11-17',title:'已确认任务',revision:4};h.state.tasks=[task];
+ const s=h.load();await s.prepare(h.api);let d=s.create('p1','strict');assert.equal(d.linkedTaskId,'strict');assert.equal(d.leaderId,'u2');d.issues=[{id:'i1',description:'离线现场记录',photos:[]}];s.update(d);
+ let writes=0;h.api.request=async(url,payload)=>{if(!payload)return {...h.state,tasks:[task]};assert.ok(url.endsWith('/issue'));assert.equal(payload.taskId,'strict');assert.equal(payload.revision,task.revision);task={...task,revision:task.revision+1};writes++;return task};
+ const result=await s.sync(d.id,h.api);assert.equal(result.status,'synced');assert.equal(result.taskId,'strict');assert.equal(writes,1);
+});
+test('offline source remains on phone when the task has advanced to review',async()=>{
+ const h=setup();h.state.tasks=[{id:'strict',projectId:'p1',workflowVersion:2,stage:'inspection',confirmedIds:['u1'],workDate:'2026-11-17',title:'任务'}];const s=h.load();await s.prepare(h.api);const d=s.create('p1','strict');h.state.tasks[0].stage='review';await assert.rejects(s.sync(d.id,h.api),/草稿保留/);assert.ok(s.get(d.id));assert.equal(h.counts().creates,0);
+});
 function setup(){let data={},quota=false,files={'/temp.jpg':'IMAGE'};const calls=[],ops=new Map();let fail='',task,creates=0,uploads=0,issues=0;
  const wx={env:{USER_DATA_PATH:'/saved'},getStorageSync:k=>data[k],setStorageSync:(k,v)=>{if(quota)throw Error('quota');data[k]=JSON.parse(JSON.stringify(v))},getFileSystemManager:()=>({mkdirSync(){},accessSync(){},copyFile:o=>{files[o.destPath]=files[o.srcPath];o.success()},readFile:o=>files[o.filePath]?o.success({data:files[o.filePath]}):o.fail()})};
  function load(){const module={exports:{}};vm.runInNewContext(source,{module,wx,console,Date,Math,Set});return module.exports}
