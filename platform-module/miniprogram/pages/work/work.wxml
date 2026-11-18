@@ -1,7 +1,9 @@
 <view class="page">
+ <block wx:if="{{view!=='report'}}">
  <button bindtap="openTasks">任务派发 / 草稿筛选 / 签字发布 / 工作认定</button>
  <button class="secondary actions" bindtap="openOffline">离线采集／手机草稿／回办公室同步</button>
  <button class="secondary actions" bindtap="openCombined">负责人合并报告／被检查单位签字</button>
+ </block>
  <view class="title">质量安全小察</view><view class="muted">{{user.name}} · 采集、确认、清单上报</view>
  <view wx:if="{{busy}}" class="note">正在处理，请稍候…</view>
  <block wx:if="{{view==='list'}}">
@@ -25,12 +27,12 @@
   <button class="actions" data-id="{{briefId}}" bindtap="briefWord" disabled="{{busy}}">预览／分享简报 Word</button>
  </block>
  <block wx:else>
+  <block wx:if="{{view!=='report'}}">
   <button class="secondary small" bindtap="back">返回任务列表</button>
   <view id="report-leader" class="card" wx:if="{{task.workflowVersion!==2}}"><view class="h2">指定报告负责人</view><view>已保存负责人：{{task.leaderName}}</view><block wx:if="{{canAssignLeader}}"><picker range="{{leaderOptions}}" range-key="name" value="{{leaderIndex}}" bindchange="leaderPick" disabled="{{busy}}"><view class="picker">{{leaderOptions[leaderIndex].name}} ▾</view></picker><button class="secondary small actions" bindtap="saveLeader" disabled="{{busy}}">保存负责人</button></block><view class="muted">上报后自动进入所选负责人的站内待阅，可在“负责人汇总”中查看及合并报告。选择后可先保存，也可随清单一起上报。</view><view class="muted" wx:if="{{leaderOptions.length===1}}">暂无可选成员，请先在网页“成员与负责人”中添加项目成员。</view></view>
   <view wx:if="{{canCollect}}" class="field-nav">
    <button class="secondary small" data-section="issue-form" bindtap="jump">隐患登记 / 拍照</button>
-   <button wx:if="{{task.workflowVersion===2}}" class="secondary small" bindtap="submitField" disabled="{{busy||recording}}">清单上报</button>
-   <button wx:else class="secondary small" data-section="brief-form" bindtap="jump">清单上报</button>
+   <button class="secondary small" bindtap="openReport">清单上报</button>
   </view>
   <view id="issue-form" class="card issue-card" wx:if="{{canCollect}}">
    <view class="row between"><view class="h2">{{editingIssueId?'编辑已保存隐患':'新增隐患记录'}}</view><view wx:if="{{!editingIssueId}}" class="tag">第 {{task.issues.length+1}} 条</view></view>
@@ -48,6 +50,7 @@
    <view class="label">处理建议</view><textarea maxlength="4000" placeholder="填写现场处理或整改建议（可选）" value="{{issue.suggestion}}" data-key="issue.suggestion" bindinput="input"/>
    <view class="note">现场端记录隐患与建议；整改责任人、期限和复核由网页平台安排。</view>
    <button class="actions" bindtap="addIssue" disabled="{{busy||recording}}">{{editingIssueId?'保存隐患修改':'保存本条隐患，继续登记'}}</button><button wx:if="{{editingIssueId}}" class="secondary" bindtap="cancelIssueEdit" disabled="{{busy}}">取消修改</button>
+   <button wx:if="{{task.issues.length}}" class="secondary" bindtap="openReport">核对已保存清单并上报</button>
   </view>
   <view class="card"><view class="tag">{{task.sourceName}} · {{task.statusName}} · {{task.fieldStatusName}}</view><view class="h2">{{task.title}}</view><view>{{task.number}}</view><view>对象：{{task.object}}</view><view>执行人：{{task.assigneeName}} · 期限：{{task.dueDate}}</view><view class="muted">场景 {{task.scenario.name}} v{{task.scenario.version}} · 数据修订 {{task.revision}}</view>
    <view class="note" wx:if="{{task.fieldFeedback}}">平台反馈：{{task.fieldFeedback.text}}</view>
@@ -55,6 +58,19 @@
    <view class="h2">任务资料</view><button wx:for="{{task.materials}}" wx:key="*this" class="small secondary actions" data-id="{{item}}" bindtap="viewEvidence">查看任务资料</button><view wx:if="{{!task.materials.length}}" class="muted">暂无附件资料</view>
   </view>
   <view class="card"><view class="h2">草稿箱 · 已保存隐患（{{task.issues.length}}）</view><view class="record" wx:for="{{task.issues}}" wx:key="id"><view class="row between" data-id="{{item.id}}" bindtap="toggleIssue"><view>隐患记录（{{index+1}}）</view><view class="muted">{{expandedIssueId===item.id?'收起 ▴':'展开 ▾'}}</view></view><block wx:if="{{expandedIssueId===item.id}}"><view class="actions" wx:if="{{canCollect&&item.status==='unassigned'&&!item.history.length}}"><button class="small secondary" data-id="{{item.id}}" bindtap="editIssue" disabled="{{busy}}">编辑隐患</button><button class="small secondary" data-id="{{item.id}}" bindtap="deleteIssue" disabled="{{busy}}">删除隐患</button></view><view class="tag">{{item.statusName}} · {{item.risk}}</view><view class="h2">{{item.category || '现场问题'}} · {{item.location}}</view><view>{{item.subcategory}}</view><view wx:if="{{item.inspectionDate}}" class="muted">检查时间：{{item.inspectionDate}} {{item.inspectionTime}}</view><view class="text">{{item.description}}</view><view wx:if="{{item.reference}}" class="text">依据：{{item.reference}}</view><view wx:if="{{item.suggestion}}" class="text">建议：{{item.suggestion}}</view><view class="muted">整改：{{item.assigneeName}} · 复核：{{item.reviewerName}}</view><view class="actions"><button class="small secondary" wx:for="{{item.evidence}}" wx:for-item="eid" wx:key="*this" data-id="{{eid}}" bindtap="viewEvidence">证据</button></view></block></view></view>
+  </block>
+  <view wx:if="{{view==='report'}}" class="card">
+   <view class="h2">清单上报 · 核对清单</view><view>{{task.title}} · 已保存 {{task.issues.length}} 条隐患、{{task.records.length}} 条现场记录</view>
+   <view class="record" wx:for="{{task.issues}}" wx:key="id">{{index+1}}. {{item.location}} {{item.description||'照片记录'}}</view>
+   <button class="secondary small" bindtap="closeReport">返回现场记录</button>
+   <block wx:if="{{task.workflowVersion===2&&canCollect}}">
+    <textarea placeholder="检查范围和结论" value="{{note}}" data-key="note" bindinput="input"/>
+    <label><switch checked="{{noHazard}}" disabled="{{busy||task.issues.length>0}}" bindchange="noHazardChange"/>本次未发现隐患</label>
+    <button loading="{{busy}}" disabled="{{busy}}" bindtap="submitField">确认清单，交组长筛选</button>
+   </block>
+   <view wx:elif="{{task.stage==='review'}}" class="note">已上报，等待组长筛选。</view>
+   <view wx:elif="{{canCollect&&!canSubmit}}" class="note">清单已保存，请由任务执行人或项目负责人上报。</view>
+  </view>
   <view id="brief-form" class="card" wx:if="{{task.workflowVersion!==2}}"><view class="h2">隐患清单与上报</view><view class="muted">有隐患请先逐条保存；无隐患请选择“未发现隐患”，可补充检查结论和签名后上报。</view><block wx:if="{{canCollect&&canSubmit&&task.workflowVersion!==2}}"><view class="label">指定报告负责人（选填）</view><picker range="{{leaderOptions}}" range-key="name" value="{{leaderIndex}}" bindchange="leaderPick"><view class="picker">{{leaderOptions[leaderIndex].name}} ▾</view></picker><view class="label">检查结论（选填）</view><label><switch checked="{{noHazard}}" disabled="{{busy||task.issues.length>0}}" bindchange="noHazardChange"/>本次检查未发现隐患</label><textarea maxlength="4000" placeholder="{{noHazard?'请填写检查范围、检查内容及未发现隐患的结论（选填）':'现场检查摘要或补充说明（选填）'}}" value="{{note}}" data-key="note" bindinput="input"/><view class="label">检查人员名单（选填）</view><input maxlength="1000" value="{{inspectors}}" data-key="inspectors" bindinput="input" placeholder="多人用逗号或顿号分隔"/><view class="label">签名人姓名（选填）</view><input maxlength="100" value="{{signer}}" data-key="signer" bindinput="input" placeholder="由名单中的一位检查人签名确认"/><view class="label">检查完成确认签名（选填）</view><image wx:if="{{signMode==='image'}}" src="{{signPath}}" mode="aspectFit" style="width:100%;height:200rpx"/><canvas wx:else class="signature" canvas-id="fieldSignature" disable-scroll="true" bindtouchstart="signStart" catchtouchmove="signMove" bindtouchend="signEnd"/><button class="secondary small" bindtap="insertSign" disabled="{{busy}}">插入电子签名图片</button><view class="muted">支持PNG/JPG、WebP、BMP、GIF等设备可读取图片；动图按静态图片导入。HEIC/HEIF/TIFF/AVIF依设备支持，签名前请核对预览。</view><button class="secondary small" bindtap="clearSign" disabled="{{busy}}">清除重签</button><view class="muted">请本人核对记录及签名图片后确认。插入图片仅作预览，点击上报才会提交，签名随本次简报保存。</view><button bindtap="submitField" disabled="{{busy||recording}}">{{task.workflowVersion===2?'返回工作台完成检查、交组长筛选':'生成隐患清单并上报网页平台'}}</button></block><view class="note">简报是现场材料，不替代平台审核后的正式报告。上报后记录锁定，平台退回后可编辑或删除尚未进入整改办理的隐患，历史简报保留原版本。</view><view class="record" wx:for="{{task.fieldBriefs}}" wx:key="id"><view>隐患清单 v{{item.version}} · {{item.createdAt}}</view><view class="actions"><button class="small" data-id="{{item.id}}" bindtap="showBrief">查看简报</button><button class="small secondary" data-id="{{item.id}}" bindtap="briefWord">Word预览／分享</button></view></view></view>
   <view class="card"><view class="h2">知识辅助查询</view><input placeholder="输入现场问题" value="{{question}}" data-key="question" bindinput="input"/><button class="secondary" bindtap="knowledge" disabled="{{busy}}">查询知识</button><view wx:if="{{knowledge}}"><view class="note">{{knowledge.message}}</view><view wx:for="{{knowledge.items}}" wx:key="title" class="record"><view>{{item.title}}</view><view>{{item.text}}</view><view class="muted">{{item.reference}}</view></view></view></view>
  </block>

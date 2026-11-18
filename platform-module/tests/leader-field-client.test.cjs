@@ -14,29 +14,25 @@ function setup(fail=false,workflowVersion=1){
  return {p,calls,wx,api,signatureImage,pages};
 }
 
-test('checklist button uses the report workflow only for version 2',()=>{
+test('both workflows open a checklist on the same page without submitting',()=>{
  const markup=fs.readFileSync(path.join(__dirname,'../miniprogram/pages/work/work.wxml'),'utf8');
- assert.match(markup,/<button wx:if="\{\{task\.workflowVersion===2\}\}"[^>]+bindtap="submitField"[^>]*>清单上报<\/button>\s*<button wx:else[^>]+data-section="brief-form" bindtap="jump">清单上报<\/button>/);
+ assert.match(markup,/bindtap="openReport">清单上报/);assert.match(markup,/view==='report'/);
+ for(const version of [1,2]){
+  const {p,calls}=setup(false,version);p.data.record={text:'',evidence:[]};
+  p.openReport();assert.equal(p.data.view,'report');assert.equal(calls.length,0);
+  p.closeReport();assert.equal(p.data.view,'detail');
+ }
 });
-test('version 2 returns to the same task after saving a hazard without submitting the legacy checklist',async()=>{
- const {p,calls,wx,pages}=setup(false,2);
- p.data.record={text:'',evidence:[]};p.data.issue.description='临边防护缺失';
- await p.addIssue();assert.equal(p.data.task.issues.length,1);
- pages.push({route:'pages/tasks/tasks',data:{task:{id:p.data.task.id}}},p);
- let backSteps;wx.navigateBack=options=>{backSteps=options.delta};wx.navigateTo=()=>assert.fail('should reuse the workbench');
- await p.submitField();assert.equal(backSteps,1);assert.ok(!calls.some(call=>call.url.endsWith('/submit-field')));
+test('opening a checklist explains unsaved input and an active recording',()=>{
+ const {p,wx}=setup(false,2);let message;
+ wx.showModal=options=>{message=options.title};wx.showToast=wx.showModal;
+ p.openReport();assert.equal(message,'请先保存');p.data.recording=true;p.openReport();assert.equal(message,'请先结束录音');
 });
-test('version 2 opens the current task when the preceding page is not that task and reports navigation errors',async()=>{
- const {p,wx,pages}=setup(false,2);
- p.data.record={text:'',evidence:[]};pages.push({route:'pages/tasks/tasks',data:{task:{id:'other-task'}}},p);
- let target,modal;wx.navigateTo=options=>{target=options.url;options.fail()};wx.showModal=options=>{modal=options};
- await p.submitField();assert.equal(target,'/pages/tasks/tasks?taskId=task1');assert.equal(modal.title,'无法打开上报入口');
-});
-test('version 2 keeps unsaved hazard edits on the field page',async()=>{
- const {p,calls,wx}=setup(false,2);
- p.data.record={text:'',evidence:[]};p.data.issue.description='未保存的隐患';
- let modal;wx.showModal=options=>{modal=options};wx.navigateTo=()=>assert.fail('unsaved hazard should block navigation');
- await p.submitField();assert.equal(modal.title,'请先保存');assert.equal(p.data.issue.description,'未保存的隐患');assert.equal(calls.length,0);
+test('version 2 only submits the saved task to mobile-complete after confirmation',async()=>{
+ const {p,calls,api}=setup(false,2);p.data.record={text:'',evidence:[]};p.data.issue.description='临边防护缺失';await p.addIssue();
+ p.openReport();const task=p.data.task;p.confirm=async()=>false;await p.submitField();assert.ok(!calls.some(call=>call.url.endsWith('/mobile-complete')));
+ p.confirm=async()=>true;p.refresh=async()=>{};api.request=async(url,payload)=>{assert.equal(url,'/api/work/mobile-complete');assert.equal(payload.taskId,task.id);assert.equal(payload.revision,task.revision);return {...task,fieldStatus:'review',stage:'review'}};
+ await p.submitField();assert.equal(p.data.task.stage,'review');assert.equal(p.data.canCollect,false);
 });
 
 test('same-text reminders retain distinct task links and unique rendering keys',async()=>{
