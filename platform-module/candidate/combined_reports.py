@@ -109,15 +109,20 @@ def source(w, row):
     issues = []
     for issue in task['issues']:
         issues.append(dict(copy.deepcopy(issue), photos=['evidence:' + eid for eid in issue['evidence'] if eid in images]))
-    for record in task['records']:
-        issues.append(dict(description=record['text'], category='现场确认记录', location='',
-                           inspectionDate=record.get('occurredAt', ''),
-                           photos=['evidence:' + eid for eid in record['evidence'] if eid in images]))
+    records = [dict(id=r['id'], type=r['type'], text=r['text'], occurredAt=r.get('occurredAt', ''),
+                    photos=['evidence:' + eid for eid in r['evidence'] if eid in images])
+               for r in task['records']]
+    separate_records = task.get('workflowVersion') == 2
+    if not separate_records:
+        issues.extend(dict(description=r['text'], category='现场确认记录', location='',
+                           inspectionDate=r['occurredAt'], photos=r['photos']) for r in records)
     signature = task.get('fieldSignature')
     report = dict(notice=task.get('notice', {}), inspector=task.get('inspectors', ''), issues=issues,
                   scope=task.get('fieldSummary', '') if row['kind'] == 'brief' else task.get('handoverSummary', ''),
                   noHazard=task.get('noHazard', False),
                   signatures=[dict(name=signature['name'], signature='evidence:' + signature['evidenceId'])] if signature else [])
+    if separate_records:
+        report['fieldRecords'] = records
     return report, list(filter(None, [task['assignee'], (signature or {}).get('submittedBy')] + [r.get('author') for r in task['records']]))
 
 
@@ -129,7 +134,8 @@ def create(w, data):
     logical = [r['taskId'] or r['key'] for r in rows]
     if len(set(logical)) != len(logical):
         w.fail('同一任务只能选择一个版本的简报或成果，请取消重复版本后合并')
-    sources, issues, signatures, summaries, readers = [], [], [], [], [w.user['id']]
+    sources, issues, field_records, signatures, summaries, readers = [], [], [], [], [], [w.user['id']]
+    no_hazard = True
     for row in rows:
         report, participants = source(w, row)
         readers.extend(participants)
@@ -138,6 +144,8 @@ def create(w, data):
         label = f"{row['number']} / v{row['version']} / {row['inspectors']}"
         for issue in report['issues']:
             issues.append(dict(issue, sourceLabel=label, sourceKey=row['key']))
+        field_records.extend(report.get('fieldRecords', []))
+        no_hazard = no_hazard and report.get('noHazard', False)
         signatures.extend(dict(s, sourceLabel=label) for s in report.get('signatures', []))
         if report.get('scope'):
             summaries.append(label + '：' + report['scope'])
@@ -145,7 +153,9 @@ def create(w, data):
     report = dict(notice={}, project=rows[0]['project'], number='MERGED-' + report_id[:12],
                   inspector='、'.join(dict.fromkeys(r['inspectors'] for r in rows if r['inspectors'])),
                   date=w.s.now()[:10], scope='\n'.join(summaries), issues=issues, signatures=signatures,
-                  noHazard=not issues and all(source(w, r)[0].get('noHazard') for r in rows), combined=True)
+                  noHazard=not issues and no_hazard, combined=True)
+    if field_records:
+        report['fieldRecords'] = field_records
     value = dict(id=report_id, projectId=rows[0]['projectId'], title=rows[0]['project'] + ' 巡查合并报告',
                  createdAt=w.s.now(), createdBy=w.user['id'], createdByName=w.user['name'],
                  readers=list(dict.fromkeys(readers)), sources=sources, report=report, contentHash=digest(report),

@@ -219,7 +219,8 @@ def render(report, read_image, dimensions):
             return p
 
         cells = children(rows[7], 'w:tc')
-        cells[1].appendChild(paragraph('检查人原签名见清单签字页'))
+        cells[1].appendChild(paragraph(
+            '检查人员会签见附件2' if report.get('publicationLabel') else '检查人原签名见清单签字页'))
         for t in nodes(cells[2], 'w:t'):
             set_text(t, '')
         cells[2].appendChild(paragraph('被检查单位负责人签字'))
@@ -274,6 +275,19 @@ def render(report, read_image, dimensions):
             else:
                 append('待被检查人本人现场签署')
         append('报告内容校验：' + report.get('contentHash', ''))
+        field_records = report.get('fieldRecords') or []
+        if field_records:
+            heading = append('附件3 现场记录')
+            props = doc.createElementNS(W, 'w:pPr')
+            props.appendChild(doc.createElementNS(W, 'w:pageBreakBefore'))
+            heading.insertBefore(props, heading.firstChild)
+            for index, record in enumerate(field_records, 1):
+                append(f"{index}. {record['type']}  {record['occurredAt']}")
+                append(record['text'])
+                for ref in record['photos']:
+                    p = append()
+                    fit_picture_paragraph(p)
+                    p.appendChild(picture(ref))
 
     parts['word/document.xml'] = doc.toxml(encoding='UTF-8')
     parts['word/_rels/document.xml.rels'] = rels.toxml(encoding='UTF-8')

@@ -221,9 +221,10 @@ def dispatch(w, action, d):
         if not isinstance(selected, list) or any(not isinstance(x, str) for x in selected) or len(set(selected)) != len(selected) or not set(selected) <= ids: w.fail('筛选清单无效')
         reason = w.optional(d, 'reason', 1000)
         if set(selected) != ids and not reason: w.fail('排除记录须填写筛选理由')
-        if not selected and not (d.get('noHazard') is True and w.optional(d, 'text')): w.fail('空清单必须明确无隐患并填写检查结论')
+        selected_issues = {i['id'] for i in t['issues']}.intersection(selected)
+        if not selected_issues and not (d.get('noHazard') is True and w.optional(d, 'text')): w.fail('无入选隐患时必须明确无隐患并填写检查结论')
         t.update(selectedIds=selected, selectionReason=reason, selectedBy=w.user['id'], selectedAt=w.s.now(),
-                 noHazard=not selected, fieldSummary=w.optional(d, 'text') or t.get('fieldSummary', ''), stage='signing', fieldStatus='submitted')
+                 noHazard=not selected_issues, fieldSummary=w.optional(d, 'text') or t.get('fieldSummary', ''), stage='signing', fieldStatus='submitted')
         t['fieldSummary']='工地：'+t['site']+'；工作日期：'+t['workDate']+'\n'+t['fieldSummary']
         bid=w.s.uid(); t['fieldBriefs'].append(dict(id=bid,version=1,createdAt=w.s.now()))
         snap=w.snapshot(t,1); snap['documentKind']='field-brief'

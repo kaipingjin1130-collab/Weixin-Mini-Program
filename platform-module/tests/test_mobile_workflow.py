@@ -115,5 +115,31 @@ class MobileWorkflow(unittest.TestCase):
         t=self.change(t,'mobile-return',self.lead,text='补拍照片')
         self.assertEqual(t['stage'],'inspection');self.assertEqual(len(t['issues']),2)
 
+    def test_selected_field_record_is_in_word_but_not_in_hazard_list(self):
+        t=self.inspect()
+        photo=self.post('upload',self.worker,projectId=self.pid,name='现场记录.png',base64=self.image,
+                        occurredAt='2026-11-17T09:00:00+08:00')['id']
+        t=self.change(t,'record',self.worker,type='现场日志',text='现场通道检查记录',
+                      occurredAt='2026-11-17T09:00:00+08:00',evidence=[photo])
+        t=self.change(t,'mobile-complete',self.worker)
+        record_id=t['records'][0]['id']
+        self.assertEqual(self.raw('mobile-select',self.lead,taskId=t['id'],revision=t['revision'],
+                                 selectedIds=[record_id],reason='复核排除两项疑似隐患')[0],400)
+        t=self.change(t,'mobile-select',self.lead,selectedIds=[record_id],reason='复核排除两项疑似隐患',
+                      noHazard=True,text='检查通道及防护，复核未发现隐患')
+        self.assertEqual(len(t['issues']),2)
+        report=self.report(t)
+        self.assertEqual(report['report']['issues'],[])
+        self.assertTrue(report['report']['noHazard'])
+        self.assertEqual(report['report']['fieldRecords'][0]['photos'],['evidence:'+photo])
+        status,blob,_=self.request('/quality/api/work/combined-word/'+report['id'],token=self.lead)
+        self.assertEqual(status,200)
+        with zipfile.ZipFile(io.BytesIO(blob)) as doc:
+            xml=doc.read('word/document.xml').decode()
+            self.assertIn('附件3 现场记录',xml)
+            self.assertIn('现场通道检查记录',xml)
+            self.assertIn('本次在上述检查范围内未发现隐患',xml)
+            self.assertIn('w:drawing',xml.split('附件3 现场记录')[1])
+
 
 if __name__=='__main__': unittest.main()
