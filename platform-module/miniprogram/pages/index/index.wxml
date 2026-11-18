@@ -1,9 +1,10 @@
 <view class="page">
  <button class="secondary actions" bindtap="openOffline">离线采集／手机草稿／回办公室同步</button>
  <view wx:if="{{mode==='login'}}" class="login">
-  <view class="brand">察</view><view class="title">质量安全小察</view><view class="muted">云端协同 · 巡查工作台</view>
+  <view wx:if="{{identityUat}}" class="note">本机验收 · 请用本人原平台账号登录。密码不记忆，任务和签字只保存到本机验收库。</view>
+  <view class="brand">察</view><view class="title">质量安全小察</view><view class="muted">{{identityUat?'本机验收 · 巡查工作台':'云端协同 · 巡查工作台'}}</view>
   <view class="card"><view class="label">登录账号</view><input value="{{username}}" data-key="username" bindinput="input" placeholder="请输入原平台账号"/><view class="label">访问密码</view><input password value="{{password}}" data-key="password" bindinput="input" placeholder="请输入与网页平台相同的密码"/><button loading="{{busy}}" disabled="{{busy}}" bindtap="login">登录</button><button class="secondary" bindtap="forgetAccount">清除记住的账号密码</button></view>
-  <view class="note">使用与网页平台相同的账号和密码登录，两端数据实时同步。成员账号和项目权限由管理员在网页平台分配。</view>
+  <view wx:if="{{!identityUat}}" class="note">使用与网页平台相同的账号和密码登录，两端数据实时同步。成员账号和项目权限由管理员在网页平台分配。</view>
  </view>
  <block wx:else>
   <view class="title">质量安全小察 · 现场端</view>
