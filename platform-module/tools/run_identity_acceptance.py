@@ -18,6 +18,7 @@ def main():
         raise SystemExit('验收认证通道已到期，需重新授权。')
     env = settings(dict(os.environ, QAXC_UAT_AUTH_URL='http://127.0.0.1:18819/internal/qaxc',
                         QAXC_UAT_AUTH_KEY=config['token']))
+    env['QAXC_UAT_PROJECT_SYNC'] = '1'
     children = []
     try:
         for script, args in ((TOOLS / 'uat_local_channel.py', []),

@@ -42,7 +42,8 @@ def people(w, pid, value, allow_empty=False):
 
 
 def manage(w, t):
-    if w.role(t['projectId']) not in ('admin', 'manager') and w.user['id'] != t['leaderId']:
+    role = w.role(t['projectId'])
+    if role not in ('admin', 'manager') and not (role == 'inspector' and w.user['id'] == t['leaderId']):
         w.fail('仅指定组长或项目经理可操作', 403)
 
 
@@ -144,8 +145,9 @@ def state(w, query):
         if n['projectId'] in visible: notifications.append(n)
     for t in tasks:
         t['stageName'] = STAGES[t['stage']]
-        t['canManage'] = is_admin(w.user) or w.user['id'] == t['leaderId'] or next(p['role'] for p in source['projects'] if p['id'] == t['projectId']) == 'manager'
-        t['canAccept'] = t['stage'] == 'dispatch' and w.user['id'] in t['invitedIds'] and w.user['id'] not in t['acceptedIds']
+        role = next(p['role'] for p in source['projects'] if p['id'] == t['projectId'])
+        t['canManage'] = role in ('admin', 'manager') or (role == 'inspector' and w.user['id'] == t['leaderId'])
+        t['canAccept'] = role in ('manager', 'inspector') and t['stage'] == 'dispatch' and w.user['id'] in t['invitedIds'] and w.user['id'] not in t['acceptedIds']
         t['confirmedNames'] = '、'.join(names.get(uid, uid) for uid in t['confirmedIds'])
         t['acceptedPeople'] = [dict(id=uid, name=names.get(uid, uid)) for uid in t['acceptedIds']]
         t['overContract'] = next((p['config'].get('contractPeople') is not None and t['requiredPeople'] > p['config']['contractPeople'] for p in project_rows if p['id'] == t['projectId']), False)

@@ -15,6 +15,7 @@ import leader_reports
 import combined_reports
 import notice
 import host_auth
+import uat_permissions
 import pg_storage
 PREFIX=os.environ.get("QAXC_ROOT_PATH", "").rstrip("/")
 if PREFIX and not re.fullmatch(r"/[a-z][a-z0-9-]*", PREFIX): raise RuntimeError("Invalid module prefix")
@@ -230,9 +231,13 @@ class Handler(BaseHTTPRequestHandler):
   if not user: raise Problem('请重新登录',401)
   if host_auth.enabled():
    if user.get('authSource')!='host': raise Problem('请使用老平台账号重新登录',401)
-   try: fresh=host_auth.identity(host_auth.call('identity',{'id':user['id']}))
+   try:
+    result=host_auth.call('identity',{'id':user['id']})
+    fresh=host_auth.identity(result)
+    if fresh['id']!=user['id']: raise host_auth.AuthError('登录账号不一致',401)
+    if uat_permissions.enabled():
+     with db() as c: uat_permissions.sync(c,result,DATA)
    except host_auth.AuthError as e: raise Problem(e.message,e.status)
-   if fresh['id']!=user['id']: raise Problem('登录账号不一致',401)
    with SESSION_LOCK: SESSION_USERS[token]=fresh
   return token
  def do_GET(self): self.handle_request('GET')
@@ -271,8 +276,10 @@ class Handler(BaseHTTPRequestHandler):
      try:
       result=host_auth.call('session',cookie=self.headers.get('Cookie','')) if path=='/api/host-session' else host_auth.call('login',{'username':str(d.get('username','')).strip(),'password':str(d.get('password',''))})
       user=host_auth.identity(result)
+      with db() as c:
+       uat_permissions.sync(c,result,DATA)
+       host_auth.register(c,user)
      except host_auth.AuthError as e: raise Problem(e.message,e.status)
-     with db() as c: host_auth.register(c,user)
     else:
      username=str(d.get('username','admin')).strip() or 'admin'
      user=None
@@ -305,6 +312,9 @@ class Handler(BaseHTTPRequestHandler):
     user=SESSION_USERS[token]
     if path=='/api/session' and method=='GET': self.send({'user':user});return
     w=workflow.Workflow(SimpleNamespace(Problem=Problem,required=required,uid=uid,now=now,get_report=get_report,image_type=image_type,dimensions=dimensions,DATA=DATA,KNOWLEDGE=KNOWLEDGE),c,user)
+    if uat_permissions.enabled() and path in ('/api/work/members','/api/work/add-member','/api/work/users'):
+     raise Problem('本机验收按原平台项目权限同步，不能在此新增或提升权限',403)
+    if method=='POST': uat_permissions.guard_write(w,d)
     if host_auth.enabled() and path=='/api/work/users': raise Problem('请使用老平台账号登录一次，再分配项目权限',403)
     if path.startswith('/api/work/'):
      action=path.removeprefix('/api/work/')
