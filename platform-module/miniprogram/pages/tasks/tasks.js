@@ -31,6 +31,7 @@ Page({
  returnDraft(){return this.run(()=>this.action('mobile-return',{text:this.data.reason}))},
  select(){return this.run(async()=>{if(await this.confirm('确认筛选清单？所选记录将生成待签字报告，未选记录保留在草稿记录中。'))await this.action('mobile-select',{selectedIds:this.data.selectedIds,reason:this.data.reason,noHazard:this.data.noHazard,text:this.data.note})})},
  report(){wx.navigateTo({url:'/pages/combined/combined?reportId='+this.data.task.combinedId})},
+ reportList(){wx.navigateTo({url:'/pages/combined/combined'})},
  publish(){return this.run(async()=>{const r=await api.request('/api/work/combined-data/'+this.data.task.combinedId);if(await this.confirm('已签字 '+r.signedCount+' 人。确认各方均已核对本报告并正式发布？'))await this.action('mobile-publish',{contentHash:r.contentHash,reportRevision:r.revision})})},
  recognize(){return this.run(async()=>{if(await this.confirm('认定 '+this.data.actualIds.length+' 人，每人 '+this.data.hours+' 小时。确认后计入工作统计，不能重复认定。'))await this.action('mobile-recognize',{actualIds:this.data.actualIds,hoursPerPerson:Number(this.data.hours),text:this.data.note})})},
  async statsScope(e){this.setData({scope:e.currentTarget.dataset.scope,legacy:null});await this.reload()},

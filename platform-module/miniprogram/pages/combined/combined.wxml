@@ -1,13 +1,19 @@
 <view class="page">
- <view class="title">合并报告与签字</view><view class="note">{{message}}</view>
+ <view class="title">报告查看、签字与发布</view><view wx:if="{{message}}" class="note">{{message}}</view>
  <block wx:if="{{!report}}">
   <button bindtap="reload" disabled="{{busy}}" class="secondary">刷新报告</button>
-  <view class="card"><view class="h2">负责人收到的报告</view><view class="muted">勾选同一项目的报告；同一任务请选择一个版本。</view><checkbox-group bindchange="select"><label wx:for="{{rows}}" wx:key="key"><checkbox value="{{item.key}}" disabled="{{busy}}"/>{{item.project}} · {{item.title}} · {{item.inspectors}} · v{{item.version}}</label></checkbox-group><button bindtap="create" disabled="{{busy||!selected.length}}">自动整合成一份大报告</button></view>
+  <view class="h2">新流程报告</view><view class="note">组长筛选清单后已生成报告，无需合并。直接打开核对、本人签字，再由组长或项目经理确认发布。</view>
+  <view class="card" wx:for="{{workflowReports}}" wx:key="id"><view class="h2">{{item.title}}</view><view>{{item.taskTitle}}</view><view>{{item.publishedAt?'已发布 · 签字锁定':'待签字 / 确认发布'}} · 已签 {{item.signedCount||0}} / {{item.signerCount||0}} 人</view><button data-id="{{item.id}}" bindtap="open" disabled="{{busy}}">{{item.publishedAt?'查看已发布报告 / Word':'查看报告 / 签字 / 发布'}}</button></view>
+  <view class="card" wx:for="{{workflowPending}}" wx:key="taskId"><view class="h2">{{item.title}}</view><view>请在任务工作台由组长筛选清单生成报告。</view><button class="secondary" data-task="{{item.taskId}}" bindtap="openTask">进入任务 / 筛选清单</button></view>
+  <view wx:if="{{!workflowReports.length&&!workflowPending.length}}" class="empty">暂无新流程报告，请先在任务中完成清单筛选。</view>
+  <view class="card" wx:if="{{rows.length}}"><view class="h2">历史报告合并</view><view class="muted">仅用于历史流程。勾选同一项目的报告；同一任务请选择一个版本。新流程报告不参与合并。</view><checkbox-group bindchange="select"><label wx:for="{{rows}}" wx:key="key"><checkbox value="{{item.key}}" disabled="{{busy}}"/>{{item.project}} · {{item.title}} · {{item.inspectors}} · v{{item.version}}</label></checkbox-group><button bindtap="create" disabled="{{busy||!selected.length}}">合并所选历史报告</button></view>
+  <view wx:if="{{reports.length}}" class="h2">历史合并报告</view>
   <view class="card" wx:for="{{reports}}" wx:key="id" data-id="{{item.id}}" bindtap="open"><view class="h2">{{item.title}}</view><view>{{item.createdByName}} · {{item.createdAt}}</view><view>被检查单位负责人：{{item.recipientName||'待指定'}}</view><view>已签 {{item.signedCount||0}} / {{item.signerCount||0}} 人 →</view></view>
  </block>
  <block wx:else>
   <view wx:if="{{report.workflowVersion===2}}" class="note">{{report.publishedAt?"已确认发布 · 签字锁定":"待各方签字 / 负责人确认发布"}}</view>
   <button bindtap="back" class="secondary" disabled="{{busy}}">返回列表</button>
+  <view class="card" wx:if="{{publication.isWorkflow}}"><view class="h2">{{publication.published?'报告已发布':'报告发布'}}</view><view>{{publication.reason}}</view><button wx:if="{{publication.canManage&&!publication.published}}" bindtap="publish" disabled="{{busy||!publication.ready}}">确认各方签字并发布报告</button><button class="secondary" bindtap="openTask" disabled="{{busy}}">返回任务 / 工作认定</button></view>
   <view class="card"><view class="h2">{{report.title}}</view><view wx:if="{{report.workflowVersion===2}}">{{report.report.issues.length}} 条隐患 · {{report.report.fieldRecords.length||0}} 条现场记录</view><view wx:else>{{report.sources.length}} 份报告 · {{report.report.issues.length}} 条记录</view><view class="text">{{report.report.scope}}</view><button bindtap="word" disabled="{{busy}}">预览／分享完整 Word</button></view>
   <view class="card" wx:for="{{report.report.issues}}" wx:key="displayId"><view class="h2">{{index+1}}. {{item.description||'现场照片记录'}}</view><view>{{item.location}} · {{item.inspectionDate}} {{item.inspectionTime}}</view><view>{{item.category}} · {{item.risk}}</view><view>{{item.reference}}</view><view>{{item.suggestion}}</view><view class="muted">来源：{{item.sourceLabel}}</view><button wx:for="{{item.photos}}" wx:for-item="photo" wx:key="*this" class="secondary small" data-ref="{{photo}}" bindtap="photo">查看隐患照片</button></view>
   <view class="card" wx:if="{{report.report.fieldRecords.length}}"><view class="h2">现场记录</view><view wx:for="{{report.report.fieldRecords}}" wx:key="id"><view class="label">{{item.type}} · {{item.occurredAt}}</view><view class="text">{{item.text}}</view><button wx:for="{{item.photos}}" wx:for-item="photo" wx:key="*this" class="secondary small" data-ref="{{photo}}" bindtap="photo">查看记录照片</button></view></view>

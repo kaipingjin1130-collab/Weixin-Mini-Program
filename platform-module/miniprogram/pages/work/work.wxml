@@ -2,7 +2,7 @@
  <block wx:if="{{view!=='report'}}">
  <button bindtap="openTasks">任务派发 / 草稿筛选 / 签字发布 / 工作认定</button>
  <button class="secondary actions" bindtap="openOffline">离线采集／手机草稿／回办公室同步</button>
- <button class="secondary actions" bindtap="openCombined">负责人合并报告／被检查单位签字</button>
+ <button class="secondary actions" bindtap="openCombined">报告查看 / 各方签字 / 发布</button>
  </block>
  <view class="title">质量安全小察</view><view class="muted">{{user.name}} · 采集、确认、清单上报</view>
  <view wx:if="{{busy}}" class="note">正在处理，请稍候…</view>
