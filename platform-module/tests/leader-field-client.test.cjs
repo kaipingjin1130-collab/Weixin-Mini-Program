@@ -1,17 +1,43 @@
 const fs=require('node:fs'),vm=require('node:vm'),assert=require('node:assert/strict'),test=require('node:test'),path=require('node:path');
-function setup(fail=false){
- let definition;const calls=[];
+function setup(fail=false,workflowVersion=1){
+ let definition;const calls=[],pages=[];
  let task={id:'task1',projectId:'p1',revision:3,status:'active',fieldStatus:'collecting',assignee:'inspector',receiver:'receiver',records:[],issues:[],scenario:{recordTypes:['巡查记录'],checklist:[]},materials:[],fieldBriefs:[]};
+ if(workflowVersion===2)Object.assign(task,{workflowVersion,confirmedIds:['inspector']});
  const state=()=>({user:{id:'inspector',name:'现场员'},projects:[{id:'p1',name:'项目',role:'inspector',members:[]}],tasks:[task],scenarios:[],reminders:[],users:[]});
  const api={request:async(url,data)=>{calls.push({url,data});if(url==='/api/work/state')return state();if(fail)throw Error('服务暂时不可用');task={...task,revision:task.revision+1};if(url.endsWith('/issue'))task.issues=[...task.issues,{...data,id:'i'+(task.issues.length+1),status:'unassigned'}];if(url.endsWith('/record'))task.records=[{...data,id:'r1',status:data.confirm?'confirmed':'draft'}];if(url.endsWith('/submit-field'))task.fieldStatus='submitted';return task}};
  const signatureImage={choose:async()=>null,prepare:async image=>image};
  const wx={showModal:o=>o.success?.({confirm:true}),showToast:()=>{},enableAlertBeforeUnload:()=>{},disableAlertBeforeUnload:()=>{}};
- vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../miniprogram/pages/work/work.js'),'utf8'),{require:name=>name.endsWith('/signature')?signatureImage:name.endsWith('/image-import')?{select:async o=>{const r=await new Promise(resolve=>wx.chooseMedia({...o,sourceType:[o.source],success:resolve}));return r.tempFiles},normalize:async f=>({path:f.tempFilePath,extension:'jpg'})}:api,Page:d=>definition=d,wx,console});
+ vm.runInNewContext(fs.readFileSync(path.join(__dirname,'../miniprogram/pages/work/work.js'),'utf8'),{require:name=>name.endsWith('/signature')?signatureImage:name.endsWith('/image-import')?{select:async o=>{const r=await new Promise(resolve=>wx.chooseMedia({...o,sourceType:[o.source],success:resolve}));return r.tempFiles},normalize:async f=>({path:f.tempFilePath,extension:'jpg'})}:api,Page:d=>definition=d,getCurrentPages:()=>pages,wx,console});
  const p={...definition,data:JSON.parse(JSON.stringify(definition.data))};
  p.setData=values=>{for(const [key,value] of Object.entries(values)){const keys=key.split('.');let obj=p.data;for(const k of keys.slice(0,-1))obj=obj[k]??(obj[k]={});obj[keys.at(-1)]=value}};
  p.setData(state());p.setTask(task);p.data.record={type:'巡查记录',text:'现场检查内容',occurredAt:'2026-10-20T09:00:00+08:00',evidence:['photo1']};p.data.evidence=[{id:'photo1',selected:true}];
- return {p,calls,wx,api,signatureImage};
+ return {p,calls,wx,api,signatureImage,pages};
 }
+
+test('checklist button uses the report workflow only for version 2',()=>{
+ const markup=fs.readFileSync(path.join(__dirname,'../miniprogram/pages/work/work.wxml'),'utf8');
+ assert.match(markup,/<button wx:if="\{\{task\.workflowVersion===2\}\}"[^>]+bindtap="submitField"[^>]*>清单上报<\/button>\s*<button wx:else[^>]+data-section="brief-form" bindtap="jump">清单上报<\/button>/);
+});
+test('version 2 returns to the same task after saving a hazard without submitting the legacy checklist',async()=>{
+ const {p,calls,wx,pages}=setup(false,2);
+ p.data.record={text:'',evidence:[]};p.data.issue.description='临边防护缺失';
+ await p.addIssue();assert.equal(p.data.task.issues.length,1);
+ pages.push({route:'pages/tasks/tasks',data:{task:{id:p.data.task.id}}},p);
+ let backSteps;wx.navigateBack=options=>{backSteps=options.delta};wx.navigateTo=()=>assert.fail('should reuse the workbench');
+ await p.submitField();assert.equal(backSteps,1);assert.ok(!calls.some(call=>call.url.endsWith('/submit-field')));
+});
+test('version 2 opens the current task when the preceding page is not that task and reports navigation errors',async()=>{
+ const {p,wx,pages}=setup(false,2);
+ p.data.record={text:'',evidence:[]};pages.push({route:'pages/tasks/tasks',data:{task:{id:'other-task'}}},p);
+ let target,modal;wx.navigateTo=options=>{target=options.url;options.fail()};wx.showModal=options=>{modal=options};
+ await p.submitField();assert.equal(target,'/pages/tasks/tasks?taskId=task1');assert.equal(modal.title,'无法打开上报入口');
+});
+test('version 2 keeps unsaved hazard edits on the field page',async()=>{
+ const {p,calls,wx}=setup(false,2);
+ p.data.record={text:'',evidence:[]};p.data.issue.description='未保存的隐患';
+ let modal;wx.showModal=options=>{modal=options};wx.navigateTo=()=>assert.fail('unsaved hazard should block navigation');
+ await p.submitField();assert.equal(modal.title,'请先保存');assert.equal(p.data.issue.description,'未保存的隐患');assert.equal(calls.length,0);
+});
 
 test('same-text reminders retain distinct task links and unique rendering keys',async()=>{
  const {p,api}=setup();p.data.task=null;

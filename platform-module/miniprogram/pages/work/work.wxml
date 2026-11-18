@@ -27,7 +27,12 @@
  <block wx:else>
   <button class="secondary small" bindtap="back">返回任务列表</button>
   <view id="report-leader" class="card" wx:if="{{task.workflowVersion!==2}}"><view class="h2">指定报告负责人</view><view>已保存负责人：{{task.leaderName}}</view><block wx:if="{{canAssignLeader}}"><picker range="{{leaderOptions}}" range-key="name" value="{{leaderIndex}}" bindchange="leaderPick" disabled="{{busy}}"><view class="picker">{{leaderOptions[leaderIndex].name}} ▾</view></picker><button class="secondary small actions" bindtap="saveLeader" disabled="{{busy}}">保存负责人</button></block><view class="muted">上报后自动进入所选负责人的站内待阅，可在“负责人汇总”中查看及合并报告。选择后可先保存，也可随清单一起上报。</view><view class="muted" wx:if="{{leaderOptions.length===1}}">暂无可选成员，请先在网页“成员与负责人”中添加项目成员。</view></view>
-  <view wx:if="{{canCollect}}" class="field-nav"><button class="secondary small" data-section="issue-form" bindtap="jump">隐患登记 / 拍照</button><button class="secondary small" data-section="brief-form" bindtap="jump">清单上报</button></view>  <view id="issue-form" class="card issue-card" wx:if="{{canCollect}}">
+  <view wx:if="{{canCollect}}" class="field-nav">
+   <button class="secondary small" data-section="issue-form" bindtap="jump">隐患登记 / 拍照</button>
+   <button wx:if="{{task.workflowVersion===2}}" class="secondary small" bindtap="submitField" disabled="{{busy||recording}}">清单上报</button>
+   <button wx:else class="secondary small" data-section="brief-form" bindtap="jump">清单上报</button>
+  </view>
+  <view id="issue-form" class="card issue-card" wx:if="{{canCollect}}">
    <view class="row between"><view class="h2">{{editingIssueId?'编辑已保存隐患':'新增隐患记录'}}</view><view wx:if="{{!editingIssueId}}" class="tag">第 {{task.issues.length+1}} 条</view></view>
    <view class="muted">先拍照，再补充描述、位置和检查时间，逐条保存，照片只关联当前隐患。</view>
    <view class="label">现场照片（{{issuePhotos.length}} / 9）</view>
