@@ -379,6 +379,11 @@ class Handler(BaseHTTPRequestHandler):
       if previous['fingerprint']!=fingerprint: raise Problem('同一请求编号不能用于不同内容',409)
       # Recheck authorization after role changes before returning cached task data.
       if d.get('taskId'): w.task(d['taskId'])
+      if action in ('mobile-roster','mobile-remove-applicant'):
+       w.allow(w.task(d['taskId'])['projectId'],['manager'])
+      if action=='mobile-accept':
+       current=w.task(d['taskId']);w.member(current['projectId'],user['id'],['manager','inspector'])
+       if user['id'] in current.get('removedApplicantIds',[]): raise Problem('项目负责人已移除你的报名，本任务不能重复报名',403)
       if d.get('projectId'): w.role(d['projectId'])
       if d.get('reportId'): w.role(get_report(c,d['reportId'])['projectId'])
       if action=='assign-document-leader': w.allow(leader_reports.document(w,d.get('key'))['projectId'],['manager'])

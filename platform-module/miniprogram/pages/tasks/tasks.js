@@ -2,7 +2,7 @@ const api=require('../../utils/api');
 const uid=()=>Date.now().toString(36)+'-'+Math.random().toString(36).slice(2);
 const today=()=>{const d=new Date();return [d.getFullYear(),String(d.getMonth()+1).padStart(2,'0'),String(d.getDate()).padStart(2,'0')].join('-')};
 Page({
- data:{busy:false,pushConfig:{enabled:false},tab:'tasks',tasks:[],projects:[],statistics:[],projectStatistics:[],notifications:[],user:{},projectIndex:0,leaderIndex:0,members:[],leaders:[],task:null,creating:false,scope:'self',legacy:null,from:'',to:'',selectedIds:[],confirmedIds:[],actualIds:[],invitedIds:[],reason:'',note:'',noHazard:false,hours:'8',form:{title:'现场巡查',site:'',workDate:today(),requiredPeople:'1'},contractPeople:'',basis:'',catalogId:'',message:'',stageNames:['1 工地信息 / 派单','2 现场检查','3 报告生成','4 工作认定']},
+ data:{busy:false,pushConfig:{enabled:false},tab:'tasks',tasks:[],projects:[],statistics:[],projectStatistics:[],notifications:[],user:{},projectIndex:0,leaderIndex:0,members:[],leaders:[],task:null,creating:false,scope:'self',legacy:null,from:'',to:'',selectedIds:[],confirmedIds:[],actualIds:[],reason:'',note:'',noHazard:false,hours:'8',form:{title:'现场巡查',site:'',workDate:today(),requiredPeople:'1'},contractPeople:'',basis:'',catalogId:'',message:'',stageNames:['1 工地信息 / 派单','2 现场检查','3 报告生成','4 工作认定']},
  onLoad(options){this.targetId=options?.taskId||''},
  onShow(){this.reload()},
  async onPullDownRefresh(){try{await this.reload()}finally{wx.stopPullDownRefresh()}},
@@ -15,17 +15,28 @@ Page({
  pick(e){this.setData({[e.currentTarget.dataset.key]:Number(e.detail.value)});if(e.currentTarget.dataset.key==='projectIndex')this.projectData()},
  checks(e){this.setData({[e.currentTarget.dataset.key]:e.detail.value})},
  noHazard(e){this.setData({noHazard:e.detail.value})},
- projectData(){const p=this.data.projects[this.data.projectIndex];const members=(p?.members||[]).filter(m=>['inspector','manager'].includes(m.role));const config=this.data.projectStatistics.find(x=>x.id===p?.id)?.config||{};this.setData({members,leaders:members,leaderIndex:0,invitedIds:[],projectCanManage:p?.role==='admin'||p?.role==='manager',contractPeople:config.contractPeople===undefined?'':String(config.contractPeople),basis:config.basis||'',catalogId:config.catalogId?String(config.catalogId):'',configRevision:config.revision||0})},
- createView(){const projectIndex=this.data.projects.findIndex(p=>['manager','admin'].includes(p.role));if(projectIndex<0){wx.showModal({title:'当前账号无派单权限',content:'请由该项目的项目经理本人登录派单，检查员在收到任务后接单。',showCancel:false});return}this.setData({creating:true,task:null,projectIndex});this.projectData()},
+ projectData(){const p=this.data.projects[this.data.projectIndex];const members=(p?.members||[]).filter(m=>['inspector','manager'].includes(m.role));const config=this.data.projectStatistics.find(x=>x.id===p?.id)?.config||{};this.setData({members,leaders:members,leaderIndex:0,projectCanManage:p?.role==='admin'||p?.role==='manager',contractPeople:config.contractPeople===undefined?'':String(config.contractPeople),basis:config.basis||'',catalogId:config.catalogId?String(config.catalogId):'',configRevision:config.revision||0})},
+ createView(){const projectIndex=this.data.projects.findIndex(p=>['manager','admin'].includes(p.role));if(projectIndex<0){wx.showModal({title:'当前账号无派单权限',content:'请由该项目的项目经理本人登录派单，项目内具备巡查权限的人员可在任务发布后自主报名。',showCancel:false});return}this.setData({creating:true,task:null,projectIndex});this.projectData()},
  switchAccount(){return this.run(async()=>{if(!(await this.confirm('退出当前账号并返回登录页？请由需要测试的人员本人输入账号和密码。')))return;await api.request('/api/logout',{});wx.removeStorageSync('token');api.reset();wx.reLaunch({url:'/pages/index/index'})})},
- async create(){await this.run(async()=>{const p=this.data.projects[this.data.projectIndex];const leader=this.data.leaders[this.data.leaderIndex];if(!p||!leader)throw Error('请选择项目和组长');if(!this.data.form.title.trim()||!this.data.form.site.trim())throw Error('请填写任务名称和工地信息');const task=await this.post('mobile-create',{...this.data.form,requiredPeople:Number(this.data.form.requiredPeople),projectId:p.id,leaderId:leader.id,invitedIds:this.data.invitedIds});this.setData({creating:false});this.targetId=task.id;await this.refresh()})},
+ async create(){await this.run(async()=>{const p=this.data.projects[this.data.projectIndex];const leader=this.data.leaders[this.data.leaderIndex];if(!p||!leader)throw Error('请选择项目和组长');if(!this.data.form.title.trim()||!this.data.form.site.trim())throw Error('请填写任务名称和工地信息');const task=await this.post('mobile-create',{...this.data.form,requiredPeople:Number(this.data.form.requiredPeople),projectId:p.id,leaderId:leader.id});this.setData({creating:false});this.targetId=task.id;await this.refresh()})},
  open(e){const task=this.data.tasks.find(t=>t.id===e.currentTarget.dataset.id);if(task)this.show(task)},
  show(task){const members=this.data.projects.find(p=>p.id===task.projectId)?.members||[];this.setData({task,creating:false,confirmedIds:task.acceptedIds.slice(),actualIds:task.confirmedIds.slice(),selectedIds:[],reason:'',note:task.fieldSummary||'',noHazard:task.noHazard||false,acceptedPeople:task.acceptedPeople.map(p=>({...p,checked:true})),actualPeople:task.confirmedIds.map(id=>({id,name:members.find(m=>m.id===id)?.name||id,checked:true})),draftItems:[...task.issues.map(i=>({...i,kind:'隐患',text:(i.location?i.location+'：':'')+(i.description||'照片记录')})),...task.records.map(i=>({...i,kind:'现场记录'}))]})},
  back(){this.setData({task:null,creating:false})},
  confirm(content){return new Promise(resolve=>wx.showModal({title:'请核对',content,success:r=>resolve(!!r.confirm),fail:()=>resolve(false)}))},
  async action(action,payload={}){const t=this.data.task;await this.post(action,{taskId:t.id,revision:t.revision,...payload});await this.refresh()},
  accept(){return this.run(()=>this.action('mobile-accept'))},
- roster(){return this.run(async()=>{if(await this.confirm('确认所选人员为最终检查名单？确认后开始现场检查，名单锁定。'))await this.action('mobile-roster',{confirmedIds:this.data.confirmedIds,reason:this.data.reason})})},
+ removeApplicant(e){
+  const person=this.data.acceptedPeople.find(p=>p.id===e.currentTarget.dataset.id);
+  if(!person||!this.data.task?.canConfirmRoster)return;
+  return this.run(async()=>{
+   if(!(await this.confirm('移除 '+person.name+' 的报名？该人员将不能重复报名本任务。')))return;
+   const selected=this.data.confirmedIds.filter(id=>id!==person.id),reason=this.data.reason;
+   await this.action('mobile-remove-applicant',{userId:person.id,reason});
+   const confirmedIds=selected.filter(id=>this.data.task.acceptedIds.includes(id));
+   this.setData({confirmedIds,reason,acceptedPeople:this.data.acceptedPeople.map(p=>({...p,checked:confirmedIds.includes(p.id)}))});
+  });
+ },
+ roster(){return this.run(async()=>{if(await this.confirm('确认所选人员为最终检查名单？确认后停止报名、锁定名单并开始现场检查。'))await this.action('mobile-roster',{confirmedIds:this.data.confirmedIds,reason:this.data.reason})})},
  field(){wx.navigateTo({url:'/pages/work/work?taskId='+this.data.task.id})},
  complete(){return this.run(async()=>{if(await this.confirm('检查完成后草稿将锁定并交由组长筛选，是否继续？'))await this.action('mobile-complete',{noHazard:this.data.noHazard,text:this.data.note})})},
  returnDraft(){return this.run(()=>this.action('mobile-return',{text:this.data.reason}))},

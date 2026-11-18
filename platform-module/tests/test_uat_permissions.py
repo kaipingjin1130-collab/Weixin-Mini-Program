@@ -52,7 +52,7 @@ class PermissionMirror(unittest.TestCase):
 
     def create(self, token):
         return self.post('mobile-create', token, projectId='p1', title='验收巡查', site='测试工地',
-                         workDate='2026-11-18', requiredPeople=1, leaderId='host:admin:7', invitedIds=['host:admin:8'])
+                         workDate='2026-11-18', requiredPeople=1, leaderId='host:admin:7')
 
     def test_other_account_login_does_not_grant_any_project(self):
         token, _ = self.login('outsider')
@@ -87,6 +87,24 @@ class PermissionMirror(unittest.TestCase):
         outsider, _ = self.login('outsider')
         self.assertEqual([p['id'] for p in self.state(outsider)[1]['projects']], ['p2'])
         self.assertEqual(self.post('mobile-accept', outsider, taskId=task['id'], revision=task['revision'])[0], 403)
+
+    def test_real_project_manager_can_remove_and_confirm_but_loses_cached_authority_on_demotion(self):
+        manager, _ = self.login()
+        task = self.create(manager)[1]
+        worker, _ = self.login('worker')
+        task = self.post('mobile-accept', worker, taskId=task['id'], revision=task['revision'])[1]
+        removal = dict(requestId='remove-once', taskId=task['id'], revision=task['revision'], userId='host:admin:8')
+        status, task, _ = self.request('/quality/api/work/mobile-remove-applicant', removal, manager)
+        self.assertEqual(status, 200)
+        self.assertEqual(task['acceptedIds'], [])
+        self.projects[0]['members'][0]['role'] = 'inspector'
+        self.assertEqual(self.request('/quality/api/work/mobile-remove-applicant', removal, manager)[0], 403)
+        self.projects[0]['members'][0]['role'] = 'manager'
+        task = self.post('mobile-accept', manager, taskId=task['id'], revision=task['revision'])[1]
+        roster = dict(requestId='confirm-once', taskId=task['id'], revision=task['revision'], confirmedIds=['host:admin:7'])
+        self.assertEqual(self.request('/quality/api/work/mobile-roster', roster, manager)[0], 200)
+        self.projects[0]['members'][0]['role'] = 'inspector'
+        self.assertEqual(self.request('/quality/api/work/mobile-roster', roster, manager)[0], 403)
 
     def test_revoked_and_downgraded_permissions_apply_to_existing_session(self):
         manager, _ = self.login()

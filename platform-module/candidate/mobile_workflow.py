@@ -47,6 +47,11 @@ def manage(w, t):
         w.fail('仅指定组长或项目经理可操作', 403)
 
 
+def project_people(w, pid, roles):
+    return [r['user_id'] for r in w.c.execute('SELECT user_id,role FROM memberships WHERE project_id=?', (pid,))
+            if r['role'] in roles]
+
+
 def notify(w, t, uids, kind, text):
     for uid in set(uids) - {''}:
         nid = w.s.uid()
@@ -72,7 +77,8 @@ def save(w, t, action, detail=''):
 def initialize(w, t, d, adhoc=False):
     t.update(workflowVersion=2, stage='dispatch', site=w.text(d, 'site', 300),
              workDate=w.checkdate(d.get('workDate')), requiredPeople=integer(w, d.get('requiredPeople'), '任务需求人数'),
-             invitedIds=people(w, t['projectId'], d.get('invitedIds', []), allow_empty=adhoc),
+             invitedIds=people(w, t['projectId'], d.get('invitedIds', []), allow_empty=True),
+             signupMode='project-open', removedApplicantIds=[], applicantRemovals=[],
              acceptedIds=[w.user['id']] if adhoc else [], confirmedIds=[], rosterConfirmedAt='',
              workType=w.optional(d, 'workType', 100) or '现场巡查', catalogId=setting(w, 'project:'+t['projectId']).get('catalogId'),
              syncStatus='pending')
@@ -83,7 +89,8 @@ def initialize(w, t, d, adhoc=False):
     t['status'] = 'ready'
     t['object'] = t['site']
     t['dueDate'] = t['workDate']
-    notify(w, t, t['invitedIds'] + [t['leaderId']], 'dispatch', '新任务待接单：' + t['title'])
+    notify(w, t, project_people(w, t['projectId'], ['manager', 'inspector']) + [t['leaderId']],
+           'dispatch', '巡查任务已发布，可自主报名接单，待项目负责人确定名单：' + t['title'])
 
 
 def guard(w, t, action, d):
@@ -147,7 +154,10 @@ def state(w, query):
         t['stageName'] = STAGES[t['stage']]
         role = next(p['role'] for p in source['projects'] if p['id'] == t['projectId'])
         t['canManage'] = role in ('admin', 'manager') or (role == 'inspector' and w.user['id'] == t['leaderId'])
-        t['canAccept'] = role in ('manager', 'inspector') and t['stage'] == 'dispatch' and w.user['id'] in t['invitedIds'] and w.user['id'] not in t['acceptedIds']
+        t['canConfirmRoster'] = role in ('admin', 'manager')
+        t['signupRemoved'] = w.user['id'] in t.get('removedApplicantIds', [])
+        t['hasApplied'] = w.user['id'] in t['acceptedIds']
+        t['canAccept'] = role in ('manager', 'inspector') and t['stage'] == 'dispatch' and not t['signupRemoved'] and not t['hasApplied']
         t['confirmedNames'] = '、'.join(names.get(uid, uid) for uid in t['confirmedIds'])
         t['acceptedPeople'] = [dict(id=uid, name=names.get(uid, uid)) for uid in t['acceptedIds']]
         t['overContract'] = next((p['config'].get('contractPeople') is not None and t['requiredPeople'] > p['config']['contractPeople'] for p in project_rows if p['id'] == t['projectId']), False)
@@ -190,12 +200,25 @@ def dispatch(w, action, d):
     if d.get('revision') != t['revision']: w.fail('任务已变化，请刷新后重试', 409)
     stage = t['stage']; pid = t['projectId']
     if action == 'mobile-accept':
-        if stage != 'dispatch' or w.user['id'] not in t['invitedIds']: w.fail('当前不允许接单', 403)
+        if stage != 'dispatch': w.fail('报名已结束，最终检查名单已锁定', 409)
         w.member(pid, w.user['id'], ['manager', 'inspector'])
-        if w.user['id'] not in t['acceptedIds']: t['acceptedIds'].append(w.user['id'])
-        notify(w, t, [t['leaderId']], 'accepted', w.user['name']+'已接单，待确认名单：'+t['title'])
+        if w.user['id'] in t.get('removedApplicantIds', []): w.fail('项目负责人已移除你的报名，本任务不能重复报名', 403)
+        if w.user['id'] in t['acceptedIds']: return t
+        t['acceptedIds'].append(w.user['id'])
+        notify(w, t, project_people(w, pid, ['manager']) + [t['leaderId'], t['createdBy']],
+               'accepted', w.user['name']+'已报名接单，待项目负责人确定名单：'+t['title'])
+    elif action == 'mobile-remove-applicant':
+        w.allow(pid, ['manager'])
+        if stage != 'dispatch': w.fail('最终名单已锁定，不能移除报名人员', 409)
+        uid = w.text(d, 'userId', 100)
+        if uid not in t['acceptedIds']: w.fail('该人员已不在报名名单，请刷新', 409)
+        t['acceptedIds'].remove(uid)
+        t.setdefault('removedApplicantIds', []).append(uid)
+        t.setdefault('applicantRemovals', []).append(dict(userId=uid, actor=w.user['id'],
+                                                         at=w.s.now(), reason=w.optional(d, 'reason', 1000)))
+        notify(w, t, [uid], 'signup-removed', '项目负责人已移除你的报名：'+t['title'])
     elif action == 'mobile-roster':
-        manage(w, t)
+        w.allow(pid, ['manager'])
         if stage != 'dispatch': w.fail('检查开始后名单已锁定', 409)
         chosen = people(w, pid, d.get('confirmedIds'))
         if not set(chosen) <= set(t['acceptedIds']): w.fail('最终名单只能选择已经本人接单的人员')
@@ -203,7 +226,7 @@ def dispatch(w, action, d):
         t.update(confirmedIds=chosen, rosterConfirmedAt=w.s.now(), rosterConfirmedBy=w.user['id'],
                  rosterReason=w.optional(d, 'reason', 1000), stage='inspection', status='active', assignee=chosen[0])
         t['inspectors']='、'.join(w.c.execute('SELECT name FROM users WHERE id=?',(uid,)).fetchone()[0] for uid in chosen)
-        notify(w, t, t['invitedIds'] + chosen, 'roster', '最终名单已确认，请查看：'+t['title'])
+        notify(w, t, t['acceptedIds'] + t.get('invitedIds', []), 'roster', '项目负责人已确认最终名单，请查看是否入选：'+t['title'])
     elif action == 'mobile-complete':
         if stage != 'inspection': w.fail('当前不在现场检查阶段', 409)
         if w.user['id'] not in t['confirmedIds']: manage(w, t)

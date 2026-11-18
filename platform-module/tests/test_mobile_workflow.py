@@ -18,7 +18,7 @@ class MobileWorkflow(unittest.TestCase):
 
     def create(self):
         return self.post('mobile-create',projectId=self.pid,title='检查任务',site='三号楼',workDate='2026-11-17',
-                         requiredPeople=1,leaderId='host:admin:8',invitedIds=['host:admin:9'])
+                         requiredPeople=1,leaderId='host:admin:8')
 
     def change(self, t, action, token=None, **data):
         return self.post(action,token,taskId=t['id'],revision=t['revision'],**data)
@@ -26,7 +26,7 @@ class MobileWorkflow(unittest.TestCase):
     def inspect(self):
         t=self.create()
         t=self.change(t,'mobile-accept',self.worker)
-        t=self.change(t,'mobile-roster',self.lead,confirmedIds=['host:admin:9'])
+        t=self.change(t,'mobile-roster',self.owner,confirmedIds=['host:admin:9'])
         t=self.change(t,'issue',self.worker,description='防护缺失',evidence=[],location='楼梯')
         return self.change(t,'issue',self.worker,description='待核实项',evidence=[])
 
@@ -71,11 +71,10 @@ class MobileWorkflow(unittest.TestCase):
 
     def test_roster_requires_acceptance_and_wrong_actor_cannot_collect(self):
         t=self.create()
-        self.assertEqual(self.raw('mobile-roster',self.lead,taskId=t['id'],revision=t['revision'],confirmedIds=['host:admin:9'])[0],400)
-        self.assertEqual(self.raw('mobile-accept',self.other,taskId=t['id'],revision=t['revision'])[0],403)
+        self.assertEqual(self.raw('mobile-roster',self.owner,taskId=t['id'],revision=t['revision'],confirmedIds=['host:admin:9'])[0],400)
         self.assertEqual(self.raw('start',self.worker,taskId=t['id'],revision=t['revision'],checklist=[])[0],409)
         t=self.change(t,'mobile-accept',self.worker)
-        t=self.change(t,'mobile-roster',self.lead,confirmedIds=['host:admin:9'])
+        t=self.change(t,'mobile-roster',self.owner,confirmedIds=['host:admin:9'])
         self.assertEqual(self.raw('issue',self.other,taskId=t['id'],revision=t['revision'],description='非法')[0],403)
         self.assertEqual(self.raw('submit-field',self.worker,taskId=t['id'],revision=t['revision'])[0],409)
 
@@ -91,10 +90,73 @@ class MobileWorkflow(unittest.TestCase):
         first=self.request('/quality/api/work/mobile-accept',payload,self.worker)
         self.assertEqual(first[0],200)
         self.assertEqual(first,self.request('/quality/api/work/mobile-accept',payload,self.worker))
-        self.assertEqual(self.raw('mobile-roster',self.lead,taskId=t['id'],revision=t['revision'],confirmedIds=['host:admin:9'])[0],409)
+        self.assertEqual(self.raw('mobile-roster',self.owner,taskId=t['id'],revision=t['revision'],confirmedIds=['host:admin:9'])[0],409)
         self.assertEqual(self.request('/quality/api/work/mobile-state?scope=all',token=self.worker)[0],403)
         with s.db() as c: c.execute('DELETE FROM memberships WHERE project_id=? AND user_id=?',(self.pid,'host:admin:9'))
         self.assertEqual(self.request('/quality/api/work/mobile-accept',payload,self.worker)[0],403)
+
+    def test_open_signup_notifies_all_eligible_members_and_allows_uninvited_people(self):
+        t=self.create()
+        self.assertEqual(t['invitedIds'], [])
+        self.assertEqual(t['signupMode'], 'project-open')
+        state=self.request('/quality/api/work/mobile-state',token=self.other)[1]
+        self.assertTrue(state['tasks'][0]['canAccept'])
+        self.assertTrue(any(n['kind']=='dispatch' and n['taskId']==t['id'] for n in state['notifications']))
+        t=self.change(t,'mobile-accept',self.other)
+        self.assertEqual(t['acceptedIds'],['host:admin:10'])
+        # More people can apply than required; the manager makes the final selection.
+        t=self.change(t,'mobile-accept',self.worker)
+        self.assertEqual(len(t['acceptedIds']),2)
+        t=self.change(t,'mobile-roster',self.owner,confirmedIds=['host:admin:9'])
+        self.assertEqual(t['confirmedIds'],['host:admin:9'])
+        self.assertEqual(self.raw('issue',self.other,taskId=t['id'],revision=t['revision'],description='未入选')[0],403)
+        self.assertEqual(self.raw('mobile-accept',self.lead,taskId=t['id'],revision=t['revision'])[0],409)
+
+    def test_manager_removes_applicant_and_blocks_reapplication_including_replayed_request(self):
+        t=self.create()
+        payload=dict(requestId='first-signup',taskId=t['id'],revision=t['revision'])
+        t=self.request('/quality/api/work/mobile-accept',payload,self.other)[1]
+        self.assertEqual(self.raw('mobile-remove-applicant',self.lead,taskId=t['id'],revision=t['revision'],userId='host:admin:10')[0],403)
+        self.assertEqual(self.raw('mobile-roster',self.lead,taskId=t['id'],revision=t['revision'],confirmedIds=['host:admin:10'])[0],403)
+        t=self.change(t,'mobile-remove-applicant',self.owner,userId='host:admin:10',reason='当日安排冲突')
+        self.assertEqual(t['acceptedIds'],[])
+        self.assertEqual(t['removedApplicantIds'],['host:admin:10'])
+        self.assertEqual(t['applicantRemovals'][0]['reason'],'当日安排冲突')
+        self.assertEqual(t['applicantRemovals'][0]['actor'],'host:admin:7')
+        self.assertEqual(self.raw('mobile-accept',self.other,taskId=t['id'],revision=t['revision'])[0],403)
+        self.assertEqual(self.request('/quality/api/work/mobile-accept',payload,self.other)[0],403)
+        state=self.request('/quality/api/work/mobile-state',token=self.other)[1]
+        self.assertFalse(state['tasks'][0]['canAccept'])
+        self.assertTrue(state['tasks'][0]['signupRemoved'])
+        self.assertTrue(any(n['kind']=='signup-removed' for n in state['notifications']))
+        self.assertEqual(self.raw('mobile-roster',taskId=t['id'],revision=t['revision'],confirmedIds=['host:admin:10'])[0],400)
+        t=self.change(t,'mobile-accept',self.worker)
+        t=self.change(t,'mobile-roster',self.owner,confirmedIds=['host:admin:9'])
+        self.assertEqual(self.raw('mobile-remove-applicant',taskId=t['id'],revision=t['revision'],userId='host:admin:9')[0],409)
+
+    def test_stale_removal_and_signup_do_not_overwrite_each_other(self):
+        t=self.change(self.create(),'mobile-accept',self.worker)
+        stale=t
+        t=self.change(t,'mobile-accept',self.other)
+        self.assertEqual(self.raw('mobile-remove-applicant',taskId=t['id'],revision=stale['revision'],userId='host:admin:9')[0],409)
+        t=self.change(t,'mobile-remove-applicant',self.owner,userId='host:admin:9')
+        self.assertEqual(t['acceptedIds'],['host:admin:10'])
+        self.assertEqual(self.raw('mobile-roster',taskId=t['id'],revision=stale['revision'],confirmedIds=['host:admin:9'])[0],409)
+
+    def test_repeat_signup_is_single_entry_and_legacy_pending_task_is_open(self):
+        t=self.create()
+        # Existing pending tasks created with the invitation UI also become open for signup.
+        with s.db() as c:
+            t['invitedIds']=['host:admin:9']
+            t.pop('removedApplicantIds');t.pop('applicantRemovals');t.pop('signupMode')
+            c.execute('UPDATE tasks SET payload=? WHERE id=?',(json.dumps(t),t['id']))
+        t=self.change(t,'mobile-accept',self.other)
+        repeated=self.change(t,'mobile-accept',self.other)
+        self.assertEqual(repeated['revision'],t['revision'])
+        self.assertEqual(repeated['acceptedIds'],['host:admin:10'])
+        with s.db() as c:
+            notices=[json.loads(r[0]) for r in c.execute('SELECT payload FROM mobile_notifications WHERE user_id=?',('host:admin:8',))]
+        self.assertEqual(len([n for n in notices if n['kind']=='accepted']),1)
 
     def test_contract_limits_dates_and_no_automatic_completed_work(self):
         self.post('mobile-project-config',projectId=self.pid,contractPeople=0,basis='合同无巡查人员配置',revision=0)
