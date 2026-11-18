@@ -1,10 +1,12 @@
 <view class="page">
  <view class="title">巡查任务工作台</view><view class="muted">{{user.name}}</view>
+ <button class="secondary small" bindtap="switchAccount" disabled="{{busy}}">退出登录 / 切换账号</button>
  <view class="steps"><view class="step" wx:for="{{stageNames}}" wx:key="*this">{{item}}</view></view>
  <view class="tabs"><button data-tab="tasks" bindtap="tab">任务</button><button data-tab="stats" bindtap="tab">工作统计</button><button data-tab="staffing" bindtap="tab">项目用工</button><button data-tab="messages" bindtap="tab">提醒 {{unread||0}}</button></view>
  <view wx:if="{{message}}" class="warn">{{message}}</view><view wx:if="{{busy}}" class="note">正在处理…</view>
  <button class="secondary small actions" bindtap="reload" disabled="{{busy}}">刷新</button>
  <block wx:if="{{tab==='tasks'}}">
+  <view class="note" wx:if="{{!creating&&!task}}"><view wx:for="{{projectAccess}}" wx:key="id"><view>{{item.name}} · 当前角色：{{item.roleName}}</view><view wx:if="{{item.canDispatch}}">你可在此项目填写工地信息并派发任务。</view><view wx:else>当前角色没有派单权限。请由{{item.dispatchers||'该项目的项目经理'}}本人登录派单；收到邀请后，本人接单并进行现场检查。</view></view><view wx:if="{{!projects.length}}">当前账号尚未分配项目，请联系项目管理员核对权限。</view></view>
   <block wx:if="{{creating}}"><button class="secondary" bindtap="back">返回</button><view class="card"><view class="h2">工地信息填写 / 任务派发</view>
    <picker range="{{projects}}" range-key="name" value="{{projectIndex}}" data-key="projectIndex" bindchange="pick"><view class="picker">项目：{{projects[projectIndex].name}} ▾</view></picker>
    <view class="input-row">任务名称<input value="{{form.title}}" maxlength="200" data-key="form.title" bindinput="input"/></view><view class="input-row">具体工地 / 地址<input value="{{form.site}}" maxlength="300" data-key="form.site" bindinput="input"/></view>
