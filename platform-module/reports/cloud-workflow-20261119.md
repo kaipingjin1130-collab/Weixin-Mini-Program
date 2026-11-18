@@ -36,7 +36,9 @@ backend from source commit `9021c22a0aa4332b9cab3b95ac1d60f0049e6e08` is now dep
 
 ## Release boundary
 
-Mini-program development version 1.0.5 is prepared for upload. WeChat review and
+Mini-program development version 1.0.5, source `e9445fd`, was uploaded on
+2026-11-19; WeChat Developer Tools displayed the explicit upload-success result.
+Review was not submitted and the release was not published. WeChat review and
 publication remain with the owner. Actual two-person device acceptance with
 real signatures is still for the users to perform; the automated full flow
 used only the isolated test database. The cloud checks above are read-only
