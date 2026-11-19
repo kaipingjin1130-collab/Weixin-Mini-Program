@@ -4,6 +4,7 @@ import hashlib
 import json
 
 import leader_reports
+import mobile_access
 from host_auth import is_admin
 
 
@@ -28,6 +29,15 @@ def assignment_hash(value):
 
 
 def accessible(w, report):
+    w.mobile_task=None
+    if report.get('workflowVersion') == 2:
+        task=mobile_access.raw_task(w,report['taskId'])
+        if not (mobile_access.can_review(w,task) or w.user['id'] in task['confirmedIds']
+                or w.user['id'] in report['readers']+[p['userId'] for p in signers(report)]
+                or mobile_access.project_role(w,task['projectId']) in ('admin','manager','inspector')):
+            w.fail('这份报告未分发给当前账号',403)
+        w.mobile_task=task
+        return
     role = w.role(report['projectId'])
     if role not in ('admin', 'manager', 'inspector') and w.user['id'] not in report['readers'] + [p['userId'] for p in signers(report)]:
         w.fail('这份合并报告未分发给当前账号', 403)
@@ -45,7 +55,7 @@ def signature_image(w, value, data, role):
     method = data.get('signMethod', 'draw')
     if method not in ('draw', 'image'):
         w.fail('签名方式不支持')
-    ev = w.upload(dict(projectId=value['projectId'], name=role+'签名.png',
+    ev = w.upload(dict(projectId=value['projectId'], combinedId=value['id'], name=role+'签名.png',
                        base64=w.text(data, 'base64', 2_000_000), occurredAt=w.s.now()))
     if ev['mime'] not in ('image/png', 'image/jpeg'):
         w.fail('请提交 PNG 或 JPG 签名图片')

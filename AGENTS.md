@@ -1,3 +1,3 @@
 # Release workflow
 
-After each change is deployed to the cloud and verified, push the corresponding source code to GitHub branch `codex/ab-fusion-integration`. Report the deployment result and Git commit to the user. Do not describe a local change or an attempted deployment as live before verification.
+For every feature update, validate the changes and first push the corresponding source code to GitHub branch `codex/ab-fusion-integration`. Update and verify any matching cloud backend, then upload a new WeChat development version built from that source. The owner submits review and publishes; do not submit review or publish on their behalf. Preserve existing production business data. Report the actual deployment/upload result, development version, and Git commit. Do not describe local changes or an attempted deployment as live before verification. Keep sensitive deployment addresses, backup paths, credentials and account data out of public release notes.

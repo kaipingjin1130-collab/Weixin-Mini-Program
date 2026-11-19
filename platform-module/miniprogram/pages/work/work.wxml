@@ -8,11 +8,11 @@
  <view wx:if="{{busy}}" class="note">正在处理，请稍候…</view>
  <block wx:if="{{view==='list'}}">
   <view class="note">新任务请进入任务工作台，按派单、检查、报告和工作认定办理。此处保留现场草稿录入和历史任务记录。</view>
-  <button wx:if="{{canInitiate}}" class="actions" bindtap="newAdhoc" disabled="{{busy}}">进入任务工作台 / 查看项目权限</button>
+  <button class="actions" bindtap="newAdhoc" disabled="{{busy}}">临时巡查 · 直接开始</button>
   <button class="secondary actions" bindtap="reload" disabled="{{busy}}">刷新任务与平台反馈</button>
   <view class="card" wx:if="{{reminders.length}}"><view class="h2 warning">任务提醒</view><view wx:for="{{reminders}}" wx:key="displayId" data-id="{{item.taskId}}" bindtap="openTemporary">{{item.text}} →</view></view>
   <view class="card" wx:for="{{tasks}}" wx:key="id" data-id="{{item.id}}" bindtap="openTemporary"><view class="tag">{{item.sourceName}} · {{item.statusName}} · {{item.fieldStatusName}}</view><view class="h2">{{item.title}}</view><view>{{item.number}}</view><view class="muted">{{item.scenario.name}} · 截止 {{item.dueDate}}</view><view>{{item.issues.length}} 条隐患记录 →</view></view>
-  <view wx:if="{{!tasks.length}}" class="empty">{{canInitiate?'暂无任务。请进入任务工作台：项目经理派单，被邀请的检查员本人接单。':'暂无任务，请联系平台负责人分配项目检查权限。'}}</view>
+  <view wx:if="{{!tasks.length}}" class="empty">暂无任务。可进入任务工作台报名接单，或直接开始临时巡查。</view>
  </block>
  <block wx:elif="{{view==='create'}}">
   <button class="secondary small" bindtap="back">返回任务列表</button>

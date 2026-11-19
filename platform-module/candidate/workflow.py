@@ -4,6 +4,7 @@ import base64
 import leader_reports
 import combined_reports
 import mobile_workflow
+import mobile_access
 from host_auth import is_admin
 import copy
 import csv
@@ -72,6 +73,8 @@ class Workflow:
   return value.strip()
  def role(self,pid):
   if not self.c.execute('SELECT 1 FROM projects WHERE id=?',(pid,)).fetchone(): self.fail('项目不存在',404)
+  scoped=getattr(self,'mobile_task',None)
+  if scoped and scoped['projectId']==pid: return mobile_access.role(self,scoped)
   if is_admin(self.user): return 'admin'
   r=self.c.execute('SELECT role FROM memberships WHERE project_id=? AND user_id=?',(pid,self.user['id'])).fetchone()
   if not r: self.fail('无此项目访问权限',403)
@@ -82,8 +85,14 @@ class Workflow:
  def task(self,tid):
   r=self.c.execute('SELECT payload FROM tasks WHERE id=?',(tid,)).fetchone()
   if not r: self.fail('任务不存在',404)
-  t=json.loads(r['payload']);self.role(t['projectId']);return t
+  t=json.loads(r['payload'])
+  self.mobile_task=None
+  if mobile_access.enabled(t): mobile_access.check(self,t)
+  else: self.role(t['projectId'])
+  return t
  def member(self,pid,uid,roles=None):
+  scoped=getattr(self,'mobile_task',None)
+  if scoped and scoped['projectId']==pid: return mobile_access.person(self,uid)
   r=self.c.execute('SELECT role FROM memberships WHERE project_id=? AND user_id=?',(pid,uid)).fetchone()
   if not r or (roles and r['role'] not in roles): self.fail('请选择符合角色要求的项目成员')
   return uid
@@ -95,6 +104,7 @@ class Workflow:
   for eid in ids:
    r=self.c.execute('SELECT project_id FROM evidence WHERE id=?',(eid,)).fetchone()
    if not r or r['project_id']!=pid: self.fail('证据不存在或不属于当前项目',403)
+   self.read_evidence(self.c.execute('SELECT * FROM evidence WHERE id=?',(eid,)).fetchone())
   return list(dict.fromkeys(ids))
  def stamp(self,t,action,detail=''):
   t['events'].append(dict(id=self.s.uid(),action=action,detail=detail,actor=self.user['id'],actorName=self.user['name'],uploadedAt=self.s.now()))
@@ -113,16 +123,25 @@ class Workflow:
   except (ValueError,TypeError): self.fail('发生时间请使用含时区的 ISO 时间')
   return value
  def state(self):
+  self.mobile_task=None
+  order=getattr(self.c,'task_order_column','rowid')
+  all_tasks=[json.loads(r['payload']) for r in self.c.execute('SELECT * FROM tasks ORDER BY '+order+' DESC')]
+  mobile_tasks=[t for t in all_tasks if mobile_access.enabled(t) and mobile_access.can_read(self,t)]
+  mobile_projects={t['projectId'] for t in mobile_tasks}
   projects=[]
   for r in self.c.execute('SELECT * FROM projects ORDER BY created DESC'):
    try: role=self.role(r['id'])
-   except self.s.Problem: continue
+   except self.s.Problem:
+    if r['id'] not in mobile_projects: continue
+    role='participant'
    p=dict(r);p['role']=role
    p['members']=[dict(x) for x in self.c.execute('SELECT u.id,u.username,u.name,m.role FROM users u JOIN memberships m ON m.user_id=u.id WHERE m.project_id=?',(p['id'],))]
    projects.append(p)
   ids={p['id'] for p in projects}
+  legacy_ids={p['id'] for p in projects if p['role']!='participant'}
   order=getattr(self.c,'task_order_column','rowid')
-  tasks=[json.loads(r['payload']) for r in self.c.execute('SELECT * FROM tasks ORDER BY '+order+' DESC') if r['project_id'] in ids]
+  tasks=[mobile_access.decorate(self,t) if mobile_access.enabled(t) else t for t in all_tasks
+         if (mobile_access.can_read(self,t) if mobile_access.enabled(t) else t['projectId'] in legacy_ids)]
   today=datetime.now().astimezone().date().isoformat()
   reminders=[]
   for t in tasks:
@@ -130,7 +149,7 @@ class Workflow:
    for i in t['issues']:
     if i['status']!='closed' and i['dueDate']<today: reminders.append(dict(taskId=t['id'],text=t['title']+'：问题逾期 '+i['description']))
   users=[public_user(r) for r in self.c.execute('SELECT * FROM users')] if is_admin(self.user) else []
-  return dict(user=self.user,projects=projects,tasks=tasks,users=users,scenarios=[json.loads(r[0]) for r in self.c.execute('SELECT payload FROM scenarios')],reminders=reminders)
+  return dict(user=self.user,projects=projects,tasks=tasks,users=users,platformUsers=mobile_access.users(self),scenarios=[json.loads(r[0]) for r in self.c.execute('SELECT payload FROM scenarios')],reminders=reminders)
  def snapshot(self,t,version):
   evidence_ids=set(t['materials'])
   if t.get('fieldSignature'): evidence_ids.add(t['fieldSignature']['evidenceId'])
@@ -235,7 +254,12 @@ class Workflow:
    self.c.execute('INSERT INTO scenarios VALUES(?,?) ON CONFLICT(id) DO UPDATE SET payload=excluded.payload',(s['id'],dump(s)));return s
   if path in ['tasks','adhoc-tasks']:
    adhoc=path=='adhoc-tasks'
-   pid=self.text(d,'projectId');self.allow(pid,['manager','inspector'] if adhoc else ['manager'])
+   modern=d.get('workflowVersion')==2
+   pid=self.text(d,'projectId')
+   if modern:
+    mobile_access.person(self,self.user['id'])
+    if not self.c.execute('SELECT 1 FROM projects WHERE id=?',(pid,)).fetchone(): self.fail('项目不存在',404)
+   else: self.allow(pid,['manager','inspector'] if adhoc else ['manager'])
    row=self.c.execute('SELECT payload FROM scenarios WHERE id=?',(d.get('scenarioId'),)).fetchone()
    if not row: self.fail('场景不存在')
    scenario=json.loads(row[0]);fields=d.get('fields',{})
@@ -256,10 +280,10 @@ class Workflow:
    t=dict(id=self.s.uid(),number='TASK-'+datetime.now().strftime('%Y%m%d')+'-'+secrets.token_hex(4).upper(),
           projectId=pid,inspectors=inspectors.strip(),title=self.optional(d,'title',200) or '巡查隐患清单',objectId=self.s.uid(),object=obj.strip(),
           dueDate=self.checkdate(d.get('dueDate')) if d.get('dueDate') else '',scenario=scenario,fields=fields,materials=self.evidence(pid,d.get('materials',[])),
-          checklist=[],assignee=self.user['id'] if adhoc else self.member(pid,d.get('assignee'),['inspector','manager']),
+          checklist=[],assignee=self.user['id'] if adhoc else (mobile_access.person(self,d.get('assignee')) if modern else self.member(pid,d.get('assignee'),['inspector','manager'])),
           receiver='' if adhoc or 'receiverName' in d else self.member(pid,d.get('receiver'),['receiver','manager']),
           receiverName='' if adhoc or 'receiverName' not in d else self.text(d,'receiverName',100),
-          leaderId=self.leader(pid,d.get('leaderId','')),source='adhoc' if adhoc else 'platform',createdBy=self.user['id'],createdByName=self.user['name'],
+          leaderId=(self.user['id'] if adhoc else mobile_access.person(self,d.get('leaderId'))) if modern else self.leader(pid,d.get('leaderId','')),source='adhoc' if adhoc else 'platform',createdBy=self.user['id'],createdByName=self.user['name'],
           status='ready',fieldStatus='collecting',fieldBriefs=[],revision=1,records=[],issues=[],events=[],deliveries=[],createdAt=self.s.now(),updatedAt=self.s.now())
    try: t['notice']=notice.clean(d.get('notice',{}))
    except ValueError as e: self.fail(str(e))
@@ -267,7 +291,9 @@ class Workflow:
     t['status']='active'
     self.stamp(t,'quick-start','临时巡查直接进入隐患采集，未代勾准备清单')
    self.stamp(t,'create','现场自主发起临时巡查' if adhoc else '平台建立派发任务')
-   if d.get('workflowVersion')==2: mobile_workflow.initialize(self,t,d,adhoc)
+   if modern:
+    self.mobile_task=t
+    mobile_workflow.initialize(self,t,dict(d,requiredPeople=1) if adhoc else d,adhoc)
    self.c.execute('INSERT INTO tasks VALUES(?,?,?,?)',(t['id'],pid,dump(t),1))
    if t.get('workflowVersion')==2: mobile_workflow.queue(self,t)
    return t
@@ -507,7 +533,19 @@ class Workflow:
    result['requiresConfirmation']=True;return result
   except Exception: return dict(fallback,message=fallback['message']+' 外部服务不可用或响应格式不匹配。')
  def upload(self,d):
-  pid=self.text(d,'projectId');self.allow(pid,['manager','inspector','rectifier','reviewer','receiver'])
+  pid=self.text(d,'projectId')
+  task=None;combined_id=d.get('combinedId')
+  if combined_id:
+   value=combined_reports.get(self,combined_id)
+   if value['projectId']!=pid: self.fail('签字项目不一致',403)
+   if self.user['id'] not in [p['userId'] for p in combined_reports.signers(value)] and not combined_reports.can_collect(self,value): self.fail('无签字权限',403)
+   task=getattr(self,'mobile_task',None)
+  elif d.get('taskId'):
+   task=self.task(d['taskId'])
+   if task['projectId']!=pid: self.fail('证据项目不一致',403)
+   mobile_workflow.guard(self,task,'issue',{})
+  else: self.mobile_task=None
+  self.allow(pid,['manager','inspector','rectifier','reviewer','receiver'])
   try: raw=base64.b64decode(d.get('base64',''),validate=True)
   except Exception: self.fail('文件编码错误')
   if not raw or len(raw)>10*1024*1024: self.fail('文件必须在10MB以内')
@@ -523,8 +561,28 @@ class Workflow:
    mime=types[ext];suffix='.'+ext
   eid=self.s.uid();filename=eid+suffix
   meta=dict(id=eid,projectId=pid,name=name,mime=mime,filename=filename,sha256=hashlib.sha256(raw).hexdigest(),size=len(raw),version=1,reviewStatus='unreviewed',source='field-upload',uploadedAt=self.s.now(),occurredAt=self.checktime(d.get('occurredAt')),access='/api/work/evidence/'+eid)
+  if task and mobile_access.enabled(task): meta['taskId']=task['id']
+  if combined_id: meta['combinedId']=combined_id
   (self.s.DATA/'uploads'/filename).write_bytes(raw)
   self.c.execute('INSERT INTO evidence VALUES(?,?,?)',(eid,pid,dump(meta)))
+  return meta
+
+ def read_evidence(self,row):
+  meta=json.loads(row['payload'])
+  scoped=getattr(self,'mobile_task',None)
+  if scoped and meta.get('taskId') and meta['taskId']!=scoped['id']: self.fail('不能引用其他任务的证据',403)
+  if meta.get('combinedId'): combined_reports.get(self,meta['combinedId'])
+  elif meta.get('taskId'):
+   task=mobile_access.raw_task(self,meta['taskId'])
+   if mobile_access.can_read(self,task): mobile_access.check(self,task)
+   else:
+    if not task.get('combinedId'): self.fail('无此证据访问权限',403)
+    value=combined_reports.get(self,task['combinedId'])
+    report=value['report']
+    references=[ref for item in report.get('issues',[])+report.get('fieldRecords',[]) for ref in item.get('photos',[])]
+    if 'evidence:'+meta['id'] not in references: self.fail('此证据未选入已分发报告',403)
+  else:
+   if not mobile_access.project_role(self,row['project_id']): self.fail('无此证据访问权限',403)
   return meta
 
 

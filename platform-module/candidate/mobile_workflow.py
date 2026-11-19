@@ -3,6 +3,7 @@ import copy
 import json
 from datetime import date
 import combined_reports as combined
+import mobile_access
 from host_auth import is_admin
 
 STAGES = {'dispatch': '工地信息填写 / 任务派发', 'inspection': '现场检查 · 草稿箱',
@@ -42,15 +43,14 @@ def people(w, pid, value, allow_empty=False):
 
 
 def manage(w, t):
-    role = w.role(t['projectId'])
-    if role not in ('admin', 'manager') and not (role == 'inspector' and w.user['id'] == t['leaderId']):
+    if not mobile_access.can_review(w, t):
         w.fail('仅指定组长或项目经理可操作', 403)
 
 
 def leader_start_authority(w, t):
     if w.user['id'] != t.get('leaderId'):
         w.fail('仅本任务指定组长本人可直接开始巡查', 403)
-    w.member(t['projectId'], w.user['id'], ['manager', 'inspector'])
+    mobile_access.person(w, w.user['id'])
     if w.user['id'] in t.get('removedApplicantIds', []):
         w.fail('项目负责人已移除你的报名，请先联系项目负责人核对安排', 403)
 
@@ -86,7 +86,7 @@ def initialize(w, t, d, adhoc=False):
     t.update(workflowVersion=2, stage='dispatch', site=w.text(d, 'site', 300),
              workDate=w.checkdate(d.get('workDate')), requiredPeople=integer(w, d.get('requiredPeople'), '任务需求人数'),
              invitedIds=people(w, t['projectId'], d.get('invitedIds', []), allow_empty=True),
-             signupMode='project-open', removedApplicantIds=[], applicantRemovals=[],
+             signupMode='platform-open', removedApplicantIds=[], applicantRemovals=[],
              acceptedIds=[w.user['id']] if adhoc else [], confirmedIds=[], rosterConfirmedAt='',
              workType=w.optional(d, 'workType', 100) or '现场巡查', catalogId=setting(w, 'project:'+t['projectId']).get('catalogId'),
              syncStatus='pending')
@@ -97,13 +97,20 @@ def initialize(w, t, d, adhoc=False):
     t['status'] = 'ready'
     t['object'] = t['site']
     t['dueDate'] = t['workDate']
-    notify(w, t, project_people(w, t['projectId'], ['manager', 'inspector']) + [t['leaderId']],
-           'dispatch', '巡查任务已发布，可自主报名接单，待项目负责人确定名单：' + t['title'])
+    if adhoc:
+        t.update(confirmedIds=[w.user['id']], rosterConfirmedAt=w.s.now(), rosterConfirmedBy=w.user['id'],
+                 rosterMode='temporary-direct', stage='inspection', status='active', inspectors=w.user['name'])
+        w.stamp(t,'temporary-direct','本人直接开始临时巡查，计入最终检查名单')
+    else:
+        notify(w, t, [p['id'] for p in mobile_access.users(w)],
+               'dispatch', '巡查任务已发布，全平台人员均可报名，待任务负责人确定名单：' + t['title'])
 
 
 def guard(w, t, action, d):
     if t.get('workflowVersion') != 2:
         return
+    if action not in ('start','materials','record','issue','edit-issue','delete-issue'):
+        w.fail('请按任务工作台的现场检查、清单筛选和签字发布流程办理',409)
     if action in ('submit-field', 'receive-field', 'handover', 'deliver', 'archive', 'reopen', 'import-report', 'assign-leader'):
         w.fail('请按任务工作台的草稿筛选、各方签字、确认发布和工作认定流程办理', 409)
     if action in ('start', 'materials', 'record', 'issue', 'edit-issue', 'delete-issue'):
@@ -119,6 +126,16 @@ def guard(w, t, action, d):
 
 def state(w, query):
     source = w.state()
+    known={t['id'] for t in source['tasks']}
+    for row in w.c.execute('SELECT payload FROM tasks'):
+        t=json.loads(row[0])
+        if mobile_access.enabled(t) and t['source']!='adhoc' and t['id'] not in known:
+            source['tasks'].append(mobile_access.summary(t))
+    known_projects={p['id'] for p in source['projects']}
+    for row in w.c.execute('SELECT id,name FROM projects ORDER BY created DESC'):
+        if row['id'] not in known_projects:
+            source['projects'].append(dict(row,contract='',role='platform-user',members=[]))
+    names = {p['id']:p['name'] for p in source['platformUsers']}
     start, end = query.get('from', [''])[0], query.get('to', [''])[0]
     if start: w.checkdate(start)
     if end: w.checkdate(end)
@@ -129,7 +146,6 @@ def state(w, query):
     scope = query.get('scope', ['self'])[0]
     if scope not in ('self', 'all'): w.fail('统计范围无效')
     if scope == 'all' and not all_people: w.fail('全部人员统计仅向管理员开放', 403)
-    names = {m['id']: m['name'] for p in source['projects'] for m in p['members']}
     names[w.user['id']] = w.user['name']
     ids = set(names) if scope == 'all' else {w.user['id']}
     rows = []
@@ -160,19 +176,17 @@ def state(w, query):
         if n['projectId'] in visible: notifications.append(n)
     for t in tasks:
         t['stageName'] = STAGES[t['stage']]
-        role = next(p['role'] for p in source['projects'] if p['id'] == t['projectId'])
-        t['canManage'] = role in ('admin', 'manager') or (role == 'inspector' and w.user['id'] == t['leaderId'])
-        t['canConfirmRoster'] = role in ('admin', 'manager')
+        mobile_access.decorate(w,t)
         t['signupRemoved'] = w.user['id'] in t.get('removedApplicantIds', [])
         t['hasApplied'] = w.user['id'] in t['acceptedIds']
-        t['canAccept'] = role in ('manager', 'inspector') and t['stage'] == 'dispatch' and not t['signupRemoved'] and not t['hasApplied']
-        t['canLeaderStart'] = (w.user['id'] == t['leaderId'] and role in ('admin', 'manager', 'inspector')
+        t['canAccept'] = t['stage'] == 'dispatch' and not t['signupRemoved'] and not t['hasApplied']
+        t['canLeaderStart'] = (w.user['id'] == t['leaderId']
                                and t['stage'] == 'dispatch' and not t['signupRemoved'])
         t['confirmedNames'] = '、'.join(names.get(uid, uid) for uid in t['confirmedIds'])
         t['acceptedPeople'] = [dict(id=uid, name=names.get(uid, uid)) for uid in t['acceptedIds']]
         t['overContract'] = next((p['config'].get('contractPeople') is not None and t['requiredPeople'] > p['config']['contractPeople'] for p in project_rows if p['id'] == t['projectId']), False)
     from mobile_push import config as push_config
-    return dict(user=source['user'], projects=source['projects'], tasks=tasks, statistics=rows, pushConfig=push_config(),
+    return dict(user=source['user'], projects=source['projects'], platformUsers=source['platformUsers'], canCreate=True, tasks=tasks, statistics=rows, pushConfig=push_config(),
                 projectStatistics=project_rows, canViewAll=all_people, scope=scope,
                 notifications=sorted(notifications, key=lambda n:n['createdAt'], reverse=True)[:100])
 
@@ -198,12 +212,15 @@ def dispatch(w, action, d):
     if action == 'mobile-notification-read':
         row = w.c.execute('SELECT payload FROM mobile_notifications WHERE id=? AND user_id=?', (d.get('id'), w.user['id'])).fetchone()
         if not row: w.fail('提醒不存在', 404)
-        value = json.loads(row[0]); w.role(value['projectId']); value['readAt'] = w.s.now()
+        value = json.loads(row[0]); value['readAt'] = w.s.now()
         w.c.execute('UPDATE mobile_notifications SET payload=? WHERE id=?', (json.dumps(value, ensure_ascii=False), d['id']))
         return value
-    if action == 'mobile-create':
-        pid = w.text(d, 'projectId'); w.allow(pid, ['manager'])
-        t = w.dispatch('tasks', dict(d, scenarioId='inspection', assignee=d.get('leaderId'), receiverName='待各方签字确认', workflowVersion=2))
+    if action in ('mobile-create','mobile-adhoc'):
+        mobile_access.person(w,w.user['id'])
+        pid = mobile_access.project(w,d)
+        adhoc=action=='mobile-adhoc'
+        leader=w.user['id'] if adhoc else d.get('leaderId') or w.user['id']
+        t = w.dispatch('adhoc-tasks' if adhoc else 'tasks', dict(d, projectId=pid, leaderId=leader, scenarioId='inspection', assignee=leader, receiverName='待各方签字确认', workflowVersion=2))
         return t
     t = w.task(d.get('taskId'))
     if t.get('workflowVersion') != 2: w.fail('历史任务保留原流程，不能转换已签署内容', 409)
@@ -211,14 +228,14 @@ def dispatch(w, action, d):
     stage = t['stage']; pid = t['projectId']
     if action == 'mobile-accept':
         if stage != 'dispatch': w.fail('报名已结束，最终检查名单已锁定', 409)
-        w.member(pid, w.user['id'], ['manager', 'inspector'])
+        mobile_access.person(w, w.user['id'])
         if w.user['id'] in t.get('removedApplicantIds', []): w.fail('项目负责人已移除你的报名，本任务不能重复报名', 403)
         if w.user['id'] in t['acceptedIds']: return t
         t['acceptedIds'].append(w.user['id'])
         notify(w, t, project_people(w, pid, ['manager']) + [t['leaderId'], t['createdBy']],
                'accepted', w.user['name']+'已报名接单，待项目负责人确定名单：'+t['title'])
     elif action == 'mobile-remove-applicant':
-        w.allow(pid, ['manager'])
+        mobile_access.require_roster_manager(w,t)
         if stage != 'dispatch': w.fail('最终名单已锁定，不能移除报名人员', 409)
         uid = w.text(d, 'userId', 100)
         if uid not in t['acceptedIds']: w.fail('该人员已不在报名名单，请刷新', 409)
@@ -241,7 +258,7 @@ def dispatch(w, action, d):
         notify(w, t, t['acceptedIds'] + t.get('invitedIds', []) + project_people(w, pid, ['manager']) + [t['createdBy']],
                'roster', '组长已确认仅本人参加并开始巡查，报名已结束：'+t['title'])
     elif action == 'mobile-roster':
-        w.allow(pid, ['manager'])
+        mobile_access.require_roster_manager(w,t)
         if stage != 'dispatch': w.fail('检查开始后名单已锁定', 409)
         chosen = people(w, pid, d.get('confirmedIds'))
         if not set(chosen) <= set(t['acceptedIds']): w.fail('最终名单只能选择已经本人接单的人员')

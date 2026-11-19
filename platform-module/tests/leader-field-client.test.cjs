@@ -172,7 +172,7 @@ test('submitted inspector cannot save task leader and failed saves keep selectio
  const h=setup(true);h.p.data.leaderOptions=[{id:'lead',name:'负责人'}];h.p.data.leaderIndex=0;await h.p.saveLeader();assert.equal(h.p.data.leaderIndex,0);assert.equal(h.p.data.task.revision,3);
 });
 
- test('new inspections route through the four-stage workbench without creating a bypass task',async()=>{const {p,calls,wx}=setup();let target;wx.navigateTo=o=>target=o.url;await p.newAdhoc();assert.equal(target,'/pages/tasks/tasks');assert.equal(calls.length,0)});
+ test('new inspections route through the four-stage workbench without creating a bypass task',async()=>{const {p,calls,wx}=setup();let target;wx.navigateTo=o=>target=o.url;await p.newAdhoc();assert.equal(target,'/pages/tasks/tasks?mode=temporary');assert.equal(calls.length,0)});
  test('historical creation helper retains project selection',async()=>{const {p,calls}=setup();p.data.projects.push({id:'p2',role:'inspector',name:'另一项目',members:[]});p.data.scenarios=[{id:'inspection',fields:[]}];p.prepareAdhoc();assert.equal(p.data.view,'create');assert.equal(calls.length,0);p.adhocProjectPick({detail:{value:'1'}});await p.createAdhoc();assert.equal(calls.find(c=>c.url.endsWith('/adhoc-tasks')).data.projectId,'p2')});
 
 for(const failure of [null,'adhoc-tasks','start','state'])test('historical creation helper retains retry safety: '+(failure||'success'),async()=>{

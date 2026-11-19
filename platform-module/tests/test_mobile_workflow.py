@@ -147,7 +147,11 @@ class MobileWorkflow(unittest.TestCase):
             self.assertEqual(saved['acceptedIds'],['host:admin:8'])
             self.assertEqual(len([e for e in saved['events'] if e['action']=='mobile-leader-start']),1)
             c.execute('UPDATE memberships SET role=? WHERE project_id=? AND user_id=?',('viewer',self.pid,'host:admin:8'))
-        self.assertIn(self.request('/quality/api/work/mobile-leader-start',payload,self.lead)[0],(400,403))
+        self.assertEqual(self.request('/quality/api/work/mobile-leader-start',payload,self.lead)[0],200)
+        with s.db() as c:
+            saved['leaderId']='host:admin:9'
+            c.execute('UPDATE tasks SET payload=? WHERE id=?',(json.dumps(saved),t['id']))
+        self.assertEqual(self.request('/quality/api/work/mobile-leader-start',payload,self.lead)[0],403)
 
     def test_stale_leader_start_does_not_overwrite_new_signup(self):
         t=self.create();stale=t
@@ -171,12 +175,12 @@ class MobileWorkflow(unittest.TestCase):
         self.assertEqual(self.raw('mobile-roster',self.owner,taskId=t['id'],revision=t['revision'],confirmedIds=['host:admin:9'])[0],409)
         self.assertEqual(self.request('/quality/api/work/mobile-state?scope=all',token=self.worker)[0],403)
         with s.db() as c: c.execute('DELETE FROM memberships WHERE project_id=? AND user_id=?',(self.pid,'host:admin:9'))
-        self.assertEqual(self.request('/quality/api/work/mobile-accept',payload,self.worker)[0],403)
+        self.assertEqual(self.request('/quality/api/work/mobile-accept',payload,self.worker)[0],200)
 
     def test_open_signup_notifies_all_eligible_members_and_allows_uninvited_people(self):
         t=self.create()
         self.assertEqual(t['invitedIds'], [])
-        self.assertEqual(t['signupMode'], 'project-open')
+        self.assertEqual(t['signupMode'], 'platform-open')
         state=self.request('/quality/api/work/mobile-state',token=self.other)[1]
         self.assertTrue(state['tasks'][0]['canAccept'])
         self.assertTrue(any(n['kind']=='dispatch' and n['taskId']==t['id'] for n in state['notifications']))

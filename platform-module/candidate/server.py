@@ -344,7 +344,7 @@ class Handler(BaseHTTPRequestHandler):
       if action.startswith('evidence-meta/'):
        row=c.execute('SELECT * FROM evidence WHERE id=?',(action.split('/')[-1],)).fetchone()
        if not row: raise Problem('证据不存在',404)
-       w.role(row['project_id']);m=json.loads(row['payload']);m.pop('filename',None);self.send(m);return
+       m=w.read_evidence(row);m.pop('filename',None);self.send(m);return
       if action.startswith(('brief/','brief-data/','brief-word/')):
        kind,bid=action.split('/',1)
        row=c.execute('SELECT * FROM field_reports WHERE id=?',(bid,)).fetchone()
@@ -357,7 +357,7 @@ class Handler(BaseHTTPRequestHandler):
       if action.startswith('evidence/'):
        row=c.execute('SELECT * FROM evidence WHERE id=?',(action.split('/')[-1],)).fetchone()
        if not row: raise Problem('证据不存在',404)
-       w.role(row['project_id']);m=json.loads(row['payload'])
+       m=w.read_evidence(row)
        headers={} if m['mime'].startswith(('image/','audio/')) else {'Content-Disposition':'attachment; filename="evidence.pdf"'}
        self.send((DATA/'uploads'/m['filename']).read_bytes(),mime=m['mime'],headers=headers);return
       if action.startswith(('package/','report/','issues/','snapshot/','word/')):
@@ -380,13 +380,13 @@ class Handler(BaseHTTPRequestHandler):
       # Recheck authorization after role changes before returning cached task data.
       if d.get('taskId'): w.task(d['taskId'])
       if action in ('mobile-roster','mobile-remove-applicant'):
-       w.allow(w.task(d['taskId'])['projectId'],['manager'])
+       workflow.mobile_access.require_roster_manager(w,w.task(d['taskId']))
       if action=='mobile-leader-start':
        workflow.mobile_workflow.leader_start_authority(w,w.task(d['taskId']))
       if action=='mobile-accept':
-       current=w.task(d['taskId']);w.member(current['projectId'],user['id'],['manager','inspector'])
+       current=w.task(d['taskId']);workflow.mobile_access.person(w,user['id'])
        if user['id'] in current.get('removedApplicantIds',[]): raise Problem('项目负责人已移除你的报名，本任务不能重复报名',403)
-      if d.get('projectId'): w.role(d['projectId'])
+      if d.get('projectId') and action not in ('mobile-create','mobile-adhoc'): w.role(d['projectId'])
       if d.get('reportId'): w.role(get_report(c,d['reportId'])['projectId'])
       if action=='assign-document-leader': w.allow(leader_reports.document(w,d.get('key'))['projectId'],['manager'])
       if action=='combined-create':

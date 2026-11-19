@@ -4,6 +4,7 @@ import html
 import io
 import json
 import zipfile
+import mobile_access
 
 
 def assignment(c, key, fallback=''):
@@ -74,7 +75,7 @@ def inbox(w):
     rows = []
 
     def add(kind, doc_id, source, leader, version, created, details, task_id=''):
-        if not leader or (leader != w.user['id'] and not is_admin(w.user) and not (source.get('workflowVersion') == 2 and w.role(source['projectId']) == 'manager')):
+        if not leader or (leader != w.user['id'] and not is_admin(w.user) and not (source.get('workflowVersion') == 2 and mobile_access.can_review(w,source))):
             return
         pid = source['projectId']
         if pid not in projects:
@@ -94,7 +95,7 @@ def inbox(w):
             table = 'field_reports' if kind == 'brief' else 'deliveries'
             for doc in docs:
                 effective = assignment(w.c, kind+':'+doc['id'], leader)['leaderId']
-                if not effective or (effective != w.user['id'] and not is_admin(w.user) and not (task.get('workflowVersion') == 2 and w.role(task['projectId']) == 'manager')):
+                if not effective or (effective != w.user['id'] and not is_admin(w.user) and not (task.get('workflowVersion') == 2 and mobile_access.can_review(w,task))):
                     continue
                 row = w.c.execute('SELECT payload FROM '+table+' WHERE id=?', (doc['id'],)).fetchone()
                 if row:
