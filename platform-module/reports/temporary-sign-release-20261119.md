@@ -31,4 +31,9 @@ Verification on 2026-11-19:
   returned HTTP 401 as expected. No production test tasks or real signatures were
   created during verification.
 
-WeChat development upload is pending. Review and publication remain with the owner.
+WeChat development version `1.0.8` was uploaded on 2026-11-19 from application
+source `f15027c`. After restarting WeChat Developer Tools, the version and release
+description were verified in the upload form, and the tool displayed code upload
+success. Review and publication were not submitted and remain with the owner.
+Real-device acceptance with the owner's accounts and signatures remains for the
+owner before review submission.
