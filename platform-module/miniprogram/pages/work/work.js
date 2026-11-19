@@ -52,14 +52,15 @@ Page({
  async completeInspection(){
   await this.run(async()=>{
    if(!this.data.canCollect||this.hasUnsavedFieldInput())return;
-   if(!await this.confirm('确认清单无误？提交后将锁定草稿并交组长筛选。'))return;
+   if(!await this.confirm(this.data.task.source==='adhoc'?'确认清单无误？全部已保存记录将进入签字核对稿，签齐后可直接生成正式报告，无需推送项目负责人。':'确认清单无误？提交后将锁定草稿并交组长筛选。'))return;
    const task=this.data.task,payload={taskId:task.id,revision:task.revision,text:this.data.note,noHazard:this.data.noHazard};
    const fingerprint=JSON.stringify(payload);
    if(this.pendingComplete?.fingerprint!==fingerprint)this.pendingComplete={fingerprint,id:requestId()};
    const updated=await this.post('mobile-complete',payload,this.pendingComplete.id);
    this.setTask(updated);this.pendingComplete=null;this.dirty=false;
    if(wx.disableAlertBeforeUnload)wx.disableAlertBeforeUnload();
-   wx.showToast({title:'已交组长筛选'});await this.refresh();
+   wx.showToast({title:updated.source==='adhoc'?'请各方核对签字':'已交组长筛选'});await this.refresh();
+   if(updated.source==='adhoc'&&updated.combinedId)wx.navigateTo({url:'/pages/combined/combined?reportId='+updated.combinedId});
   })
  },
  removeIssuePhoto(e){const id=e.currentTarget.dataset.id;this.setData({'issue.evidence':this.data.issue.evidence.filter(x=>x!==id),issuePhotos:this.data.issuePhotos.filter(x=>x.id!==id)});this.markDirty()},

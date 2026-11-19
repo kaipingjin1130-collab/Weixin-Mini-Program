@@ -175,7 +175,7 @@ def state(w, query):
         n = json.loads(row[0])
         if n['projectId'] in visible: notifications.append(n)
     for t in tasks:
-        t['stageName'] = STAGES[t['stage']]
+        t['stageName'] = ({'review':'核对清单 · 直接进入签字','signing':'各方签字 · 待生成正式报告','published':'正式报告已生成 · 待工作认定'}.get(t['stage']) if t['source']=='adhoc' else None) or STAGES[t['stage']]
         mobile_access.decorate(w,t)
         t['signupRemoved'] = w.user['id'] in t.get('removedApplicantIds', [])
         t['hasApplied'] = w.user['id'] in t['acceptedIds']
@@ -190,6 +190,30 @@ def state(w, query):
                 projectStatistics=project_rows, canViewAll=all_people, scope=scope,
                 notifications=sorted(notifications, key=lambda n:n['createdAt'], reverse=True)[:100])
 
+
+
+def prepare_report(w, t, d):
+    selected = d.get('selectedIds')
+    items = t['issues'] + t['records']; ids = {i['id'] for i in items}
+    if not isinstance(selected, list) or any(not isinstance(x, str) for x in selected) or len(set(selected)) != len(selected) or not set(selected) <= ids: w.fail('筛选清单无效')
+    reason = w.optional(d, 'reason', 1000)
+    if set(selected) != ids and not reason: w.fail('排除记录须填写筛选理由')
+    selected_issues = {i['id'] for i in t['issues']}.intersection(selected)
+    if not selected_issues and not (d.get('noHazard') is True and w.optional(d, 'text')): w.fail('无入选隐患时必须明确无隐患并填写检查结论')
+    t.update(selectedIds=selected, selectionReason=reason, selectedBy=w.user['id'], selectedAt=w.s.now(),
+             noHazard=not selected_issues, fieldSummary=w.optional(d, 'text') or t.get('fieldSummary', ''), stage='signing', fieldStatus='submitted')
+    t['fieldSummary']='工地：'+t['site']+'；工作日期：'+t['workDate']+'\n'+t['fieldSummary']
+    bid=w.s.uid(); t['fieldBriefs'].append(dict(id=bid,version=1,createdAt=w.s.now()))
+    snap=w.snapshot(t,1); snap['documentKind']='field-brief'
+    snap['task']['issues']=[i for i in snap['task']['issues'] if i['id'] in selected]
+    snap['task']['records']=[dict(i,status='confirmed') for i in snap['task']['records'] if i['id'] in selected]
+    snap['task']['handoverSummary']=t['fieldSummary']
+    w.c.execute('INSERT INTO field_reports VALUES(?,?,?)',(bid,t['id'],json.dumps(snap,ensure_ascii=False)))
+    # Manager selection freezes a review copy; original drafts remain intact.
+    w.persist(t)
+    report=combined.create(w,dict(keys=['brief:'+bid]))
+    t['combinedId']=report['id']
+    notify(w,t,t['confirmedIds']+[t['leaderId']],'signing','清单已确定，请在报告页核对并签字：'+t['title'])
 
 def dispatch(w, action, d):
     if action == 'mobile-project-config':
@@ -268,11 +292,14 @@ def dispatch(w, action, d):
         t['inspectors']='、'.join(w.c.execute('SELECT name FROM users WHERE id=?',(uid,)).fetchone()[0] for uid in chosen)
         notify(w, t, t['acceptedIds'] + t.get('invitedIds', []), 'roster', '项目负责人已确认最终名单，请查看是否入选：'+t['title'])
     elif action == 'mobile-complete':
-        if stage != 'inspection': w.fail('当前不在现场检查阶段', 409)
+        if stage != 'inspection' and not (t['source']=='adhoc' and stage=='review'): w.fail('当前不在现场检查阶段', 409)
         if w.user['id'] not in t['confirmedIds']: manage(w, t)
         t.update(stage='review', fieldStatus='review', fieldSummary=w.optional(d, 'text'), noHazard=d.get('noHazard') is True)
         if not t['issues'] and not t['records'] and not (t['noHazard'] and t['fieldSummary']): w.fail('请保存检查记录，或填写无隐患结论')
-        notify(w, t, [t['leaderId']], 'review', '检查草稿待筛选：'+t['title'])
+        if t['source']=='adhoc':
+            prepare_report(w,t,dict(d,selectedIds=[i['id'] for i in t['issues']+t['records']]))
+        else:
+            notify(w, t, [t['leaderId']], 'review', '检查草稿待筛选：'+t['title'])
     elif action == 'mobile-return':
         manage(w, t)
         if stage != 'review': w.fail('仅待筛选草稿可退回', 409)
@@ -281,27 +308,7 @@ def dispatch(w, action, d):
     elif action == 'mobile-select':
         manage(w, t)
         if stage != 'review': w.fail('须先完成检查再筛选清单', 409)
-        selected = d.get('selectedIds')
-        items = t['issues'] + t['records']; ids = {i['id'] for i in items}
-        if not isinstance(selected, list) or any(not isinstance(x, str) for x in selected) or len(set(selected)) != len(selected) or not set(selected) <= ids: w.fail('筛选清单无效')
-        reason = w.optional(d, 'reason', 1000)
-        if set(selected) != ids and not reason: w.fail('排除记录须填写筛选理由')
-        selected_issues = {i['id'] for i in t['issues']}.intersection(selected)
-        if not selected_issues and not (d.get('noHazard') is True and w.optional(d, 'text')): w.fail('无入选隐患时必须明确无隐患并填写检查结论')
-        t.update(selectedIds=selected, selectionReason=reason, selectedBy=w.user['id'], selectedAt=w.s.now(),
-                 noHazard=not selected_issues, fieldSummary=w.optional(d, 'text') or t.get('fieldSummary', ''), stage='signing', fieldStatus='submitted')
-        t['fieldSummary']='工地：'+t['site']+'；工作日期：'+t['workDate']+'\n'+t['fieldSummary']
-        bid=w.s.uid(); t['fieldBriefs'].append(dict(id=bid,version=1,createdAt=w.s.now()))
-        snap=w.snapshot(t,1); snap['documentKind']='field-brief'
-        snap['task']['issues']=[i for i in snap['task']['issues'] if i['id'] in selected]
-        snap['task']['records']=[dict(i,status='confirmed') for i in snap['task']['records'] if i['id'] in selected]
-        snap['task']['handoverSummary']=t['fieldSummary']
-        w.c.execute('INSERT INTO field_reports VALUES(?,?,?)',(bid,t['id'],json.dumps(snap,ensure_ascii=False)))
-        # Manager selection freezes a review copy; original drafts remain intact.
-        w.persist(t)
-        report=combined.create(w,dict(keys=['brief:'+bid]))
-        t['combinedId']=report['id']
-        notify(w,t,t['confirmedIds']+[t['leaderId']],'signing','清单已确定，请在报告页核对并签字：'+t['title'])
+        prepare_report(w,t,d)
     elif action == 'mobile-publish':
         manage(w,t)
         if stage!='signing': w.fail('报告已发布或尚未生成',409)

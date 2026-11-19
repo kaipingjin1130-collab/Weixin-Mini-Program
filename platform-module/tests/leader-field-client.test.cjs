@@ -230,3 +230,6 @@ test('previously selected signature is revalidated before upload and fields surv
  signatureImage.prepare=async()=>({path:'normalized.png',base64:'normalized-bytes'});await p.captureSign();
  assert.equal(calls[0].data.base64,'normalized-bytes');assert.equal(p.data.signPath,'normalized.png');assert.equal(p.data.note,'保留检查结论');
 });
+
+
+test('temporary checklist goes straight to all-party signing without leader handoff',async()=>{const {p,calls,api,wx}=setup(false,2);p.data.record={text:'',evidence:[]};p.data.task.source='adhoc';p.data.task.issues=[{id:'i',evidence:[]}];let confirmation='',target='';p.confirm=async text=>{confirmation=text;return true};p.refresh=async()=>{};wx.navigateTo=o=>target=o.url;api.request=async(url,data)=>{calls.push({url,data});return {...p.data.task,stage:'signing',fieldStatus:'submitted',combinedId:'temporary-report'}};await p.completeInspection();assert.equal(calls[0].url,'/api/work/mobile-complete');assert.match(confirmation,/无需推送项目负责人/);assert.equal(target,'/pages/combined/combined?reportId=temporary-report');assert.equal(p.data.canCollect,false)});

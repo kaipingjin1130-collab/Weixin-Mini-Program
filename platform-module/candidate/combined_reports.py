@@ -68,6 +68,8 @@ def get(w, report_id):
         w.fail('合并报告不存在', 404)
     value = json.loads(row[0])
     accessible(w, value)
+    if value.get('workflowVersion')==2:
+        value['temporaryInspection']=mobile_access.raw_task(w,value['taskId'])['source']=='adhoc'
     return value
 
 
@@ -173,8 +175,10 @@ def create(w, data):
     if strict:
         task = strict[0]
         value.update(workflowVersion=2, taskId=task['id'], requiredInspectorIds=task['confirmedIds'], requiredLeaderId=task['leaderId'])
+        value['temporaryInspection']=task['source']=='adhoc'
+        if value['temporaryInspection']: value['title']=rows[0]['project']+' 临时巡查报告'
         ids = list(dict.fromkeys(task['confirmedIds'] + [task['leaderId']]))
-        value['coSigners'] = [dict(userId=uid, name=w.c.execute('SELECT name FROM users WHERE id=?',(uid,)).fetchone()[0], role='项目负责人' if uid==task['leaderId'] else '检查人', signature=None) for uid in ids]
+        value['coSigners'] = [dict(userId=uid, name=w.c.execute('SELECT name FROM users WHERE id=?',(uid,)).fetchone()[0], role='项目负责人' if uid==task['leaderId'] and not value['temporaryInspection'] else '检查人', signature=None) for uid in ids]
     w.c.execute('INSERT INTO combined_reports VALUES(?,?,?)', (report_id, value['projectId'], encode(value)))
     return public(w, value)
 
@@ -197,7 +201,7 @@ def mutate(w, action, data):
         typed = 'managerIds' in data or 'recipientIds' in data
         managers, recipients = data.get('managerIds', []), data.get('recipientIds', [])
         if typed:
-            if not isinstance(managers, list) or not managers or not isinstance(recipients, list):
+            if not isinstance(managers, list) or (not managers and not value.get('temporaryInspection')) or not isinstance(recipients, list):
                 w.fail('请至少指定一名项目负责人；被检查人账号可多选或留空后现场签署')
             ids = managers + recipients
         else:
@@ -222,7 +226,7 @@ def mutate(w, action, data):
             for uid in required:
                 w.member(value['projectId'], uid, ['manager','inspector'])
                 people = [p for p in people if p['userId'] != uid]
-                people.append(dict(userId=uid,name=w.c.execute('SELECT name FROM users WHERE id=?',(uid,)).fetchone()[0],role='项目负责人' if uid==value['requiredLeaderId'] else '检查人',signature=None))
+                people.append(dict(userId=uid,name=w.c.execute('SELECT name FROM users WHERE id=?',(uid,)).fetchone()[0],role='项目负责人' if uid==value['requiredLeaderId'] and not value.get('temporaryInspection') else '检查人',signature=None))
         value['coSigners'] = people
         value['recipientId'] = recipient
         value['recipientName'] = w.c.execute('SELECT name FROM users WHERE id=?', (recipient,)).fetchone()[0] if recipient else ''
@@ -260,7 +264,7 @@ def guest(w, action, data):
         w.fail('仅本项目检查人或负责人可采集现场签字', 403)
     people = value.setdefault('guestSigners', [])
     if action == 'combined-guest-add':
-        if not any(p['role'] == '项目负责人' for p in signers(value)):
+        if not value.get('temporaryInspection') and not any(p['role'] == '项目负责人' for p in signers(value)):
             w.fail('请项目负责人先设置会签名单，再采集现场签字')
         if len(people) >= 100:
             w.fail('每份报告最多100个现场签字位置')
@@ -295,7 +299,7 @@ def export(w, value):
     import notice_docx
     report = copy.deepcopy(value['report'])
     if value.get('workflowVersion') == 2:
-        report['publicationLabel'] = '已确认发布：'+value['publishedAt'] if value.get('publishedAt') else '未发布：待各方签字并由负责人确认发布'
+        report['publicationLabel'] = (('正式报告已生成：' if value.get('temporaryInspection') else '已确认发布：')+value['publishedAt']) if value.get('publishedAt') else ('待签字核对稿：各方签齐后由发起人生成正式报告' if value.get('temporaryInspection') else '未发布：待各方签字并由负责人确认发布')
     report['sources'] = value['sources']
     report['contentHash'] = value['contentHash']
     report['coSignatures'] = [dict(p, signature='evidence:'+p['signature']['evidenceId'],

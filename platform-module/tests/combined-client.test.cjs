@@ -84,3 +84,6 @@ test('unselected workflow sources link to their task instead of a merge checkbox
  const {page,api}=setup();api.request=async url=>url.endsWith('/combined-list')?[]:url.endsWith('/leader-inbox')?[{key:'brief:a',taskId:'task'},{key:'brief:b',taskId:'task'}]:{projects:[],tasks:[{id:'task',workflowVersion:2,stage:'review'}]};
  await page.refresh();assert.equal(page.data.rows.length,0);assert.equal(page.data.workflowPending.length,1);assert.equal(page.data.workflowPending[0].taskId,'task');
 });
+
+
+test('temporary inspection author generates report after inspectors and onsite recipients sign',()=>{const {page}=setup();page.state={user:{id:'self'},projects:[],tasks:[{id:'t',source:'adhoc',workflowVersion:2,stage:'signing',createdBy:'self',leaderId:'self',confirmedIds:['self'],combinedId:'r'}]};const report={id:'r',workflowVersion:2,temporaryInspection:true,signers:[{userId:'self',role:'检查人',signature:{}}],guestSigners:[{role:'被检查人',signature:{}}]};let publication=page.publication(report);assert.equal(publication.temporary,true);assert.equal(publication.ready,true);assert.match(publication.reason,/无需项目负责人审批/);report.guestSigners[0].signature=null;assert.equal(page.publication(report).ready,false)});
