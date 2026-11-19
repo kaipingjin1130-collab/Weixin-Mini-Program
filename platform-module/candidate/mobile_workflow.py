@@ -47,6 +47,14 @@ def manage(w, t):
         w.fail('仅指定组长或项目经理可操作', 403)
 
 
+def leader_start_authority(w, t):
+    if w.user['id'] != t.get('leaderId'):
+        w.fail('仅本任务指定组长本人可直接开始巡查', 403)
+    w.member(t['projectId'], w.user['id'], ['manager', 'inspector'])
+    if w.user['id'] in t.get('removedApplicantIds', []):
+        w.fail('项目负责人已移除你的报名，请先联系项目负责人核对安排', 403)
+
+
 def project_people(w, pid, roles):
     return [r['user_id'] for r in w.c.execute('SELECT user_id,role FROM memberships WHERE project_id=?', (pid,))
             if r['role'] in roles]
@@ -70,7 +78,7 @@ def queue(w, t):
 def save(w, t, action, detail=''):
     w.stamp(t, action, detail)
     w.persist(t)
-    if action in ('mobile-roster', 'mobile-recognize'): queue(w, t)
+    if action in ('mobile-roster', 'mobile-leader-start', 'mobile-recognize'): queue(w, t)
     return t
 
 
@@ -158,6 +166,8 @@ def state(w, query):
         t['signupRemoved'] = w.user['id'] in t.get('removedApplicantIds', [])
         t['hasApplied'] = w.user['id'] in t['acceptedIds']
         t['canAccept'] = role in ('manager', 'inspector') and t['stage'] == 'dispatch' and not t['signupRemoved'] and not t['hasApplied']
+        t['canLeaderStart'] = (w.user['id'] == t['leaderId'] and role in ('admin', 'manager', 'inspector')
+                               and t['stage'] == 'dispatch' and not t['signupRemoved'])
         t['confirmedNames'] = '、'.join(names.get(uid, uid) for uid in t['confirmedIds'])
         t['acceptedPeople'] = [dict(id=uid, name=names.get(uid, uid)) for uid in t['acceptedIds']]
         t['overContract'] = next((p['config'].get('contractPeople') is not None and t['requiredPeople'] > p['config']['contractPeople'] for p in project_rows if p['id'] == t['projectId']), False)
@@ -217,6 +227,19 @@ def dispatch(w, action, d):
         t.setdefault('applicantRemovals', []).append(dict(userId=uid, actor=w.user['id'],
                                                          at=w.s.now(), reason=w.optional(d, 'reason', 1000)))
         notify(w, t, [uid], 'signup-removed', '项目负责人已移除你的报名：'+t['title'])
+    elif action == 'mobile-leader-start':
+        leader_start_authority(w, t)
+        if stage != 'dispatch': w.fail('巡查已经开始，最终名单已锁定，请刷新任务', 409)
+        reason = w.optional(d, 'reason', 1000)
+        if t['requiredPeople'] != 1 and not reason:
+            w.fail('需求超过1人，组长提前单人开始须填写原因')
+        uid = w.user['id']
+        if uid not in t['acceptedIds']: t['acceptedIds'].append(uid)
+        t.update(confirmedIds=[uid], rosterConfirmedAt=w.s.now(), rosterConfirmedBy=uid,
+                 rosterReason=reason, rosterMode='leader-solo', stage='inspection', status='active',
+                 assignee=uid, inspectors=w.user['name'])
+        notify(w, t, t['acceptedIds'] + t.get('invitedIds', []) + project_people(w, pid, ['manager']) + [t['createdBy']],
+               'roster', '组长已确认仅本人参加并开始巡查，报名已结束：'+t['title'])
     elif action == 'mobile-roster':
         w.allow(pid, ['manager'])
         if stage != 'dispatch': w.fail('检查开始后名单已锁定', 409)

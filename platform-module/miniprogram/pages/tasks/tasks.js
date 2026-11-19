@@ -25,6 +25,7 @@ Page({
  confirm(content){return new Promise(resolve=>wx.showModal({title:'请核对',content,success:r=>resolve(!!r.confirm),fail:()=>resolve(false)}))},
  async action(action,payload={}){const t=this.data.task;await this.post(action,{taskId:t.id,revision:t.revision,...payload});await this.refresh()},
  accept(){return this.run(()=>this.action('mobile-accept'))},
+ leaderStart(){return this.run(async()=>{const t=this.data.task;if(!t?.canLeaderStart)return;const reason=(this.data.reason||'').trim();if(t.requiredPeople>1&&!reason)throw Error('需求超过1人，请填写组长提前单人开始的原因');if(await this.confirm('确认由你本人直接开始巡查？本次最终检查名单仅包含你本人，计1人；其他报名人员不入选，确认后停止报名。'+(t.requiredPeople>1?'需求为'+t.requiredPeople+'人，提前单人开始原因：'+reason:'')))await this.action('mobile-leader-start',{reason})})},
  removeApplicant(e){
   const person=this.data.acceptedPeople.find(p=>p.id===e.currentTarget.dataset.id);
   if(!person||!this.data.task?.canConfirmRoster)return;

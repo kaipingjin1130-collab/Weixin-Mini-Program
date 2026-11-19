@@ -78,6 +78,84 @@ class MobileWorkflow(unittest.TestCase):
         self.assertEqual(self.raw('issue',self.other,taskId=t['id'],revision=t['revision'],description='非法')[0],403)
         self.assertEqual(self.raw('submit-field',self.worker,taskId=t['id'],revision=t['revision'])[0],409)
 
+    def test_leader_starts_alone_and_completes_report_signing_and_recognition(self):
+        t=self.create()
+        state=self.request('/quality/api/work/mobile-state',token=self.lead)[1]
+        self.assertTrue(state['tasks'][0]['canLeaderStart'])
+        t=self.change(t,'mobile-leader-start',self.lead)
+        self.assertEqual(t['acceptedIds'],['host:admin:8'])
+        self.assertEqual(t['confirmedIds'],['host:admin:8'])
+        self.assertEqual(t['rosterMode'],'leader-solo')
+        self.assertEqual(t['rosterConfirmedBy'],'host:admin:8')
+        self.assertEqual(t['stage'],'inspection')
+        self.assertTrue(t['rosterConfirmedAt'])
+        self.assertEqual(self.raw('mobile-accept',self.worker,taskId=t['id'],revision=t['revision'])[0],409)
+        t=self.change(t,'issue',self.lead,description='组长检查发现防护缺失',evidence=[])
+        t=self.change(t,'mobile-complete',self.lead)
+        t=self.change(t,'mobile-select',self.lead,selectedIds=[t['issues'][0]['id']])
+        r=self.report(t)
+        r=self.post('combined-assign',self.lead,combinedId=r['id'],revision=r['revision'],managerIds=['host:admin:8'],recipientIds=['host:admin:11'])
+        for token in [self.lead,self.receiver]: r=self.sign(r,token)
+        t=self.change(t,'mobile-publish',self.lead,contentHash=r['contentHash'],reportRevision=r['revision'])
+        t=self.change(t,'mobile-recognize',self.lead,actualIds=['host:admin:8'],hoursPerPerson=3,text='组长单人巡查')
+        state=self.request('/quality/api/work/mobile-state',token=self.lead)[1]
+        self.assertEqual(state['statistics'][0]['accepted'],1)
+        self.assertEqual(state['statistics'][0]['confirmed'],1)
+        self.assertEqual(state['statistics'][0]['recognized'],1)
+        self.assertEqual(state['statistics'][0]['hours'],3)
+        self.assertEqual(state['projectStatistics'][0]['actual'],1)
+        self.assertFalse(state['tasks'][0]['canLeaderStart'])
+
+    def test_leader_early_solo_start_requires_reason_and_preserves_other_applications(self):
+        t=self.post('mobile-create',projectId=self.pid,title='多人任务',site='现场',workDate='2026-11-19',requiredPeople=2,leaderId='host:admin:8')
+        t=self.change(t,'mobile-accept',self.worker)
+        for reason in ['', '   ']:
+            self.assertEqual(self.raw('mobile-leader-start',self.lead,taskId=t['id'],revision=t['revision'],reason=reason)[0],400)
+        t=self.change(t,'mobile-leader-start',self.lead,reason='先开展现场踏勘，本次由组长独立检查')
+        self.assertEqual(t['acceptedIds'],['host:admin:9','host:admin:8'])
+        self.assertEqual(t['confirmedIds'],['host:admin:8'])
+        self.assertEqual(t['requiredPeople'],2)
+        self.assertEqual(t['events'][-1]['detail'],t['rosterReason'])
+        self.assertEqual(self.raw('issue',self.worker,taskId=t['id'],revision=t['revision'],description='未入选人员')[0],403)
+        with s.db() as c:
+            jobs=[json.loads(r[0]) for r in c.execute('SELECT payload FROM mobile_outbox')]
+        self.assertTrue(any(j['revision']==t['revision'] and j['task']['confirmedIds']==['host:admin:8'] for j in jobs))
+
+    def test_leader_start_rejects_other_actors_removed_leader_and_locked_roster(self):
+        t=self.create()
+        for token in [self.owner,self.worker,self.other]:
+            self.assertEqual(self.raw('mobile-leader-start',token,taskId=t['id'],revision=t['revision'])[0],403)
+            state=self.request('/quality/api/work/mobile-state',token=token)[1]
+            self.assertFalse(state['tasks'][0]['canLeaderStart'])
+        t=self.change(t,'mobile-accept',self.lead)
+        t=self.change(t,'mobile-remove-applicant',self.owner,userId='host:admin:8')
+        self.assertEqual(self.raw('mobile-leader-start',self.lead,taskId=t['id'],revision=t['revision'])[0],403)
+        fresh=self.create()
+        fresh=self.change(fresh,'mobile-accept',self.worker)
+        fresh=self.change(fresh,'mobile-roster',self.owner,confirmedIds=['host:admin:9'])
+        self.assertEqual(self.raw('mobile-leader-start',self.lead,taskId=fresh['id'],revision=fresh['revision'])[0],409)
+
+    def test_leader_start_retries_once_and_rechecks_authority(self):
+        t=self.create()
+        payload=dict(requestId='solo-start-once',taskId=t['id'],revision=t['revision'])
+        first=self.request('/quality/api/work/mobile-leader-start',payload,self.lead)
+        self.assertEqual(first[0],200)
+        self.assertEqual(first,self.request('/quality/api/work/mobile-leader-start',payload,self.lead))
+        self.assertEqual(self.raw('mobile-leader-start',self.lead,taskId=t['id'],revision=first[1]['revision'])[0],409)
+        with s.db() as c:
+            saved=json.loads(c.execute('SELECT payload FROM tasks WHERE id=?',(t['id'],)).fetchone()[0])
+            self.assertEqual(saved['acceptedIds'],['host:admin:8'])
+            self.assertEqual(len([e for e in saved['events'] if e['action']=='mobile-leader-start']),1)
+            c.execute('UPDATE memberships SET role=? WHERE project_id=? AND user_id=?',('viewer',self.pid,'host:admin:8'))
+        self.assertIn(self.request('/quality/api/work/mobile-leader-start',payload,self.lead)[0],(400,403))
+
+    def test_stale_leader_start_does_not_overwrite_new_signup(self):
+        t=self.create();stale=t
+        t=self.change(t,'mobile-accept',self.worker)
+        self.assertEqual(self.raw('mobile-leader-start',self.lead,taskId=t['id'],revision=stale['revision'])[0],409)
+        t=self.change(t,'mobile-leader-start',self.lead)
+        self.assertEqual(t['acceptedIds'],['host:admin:9','host:admin:8'])
+
     def test_unsigned_cannot_publish_and_selected_inspectors_cannot_be_removed(self):
         t=self.selected();r=self.report(t)
         self.assertEqual(self.raw('mobile-publish',self.lead,taskId=t['id'],revision=t['revision'],contentHash=r['contentHash'],reportRevision=r['revision'])[0],409)

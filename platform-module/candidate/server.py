@@ -381,6 +381,8 @@ class Handler(BaseHTTPRequestHandler):
       if d.get('taskId'): w.task(d['taskId'])
       if action in ('mobile-roster','mobile-remove-applicant'):
        w.allow(w.task(d['taskId'])['projectId'],['manager'])
+      if action=='mobile-leader-start':
+       workflow.mobile_workflow.leader_start_authority(w,w.task(d['taskId']))
       if action=='mobile-accept':
        current=w.task(d['taskId']);w.member(current['projectId'],user['id'],['manager','inspector'])
        if user['id'] in current.get('removedApplicantIds',[]): raise Problem('项目负责人已移除你的报名，本任务不能重复报名',403)
